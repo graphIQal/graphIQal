@@ -8,7 +8,6 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: true,
 		},
-		// frame: false,
 	});
 
 	//load the index.html from a url

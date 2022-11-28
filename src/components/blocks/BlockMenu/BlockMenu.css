@@ -1,0 +1,25 @@
+
+.block_menu {
+	border-radius: 5px;
+	border-color: var(--base_black);
+	border-width: 1px;
+	border-style: solid;
+	width: fit-content;
+}
+
+.block_item {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.block_item + .block_item {
+	/* border: 1px solid var(--base_black); */
+	border-color: var(--base_black);
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom: 0px;
+	border-left: 0px;
+	border-right: 0px;
+}

@@ -1,27 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+// TypeScript users only add this code
+import EditorComponent from '../blocks/EditorComponent';
 
 const Document: React.FC = () => {
-	const [data, setData] = useState({
-		title: 'Page Title',
-		blocks: [
-			{ id: '1', content: 'text', type: 'header' },
-			{ id: '1', content: 'text', type: 'header' },
-			{ id: '1', content: 'text', type: 'header' },
-			{ id: '1', content: 'text', type: 'header' },
-			{ id: '1', content: 'text', type: 'header' },
-		],
-	});
-
-	const renderAllBlocks = () => {
-		return null;
-	};
-
-	const renderBlock = () => {};
-
 	return (
-		<div>
-			{data.title}
-			{renderAllBlocks()}
+		<div className='container'>
+			<EditorComponent></EditorComponent>
 		</div>
 	);
 };

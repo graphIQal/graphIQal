@@ -7,18 +7,27 @@ import { ReactEditor } from 'slate-react';
 // Define our own custom set of helpers.
 const EditorCommands = {
 	isBoldMarkActive(editor: BaseEditor & ReactEditor) {
-		const match = Editor.nodes(editor, {
-			match: (n) => Text.isText(n) && n.bold === true,
-			universal: true,
-		});
+		const [match] = Array.from(
+			Editor.nodes(editor, {
+				match: (n) => Text.isText(n) && n.bold === true,
+				universal: true,
+			})
+		);
 
 		return !!match;
 	},
 
 	isCodeBlockActive(editor: BaseEditor & ReactEditor) {
-		const match = Editor.nodes(editor, {
-			match: (n) => Editor.isBlock(editor, n) && n.type === 'code',
-		});
+		const [match] = Array.from(
+			Editor.nodes(editor, {
+				match: (n) => {
+					// console.log('match');
+					// console.log(n);
+					// console.log(Editor.isBlock(editor, n));
+					return Editor.isBlock(editor, n) && n.type === 'code';
+				},
+			})
+		);
 
 		return !!match;
 	},

@@ -8,6 +8,7 @@ import { BaseEditor, Descendant } from 'slate';
 import { ReactEditor } from 'slate-react';
 import BlockMenu from './BlockMenu/BlockMenu';
 import { Leaf, DefaultElement, CodeElement } from './Elements/Elements';
+import EditorCommands from './EditorCommands';
 
 type CustomElement = {
 	type: 'paragraph' | 'code';
@@ -163,42 +164,26 @@ const EditorComponent: React.FC = () => {
 					renderLeaf={renderLeaf}
 					onKeyDown={(event) => {
 						if (!event.ctrlKey && !event.metaKey) {
-							if (event.key === 'Slash') {
-								showMenu();
-							}
+							// if (event.key === 'Slash') {
+							// 	showMenu();
+							// }
+							return;
 						}
+						console.log(event);
 
 						switch (event.key) {
 							// When "`" is pressed, keep our existing code block logic.
-							case '`': {
+							case 'k': {
+								console.log('```');
 								event.preventDefault();
-								const match = Editor.nodes(editor, {
-									match: (n) =>
-										Editor.isBlock(editor, n) &&
-										n.type === 'paragraph',
-								});
-								Transforms.setNodes(
-									editor,
-									{ type: match ? 'code' : 'paragraph' },
-									{ match: (n) => Editor.isBlock(editor, n) }
-								);
+								EditorCommands.toggleCodeBlock(editor);
 								break;
 							}
 
 							// When "B" is pressed, bold the text in the selection.
 							case 'b': {
 								event.preventDefault();
-								Transforms.setNodes(
-									editor,
-									{ bold: true },
-									// Apply it to text nodes, and split the text node up if the
-									// selection is overlapping only part of it.
-									{
-										match: (n) => Text.isText(n),
-										split: true,
-									}
-								);
-								console.log(editor);
+								EditorCommands.toggleBoldMark(editor);
 								break;
 							}
 						}

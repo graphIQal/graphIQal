@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import { createEditor, Editor, Transforms, Text } from 'slate';
+import { createEditor, Editor, Transforms, Text, Range, Point } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
 
 // TypeScript users only add this code
@@ -11,7 +11,8 @@ import { Leaf, DefaultElement, CodeElement } from './Elements/Elements';
 import EditorCommands from './EditorCommands';
 
 type CustomElement = {
-	type: 'paragraph' | 'code';
+	format: 'paragraph' | 'code';
+	type: 'block' | 'node' | 'connection';
 	children: (CustomText | CustomElement)[];
 };
 
@@ -32,11 +33,13 @@ declare module 'slate' {
 
 const initialValue: CustomElement[] = [
 	{
-		type: 'paragraph',
+		format: 'paragraph',
 		children: [{ text: 'TITLE PAGE', text_type: 'h1' }],
+		type: 'block',
 	},
 	{
-		type: 'paragraph',
+		format: 'paragraph',
+		type: 'block',
 		children: [
 			{ text: 'A line of text in a paragraph.', text_type: 'text' },
 		],
@@ -130,26 +133,13 @@ const EditorComponent: React.FC = () => {
 					{
 						title: 'bold',
 						onPress: () => {
-							Transforms.setNodes(
-								editor,
-								{ bold: true },
-								// Apply it to text nodes, and split the text node up if the
-								// selection is overlapping only part of it.
-								{
-									match: (n) => Text.isText(n),
-									split: true,
-								}
-							);
+							EditorCommands.toggleBoldMark(editor);
 						},
 					},
 					{
 						title: 'italics',
 						onPress: () => {
-							const match = Editor.nodes(editor, {
-								match: (n) =>
-									Editor.isBlock(editor, n) &&
-									n.type === 'paragraph',
-							});
+							EditorCommands.toggleItalicsMark(editor);
 						},
 					},
 					{
@@ -164,27 +154,43 @@ const EditorComponent: React.FC = () => {
 					renderLeaf={renderLeaf}
 					onKeyDown={(event) => {
 						if (!event.ctrlKey && !event.metaKey) {
-							// if (event.key === 'Slash') {
-							// 	showMenu();
-							// }
-							return;
-						}
-						console.log(event);
-
-						switch (event.key) {
-							// When "`" is pressed, keep our existing code block logic.
-							case 'k': {
-								console.log('```');
-								event.preventDefault();
-								EditorCommands.toggleCodeBlock(editor);
-								break;
+							switch (event.key) {
+								case 'Tab':
+									event.preventDefault();
+									if (
+										editor.selection &&
+										Range.isCollapsed(editor.selection) &&
+										editor.selection.anchor.offset === 0
+									) {
+										console.log('at start');
+									} else {
+										console.log('not at start');
+										editor.insertText('    ');
+									}
+									break;
 							}
+						} else {
+							switch (event.key) {
+								// When "`" is pressed, keep our existing code block logic.
+								case 'k': {
+									event.preventDefault();
+									EditorCommands.toggleCodeBlock(editor);
+									break;
+								}
 
-							// When "B" is pressed, bold the text in the selection.
-							case 'b': {
-								event.preventDefault();
-								EditorCommands.toggleBoldMark(editor);
-								break;
+								// When "B" is pressed, bold the text in the selection.
+								case 'b': {
+									event.preventDefault();
+									EditorCommands.toggleBoldMark(editor);
+									break;
+								}
+
+								// When "i" is pressed, italics the text in the selection.
+								case 'i': {
+									event.preventDefault();
+									EditorCommands.toggleItalicsMark(editor);
+									break;
+								}
 							}
 						}
 					}}

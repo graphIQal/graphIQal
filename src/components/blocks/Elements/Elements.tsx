@@ -14,7 +14,6 @@ export const DefaultElement = (props: any) => {
 
 export const Leaf = (props: any) => {
 	if (props.leaf.italics) {
-		console.log('leaf', props);
 		return (
 			<span
 				{...props.attributes}

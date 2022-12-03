@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 
 import { createEditor, Editor, Transforms, Text } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
@@ -45,6 +45,7 @@ const initialValue: CustomElement[] = [
 
 const EditorComponent: React.FC = () => {
   const [editor] = useState(() => withReact(createEditor()));
+  const ref = useRef();
 
   // ELEMENTS
   // Define a React component renderer for our code blocks.
@@ -157,10 +158,11 @@ const EditorComponent: React.FC = () => {
       },
     ];
   };
+
   return (
     <>
       <Slate editor={editor} value={initialValue}>
-        <HoveringToolbar opacity={opacity} />
+        <HoveringToolbar ref={ref} opacity={opacity} />
 
         <BlockMenu items={getItems()} />
         <Editable

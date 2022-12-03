@@ -1,4 +1,11 @@
-import React, { useMemo, useRef, useEffect, useState } from 'react';
+import React, {
+  useMemo,
+  useRef,
+  useEffect,
+  useState,
+  MutableRefObject,
+  LegacyRef,
+} from 'react';
 import { Slate, Editable, withReact, useSlate, useFocused } from 'slate-react';
 import {
   Editor,
@@ -13,8 +20,9 @@ import BlockMenu from '../BlockMenu/BlockMenu';
 
 type HoveringToolbarProps = {
   opacity: '0%' | '100%';
+  ref: any;
 };
-const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity }) => {
+const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
   // const ref = useRef<HTMLDivElement | null>();
   const editor = useSlate();
   const inFocus = useFocused();
@@ -61,6 +69,7 @@ const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity }) => {
   // };
   return (
     <div
+      ref={ref}
       style={{
         opacity: opacity,
         display: 'inline-block',

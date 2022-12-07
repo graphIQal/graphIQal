@@ -164,7 +164,7 @@ const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
             onPress: () => {
               const match = Editor.nodes(editor, {
                 match: (n) =>
-                  Editor.isBlock(editor, n) && n.type === 'paragraph',
+                  Editor.isBlock(editor, n) && n.format === 'paragraph',
               });
             },
           },

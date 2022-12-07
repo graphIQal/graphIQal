@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { createEditor, Range, Text, Transforms } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
@@ -47,7 +47,6 @@ const initialValue: CustomElement[] = [
 
 const EditorComponent: React.FC = () => {
   const [editor] = useState(() => withReact(createEditor()));
-  const ref = useRef();
 
   // ELEMENTS
   // Define a React component renderer for our code blocks.
@@ -73,88 +72,91 @@ const EditorComponent: React.FC = () => {
     // editor.insertNode()
   };
 
-  const getItems = () => {
-    return [
-      {
-        title: 'text',
-        onPress: () => {
-          Transforms.setNodes(
-            editor,
-            { text_type: 'text' },
-            // Apply it to text nodes, and split the text node up if the
-            // selection is overlapping only part of it.
-            {
-              match: (n) => Text.isText(n),
-            }
-          );
-        },
+  const items = [
+    {
+      title: 'text',
+      className: 'block_item',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { text_type: 'text' },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+          }
+        );
       },
-      {
-        title: 'Header 1',
-        onPress: () => {
-          Transforms.setNodes(
-            editor,
-            { text_type: 'h1' },
-            // Apply it to text nodes, and split the text node up if the
-            // selection is overlapping only part of it.
-            {
-              match: (n) => Text.isText(n),
-            }
-          );
-        },
+    },
+    {
+      title: 'Header 1',
+      className: 'block_item',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { text_type: 'h1' },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+          }
+        );
       },
-      {
-        title: 'Header 2',
-        onPress: () => {
-          Transforms.setNodes(
-            editor,
-            { text_type: 'h2' },
-            // Apply it to text nodes, and split the text node up if the
-            // selection is overlapping only part of it.
-            {
-              match: (n) => Text.isText(n),
-            }
-          );
-        },
+    },
+    {
+      title: 'Header 2',
+      className: 'block_item',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { text_type: 'h2' },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+          }
+        );
       },
-      {
-        title: 'Header 3',
-        onPress: () => {
-          Transforms.setNodes(
-            editor,
-            { text_type: 'h3' },
-            // Apply it to text nodes, and split the text node up if the
-            // selection is overlapping only part of it.
-            {
-              match: (n) => Text.isText(n),
-            }
-          );
-        },
+    },
+    {
+      title: 'Header 3',
+      className: 'block_item',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { text_type: 'h3' },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+          }
+        );
       },
-      {
-        title: 'bold',
-        onPress: () => {
-          Transforms.setNodes(
-            editor,
-            { bold: true },
-            // Apply it to text nodes, and split the text node up if the
-            // selection is overlapping only part of it.
-            {
-              match: (n) => Text.isText(n),
-              split: true,
-            }
-          );
-        },
+    },
+    {
+      title: 'bold',
+      className: 'block_item',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { bold: true },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+            split: true,
+          }
+        );
       },
-    ];
-  };
+    },
+  ];
 
   return (
     <>
       <Slate editor={editor} value={initialValue}>
-        <HoveringToolbar ref={ref} opacity={opacity} />
+        <HoveringToolbar />
 
-        <BlockMenu items={getItems()} />
+        <BlockMenu items={items} className='block_menu' />
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}

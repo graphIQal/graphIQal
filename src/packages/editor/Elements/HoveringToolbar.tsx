@@ -1,80 +1,74 @@
-import React from 'react';
-import { Text, Transforms } from 'slate';
-import { useSlate } from 'slate-react';
+import React, { useRef, useEffect } from 'react';
+import { Text, Transforms, Range, Editor } from 'slate';
+import { useSlate, useFocused } from 'slate-react';
 import BlockMenu from '../BlockMenu/BlockMenu';
 
-type HoveringToolbarProps = {
-  opacity: '0%' | '100%';
-  ref: any;
-};
-const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
-  // const ref = useRef<HTMLDivElement | null>();
+const HoveringToolbar: React.FC<{}> = () => {
+  const ref = useRef<any>();
   const editor = useSlate();
-  // const inFocus = useFocused();
+  const inFocus = useFocused();
 
-  // useEffect(() => {
-  //   const el = ref.current;
-  //   const { selection } = editor;
+  useEffect(() => {
+    const el = ref.current;
+    const { selection } = editor;
 
-  //   if (!el) {
-  //     return;
-  //   }
+    if (!el) {
+      return;
+    }
 
-  //   if (
-  //     !selection ||
-  //     !inFocus ||
-  //     Range.isCollapsed(selection) ||
-  //     Editor.string(editor, selection) === ''
-  //   ) {
-  //     // setOpacity('0%');
-  //     return;
-  //   }
+    if (
+      !selection ||
+      !inFocus ||
+      Range.isCollapsed(selection) ||
+      Editor.string(editor, selection) === ''
+    ) {
+      el.style.opacity = '0';
+      return;
+    }
 
-  //   const domSelection = window.getSelection();
-  //   if (domSelection) {
-  //     const domRange = domSelection.getRangeAt(0);
-  //     const rect = domRange.getBoundingClientRect();
-  //     el.style.opacity = '1';
-  //     el.style.top = `${rect.top + window.pageYOffset - el.offsetHeight}px`;
-  //     el.style.left = `${
-  //       rect.left + window.pageXOffset - el.offsetWidth / 2 + rect.width / 2
-  //     }px`;
-  //   }
-  // });
+    const domSelection = window.getSelection();
+    if (domSelection == null || domSelection.rangeCount === 0) return;
+    const domRange = domSelection.getRangeAt(0);
 
-  //   const getPixelPosition = function(position, onScreen) {
-  //     if (!position)
-  //         position = this.session.selection.getCursor();
-  //     var pos =
-  //     var cursorLeft = this.$padding + pos.column * this.config.characterWidth;
-  //     var cursorTop = (pos.row - (onScreen ? this.config.firstRowScreen : 0)) *
-  //         this.config.lineHeight;
+    const rect = domRange.getBoundingClientRect();
 
-  //     return {left : cursorLeft, top : cursorTop};
-  // };
+    el.style.opacity = '1';
+    el.style.top = rect.top + window.pageYOffset - el.offsetHeight + 'px';
+    el.style.left =
+      rect.left +
+      window.pageXOffset -
+      el.offsetWidth / 2 +
+      rect.width / 2 +
+      'px';
+  });
+
+  const className = 'hovering_menu_item';
+
   return (
     <div
       ref={ref}
       style={{
-        opacity: opacity,
+        opacity: 0,
         display: 'inline-block',
         padding: '8px 7px 6px',
         position: 'absolute',
         zIndex: 1,
-
-        // top: '-10000px',
-        // left: '-10000px',
+        top: 0,
+        left: 0,
         marginTop: '6px',
         backgroundColor: '#00000',
+        height: 30,
+        width: 30,
         borderRadius: '4px',
-
         marginLeft: '200px',
       }}
     >
       <BlockMenu
+        className='hovering_menu'
         items={[
           {
             title: 'text',
+            className: 'block_item',
             onPress: () => {
               Transforms.setNodes(
                 editor,
@@ -89,6 +83,7 @@ const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
           },
           {
             title: 'Header 1',
+            className: className,
             onPress: () => {
               Transforms.setNodes(
                 editor,
@@ -103,6 +98,7 @@ const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
           },
           {
             title: 'Header 2',
+            className: className,
             onPress: () => {
               Transforms.setNodes(
                 editor,
@@ -117,6 +113,7 @@ const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
           },
           {
             title: 'Header 3',
+            className: className,
             onPress: () => {
               Transforms.setNodes(
                 editor,
@@ -131,6 +128,7 @@ const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
           },
           {
             title: 'bold',
+            className: className,
             onPress: () => {
               Transforms.setNodes(
                 editor,
@@ -146,6 +144,7 @@ const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
           },
           {
             title: 'test',
+            className: className,
             onPress: () => {},
           },
         ]}

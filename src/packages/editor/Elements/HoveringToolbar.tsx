@@ -1,21 +1,6 @@
-import React, {
-  useMemo,
-  useRef,
-  useEffect,
-  useState,
-  MutableRefObject,
-  LegacyRef,
-} from 'react';
-import { Slate, Editable, withReact, useSlate, useFocused } from 'slate-react';
-import {
-  Editor,
-  Transforms,
-  Text,
-  createEditor,
-  Descendant,
-  Range,
-} from 'slate';
-import { format } from 'path';
+import React from 'react';
+import { Text, Transforms } from 'slate';
+import { useSlate } from 'slate-react';
 import BlockMenu from '../BlockMenu/BlockMenu';
 
 type HoveringToolbarProps = {
@@ -25,7 +10,7 @@ type HoveringToolbarProps = {
 const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
   // const ref = useRef<HTMLDivElement | null>();
   const editor = useSlate();
-  const inFocus = useFocused();
+  // const inFocus = useFocused();
 
   // useEffect(() => {
   //   const el = ref.current;
@@ -157,15 +142,6 @@ const HoveringToolbar: React.FC<HoveringToolbarProps> = ({ opacity, ref }) => {
                   split: true,
                 }
               );
-            },
-          },
-          {
-            title: 'italics',
-            onPress: () => {
-              const match = Editor.nodes(editor, {
-                match: (n) =>
-                  Editor.isBlock(editor, n) && n.format === 'paragraph',
-              });
             },
           },
           {

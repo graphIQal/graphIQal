@@ -1,5 +1,5 @@
 import React from 'react';
-import { DndProvider, useDrop } from 'react-dnd';
+import { useDrop } from 'react-dnd';
 
 const DropLayer: React.FC = () => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({

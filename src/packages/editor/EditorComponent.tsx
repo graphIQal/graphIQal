@@ -1,16 +1,15 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
-import { createEditor, Editor, Transforms, Text, Range, Point } from 'slate';
-import { Slate, Editable, withReact } from 'slate-react';
+import { createEditor, Range, Text, Transforms } from 'slate';
+import { Editable, Slate, withReact } from 'slate-react';
 
 // TypeScript users only add this code
-import { BaseEditor, Descendant } from 'slate';
+import { BaseEditor } from 'slate';
 import { ReactEditor } from 'slate-react';
 import BlockMenu from './BlockMenu/BlockMenu';
-import { Leaf, DefaultElement, CodeElement } from './Elements/Elements';
 import EditorCommands from './EditorCommands';
+import { CodeElement, DefaultElement, Leaf } from './Elements/Elements';
 import HoveringToolbar from './Elements/HoveringToolbar';
-import { getAutomaticTypeDirectiveNames } from 'typescript';
 
 type CustomElement = {
   format: 'paragraph' | 'code';
@@ -146,18 +145,6 @@ const EditorComponent: React.FC = () => {
             }
           );
         },
-      },
-      {
-        title: 'italics',
-        onPress: () => {
-          const match = Editor.nodes(editor, {
-            match: (n) => Editor.isBlock(editor, n) && n.format === 'paragraph',
-          });
-        },
-      },
-      {
-        title: 'test',
-        onPress: () => {},
       },
     ];
   };

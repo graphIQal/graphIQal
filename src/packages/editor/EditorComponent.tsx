@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 
-import { createEditor, Range, Text, Transforms } from 'slate';
+import { createEditor, Range, Text, Transforms, Editor } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 
 // TypeScript users only add this code
@@ -10,6 +10,7 @@ import BlockMenu from './BlockMenu/BlockMenu';
 import EditorCommands from './EditorCommands';
 import { CodeElement, DefaultElement, Leaf } from './Elements/Elements';
 import HoveringToolbar from './Elements/HoveringToolbar';
+import FloatingMenu from './Elements/FloatingMenu';
 
 type CustomElement = {
   format: 'paragraph' | 'code';
@@ -47,7 +48,49 @@ const initialValue: CustomElement[] = [
 
 const EditorComponent: React.FC = () => {
   const [editor] = useState(() => withReact(createEditor()));
+  const [isOpen, setIsOpen] = useState(false);
+  const commandTextRef = useRef<any>('');
+  const closeMenu = false;
+  const menuListRef = useRef<any>(null);
+  console.log(editor.selection);
 
+  // eslint-disable-next-line no-empty
+  // const [commands, setCommands] = useState(items)
+  //   const openTagSelectorMenu = () => {
+  //     // if (!isOpen) {
+  //       if (menuListRef.current != null) {
+  //         menuListRef.current.scrollTo(0, 0)
+  //       }
+
+  //     // editor.isCommandMenu = true
+  //     setIsOpen(true)
+  //     // }
+
+  //     document.addEventListener('click', closeTagSelectorMenu, false)
+  // }
+
+  // const closeTagSelectorMenu = () => {
+  //     console.log('closeTagSelectorMenu')
+  //     commandTextRef.current = ''
+  //     // editor.isCommandMenu = false
+  //     setIsOpen(false)
+  //     resetCommands()
+  //     // setSelected(0)
+  //     // commandOffset.current = 0
+  //     document.removeEventListener('click', closeTagSelectorMenu, false)
+  // }
+
+  // const resetCommands = () => {
+  //   console.log('resetCommands')
+
+  //   setCommands([...SlateMenus])
+  //   commandsLengthRef.current = SlateMenus.length
+  //   setSelected(0)
+  //   // commandOffset.current = 0
+  //   editor.commands = [...SlateMenus]
+  //   editor.selectedCommand = 0
+  // }
+  // ReactEditor.findPath()
   // ELEMENTS
   // Define a React component renderer for our code blocks.
 
@@ -155,13 +198,17 @@ const EditorComponent: React.FC = () => {
     <>
       <Slate editor={editor} value={initialValue}>
         <HoveringToolbar />
-
+        {/* <FloatingMenu /> */}
         <BlockMenu items={items} className='block_menu' />
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={(event) => {
             if (!event.ctrlKey && !event.metaKey) {
+              // console.log(
+              //   'event ' + event.currentTarget.offsetHeight
+              //   // event.currentTarget
+              // );
               switch (event.key) {
                 case 'Tab':
                   event.preventDefault();

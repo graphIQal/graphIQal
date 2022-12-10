@@ -1,3 +1,5 @@
+// make toolbar a general component that just takes in children and stuff
+
 import React, { useRef, useEffect } from 'react';
 import { Text, Transforms, Range, Editor } from 'slate';
 import { useSlate, useFocused } from 'slate-react';
@@ -68,7 +70,7 @@ const HoveringToolbar: React.FC<{}> = () => {
         items={[
           {
             title: 'text',
-            className: 'block_item',
+            className: className,
             onPress: () => {
               Transforms.setNodes(
                 editor,

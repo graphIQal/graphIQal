@@ -1,0 +1,10 @@
+.hovering_menu_item {
+  border-color: var(--base_black);
+  border-width: 1px;
+  border-style: solid;
+}
+
+.hovering_menu {
+  display: flex;
+  flex-direction: row;
+}

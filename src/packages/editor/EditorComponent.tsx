@@ -199,7 +199,7 @@ const EditorComponent: React.FC = () => {
       <Slate editor={editor} value={initialValue}>
         <HoveringToolbar />
         {/* <FloatingMenu /> */}
-        <BlockMenu items={items} className='block_menu' />
+        <BlockMenu />
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}

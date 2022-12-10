@@ -1,28 +1,89 @@
-import React from 'react';
-import './BlockMenu.css';
+// make toolbar a general component that just takes in children and stuff
 
-type BlockMenuItem = {
-  title: string;
-  onPress(params: any): void;
-  className: string;
-};
+import React, { useRef } from 'react';
+import { Text, Transforms } from 'slate';
+import { useSlate } from 'slate-react';
+import BlockMenuOrg from '../../../components/organisms/BlockMenuOrg';
 
-type BlockMenuProps = {
-  items: BlockMenuItem[];
-  className: string;
-};
+const BlockMenu: React.FC<{}> = () => {
+  const ref = useRef<any>();
+  const editor = useSlate();
 
-//
-const BlockMenu: React.FC<BlockMenuProps> = ({ items, className }) => {
-  const renderButtons = () => {
-    return items.map((item, i) => (
-      <div className={item.className} onClick={item.onPress} key={i}>
-        {item.title}
-      </div>
-    ));
-  };
+  const items = [
+    {
+      buttonText: 'text',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { text_type: 'text' },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+          }
+        );
+      },
+    },
+    {
+      buttonText: 'Header 1',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { text_type: 'h1' },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+          }
+        );
+      },
+    },
+    {
+      buttonText: 'Header 2',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { text_type: 'h2' },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+          }
+        );
+      },
+    },
+    {
+      buttonText: 'Header 3',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { text_type: 'h3' },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+          }
+        );
+      },
+    },
+    {
+      buttonText: 'bold',
+      onPress: () => {
+        Transforms.setNodes(
+          editor,
+          { bold: true },
+          // Apply it to text nodes, and split the text node up if the
+          // selection is overlapping only part of it.
+          {
+            match: (n) => Text.isText(n),
+            split: true,
+          }
+        );
+      },
+    },
+  ];
 
-  return <div className={className}>{renderButtons()}</div>;
+  return <BlockMenuOrg ref={ref} items={items} />;
 };
 
 export default BlockMenu;

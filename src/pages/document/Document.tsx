@@ -6,14 +6,13 @@ import DropLayer from '../../packages/dnd/DropLayer';
 // TypeScript users only add this code
 import EditorComponent from '../../packages/editor/EditorComponent';
 const Document: React.FC = () => {
-  return (
-    <div className='container'>
-      <DndProvider backend={HTML5Backend}>
-        <EditorComponent></EditorComponent>
-        <DropLayer />
-      </DndProvider>
-    </div>
-  );
+	return (
+		<div className='container'>
+			<DndProvider backend={HTML5Backend}>
+				<EditorComponent></EditorComponent>
+			</DndProvider>
+		</div>
+	);
 };
 
 export default Document;

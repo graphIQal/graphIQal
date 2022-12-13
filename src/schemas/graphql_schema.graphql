@@ -1,0 +1,80 @@
+union CustomElementChildren = CustomText | Block
+
+type CustomText {
+	text: String
+	bold: Boolean
+	italics: Boolean
+	text_type: String
+}
+
+type Block {
+	format: String
+	type: String
+	children: [CustomElementChildren]
+	id: ID!
+}
+
+type ConnectionData {
+	id: ID!
+	title: String
+	content: [Block]
+	nodes: [String]
+	connection_type: String
+}
+
+type DocumentView {
+	node: String
+	elements: [String]
+}
+
+type GraphView {
+	node: String
+	title: String
+	elements: [GraphViewElement]
+}
+
+type GraphViewElement {
+	id: ID!
+	graphNode: GraphNode
+}
+
+type GraphNode {
+	index: Int
+	x: Float
+	y: Float
+	size: [Float]
+	type: String
+}
+
+union ViewType = DocumentView | GraphView
+
+type NodeData {
+	title: String
+	id: ID!
+	blocks: [BlockElement]
+	connections: [ConnectionElement]
+	document: DocumentView
+	navigation: [ViewType]
+}
+
+type BlockElement {
+	id: ID!
+	block: Block
+}
+
+type ConnectionElement {
+	id: ID!
+	connection: ConnectionData
+}
+
+type User {
+	id: ID!
+	metadata: UserMetadata
+	home_node: NodeData
+	homeless_node: NodeData
+}
+
+type UserMetadata {
+	name: String
+	email: String
+}

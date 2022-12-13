@@ -48,7 +48,6 @@ export const DefaultElement = (props: any) => {
 			<span ref={drag}>
 				<Handle></Handle>
 			</span>
-			{/*  */}
 			{props.children}
 		</div>
 	);

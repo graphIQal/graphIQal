@@ -21,10 +21,10 @@ import HoveringToolbar from './Elements/HoveringToolbar';
 import FloatingMenu from './Elements/FloatingMenu';
 import { createId } from '../../helpers/frontend/frontend';
 
-type CustomElement = {
+type Block = {
 	format: 'paragraph' | 'code';
 	type: 'block' | 'node' | 'connection';
-	children: (CustomText | CustomElement)[];
+	children: (CustomText | Block)[];
 	id: string;
 };
 
@@ -38,7 +38,7 @@ type CustomText = {
 declare module 'slate' {
 	interface CustomTypes {
 		Editor: BaseEditor & ReactEditor;
-		Element: CustomElement;
+		Element: Block;
 		Text: CustomText;
 	}
 }

@@ -16,6 +16,8 @@ export const CodeElement = (props: any) => {
 };
 
 export const Block = (props: any) => {
+	console.log('block');
+
 	const [{ opacity }, drag, preview] = useDrag(() => ({
 		type: ItemTypes.block,
 		collect: (monitor) => ({
@@ -36,8 +38,6 @@ export const Block = (props: any) => {
 		border: '1px dashed gray',
 		padding: '0.5rem 1rem',
 		marginBottom: '.5rem',
-		backgroundColor: 'white',
-		width: '20rem',
 	};
 
 	return (

@@ -362,6 +362,7 @@ export const createMyPlateEditor = (
 export const createMyPluginFactory = <P = PluginOptions>(
 	defaultPlugin: PlatePlugin<NoInfer<P>, MyValue, MyEditor>
 ) => createPluginFactory(defaultPlugin);
+
 export const createMyPlugins = (
 	plugins: MyPlatePlugin[],
 	options?: {

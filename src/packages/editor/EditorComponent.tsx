@@ -1,12 +1,9 @@
-import {
-	createKbdPlugin,
-	createPlateUI,
-	Plate,
-	PlateProvider,
-} from '@udecode/plate';
+import { createComboboxPlugin, createPlateUI, Plate } from '@udecode/plate';
 import React, { useCallback, useMemo, useState } from 'react';
+import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
+import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
-import { Block, Leaf } from './Elements/Elements';
+import { Block } from './Elements/Elements';
 import { createMyPlugins, MyParagraphElement, MyValue } from './plateTypes';
 import { BlockPlugins } from './Plugins/BlockPlugins';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
@@ -31,13 +28,16 @@ const EditorComponent: React.FC = () => {
 				// elements
 				...BlockPlugins,
 				// Commands,
+				createComboboxPlugin(),
 			]),
 		[]
 	);
 	// `useCallback` here to memoize the function for subsequent renders.
-	const renderElement = useCallback((props: any) => {
-		return <Block {...props} />;
-	}, []);
+	// const renderElement = useCallback((props: any) => {
+	// 	return <Block {...props} />;
+	// }, []);
+
+	console.log(createPlateUI({}));
 
 	return (
 		<Plate<MyValue>
@@ -47,7 +47,10 @@ const EditorComponent: React.FC = () => {
 				console.log(value);
 			}}
 			plugins={plugins}
-		/>
+		>
+			<EditorFloatingMenu />
+			<EditorSlashMenu />
+		</Plate>
 	);
 };
 

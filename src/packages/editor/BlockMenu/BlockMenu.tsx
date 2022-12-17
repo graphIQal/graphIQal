@@ -89,7 +89,7 @@ const BlockMenu: React.FC<{}> = () => {
 		},
 	];
 
-	return <BlockMenuOrg ref={ref} items={items} />;
+	return <BlockMenuOrg ref={ref} />;
 };
 
 export default BlockMenu;

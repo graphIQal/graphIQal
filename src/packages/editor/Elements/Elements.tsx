@@ -16,8 +16,6 @@ export const CodeElement = (props: any) => {
 };
 
 export const Block = (props: any) => {
-	console.log('block');
-
 	const [{ opacity }, drag, preview] = useDrag(() => ({
 		type: ItemTypes.block,
 		collect: (monitor) => ({

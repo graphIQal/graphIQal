@@ -16,6 +16,9 @@ import {
 	insertNodes,
 	ELEMENT_H2,
 	ELEMENT_H3,
+	deleteBackward,
+	deleteText,
+	deleteFragment,
 } from '@udecode/plate';
 import {
 	MyH1Element,
@@ -89,7 +92,11 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	return (
 		<Combobox
 			id='1'
-			onSelectItem={(editor, item) => item.data.onPress()}
+			onSelectItem={(editor, item) => {
+				// had to go through a SHIT load of stuff, finally figured out undo is working but honestly it's kinda hacky no?
+				editor.undo();
+				item.data.onPress();
+			}}
 			trigger='/'
 			component={(store) => {
 				return <BlockMenuOrg></BlockMenuOrg>;

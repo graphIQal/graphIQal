@@ -37,8 +37,6 @@ const EditorComponent: React.FC = () => {
 	// 	return <Block {...props} />;
 	// }, []);
 
-	console.log(createPlateUI({}));
-
 	return (
 		<Plate<MyValue>
 			editableProps={editableProps}

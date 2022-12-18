@@ -1,3 +1,4 @@
+import { createPlateUI, ELEMENT_H1 } from '@udecode/plate';
 import { CSSProperties } from 'react';
 import { useDrag } from 'react-dnd';
 import Handle from '../../../components/atoms/Handle';
@@ -49,6 +50,15 @@ export const Block = (props: any) => {
 			{props.children}
 		</div>
 	);
+};
+
+export const H1 = (props: any) => {
+	console.log(props);
+	const plateUI = createPlateUI({})[ELEMENT_H1];
+	console.log(plateUI);
+	// return plateUI[ELEMENT_H1];
+
+	return <Block>{props.children}</Block>;
 };
 
 export const Leaf = (props: any) => {

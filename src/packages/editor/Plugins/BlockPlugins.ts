@@ -1,22 +1,23 @@
 import {
-	createBoldPlugin,
 	createCodeBlockPlugin,
 	createHeadingPlugin,
 	createParagraphPlugin,
 	createPlateUI,
-	createPluginFactory,
 	ELEMENT_H1,
 	ELEMENT_PARAGRAPH,
 	HotkeyPlugin,
 	onKeyDownToggleElement,
-	setDefaultPlugin,
 } from '@udecode/plate';
 import { Block, H1, NodeBlock } from '../Elements/Elements';
-import { createMyPlugins, ELEMENT_NODE } from '../plateTypes';
+import {
+	createMyPluginFactory,
+	createMyPlugins,
+	ELEMENT_NODE,
+} from '../plateTypes';
 
 const plateUI = createPlateUI({});
 
-const createNodePlugin = createPluginFactory<HotkeyPlugin>({
+const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODE,
 	isElement: true,
 	isLeaf: false,

@@ -46,7 +46,7 @@ export interface UseDropNodeOptions
  * - isOver: true if mouse is over the block
  */
 export const useDropNode = <V extends MyValue>(
-	editor: TReactEditor<V>,
+	editor: MyEditor,
 	{ nodeRef, id, dropLine, onChangeDropLine, ...options }: UseDropNodeOptions
 ) => {
 	return useDrop<DragItemNode, unknown, { isOver: boolean }>({

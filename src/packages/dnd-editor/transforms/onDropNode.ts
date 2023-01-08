@@ -10,12 +10,13 @@ import { Path } from 'slate';
 import { getHoverDirection } from '../../dnd/utils/getHoverDirection';
 import { UseDropNodeOptions } from '../hooks/useDropNode';
 import { DragItemNode } from '../../dnd/types';
+import { MyEditor } from '../../editor/plateTypes';
 
 /**
  * Callback called on drag an drop a node with id.
  */
 export const onDropNode = <V extends Value>(
-	editor: TReactEditor<V>,
+	editor: MyEditor,
 	{
 		dragItem,
 		monitor,

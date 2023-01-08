@@ -5,12 +5,13 @@ import {
 	TEditor,
 	Value,
 } from '@udecode/plate-core';
+import { MyEditor } from '../../editor/plateTypes';
 
 /**
  * Get blocks with an id
  */
 export const getBlocksWithId = <V extends Value>(
-	editor: TEditor<V>,
+	editor: MyEditor,
 	options: GetNodeEntriesOptions<V>
 ) => {
 	const _nodes = getNodeEntries(editor, {

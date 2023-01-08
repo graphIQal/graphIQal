@@ -1,10 +1,10 @@
-import React from 'react';
-import { EElement, TEditor, TElement, Value } from '@udecode/plate-core';
+import { EElement, TElement, Value } from '@udecode/plate-core';
 import { StyledElementProps } from '@udecode/plate-styled-components';
+import React from 'react';
 import { Path } from 'slate';
 import { CSSProp } from 'styled-components';
 import { DropLineDirection } from '../../dnd/types';
-import { MyValue } from '../../editor/plateTypes';
+import { MyEditor, MyValue } from '../../editor/plateTypes';
 
 export interface BlockStyleProps<V extends MyValue> extends DraggableProps<V> {
 	direction: DropLineDirection;
@@ -84,7 +84,7 @@ export interface DraggableProps<V extends Value>
 	/**
 	 * Filter out elements that can't be dragged.
 	 */
-	filter?: (editor: TEditor<V>, path: Path) => boolean;
+	filter?: (editor: MyEditor, path: Path) => boolean;
 
 	/**
 	 * Enables dnd in read-only.

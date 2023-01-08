@@ -8,7 +8,7 @@ import {
 } from '@udecode/plate-core';
 import { getHoverDirection } from '../../dnd/utils/getHoverDirection';
 import { getNewDirection } from '../../dnd/utils/getNewDirection';
-import { MyValue } from '../../editor/plateTypes';
+import { MyEditor, MyValue } from '../../editor/plateTypes';
 import { DragItemNode } from '../../dnd/types';
 import { UseDropNodeOptions } from '../hooks/useDropNode';
 
@@ -16,7 +16,7 @@ import { UseDropNodeOptions } from '../hooks/useDropNode';
  * Callback called when dragging a node and hovering nodes.
  */
 export const onHoverNode = <V extends MyValue>(
-	editor: TReactEditor<V>,
+	editor: MyEditor,
 	{
 		dragItem,
 		monitor,

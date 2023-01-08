@@ -5,41 +5,23 @@ import {
 	createPluginFactory,
 	createPlugins,
 	createTEditor,
-	Decorate,
-	DecorateEntry,
-	DOMHandler,
 	EDescendant,
 	EElement,
 	EElementEntry,
 	EElementOrText,
-	ELEMENT_BLOCKQUOTE,
-	ELEMENT_CODE_BLOCK,
-	ELEMENT_CODE_LINE,
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
-	ELEMENT_HR,
-	ELEMENT_IMAGE,
-	ELEMENT_LI,
 	ELEMENT_LINK,
-	ELEMENT_MEDIA_EMBED,
 	ELEMENT_MENTION,
 	ELEMENT_MENTION_INPUT,
-	ELEMENT_OL,
 	ELEMENT_PARAGRAPH,
-	ELEMENT_TABLE,
-	ELEMENT_TD,
-	ELEMENT_TODO_LI,
-	ELEMENT_TR,
-	ELEMENT_UL,
 	EMarks,
 	ENode,
 	ENodeEntry,
 	EText,
 	ETextEntry,
 	getTEditor,
-	InjectComponent,
-	InjectProps,
 	KeyboardHandler,
 	NoInfer,
 	OnChange,
@@ -55,16 +37,11 @@ import {
 	SerializeHtml,
 	TCommentText,
 	TElement,
-	TImageElement,
 	TLinkElement,
-	TMediaEmbedElement,
 	TMentionElement,
 	TMentionInputElement,
 	TNodeEntry,
-	TReactEditor,
-	TTableElement,
 	TText,
-	TTodoListItemElement,
 	useEditorRef,
 	useEditorState,
 	usePlateActions,
@@ -135,7 +112,7 @@ export type MyInlineElement =
 	| MyMentionInputElement;
 
 export type MyInlineDescendant = MyInlineElement | RichText;
-export type MyInlineChildren = MyInlineDescendant[];
+export type InlineElements = MyInlineDescendant[];
 
 /**
  * Block props
@@ -159,7 +136,7 @@ export interface MyAlignProps {
 	align?: CSSProperties['textAlign'];
 }
 
-export interface MyBlockElement
+export interface BlockElements
 	extends TElement,
 		MyIndentListProps,
 		MyLineHeightProps {
@@ -170,131 +147,45 @@ export interface MyBlockElement
  * Blocks
  */
 
-export interface MyParagraphElement extends MyBlockElement {
+export interface MyParagraphElement extends BlockElements {
 	type: typeof ELEMENT_PARAGRAPH;
-	children: MyInlineChildren | MyBlockElement[];
+	children: InlineElements | BlockElements[];
 }
 
-export interface MyNodeElement extends MyBlockElement {
+export interface MyNodeElement extends BlockElements {
 	type: typeof ELEMENT_NODE;
-	children: MyInlineChildren | MyBlockElement[];
+	children: InlineElements | BlockElements[];
 }
-export interface MyConnectionElement extends MyBlockElement {
+export interface MyConnectionElement extends BlockElements {
 	type: typeof ELEMENT_NODE;
-	children: MyInlineChildren | MyBlockElement[];
+	children: InlineElements | BlockElements[];
 }
 
-export interface MyBlockquoteElement extends MyBlockElement {
-	type: typeof ELEMENT_BLOCKQUOTE;
-	children: MyInlineChildren | MyBlockElement[];
-}
-
-export interface MyH1Element extends MyBlockElement {
+export interface MyH1Element extends BlockElements {
 	type: typeof ELEMENT_H1;
-	children: MyInlineChildren;
+	children: InlineElements;
 }
 
-export interface MyH2Element extends MyBlockElement {
+export interface MyH2Element extends BlockElements {
 	type: typeof ELEMENT_H2;
-	children: MyInlineChildren;
+	children: InlineElements;
 }
 
-export interface MyH3Element extends MyBlockElement {
+export interface MyH3Element extends BlockElements {
 	type: typeof ELEMENT_H3;
-	children: MyInlineChildren;
+	children: InlineElements;
 }
-
-export interface MyCodeBlockElement extends MyBlockElement {
-	type: typeof ELEMENT_CODE_BLOCK;
-	children: MyCodeLineElement[];
-}
-
-export interface MyCodeLineElement extends TElement {
-	type: typeof ELEMENT_CODE_LINE;
-	children: PlainText[];
-}
-
-export interface MyTableElement extends TTableElement, MyBlockElement {
-	type: typeof ELEMENT_TABLE;
-	children: MyTableRowElement[];
-}
-
-export interface MyTableRowElement extends TElement {
-	type: typeof ELEMENT_TR;
-	children: MyTableCellElement[];
-}
-
-export interface MyTableCellElement extends TElement {
-	type: typeof ELEMENT_TD;
-	children: MyNestableBlock[];
-}
-
-export interface MyBulletedListElement extends TElement, MyBlockElement {
-	type: typeof ELEMENT_UL;
-	children: MyListItemElement[];
-}
-
-export interface MyNumberedListElement extends TElement, MyBlockElement {
-	type: typeof ELEMENT_OL;
-	children: MyListItemElement[];
-}
-
-export interface MyListItemElement extends TElement, MyBlockElement {
-	type: typeof ELEMENT_LI;
-	children: MyInlineChildren;
-}
-
-export interface MyTodoListElement
-	extends TTodoListItemElement,
-		MyBlockElement {
-	type: typeof ELEMENT_TODO_LI;
-	children: MyInlineChildren;
-}
-
-export interface MyImageElement extends TImageElement, MyBlockElement {
-	type: typeof ELEMENT_IMAGE;
-	children: [EmptyText];
-}
-
-export interface MyMediaEmbedElement
-	extends TMediaEmbedElement,
-		MyBlockElement {
-	type: typeof ELEMENT_MEDIA_EMBED;
-	children: [EmptyText];
-}
-
-export interface MyHrElement extends MyBlockElement {
-	type: typeof ELEMENT_HR;
-	children: [EmptyText];
-}
-
-// export interface MyExcalidrawElement
-//   extends TExcalidrawElement,
-//     MyBlockElement {
-//   type: typeof ELEMENT_EXCALIDRAW;
-//   children: [EmptyText];
-// }
-
-export type MyNestableBlock = MyParagraphElement;
 
 export type MyBlock = Exclude<MyElement, MyInlineElement>;
 export type MyBlockEntry = TNodeEntry<MyBlock>;
 
 export type MyRootBlock =
 	| MyParagraphElement
+	| MyNodeElement
+	| MyConnectionElement
 	| MyH1Element
 	| MyH2Element
-	| MyH3Element
-	| MyBlockquoteElement
-	| MyCodeBlockElement
-	| MyTableElement
-	| MyBulletedListElement
-	| MyNumberedListElement
-	| MyTodoListElement
-	| MyImageElement
-	| MyMediaEmbedElement
-	| MyHrElement;
-// | MyExcalidrawElement;
+	| MyH3Element;
 
 export type MyValue = MyRootBlock[];
 
@@ -303,7 +194,6 @@ export type MyValue = MyRootBlock[];
  */
 
 export type MyEditor = PlateEditor<MyValue> & { isDragging?: boolean };
-export type MyReactEditor = TReactEditor<MyValue>;
 export type MyNode = ENode<MyValue>;
 export type MyNodeEntry = ENodeEntry<MyValue>;
 export type MyElement = EElement<MyValue>;
@@ -319,11 +209,6 @@ export type MyMark = keyof MyMarks;
  * Plate types
  */
 
-export type MyDecorate<P = PluginOptions> = Decorate<P, MyValue, MyEditor>;
-export type MyDecorateEntry = DecorateEntry<MyValue>;
-export type MyDOMHandler<P = PluginOptions> = DOMHandler<P, MyValue, MyEditor>;
-export type MyInjectComponent = InjectComponent<MyValue>;
-export type MyInjectProps = InjectProps<MyValue>;
 export type MyKeyboardHandler<P = PluginOptions> = KeyboardHandler<
 	P,
 	MyValue,

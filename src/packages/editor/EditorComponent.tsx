@@ -1,4 +1,11 @@
-import { createComboboxPlugin, createPlateUI, Plate } from '@udecode/plate';
+import {
+	createComboboxPlugin,
+	createNodeIdPlugin,
+	createParagraphPlugin,
+	createPlateUI,
+	Plate,
+	setDefaultPlugin,
+} from '@udecode/plate';
 import React, { useCallback, useMemo, useState } from 'react';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
@@ -12,10 +19,12 @@ const EditorComponent: React.FC = () => {
 	const [value, setValue] = useState([
 		{
 			type: 'p',
+			id: 'aaaaa',
 			children: [
 				{
 					text: 'This is editable plain text with react and history plugins, just like a <textarea>!',
 				},
+				{ type: 'p', id: 'bbbbb', children: [{ text: 'hmm' }] },
 			],
 		} as MyParagraphElement,
 	]);
@@ -29,6 +38,7 @@ const EditorComponent: React.FC = () => {
 				...BlockPlugins,
 				// Commands,
 				createComboboxPlugin(),
+				createNodeIdPlugin(),
 			]),
 		[]
 	);

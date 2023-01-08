@@ -1,8 +1,9 @@
-import { createPlateUI, ELEMENT_H1 } from '@udecode/plate';
-import { CSSProperties } from 'react';
+import { createPlateUI, ELEMENT_H1, useEditorRef } from '@udecode/plate';
+import { CSSProperties, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import Handle from '../../../components/atoms/Handle';
-import { ItemTypes } from '../../dnd/types';
+import colours from '../../../theme/colours';
+import { DropLineDirection, ItemTypes } from '../../dnd/types';
 
 // ELEMENTS
 // Define a React component renderer for our code blocks.
@@ -17,6 +18,13 @@ export const CodeElement = (props: any) => {
 };
 
 export const Block = (props: any) => {
+	const editor = useEditorRef();
+
+	const [dropLine, setDropLine] = useState<DropLineDirection>('');
+
+	const blockRef = useRef<HTMLDivElement>(null);
+	const rootRef = useRef<HTMLDivElement>(null);
+
 	const [{ opacity }, drag, preview] = useDrag(() => ({
 		type: ItemTypes.block,
 		collect: (monitor) => ({
@@ -52,10 +60,20 @@ export const Block = (props: any) => {
 	);
 };
 
+export const NodeBlock = (props: any) => {
+	return (
+		<Block>
+			<div style={{ background: colours.selected_white }}>
+				{props.children}
+			</div>
+		</Block>
+	);
+};
+
 export const H1 = (props: any) => {
-	console.log(props);
-	const plateUI = createPlateUI({})[ELEMENT_H1];
-	console.log(plateUI);
+	// console.log(props);
+	// const plateUI = createPlateUI({})[ELEMENT_H1];
+	// console.log(plateUI);
 	// return plateUI[ELEMENT_H1];
 
 	return <Block>{props.children}</Block>;

@@ -80,6 +80,9 @@ import {
 // } from '@udecode/plate-ui-excalidraw';
 import { CSSProperties } from 'styled-components';
 
+export const ELEMENT_NODE = 'node';
+export const ELEMENT_CONNECTION = 'connection';
+
 /**
  * Text
  */
@@ -130,6 +133,7 @@ export type MyInlineElement =
 	| MyLinkElement
 	| MyMentionElement
 	| MyMentionInputElement;
+
 export type MyInlineDescendant = MyInlineElement | RichText;
 export type MyInlineChildren = MyInlineDescendant[];
 
@@ -159,7 +163,7 @@ export interface MyBlockElement
 	extends TElement,
 		MyIndentListProps,
 		MyLineHeightProps {
-	id?: PlateId;
+	id: PlateId;
 }
 
 /**
@@ -168,7 +172,21 @@ export interface MyBlockElement
 
 export interface MyParagraphElement extends MyBlockElement {
 	type: typeof ELEMENT_PARAGRAPH;
-	children: MyInlineChildren;
+	children: MyInlineChildren | MyBlockElement[];
+}
+
+export interface MyNodeElement extends MyBlockElement {
+	type: typeof ELEMENT_NODE;
+	children: MyInlineChildren | MyBlockElement[];
+}
+export interface MyConnectionElement extends MyBlockElement {
+	type: typeof ELEMENT_NODE;
+	children: MyInlineChildren | MyBlockElement[];
+}
+
+export interface MyBlockquoteElement extends MyBlockElement {
+	type: typeof ELEMENT_BLOCKQUOTE;
+	children: MyInlineChildren | MyBlockElement[];
 }
 
 export interface MyH1Element extends MyBlockElement {
@@ -183,11 +201,6 @@ export interface MyH2Element extends MyBlockElement {
 
 export interface MyH3Element extends MyBlockElement {
 	type: typeof ELEMENT_H3;
-	children: MyInlineChildren;
-}
-
-export interface MyBlockquoteElement extends MyBlockElement {
-	type: typeof ELEMENT_BLOCKQUOTE;
 	children: MyInlineChildren;
 }
 

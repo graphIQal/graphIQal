@@ -1,0 +1,12 @@
+@config '../../../tailwind.config.js'
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .menu_item {
+    @apply px-1;
+    @apply py-1;
+    @apply bg-base_black;
+  }
+}

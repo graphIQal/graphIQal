@@ -1,49 +1,38 @@
-/* .App {
-  text-align: center;
-} */
+@config '../tailwind.config.js';
 
-:root {
-  box-sizing: border-box;
-  --base_black: '#242424';
-	--base_white: '#FCFAF4';
-	--node: '#8DD39C';
-	--connection: '#4362B1';
-	--selected_white: '#FFF9E9';
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Typography */
-@media (min-width: 768px) {
-  :root {
-    font-size: calc(1rem + ((1vw - 7.68px) * 0.6944));
-    min-height: 0vw;
+@layer base {
+  html,
+  h1,
+  h2,
+  h3,
+  p {
+    @apply font-primary;
+    color: theme(colors.base_black);
+  }
+
+  h1 {
+    @apply text-xxl;
+    @apply font-bold;
+  }
+
+  h2 {
+    @apply text-xl;
+    @apply font-bold;
+  }
+
+  h3 {
+    @apply text-lg;
+    @apply font-bold;
+  }
+
+  p {
+    @apply text-md;
   }
 }
-@media (min-width: 1920px) {
-  :root {
-    font-size: 24px;
-  }
-}
-
-.h1 {
-  font-weight: bold !important;
-  font-size: 2rem;
-}
-
-.h2 {
-  font-weight: bold !important;
-  font-size: 1.8rem;
-}
-
-.h3 {
-  font-weight: bold !important;
-  font-size: 1.5rem;
-}
-
-.text {
-  font-size: 1rem;
-}
-
-/* UI */
 .container {
-  padding: 5%;
+  @apply bg-base_white;
 }

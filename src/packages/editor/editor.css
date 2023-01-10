@@ -1,0 +1,27 @@
+@config '../../../tailwind.config.js'
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.h1 {
+  @apply font-bold !important;
+  @apply text-lg;
+}
+
+.h2 {
+  @apply font-bold !important;
+  @apply text-md;
+}
+
+.h3 {
+  @apply font-bold !important;
+  @apply text-sm;
+}
+
+.text_box {
+  @apply border-dashed;
+  @apply border-base_black;
+  border-width: theme(spacing[xxs]);
+  padding: theme(spacing[sm]);
+  margin-bottom: theme(spacing[sm]);
+}

@@ -1,0 +1,15 @@
+@config '../../../tailwind.config.js'
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .menu {
+    @apply rounded-text_box;
+    @apply border-base_black;
+    @apply rounded-text_box;
+    width: fit-content;
+    @apply flex;
+    @apply flex-row;
+  }
+}

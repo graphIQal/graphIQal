@@ -1,20 +1,8 @@
-import React, { CSSProperties } from 'react';
-
-const handleStyle: CSSProperties = {
-	backgroundColor: 'green',
-	width: '1rem',
-	height: '1rem',
-	display: 'inline-block',
-	marginRight: '0.75rem',
-	cursor: 'move',
-};
-
-type HandleProps = {
-	ref: any;
-};
+import React from 'react';
+import './atoms.css';
 
 const Handle: React.FC = () => {
-	return <div style={handleStyle}></div>;
+  return <div className='handle'></div>;
 };
 
 export default Handle;

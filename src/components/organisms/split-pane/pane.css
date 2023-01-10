@@ -1,0 +1,53 @@
+@config '../../../../tailwind.config.js'
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.split-pane-col {
+  height: 100vh;
+  @apply flex;
+  @apply flex-col;
+}
+
+.split-pane-row {
+  width: 100vw;
+  height: 100vh;
+  @apply flex;
+  @apply flex-row;
+}
+
+.split-pane-top,
+.split-pane-bottom,
+.split-pane-right,
+.split-pane-left {
+  @apply flex-1;
+  @apply overflow-scroll;
+}
+
+.split-pane-right {
+  background-color: rgb(141, 211, 156, 0.3);
+  padding: theme(spacing[sm]);
+}
+
+.split-pane-top,
+.split-pane-bottom {
+  text-align: left;
+  padding: theme(spacing[sm]);
+}
+
+.split-pane-bottom {
+  @apply bg-connection;
+}
+
+.separator-col {
+  @apply border-base_black;
+  @apply border-x-2;
+  cursor: col-resize;
+}
+
+.separator-row {
+  @apply border-base_black;
+  @apply border-y-2;
+  cursor: row-resize;
+}

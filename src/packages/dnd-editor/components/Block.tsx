@@ -10,6 +10,12 @@ const DefaultDragHandle = ({ styles, ...props }: DragHandleProps) => (
 	<button type='button' {...props} />
 );
 
+// So I can either :
+// 1. Create a plate plugin like they do, and wrap all of the components in it
+// 2. Create a default block and wrap all components in default
+// 1 just makes more sense right? Are there any
+// Create elements list
+
 export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 	const { children, element, componentRef, onRenderDragHandle } = props;
 

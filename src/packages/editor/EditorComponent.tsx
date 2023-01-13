@@ -1,28 +1,47 @@
 import {
 	createComboboxPlugin,
 	createNodeIdPlugin,
+	ELEMENT_H1,
 	Plate,
 } from '@udecode/plate';
 import React, { useMemo, useState } from 'react';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
-import { createMyPlugins, MyParagraphElement, MyValue } from './plateTypes';
+import {
+	createMyPlugins,
+	MyBlockElement,
+	MyH1Element,
+	MyParagraphElement,
+	MyValue,
+} from './plateTypes';
 import { BlockPlugins } from './Plugins/BlockPlugins';
+import { CommandPlugins } from './Plugins/CommandPlugins';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 
 const EditorComponent: React.FC = () => {
 	const [value, setValue] = useState([
 		{
-			type: 'p',
+			type: ELEMENT_H1,
+			id: 'asdkja',
+			children: [{ text: 'title' }],
+		} as MyH1Element,
+		{
+			type: 'block',
 			id: 'aaaaa',
 			children: [
 				{
-					text: 'This is editable plain text with react and history plugins, just like a <textarea>!',
-				},
-				{ type: 'p', id: 'bbbbb', children: [{ text: 'hmm' }] },
+					type: 'p',
+					id: 'aaaaa',
+					children: [
+						{
+							text: 'This is a test',
+						},
+						// { type: 'p', id: 'bbbbb', children: [{ text: 'hmm' }] },
+					],
+				} as MyParagraphElement,
 			],
-		} as MyParagraphElement,
+		} as MyBlockElement,
 	]);
 
 	const plugins = useMemo(
@@ -33,6 +52,7 @@ const EditorComponent: React.FC = () => {
 				// elements
 				...BlockPlugins,
 				// Commands,
+				...CommandPlugins,
 				createComboboxPlugin(),
 				createNodeIdPlugin(),
 			]),

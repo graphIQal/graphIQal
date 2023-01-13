@@ -9,7 +9,8 @@ import { CSSProperties, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import Handle from '../../../components/atoms/Handle';
 import { DropLineDirection, ItemTypes } from '../../dnd/types';
-
+import { useMyEditorRef } from '../plateTypes';
+import '../editor.css';
 // ELEMENTS
 // Define a React component renderer for our code blocks.
 
@@ -23,7 +24,7 @@ export const CodeElement = (props: any) => {
 };
 
 export const Block = (props: any) => {
-	const editor = useEditorRef();
+	const editor = useMyEditorRef();
 
 	const [dropLine, setDropLine] = useState<DropLineDirection>('');
 
@@ -37,6 +38,8 @@ export const Block = (props: any) => {
 		}),
 	}));
 
+	const { element } = props;
+
 	return (
 		<div
 			ref={preview}
@@ -46,6 +49,7 @@ export const Block = (props: any) => {
 			<span ref={drag}>
 				<Handle></Handle>
 			</span>
+			{/* {element.text} */}
 			{props.children}
 		</div>
 	);

@@ -57,9 +57,11 @@ import {
 // } from '@udecode/plate-ui-excalidraw';
 import { CSSProperties } from 'styled-components';
 
+export const ELEMENT_BLOCK = 'block';
 export const ELEMENT_NODE = 'node';
 export const ELEMENT_CONNECTION = 'connection';
 
+export const COMMAND_NEST = 'nested';
 /**
  * Text
  */
@@ -106,13 +108,11 @@ export interface MyMentionElement extends TMentionElement {
 	children: [EmptyText];
 }
 
-export type MyInlineElement =
+export type InlineElements =
 	| MyLinkElement
 	| MyMentionElement
-	| MyMentionInputElement;
-
-export type MyInlineDescendant = MyInlineElement | RichText;
-export type InlineElements = MyInlineDescendant[];
+	| MyMentionInputElement
+	| RichText;
 
 /**
  * Block props
@@ -147,42 +147,49 @@ export interface BlockElements
  * Blocks
  */
 
+export interface MyBlockElement extends BlockElements {
+	type: typeof ELEMENT_BLOCK;
+	children: BlockElements[];
+}
+
 export interface MyParagraphElement extends BlockElements {
 	type: typeof ELEMENT_PARAGRAPH;
-	children: InlineElements | BlockElements[];
+	// text: InlineElements[];
+	children: InlineElements[];
 }
 
 export interface MyNodeElement extends BlockElements {
 	type: typeof ELEMENT_NODE;
-	children: InlineElements | BlockElements[];
+	children: InlineElements[] | BlockElements[];
 }
 export interface MyConnectionElement extends BlockElements {
 	type: typeof ELEMENT_NODE;
-	children: InlineElements | BlockElements[];
+	children: InlineElements[] | BlockElements[];
 }
 
 export interface MyH1Element extends BlockElements {
 	type: typeof ELEMENT_H1;
-	children: InlineElements;
+	children: InlineElements[];
 }
 
 export interface MyH2Element extends BlockElements {
 	type: typeof ELEMENT_H2;
-	children: InlineElements;
+	children: InlineElements[];
 }
 
 export interface MyH3Element extends BlockElements {
 	type: typeof ELEMENT_H3;
-	children: InlineElements;
+	children: InlineElements[];
 }
 
-export type MyBlock = Exclude<MyElement, MyInlineElement>;
+export type MyBlock = Exclude<MyElement, InlineElements>;
 export type MyBlockEntry = TNodeEntry<MyBlock>;
 
 export type MyRootBlock =
-	| MyParagraphElement
+	| MyBlockElement
 	| MyNodeElement
 	| MyConnectionElement
+	| MyParagraphElement
 	| MyH1Element
 	| MyH2Element
 	| MyH3Element;

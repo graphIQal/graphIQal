@@ -24,4 +24,5 @@
   border-width: theme(spacing[xxs]);
   padding: theme(spacing[sm]);
   margin-bottom: theme(spacing[sm]);
+  margin-left: theme(spacing[sm]);
 }

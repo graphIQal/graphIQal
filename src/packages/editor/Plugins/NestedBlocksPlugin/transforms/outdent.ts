@@ -16,25 +16,23 @@ import { Node, Path } from 'slate';
  */
 export const outdent = <V extends MyValue>(
 	editor: PlateEditor<V>,
-	options?: SetIndentOptions<V>
+	nestedBlockNum: number = 2
 ) => {
 	if (editor.selection) {
 		const path = editor.selection.anchor.path;
-		const paragraphPath = Path.parent(editor.selection.anchor.path);
-		const blockPath = Path.parent(paragraphPath);
+		// const paragraphPath = Path.parent(editor.selection.anchor.path);
+		// const blockPath = Path.parent(paragraphPath);
 
-		console.log(blockPath);
+		let blockPath = path;
+		for (let i = 0; i < nestedBlockNum; i++) {
+			blockPath = Path.parent(blockPath);
+		}
 
 		if (blockPath.length > 1) {
 			// move all children into this current node
 			// path (text -> paragraph -> block)
 			// find children index based on current path
-			const parentBlockNode = getNode(editor, Path.parent(blockPath));
 			const blockNode = getNode(editor, blockPath);
-			console.log(parentBlockNode);
-			console.log('parent stuff');
-			console.log(Path.parent(blockPath));
-			console.log(blockNode);
 
 			if (
 				blockNode &&
@@ -50,7 +48,7 @@ export const outdent = <V extends MyValue>(
 
 			// lift nodes upwards
 			liftNodes(editor, {
-				at: path.slice(0, path.length - 2),
+				at: blockPath,
 			});
 		}
 	}

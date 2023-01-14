@@ -15,6 +15,7 @@ import {
 	MyParagraphElement,
 	MyValue,
 } from '../../../plateTypes';
+import { outdent } from '../transforms/outdent';
 
 // I will normalise the block by setting the first block to text and all future blocks as children
 export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
@@ -39,17 +40,19 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			// Check if it's the first item in a block. If so ignore.
 			if (path[path.length - 1] === 0) return;
 
-			// liftNode
-			liftNodes(editor, {
-				at: path,
-			});
+			// liftNodes(editor, {
+			// 	at: path,
+			// });
 
-			// Wrap in block
+			// // Wrap in block
 			wrapNodes(editor, {
 				type: ELEMENT_BLOCK,
 				id: '',
 				children: [],
 			});
+
+			// outdent node
+			outdent(editor);
 		} else if (isBlock) {
 			// Children should all be code lines
 			const children = getChildren([node, path]);

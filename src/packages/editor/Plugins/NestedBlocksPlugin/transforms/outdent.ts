@@ -6,7 +6,6 @@ import {
 	unwrapNodes,
 } from '@udecode/plate';
 import { MyValue } from '../../../plateTypes';
-import { SetIndentOptions } from './setIndent';
 
 import { getNode, moveNodes } from '@udecode/plate';
 import { Node, Path } from 'slate';

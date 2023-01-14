@@ -31,7 +31,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 		}
 
 		const isBlock = node.type === blockType;
-		// console.log(node.type, isBlock);
 
 		if (node.type === ELEMENT_PARAGRAPH) {
 			// Normalise p's so that they automatically lift if they're second.
@@ -40,10 +39,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			// Check if it's the first item in a block. If so ignore.
 			if (path[path.length - 1] === 0) return;
 
-			// liftNodes(editor, {
-			// 	at: path,
-			// });
-
 			// // Wrap in block
 			wrapNodes(editor, {
 				type: ELEMENT_BLOCK,
@@ -51,7 +46,7 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 				children: [],
 			});
 
-			// outdent node
+			// outdent node to carry all children nodes.
 			outdent(editor);
 		} else if (isBlock) {
 			// Children should all be code lines
@@ -61,12 +56,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			// gets data of first child, makes sure it's paragraph
 
 			if (children[0][0].type !== ELEMENT_PARAGRAPH) {
-				// setNodes<TElement>(
-				// 	editor,
-				// 	// It's ignoring the children field becasuse apparently setnodes should do that?
-				// 	{ type: 'text', children: [{ text: '' }] },
-				// 	{ at: children[0][1] }
-				// );
 				wrapNodes(
 					editor,
 					{
@@ -80,7 +69,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 			// Iterates through remaining children, and they should not be ELEMENT_PARAGRAPH. They should be NODE, CONNECTION, or something else
 			for (let i = 1; i < children.length; i++) {
-				// console.log('is it here?');
 				if (children[i][0].type === ELEMENT_PARAGRAPH) {
 					setNodes<TElement>(
 						editor,

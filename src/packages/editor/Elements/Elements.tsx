@@ -64,27 +64,21 @@ export const NodeBlock = (props: any) => {
 };
 
 export const H1 = (props: any) => {
-	// console.log(props);
 	// const plateUI = createPlateUI({})[ELEMENT_H1];
-	// console.log(plateUI);
 	// return plateUI[ELEMENT_H1];
 
 	return <Block>{props.children}</Block>;
 };
 
 export const H2 = (props: any) => {
-	console.log(props);
 	const plateUI = createPlateUI({})[ELEMENT_H2];
-	console.log(plateUI);
 	// return plateUI[ELEMENT_H1];
 
 	return <h2>{props.children}</h2>;
 };
 
 export const H3 = (props: any) => {
-	console.log(props);
 	const plateUI = createPlateUI({})[ELEMENT_H3];
-	console.log(plateUI);
 	// return plateUI[ELEMENT_H1];
 
 	return <h3>{props.children}</h3>;
@@ -92,7 +86,6 @@ export const H3 = (props: any) => {
 
 export const Leaf = (props: any) => {
 	if (props.leaf.italics) {
-		console.log('leaf', props);
 		return (
 			<span
 				{...props.attributes}

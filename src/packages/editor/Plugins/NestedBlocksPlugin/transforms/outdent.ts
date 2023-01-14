@@ -48,8 +48,6 @@ export const outdent = <V extends MyValue>(
 				});
 			}
 
-			// Move children below into current block
-
 			// lift nodes upwards
 			liftNodes(editor, {
 				at: path.slice(0, path.length - 2),

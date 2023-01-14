@@ -1,4 +1,4 @@
-import { ELEMENT_PARAGRAPH, wrapNodes } from '@udecode/plate';
+import { ELEMENT_PARAGRAPH, liftNodes, wrapNodes } from '@udecode/plate';
 import {
 	getChildren,
 	getPluginType,
@@ -29,15 +29,30 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			return;
 		}
 
-		console.log(editor.children);
-
 		const isBlock = node.type === blockType;
 		// console.log(node.type, isBlock);
 
-		if (isBlock) {
+		if (node.type === ELEMENT_PARAGRAPH) {
+			// Normalise p's so that they automatically lift if they're second.
+			// The trick is that something that is indented will actually already be wrapped in a block, but a automatically generated p will be naked.
+
+			// Check if it's the first item in a block. If so ignore.
+			if (path[path.length - 1] === 0) return;
+
+			// liftNode
+			liftNodes(editor, {
+				at: path,
+			});
+
+			// Wrap in block
+			wrapNodes(editor, {
+				type: ELEMENT_BLOCK,
+				id: '',
+				children: [],
+			});
+		} else if (isBlock) {
 			// Children should all be code lines
 			const children = getChildren([node, path]);
-			console.log(children);
 
 			// children returns array of tuples [child, path]
 			// gets data of first child, makes sure it's paragraph
@@ -72,7 +87,5 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 				}
 			}
 		}
-		// if (node.type === ELEMENT_PARAGRAPH) {
-		// }
 	};
 };

@@ -46,10 +46,6 @@ export const Block = (props: any) => {
 			style={{ opacity }}
 			className='text_box' /**{...props.attributes}**/
 		>
-			<span ref={drag}>
-				<Handle></Handle>
-			</span>
-			{/* {element.text} */}
 			{props.children}
 		</div>
 	);

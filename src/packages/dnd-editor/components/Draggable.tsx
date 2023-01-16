@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import useMergedRef from '@react-hook/merged-ref';
 import { Value } from '@udecode/plate-core';
 import { useDndNode } from '../hooks/useDnDNode';
-import { getBlockStyles } from './Block.styles';
-import { DraggableProps, DragHandleProps } from './Block.types';
+import { getBlockStyles } from './Draggable.styles';
+import { DraggableProps, DragHandleProps } from './Draggable.types';
 import { MyValue } from '../../editor/plateTypes';
 
 const DefaultDragHandle = ({ styles, ...props }: DragHandleProps) => (

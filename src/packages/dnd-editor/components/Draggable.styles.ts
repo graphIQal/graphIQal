@@ -1,6 +1,6 @@
 import { createStyles } from '@udecode/plate';
 import { MyValue } from '../../editor/plateTypes';
-import { BlockStyleProps } from './Block.types';
+import { BlockStyleProps } from './Draggable.types';
 
 export const getBlockStyles = <V extends MyValue>(
 	props: BlockStyleProps<V>

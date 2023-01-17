@@ -197,7 +197,7 @@ export const SplitPaneLeft = (props: any) => {
 
   useEffect(() => {
     if (!clientWidth) {
-      setClientWidth(topRef.current.clientWidth / 2);
+      setClientWidth(1.5 * topRef.current.clientWidth);
       return;
     }
 

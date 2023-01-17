@@ -63,9 +63,10 @@ const EditorComponent: React.FC = () => {
   // const renderElement = useCallback((props: any) => {
   // 	return <Block {...props} />;
   // }, []);
-  const userName = userQuery('8f94b276-711d-4eeb-9348-c73f55a98459');
+  const user = userQuery('8f94b276-711d-4eeb-9348-c73f55a98459');
   return (
     <div>
+      <p>{'Hello ' + user}</p>
       <Plate<MyValue>
         editableProps={editableProps}
         value={value}

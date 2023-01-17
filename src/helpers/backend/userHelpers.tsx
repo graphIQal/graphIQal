@@ -2,12 +2,7 @@ import { useCallback } from 'react';
 import { useQuery } from 'urql';
 import { Query } from './dbAccessObj';
 
-// const mapObj = (obj: string): object => {
-//   let map = JSON.parse(obj);
-//   return new Map(Object.entries(map));
-// };
-
-export const userQuery = (name: string): void => {
+export const userQuery = (name: string): string => {
   const userQuery = `
   query ($name : ID) {
     users(where: {id: $name}) {
@@ -18,5 +13,6 @@ export const userQuery = (name: string): void => {
     }
   }
 `;
-  return Query(userQuery, { name });
+  const user = Query(userQuery, { name });
+  return user['users'][0]['metadata']['name'];
 };

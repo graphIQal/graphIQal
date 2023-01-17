@@ -16,7 +16,6 @@ export const Query = (query: string, variables: object) => {
   if (fetching) return 'Loading...';
   if (error) return error.message;
   console.log('Data received: ' + JSON.stringify(data));
-
   return data;
 };
 

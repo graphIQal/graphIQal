@@ -33,6 +33,7 @@
     @apply text-md;
   }
 }
+
 .container {
   @apply bg-base_white;
 }

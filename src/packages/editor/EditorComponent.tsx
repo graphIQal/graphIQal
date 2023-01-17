@@ -4,7 +4,8 @@ import {
   ELEMENT_H1,
   Plate,
 } from '@udecode/plate';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { getCurrentUser } from '../../helpers/backend/userHelpers';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
@@ -18,7 +19,6 @@ import {
 import { BlockPlugins } from './Plugins/BlockPlugins';
 import { CommandPlugins } from './Plugins/CommandPlugins';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
-import { getCurrentUser } from '../../helpers/backend/userHelpers';
 
 const EditorComponent: React.FC = () => {
   const [value, setValue] = useState([

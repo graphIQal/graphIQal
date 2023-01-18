@@ -54,7 +54,7 @@ export const useDropNode = <V extends MyValue>(
 			onDropNode(editor, { nodeRef, id, dragItem, monitor });
 		},
 		collect: (monitor) => ({
-			isOver: monitor.isOver(),
+			isOver: monitor.isOver({ shallow: true }),
 		}),
 		hover(item: DragItemNode, monitor: DropTargetMonitor) {
 			onHoverNode(editor, {

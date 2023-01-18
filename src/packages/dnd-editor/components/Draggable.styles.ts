@@ -24,7 +24,7 @@ export const getBlockStyles = <V extends MyValue>(
 		},
 		dropLine: {
 			className:
-				`absolute left-0 right-0 h-0.5 opacity-100 ` +
+				`left-0 right-0 h-0.5 opacity-100 ` +
 				(props.direction === 'top' ? `-top-px ` : '') +
 				(props.direction === 'bottom' ? `-bottom-px ` : ''),
 			css: {

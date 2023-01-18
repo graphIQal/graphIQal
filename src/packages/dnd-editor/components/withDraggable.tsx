@@ -13,7 +13,7 @@ import { MyEditor, MyValue } from '../../editor/plateTypes';
 export interface WithDraggableOptions<V extends MyValue = MyValue>
 	extends Pick<
 		DraggableProps<V>,
-		'onRenderDragHandle' | 'styles' | 'level' | 'filter' | 'allowReadOnly'
+		'styles' | 'level' | 'filter' | 'allowReadOnly'
 	> {}
 
 export const withDraggable = <V extends MyValue>(
@@ -23,7 +23,6 @@ export const withDraggable = <V extends MyValue>(
 		level = 0,
 		filter,
 		allowReadOnly = false,
-		onRenderDragHandle,
 	}: WithDraggableOptions<V> = {}
 ) => {
 	return forwardRef((props: PlateRenderElementProps<V>, ref) => {
@@ -58,7 +57,6 @@ export const withDraggable = <V extends MyValue>(
 				element={element}
 				componentRef={ref}
 				styles={styles}
-				onRenderDragHandle={onRenderDragHandle}
 			>
 				<Component {...props} />
 			</Draggable>

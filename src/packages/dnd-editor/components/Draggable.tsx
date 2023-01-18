@@ -34,9 +34,9 @@ const DefaultDragHandle = ({ styles, ...props }: DragHandleProps) => {
 // Create elements list
 
 export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
-	const { children, element, componentRef, onRenderDragHandle } = props;
+	const { children, element, componentRef } = props;
 
-	const DragHandle = onRenderDragHandle ?? DefaultDragHandle;
+	const DragHandle = DefaultDragHandle;
 
 	const blockRef = useRef<HTMLDivElement>(null);
 	const rootRef = useRef<HTMLDivElement>(null);
@@ -103,8 +103,8 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 				{!!dropLine && (
 					<div
 						style={styles.dropLine?.css}
-						// className={styles.dropLine?.className}
-						className='opacity-50 bg-cyan-500 w-full h-4'
+						className={styles.dropLine?.className}
+						// className='opacity-50 bg-cyan-500 w-full h-4 '
 						contentEditable={false}
 					></div>
 				)}

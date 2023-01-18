@@ -29,6 +29,7 @@ export const getBlockStyles = <V extends MyValue>(
 				(props.direction === 'bottom' ? `-bottom-px ` : ''),
 			css: {
 				backgroundColor: '#B4D5FF',
+				height: ' 4px',
 			},
 		},
 	};

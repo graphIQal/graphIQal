@@ -11,6 +11,8 @@ import Handle from '../../../components/atoms/Handle';
 import { DropLineDirection, ItemTypes } from '../../dnd/types';
 import { useMyEditorRef } from '../plateTypes';
 import '../editor.css';
+import { Draggable } from '../../dnd-editor/components/Draggable';
+
 // ELEMENTS
 // Define a React component renderer for our code blocks.
 
@@ -37,8 +39,6 @@ export const Block = (props: any) => {
 			opacity: monitor.isDragging() ? 0.4 : 1,
 		}),
 	}));
-
-	const { element } = props;
 
 	return (
 		<div

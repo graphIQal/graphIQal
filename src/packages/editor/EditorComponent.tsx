@@ -32,10 +32,10 @@ const EditorComponent: React.FC = () => {
 			children: [
 				{
 					type: 'p',
-					id: 'aaaaa',
+					id: '33333',
 					children: [
 						{
-							text: 'This is a test',
+							text: '1',
 						},
 						// { type: 'p', id: 'bbbbb', children: [{ text: 'hmm' }] },
 					],

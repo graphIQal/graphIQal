@@ -39,7 +39,9 @@ export const withDraggable = <V extends MyValue>(
 		const filteredOut = useMemo(
 			() =>
 				path &&
-				((Number.isInteger(level) && level !== path.length - 1) ||
+				((Number.isInteger(level) &&
+					level !== path.length - 1 &&
+					false) ||
 					(filter && filter(editor as MyEditor, path))),
 			// This might be a problem
 			[path, editor]

@@ -61,11 +61,11 @@ export interface DragHandleProps
 		React.ButtonHTMLAttributes<HTMLButtonElement>,
 		HTMLButtonElement
 	> {
-	element: TElement;
+	// element: MyValue;
 	styles?: CSSProp;
 }
 
-export interface DraggableProps<V extends Value>
+export interface DraggableProps<V extends MyValue>
 	extends StyledElementProps<V, EElement<V>, DraggableStyles> {
 	componentRef?: any;
 

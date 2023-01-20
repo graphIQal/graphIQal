@@ -8,6 +8,7 @@ import SplitPane, {
 	SplitPaneRight,
 	SplitPaneTop,
 } from '../../components/organisms/split-pane/SplitPane';
+import ShelfEditor from '../../packages/shelf-editor/ShelfEditor';
 import Document from './Document';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
@@ -16,7 +17,10 @@ const SplitPaneWrapper: React.FC<{}> = () => {
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
 					<SplitPane className='split-pane-col'>
-						<SplitPaneTop title={'Shelf'} children={<p>text</p>} />
+						<SplitPaneTop
+							title={'Shelf'}
+							children={<ShelfEditor></ShelfEditor>}
+						/>
 						<SplitPaneTop
 							title={'Connections'}
 							children={<p>text</p>}

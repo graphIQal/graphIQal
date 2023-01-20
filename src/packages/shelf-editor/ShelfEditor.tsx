@@ -5,34 +5,29 @@ import {
 	Plate,
 } from '@udecode/plate';
 import React, { useMemo, useState } from 'react';
-import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
-import { EditorSlashMenu } from './Components/EditorSlashMenu';
-import { editableProps } from './editableProps';
+import { EditorFloatingMenu } from '../editor/Components/EditorFloatingMenu';
+import { EditorSlashMenu } from '../editor/Components/EditorSlashMenu';
+import { editableProps } from '../editor/editableProps';
 import {
 	createMyPlugins,
 	MyBlockElement,
 	MyH1Element,
 	MyParagraphElement,
 	MyValue,
-} from './plateTypes';
-import { BlockPlugins } from './Plugins/BlockPlugins';
-import { CommandPlugins } from './Plugins/CommandPlugins';
-import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
+} from '../editor/plateTypes';
+import { BlockPlugins } from '../editor/Plugins/BlockPlugins';
+import { CommandPlugins } from '../editor/Plugins/CommandPlugins';
+import { TextMarkPlugins } from '../editor/Plugins/TextMarkPlugins';
 
-const EditorComponent: React.FC = () => {
+const ShelfEditor: React.FC = () => {
 	const [value, setValue] = useState([
 		{
-			type: ELEMENT_H1,
-			id: 'asdkj123123a',
-			children: [{ text: 'title' }],
-		} as MyH1Element,
-		{
 			type: 'block',
-			id: '123123990asdf',
+			id: '23132123123123',
 			children: [
 				{
 					type: 'p',
-					id: '33333',
+					id: '32343',
 					children: [
 						{
 							text: '1',
@@ -71,7 +66,7 @@ const EditorComponent: React.FC = () => {
 				console.log(value);
 			}}
 			plugins={plugins}
-			id='editor'
+			id='shelf'
 		>
 			<EditorFloatingMenu />
 			<EditorSlashMenu />
@@ -79,4 +74,4 @@ const EditorComponent: React.FC = () => {
 	);
 };
 
-export default EditorComponent;
+export default ShelfEditor;

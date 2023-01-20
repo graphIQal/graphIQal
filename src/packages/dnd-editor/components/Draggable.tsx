@@ -1,12 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import useMergedRef from '@react-hook/merged-ref';
 import { Value } from '@udecode/plate-core';
 import { useDndNode } from '../hooks/useDnDNode';
 import { getBlockStyles } from './Draggable.styles';
 import { DraggableProps, DragHandleProps } from './Draggable.types';
-import { MyValue } from '../../editor/plateTypes';
+import { getMyEditor, MyValue, useMyEditorRef } from '../../editor/plateTypes';
 
-const DefaultDragHandle = ({ styles, ...props }: DragHandleProps) => {
+const DragHandle = ({ styles, ...props }: DragHandleProps) => {
 	return (
 		<div>
 			<svg
@@ -34,9 +34,7 @@ const DefaultDragHandle = ({ styles, ...props }: DragHandleProps) => {
 // Create elements list
 
 export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
-	const { children, element, componentRef } = props;
-
-	const DragHandle = DefaultDragHandle;
+	const { children, element, componentRef, editor } = props;
 
 	const blockRef = useRef<HTMLDivElement>(null);
 	const rootRef = useRef<HTMLDivElement>(null);
@@ -56,8 +54,6 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 		direction: dropLine,
 		isDragging,
 	});
-
-	console.log(styles.dropLine);
 
 	return (
 		<div

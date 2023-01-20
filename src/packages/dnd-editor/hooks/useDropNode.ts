@@ -13,6 +13,11 @@ export interface UseDropNodeOptions
 	nodeRef: any;
 
 	/**
+	 * Id of the source editor
+	 */
+	sourceEditor: MyEditor;
+
+	/**
 	 * Id of the node.
 	 */
 	id: string;
@@ -47,11 +52,23 @@ export interface UseDropNodeOptions
  */
 export const useDropNode = <V extends MyValue>(
 	editor: MyEditor,
-	{ nodeRef, id, dropLine, onChangeDropLine, ...options }: UseDropNodeOptions
+	{
+		nodeRef,
+		sourceEditor,
+		id,
+		dropLine,
+		onChangeDropLine,
+		...options
+	}: UseDropNodeOptions
 ) => {
 	return useDrop<DragItemNode, unknown, { isOver: boolean }>({
 		drop: (dragItem, monitor) => {
-			onDropNode(editor, { nodeRef, id, dragItem, monitor });
+			onDropNode(editor, {
+				nodeRef,
+				id,
+				dragItem,
+				monitor,
+			});
 		},
 		collect: (monitor) => ({
 			isOver: monitor.isOver({ shallow: true }),

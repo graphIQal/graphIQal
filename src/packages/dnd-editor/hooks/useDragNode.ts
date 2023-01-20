@@ -3,10 +3,11 @@ import { TEditor, Value } from '@udecode/plate-core';
 // import { dndStore } from '../dndStore';
 import { DragItemNode } from '../../dnd/types';
 import { MyEditor, MyValue } from '../../editor/plateTypes';
-import { deselect } from '@udecode/plate';
+import { collapseSelection, deselect } from '@udecode/plate';
 export interface UseDragNodeOptions
 	extends DragSourceHookSpec<DragItemNode, unknown, { isDragging: boolean }> {
 	id: string;
+	sourceEditor: MyEditor;
 }
 
 /**
@@ -25,7 +26,7 @@ export interface UseDragNodeOptions
  */
 export const useDragNode = <V extends MyValue>(
 	editor: MyEditor,
-	{ id, item, ...options }: UseDragNodeOptions
+	{ id, item, sourceEditor, ...options }: UseDragNodeOptions
 ) => {
 	return useDrag<DragItemNode, unknown, { isDragging: boolean }>(
 		() => ({
@@ -33,12 +34,14 @@ export const useDragNode = <V extends MyValue>(
 				// dndStore.set.isDragging(true);
 				editor.isDragging = true;
 				deselect(editor);
+				collapseSelection(editor);
 				document.body.classList.add('dragging');
 
 				const _item = typeof item === 'function' ? item(monitor) : item;
 
 				return {
 					id,
+					sourceEditor,
 					..._item,
 				};
 			},

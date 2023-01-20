@@ -9,9 +9,7 @@ const Document: React.FC = () => {
 
 	return (
 		<div className='container'>
-			<DndProvider backend={HTML5Backend}>
-				<EditorComponent></EditorComponent>
-			</DndProvider>
+			<EditorComponent></EditorComponent>
 		</div>
 	);
 };

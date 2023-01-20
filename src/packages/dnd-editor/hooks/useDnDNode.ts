@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useEditorRef } from '@udecode/plate-core';
 
 import { useDragNode, UseDragNodeOptions } from './useDragNode';
 import { useDropNode, UseDropNodeOptions } from './useDropNode';
 import { DropLineDirection } from '../../dnd/types';
-import { useMyEditorRef } from '../../editor/plateTypes';
+import { useMyEditorRef, useMyPlateEditorRef } from '../../editor/plateTypes';
+import { useEventPlateId } from '@udecode/plate';
 
 export interface UseDndNodeOptions
 	extends Pick<UseDropNodeOptions, 'id' | 'nodeRef'>,
@@ -40,16 +41,28 @@ export const useDndNode = ({
 }: UseDndNodeOptions) => {
 	const editor = useMyEditorRef();
 
+	// Maybe this can work? It's fucky but it's possible?
+	const sourceEditorId = useEventPlateId();
+	const sourceEditor = useMyPlateEditorRef(sourceEditorId);
+
+	// console.log(sourceEditorId, sourceEditor);
+
+	// console.log(editor, id);
+
+	// if (!editor) return {dropLine : false, dragRef : null, isDragging: false }};
+
 	const [dropLine, setDropLine] = useState<DropLineDirection>('');
 
 	const [{ isDragging }, dragRef, preview] = useDragNode(editor, {
 		id,
+		sourceEditor: editor,
 		type,
 		...dragOptions,
 	});
 
 	const [{ isOver }, drop] = useDropNode(editor, {
 		accept: type,
+		sourceEditor,
 		id,
 		nodeRef,
 		dropLine,

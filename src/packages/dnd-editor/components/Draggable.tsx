@@ -96,14 +96,12 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 			>
 				{children}
 
-				{!!dropLine && (
-					<div
-						style={styles.dropLine?.css}
-						className={styles.dropLine?.className}
-						// className='opacity-50 bg-cyan-500 w-full h-4 '
-						contentEditable={false}
-					></div>
-				)}
+				<div
+					// style={styles.dropLine?.css}
+					// className={styles.dropLine?.className}
+					className='opacity-10 bg-cyan-500 w-full h-4 '
+					contentEditable={false}
+				></div>
 			</div>
 		</div>
 	);

@@ -8,7 +8,7 @@ import {
 import { CSSProperties, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import Handle from '../../../components/atoms/Handle';
-import { DropLineDirection, ItemTypes } from '../../dnd/types';
+import { DropLineDirection, ItemTypes } from '../../dnd-editor/types';
 import { useMyEditorRef } from '../plateTypes';
 import '../editor.css';
 import { Draggable } from '../../dnd-editor/components/Draggable';

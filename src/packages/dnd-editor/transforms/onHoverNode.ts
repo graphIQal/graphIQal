@@ -6,11 +6,11 @@ import {
 	TReactEditor,
 	Value,
 } from '@udecode/plate-core';
-import { getHoverDirection } from '../../dnd/utils/getHoverDirection';
-import { getNewDirection } from '../../dnd/utils/getNewDirection';
 import { MyEditor, MyValue } from '../../editor/plateTypes';
-import { DragItemNode } from '../../dnd/types';
+import { DragItemNode } from '../types';
 import { UseDropNodeOptions } from '../hooks/useDropNode';
+import { getHoverDirection } from '../utils/getHoverDirection';
+import { getNewDirection } from '../utils/getNewDirection';
 
 /**
  * Callback called when dragging a node and hovering nodes.

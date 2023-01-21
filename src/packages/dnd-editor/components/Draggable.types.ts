@@ -3,7 +3,7 @@ import { StyledElementProps } from '@udecode/plate-styled-components';
 import React from 'react';
 import { Path } from 'slate';
 import { CSSProp } from 'styled-components';
-import { DropLineDirection } from '../../dnd/types';
+import { DropLineDirection } from '../types';
 import { MyEditor, MyValue } from '../../editor/plateTypes';
 
 export interface BlockStyleProps<V extends MyValue> extends DraggableProps<V> {

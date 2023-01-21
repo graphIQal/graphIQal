@@ -1,9 +1,11 @@
 import { DragSourceHookSpec, useDrag } from 'react-dnd';
 import { TEditor, Value } from '@udecode/plate-core';
 // import { dndStore } from '../dndStore';
-import { DragItemNode } from '../../dnd/types';
+// import { DragItemNode } from '../types';
+
 import { MyEditor, MyValue } from '../../editor/plateTypes';
 import { collapseSelection, deselect } from '@udecode/plate';
+import { DragItemNode } from '../types';
 export interface UseDragNodeOptions
 	extends DragSourceHookSpec<DragItemNode, unknown, { isDragging: boolean }> {
 	id: string;

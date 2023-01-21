@@ -7,9 +7,8 @@ import {
 	Value,
 } from '@udecode/plate-core';
 import { Path } from 'slate';
-import { getHoverDirection } from '../../dnd/utils/getHoverDirection';
 import { UseDropNodeOptions } from '../hooks/useDropNode';
-import { DragItemNode } from '../../dnd/types';
+// import { DragItemNode } from '../types';
 import {
 	getMyEditor,
 	MyEditor,
@@ -22,6 +21,11 @@ import {
 	insertNodes,
 	removeNodes,
 } from '@udecode/plate';
+// import { getHoverDirection } from '../../dnd/utils/getHoverDirection';
+import { DragItemNode } from '../types';
+import { getHoverDirection } from '../utils/getHoverDirection';
+// import { DragItemNode } from '../../dnd/types';
+// import { getHoverDirection } from '../utils/getHoverDirection';
 
 /**
  * Callback called on drag an drop a node with id.

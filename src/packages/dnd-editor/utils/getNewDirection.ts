@@ -1,7 +1,7 @@
 /**
  * Get new direction if updated
  */
-import { DropLineDirection } from '../types';
+import { DropLineDirection } from '../../dnd-editor/types';
 
 export const getNewDirection = (
 	previousDir: string,

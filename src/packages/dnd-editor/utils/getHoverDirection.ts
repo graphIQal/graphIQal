@@ -1,5 +1,5 @@
 import { DropTargetMonitor, XYCoord } from 'react-dnd';
-import { DragItemNode, DropDirection } from '../types';
+import { DragItemNode, DropDirection } from '../../dnd-editor/types';
 
 export interface GetHoverDirectionOptions {
 	dragItem: DragItemNode;

@@ -4,7 +4,7 @@ import { useEditorRef } from '@udecode/plate-core';
 
 import { useDragNode, UseDragNodeOptions } from './useDragNode';
 import { useDropNode, UseDropNodeOptions } from './useDropNode';
-import { DropLineDirection } from '../../dnd/types';
+import { DropLineDirection } from '../types';
 import { useMyEditorRef, useMyPlateEditorRef } from '../../editor/plateTypes';
 import { useEventPlateId } from '@udecode/plate';
 

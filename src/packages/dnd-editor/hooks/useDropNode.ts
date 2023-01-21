@@ -3,7 +3,7 @@ import { TReactEditor, Value } from '@udecode/plate-core';
 import { onDropNode } from '../transforms/onDropNode';
 import { onHoverNode } from '../transforms/onHoverNode';
 import { MyEditor, MyValue } from '../../editor/plateTypes';
-import { DragItemNode, DropLineDirection } from '../../dnd/types';
+import { DragItemNode, DropLineDirection } from '../types';
 
 export interface UseDropNodeOptions
 	extends DropTargetHookSpec<DragItemNode, unknown, { isOver: boolean }> {

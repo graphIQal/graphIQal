@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { gql, useMutation, useQuery } from 'urql';
 import { Query, Mutation } from './dbAccessObj';
+import { graphql } from '../../../src/gql';
 
 export const CreateNode = (id: string): (() => string) => {
   const nodeMutation = `
@@ -22,16 +23,6 @@ export const CreateNode = (id: string): (() => string) => {
   }
 }
 `;
-  //   let updateFunc = Mutation(nodeMutation);
-  //   //there are two ways of getting to the result from the updateResult function
-  //   //you can use the updateResult from above, or you can use the promise that update returns
-  //   updateFunc().then((result) => {
-  //     // The result is almost identical to `updateResult` with the exception
-  //     // of `result.fetching` not being set.
-  //     // It is an OperationResult.
-  //     console.log('Data updated & received: ' + JSON.stringify(result.data));
-  //     return result.data;
-  //   });
 
   const [{ fetching }, executeMutation] = useMutation(nodeMutation);
   return useCallback(() => {
@@ -46,7 +37,7 @@ export const CreateNode = (id: string): (() => string) => {
 };
 
 export const GetNodes = () => {
-  const allNodesQuery = gql`
+  const allNodesQuery = /* GraphQL */ `
     query {
       nodeData {
         title
@@ -55,13 +46,48 @@ export const GetNodes = () => {
     }
   `;
 
-  const [result, executeQuery] = useQuery({
+  interface NodesQuery {
+    nodeData: {
+      title: string;
+      id: string;
+    }[];
+  }
+
+  const [{ data }] = useQuery<NodesQuery>({
     query: allNodesQuery,
   });
 
-  if (result.fetching) {
-    return;
-  }
+  return data?.nodeData;
+};
 
-  console.log('all nodes ' + result && result.data);
+export const GetNodeDocumentView = () => {
+  const nodeID = 'e14d9ace-0a0a-4d49-8eb3-0771d5fff1d0';
+  interface DocumentQuery {
+    nodeData: {
+      document: {
+        id: string;
+        elements: [string];
+      };
+    }[];
+  }
+  const getNodeDocumentViewQuery = gql`
+    query ($id: ID) {
+      nodeData(where: { id: $id }) {
+        document {
+          id
+          elements
+        }
+      }
+    }
+  `;
+
+  const [{ data, fetching }, executeQuery] = useQuery<DocumentQuery>({
+    query: getNodeDocumentViewQuery,
+    variables: { id: nodeID },
+  });
+  if (fetching) {
+    return '';
+  }
+  console.log(data?.nodeData[0].document.id);
+  // return data?.nodeData[0].document.id;
 };

@@ -4,6 +4,7 @@ type CircleProps = {
   diameter: number;
   children?: any;
   backgroundClass: string;
+  onClick?: () => void;
 };
 
 //an empty circle that can contain any children
@@ -12,6 +13,7 @@ const Circle: React.FC<CircleProps> = ({
   diameter,
   children,
   backgroundClass,
+  onClick,
 }) => {
   const widthMinClass = 'min-w-[' + diameter + 'px]';
   const widthMaxClass = 'max-w-[' + diameter + 'px]';
@@ -29,7 +31,11 @@ const Circle: React.FC<CircleProps> = ({
     ' ' +
     backgroundClass +
     ' ' +
-    'rounded-full flex items-center justify-center';
-  return <div className={className}>{children}</div>;
+    'rounded-full flex items-center justify-center m-2';
+  return (
+    <div onClick={onClick} className={className}>
+      {children}
+    </div>
+  );
 };
 export default Circle;

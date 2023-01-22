@@ -5,10 +5,7 @@ import {
   Plate,
 } from '@udecode/plate';
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  GetCurrentUser,
-  getCurrentUserQuery,
-} from '../../helpers/backend/userHelpers';
+import { GetCurrentUser } from '../../helpers/backend/userHelpers';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
@@ -68,11 +65,8 @@ const EditorComponent: React.FC = () => {
   // 	return <Block {...props} />;
   // }, []);
 
-  let user = GetCurrentUser('8f94b276-711d-4eeb-9348-c73f55a98459');
-
   return (
     <div>
-      <p>{'Hello ' + user}</p>
       <Plate<MyValue>
         editableProps={editableProps}
         value={value}

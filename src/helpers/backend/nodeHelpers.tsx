@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useMutation } from 'urql';
+import { gql, useMutation, useQuery } from 'urql';
 import { Query, Mutation } from './dbAccessObj';
 
 export const CreateNode = (id: string): (() => string) => {
@@ -43,4 +43,25 @@ export const CreateNode = (id: string): (() => string) => {
     });
     return 'not found';
   }, [executeMutation, id]);
+};
+
+export const GetNodes = () => {
+  const allNodesQuery = gql`
+    query {
+      nodeData {
+        title
+        id
+      }
+    }
+  `;
+
+  const [result, executeQuery] = useQuery({
+    query: allNodesQuery,
+  });
+
+  if (result.fetching) {
+    return;
+  }
+
+  console.log('all nodes ' + result && result.data);
 };

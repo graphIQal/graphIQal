@@ -17,7 +17,9 @@ import {
 } from '../editor/plateTypes';
 import { BlockPlugins } from '../editor/Plugins/BlockPlugins';
 import { CommandPlugins } from '../editor/Plugins/CommandPlugins';
+import { createBlockPlugin } from '../editor/Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from '../editor/Plugins/TextMarkPlugins';
+import { createShelfBlockPlugin } from './ShelfBlock/ShelfBlockPlugin';
 
 const ShelfEditor: React.FC = () => {
 	const [value, setValue] = useState([
@@ -48,6 +50,7 @@ const ShelfEditor: React.FC = () => {
 				...BlockPlugins,
 				// Commands,
 				...CommandPlugins,
+				createShelfBlockPlugin(),
 				createComboboxPlugin(),
 				createNodeIdPlugin(),
 			]),

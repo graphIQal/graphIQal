@@ -62,7 +62,6 @@ export const useDndNode = ({
 
 	const [{ isOver }, drop] = useDropNode(editor, {
 		accept: type,
-		sourceEditor,
 		id,
 		nodeRef,
 		dropLine,

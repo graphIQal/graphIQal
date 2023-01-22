@@ -8,7 +8,7 @@ import { getMyEditor, MyValue, useMyEditorRef } from '../../editor/plateTypes';
 
 const DragHandle = ({ styles, ...props }: DragHandleProps) => {
 	return (
-		<div>
+		<button type='button'>
 			<svg
 				viewBox='0 0 10 10'
 				className='dragHandle'
@@ -23,7 +23,7 @@ const DragHandle = ({ styles, ...props }: DragHandleProps) => {
 			>
 				<path d='M3,2 C2.44771525,2 2,1.55228475 2,1 C2,0.44771525 2.44771525,0 3,0 C3.55228475,0 4,0.44771525 4,1 C4,1.55228475 3.55228475,2 3,2 Z M3,6 C2.44771525,6 2,5.55228475 2,5 C2,4.44771525 2.44771525,4 3,4 C3.55228475,4 4,4.44771525 4,5 C4,5.55228475 3.55228475,6 3,6 Z M3,10 C2.44771525,10 2,9.55228475 2,9 C2,8.44771525 2.44771525,8 3,8 C3.55228475,8 4,8.44771525 4,9 C4,9.55228475 3.55228475,10 3,10 Z M7,2 C6.44771525,2 6,1.55228475 6,1 C6,0.44771525 6.44771525,0 7,0 C7.55228475,0 8,0.44771525 8,1 C8,1.55228475 7.55228475,2 7,2 Z M7,6 C6.44771525,6 6,5.55228475 6,5 C6,4.44771525 6.44771525,4 7,4 C7.55228475,4 8,4.44771525 8,5 C8,5.55228475 7.55228475,6 7,6 Z M7,10 C6.44771525,10 6,9.55228475 6,9 C6,8.44771525 6.44771525,8 7,8 C7.55228475,8 8,8.44771525 8,9 C8,9.55228475 7.55228475,10 7,10 Z'></path>
 			</svg>
-		</div>
+		</button>
 	);
 };
 
@@ -58,7 +58,7 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 	return (
 		<div
 			style={styles.root.css}
-			className={styles.root.className}
+			className='.slate-Draggable-gutterLeft relative flex-row group'
 			ref={multiRootRef}
 		>
 			<div
@@ -67,20 +67,24 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 				// 	...(styles.gutterLeft?.css ?? []),
 				// ]}
 				// className={styles.gutterLeft?.className}
+				className='absolute top-0 flex h-full opacity-0 pointer-events-none cursor-text group-hover:opacity-70 mr-4'
 				contentEditable={false}
 			>
 				<div
-				// style={styles.blockToolbarWrapper?.css}
-				// className={styles.blockToolbarWrapper?.className}
+					// style={styles.blockToolbarWrapper?.css}
+					// className={styles.blockToolbarWrapper?.className}
+					className='flex height[1.5em]'
 				>
 					<div
 						// style={styles.blockToolbar?.css}
 						// className={styles.blockToolbar?.className}
+						className=' mr-1 pointer-events-auto'
 						ref={multiDragRef}
 					>
 						<DragHandle
 							// element={element}
-							className={styles.dragHandle?.className}
+							// className={styles.dragHandle?.className}
+							className='p-0 bg-transparent bg-no-repeat cursor-pointer overflow-hidden outline-none border-none minWidth[18px] height[18px]'
 							onMouseDown={(e: any) => e.stopPropagation()}
 						/>
 					</div>
@@ -93,15 +97,19 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 				// 	...(styles.blockAndGutter?.css ?? []),
 				// 	...(styles.block?.css ?? []),
 				// ]}
+				// Add div
+				className='ml-4'
 			>
 				{children}
 
-				<div
-					// style={styles.dropLine?.css}
-					// className={styles.dropLine?.className}
-					className='opacity-10 bg-cyan-500 w-full h-4 '
-					contentEditable={false}
-				></div>
+				{!!dropLine && (
+					<div
+						style={styles.dropLine?.css}
+						className={styles.dropLine?.className}
+						// className='opacity-80 w-full h-2 bg-blue-300'
+						contentEditable={false}
+					></div>
+				)}
 			</div>
 		</div>
 	);

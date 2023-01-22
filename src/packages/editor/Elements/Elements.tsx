@@ -26,26 +26,8 @@ export const CodeElement = (props: any) => {
 };
 
 export const Block = (props: any) => {
-	const editor = useMyEditorRef();
-
-	const [dropLine, setDropLine] = useState<DropLineDirection>('');
-
-	const blockRef = useRef<HTMLDivElement>(null);
-	const rootRef = useRef<HTMLDivElement>(null);
-
-	const [{ opacity }, drag, preview] = useDrag(() => ({
-		type: ItemTypes.block,
-		collect: (monitor) => ({
-			opacity: monitor.isDragging() ? 0.4 : 1,
-		}),
-	}));
-
 	return (
-		<div
-			ref={preview}
-			style={{ opacity }}
-			className='text_box' /**{...props.attributes}**/
-		>
+		<div className='text_box' /**{...props.attributes}**/>
 			{props.children}
 		</div>
 	);

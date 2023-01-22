@@ -17,6 +17,7 @@ import {
 } from './plateTypes';
 import { BlockPlugins } from './Plugins/BlockPlugins';
 import { CommandPlugins } from './Plugins/CommandPlugins';
+import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 
 const EditorComponent: React.FC = () => {
@@ -53,6 +54,7 @@ const EditorComponent: React.FC = () => {
 				...BlockPlugins,
 				// Commands,
 				...CommandPlugins,
+				createBlockPlugin(),
 				createComboboxPlugin(),
 				createNodeIdPlugin(),
 			]),

@@ -1,10 +1,8 @@
 import { DragSourceHookSpec, useDrag } from 'react-dnd';
-import { TEditor, Value } from '@udecode/plate-core';
 // import { dndStore } from '../dndStore';
-// import { DragItemNode } from '../types';
 
-import { MyEditor, MyValue } from '../../editor/plateTypes';
 import { collapseSelection, deselect } from '@udecode/plate';
+import { MyEditor, MyValue } from '../../editor/plateTypes';
 import { DragItemNode } from '../types';
 export interface UseDragNodeOptions
 	extends DragSourceHookSpec<DragItemNode, unknown, { isDragging: boolean }> {
@@ -26,7 +24,7 @@ export interface UseDragNodeOptions
  * Collect:
  * - isDragging: true if mouse is dragging the block
  */
-export const useDragNode = <V extends MyValue>(
+export const useDragNode = (
 	editor: MyEditor,
 	{ id, item, sourceEditor, ...options }: UseDragNodeOptions
 ) => {
@@ -35,8 +33,11 @@ export const useDragNode = <V extends MyValue>(
 			item(monitor) {
 				// dndStore.set.isDragging(true);
 				editor.isDragging = true;
-				deselect(editor);
+
+				console.log('oioioi');
+				// deselect(editor);
 				collapseSelection(editor);
+
 				document.body.classList.add('dragging');
 
 				const _item = typeof item === 'function' ? item(monitor) : item;

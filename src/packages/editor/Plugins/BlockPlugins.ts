@@ -9,7 +9,7 @@ import {
 	MARK_BOLD,
 	onKeyDownToggleElement,
 } from '@udecode/plate';
-import { Block, H1, NodeBlock } from '../Elements/Elements';
+import { Block, H1 } from '../Elements/Elements';
 import {
 	createMyPluginFactory,
 	createMyPlugins,
@@ -40,7 +40,7 @@ export const BlockPlugins = createMyPlugins(
 		createHeadingPlugin(),
 		createParagraphPlugin(),
 		createNodePlugin(),
-		createBlockPlugin(),
+		// createBlockPlugin(),
 	]
 	// {
 	// 	components: {

@@ -11,7 +11,7 @@ export const getBlockStyles = <V extends MyValue>(
 				backgroundColor: props.selected ? 'rgb(181, 215, 255)' : '',
 				opacity: props.isDragging ? `50%` : '100%',
 			},
-			className: '.slate-Draggable-gutterLeft',
+			className: '.slate-Draggable-gutterLeft relative',
 		},
 		gutterLeft: {
 			css: { transform: 'translateX(-100%)' },
@@ -20,16 +20,19 @@ export const getBlockStyles = <V extends MyValue>(
 		},
 		dragHandle: {
 			className:
-				'p-0 bg-transparent bg-no-repeat cursor-pointer overflow-hidden outline-none border-none',
+				'p-0 bg-transparent bg-no-repeat cursor-pointer overflow-hidden outline-none border-none minWidth[18px] height[18px]',
+		},
+		blockToolbarWrapper: { className: `flex height[1.5em]` },
+		blockToolbar: {
+			className: `flex items-center mr-1 pointer-events-auto`,
 		},
 		dropLine: {
 			className:
-				`left-0 right-0 h-0.5 opacity-100 ` +
+				`absolute left-0 right-0 h-0.5 opacity-100 ` +
 				(props.direction === 'top' ? `-top-px ` : '') +
 				(props.direction === 'bottom' ? `-bottom-px ` : ''),
 			css: {
 				backgroundColor: '#B4D5FF',
-				height: ' 4px',
 			},
 		},
 	};

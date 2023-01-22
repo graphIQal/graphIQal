@@ -4,11 +4,6 @@
 @tailwind utilities;
 
 @layer components {
-  .button_text {
-    @apply text-sm;
-    @apply text-base_white;
-  }
-
   .handle {
     @apply bg-connection;
     @apply w-3;

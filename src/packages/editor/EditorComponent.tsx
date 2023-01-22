@@ -4,8 +4,11 @@ import {
   ELEMENT_H1,
   Plate,
 } from '@udecode/plate';
-import React, { useMemo, useState } from 'react';
-import { getCurrentUser } from '../../helpers/backend/userHelpers';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  GetCurrentUser,
+  getCurrentUserQuery,
+} from '../../helpers/backend/userHelpers';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
@@ -19,6 +22,7 @@ import {
 import { BlockPlugins } from './Plugins/BlockPlugins';
 import { CommandPlugins } from './Plugins/CommandPlugins';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
+import { useQuery } from 'urql';
 
 const EditorComponent: React.FC = () => {
   const [value, setValue] = useState([
@@ -63,8 +67,9 @@ const EditorComponent: React.FC = () => {
   // const renderElement = useCallback((props: any) => {
   // 	return <Block {...props} />;
   // }, []);
-  let user;
-  user = getCurrentUser('8f94b276-711d-4eeb-9348-c73f55a98459');
+
+  let user = GetCurrentUser('8f94b276-711d-4eeb-9348-c73f55a98459');
+
   return (
     <div>
       <p>{'Hello ' + user}</p>

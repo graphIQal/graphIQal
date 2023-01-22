@@ -1,4 +1,5 @@
 import { useQuery, useMutation } from 'urql';
+import React from 'react';
 
 export const Query = (query: string, variables: object) => {
   //useQuery takes in an options object and returns a tuple
@@ -12,24 +13,19 @@ export const Query = (query: string, variables: object) => {
   });
 
   const { data, fetching, error } = result;
+  return React.useCallback(() => {
+    reexecuteQuery();
+  }, [reexecuteQuery]);
+  // if (fetching) return 'Loading...';
 
-  if (fetching) return 'Loading...';
-  if (error) return error.message;
-  console.log('Data received: ' + JSON.stringify(data));
-  return data;
+  // if (error) return error.message;
+  // console.log('Data received: ' + JSON.stringify(data));
+  // return data;
 };
 
 export const Mutation = (mutation: string) => {
+  console.log('here2');
   //mutation is not automatically triggered, you must manually call the update function
   const [updateResult, update] = useMutation(mutation);
-
-  //there are two ways of getting to the result from the updateResult function
-  //you can use the updateResult from above, or you can use the promise that update returns
-  update().then((result) => {
-    // The result is almost identical to `updateResult` with the exception
-    // of `result.fetching` not being set.
-    // It is an OperationResult.
-    console.log('Data updated & received: ' + JSON.stringify(result.data));
-    return result;
-  });
+  return update;
 };

@@ -11,6 +11,7 @@ type BlockMenuProps = {
   items?: ToolbarButtonProps[];
 };
 
+//Top menu to format/add stuff
 const BlockMenu: React.FC<BlockMenuProps> = ({ items }) => {
   const renderButtons = () => {
     return items?.map((item, i) => {

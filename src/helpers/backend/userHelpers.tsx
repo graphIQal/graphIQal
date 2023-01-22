@@ -1,9 +1,10 @@
+import React from 'react';
+import { gql, useQuery } from 'urql';
 import { Query } from './dbAccessObj';
 
-export const getCurrentUser = (id: string): string => {
-  const userQuery = `
-  query ($id : ID) {
-    users(where: {id: $id}) {
+export const getCurrentUserQuery = gql`
+  query ($id: ID) {
+    users(where: { id: $id }) {
       id
       metadata {
         name
@@ -11,9 +12,16 @@ export const getCurrentUser = (id: string): string => {
     }
   }
 `;
-  let user = Query(userQuery, { id });
-  if (user === 'Loading...') {
-    return 'Loading';
-  }
-  return user['users'][0]['metadata']['name'];
+
+export const GetCurrentUser = (id: string): string => {
+  const [result, executeQuery] = useQuery({
+    query: getCurrentUserQuery,
+    variables: { id },
+  });
+
+  const getUser = React.useCallback(() => {
+    executeQuery();
+  }, [executeQuery]);
+
+  return result.data ? result.data['users'][0]['metadata']['name'] : '';
 };

@@ -6,6 +6,8 @@ type IconButtonProps = {
   onClick: () => void;
 };
 
+//An icon that is clickable
+//src can be either an image or another component, in which case onClick should be specified in that component already when passed in
 const IconButton: React.FC<IconButtonProps> = ({ src, onClick }) => {
   const classes = 'icon_button hover:opacity-50';
   const renderButton = () => {

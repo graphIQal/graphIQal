@@ -36,4 +36,5 @@
 
 .container {
   @apply bg-base_white;
+  @apply h-screen;
 }

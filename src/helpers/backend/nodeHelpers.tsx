@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import { gql, useMutation, useQuery } from 'urql';
+import { gql, OperationContext, useMutation, useQuery } from 'urql';
 import { Query, Mutation } from './dbAccessObj';
 import { graphql } from '../../../src/gql';
 
-export const CreateNode = (id: string): (() => string) => {
+export const CreateNode = () => {
   const nodeMutation = `
   mutation {
 	createNodeData(input: {
@@ -24,19 +24,19 @@ export const CreateNode = (id: string): (() => string) => {
 }
 `;
 
-  const [{ fetching }, executeMutation] = useMutation(nodeMutation);
+  const [{ fetching, data }, executeMutation] = useMutation(nodeMutation);
   return useCallback(() => {
     executeMutation().then(({ data }) => {
       if (fetching) {
         return;
       }
-      return data & data.id;
+      return data;
     });
     return 'not found';
-  }, [executeMutation, id]);
+  }, [executeMutation]);
 };
 
-export const GetNodes = () => {
+export const GetNodes = (go: boolean) => {
   const allNodesQuery = /* GraphQL */ `
     query {
       nodeData {
@@ -53,15 +53,15 @@ export const GetNodes = () => {
     }[];
   }
 
-  const [{ data }] = useQuery<NodesQuery>({
+  const [{ data }, executeQuery] = useQuery<NodesQuery>({
     query: allNodesQuery,
+    pause: !go,
   });
 
-  return data?.nodeData;
+  return { execute: executeQuery, data: data };
 };
 
-export const GetNodeDocumentView = () => {
-  const nodeID = 'e14d9ace-0a0a-4d49-8eb3-0771d5fff1d0';
+export const GetNodeDocumentView = (nodeID: string) => {
   interface DocumentQuery {
     nodeData: {
       document: {
@@ -84,10 +84,8 @@ export const GetNodeDocumentView = () => {
   const [{ data, fetching }, executeQuery] = useQuery<DocumentQuery>({
     query: getNodeDocumentViewQuery,
     variables: { id: nodeID },
+    pause: nodeID === '',
   });
-  if (fetching) {
-    return '';
-  }
-  console.log(data?.nodeData[0].document.id);
-  // return data?.nodeData[0].document.id;
+
+  return { execute: executeQuery, data: data };
 };

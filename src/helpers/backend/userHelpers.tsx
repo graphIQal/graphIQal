@@ -2,7 +2,7 @@ import React from 'react';
 import { gql, useQuery } from 'urql';
 import { Query } from './dbAccessObj';
 
-export const GetCurrentUser = (id: string) => {
+export const GetCurrentUser = (id: string, go: boolean) => {
   const getCurrentUserQuery = gql`
     query ($id: ID) {
       users(where: { id: $id }) {
@@ -25,7 +25,8 @@ export const GetCurrentUser = (id: string) => {
   const [result, executeQuery] = useQuery<UserQuery>({
     query: getCurrentUserQuery,
     variables: { id },
+    pause: !go,
   });
 
-  return result.data ? result.data.users[0] : null;
+  return { execute: executeQuery, data: result };
 };

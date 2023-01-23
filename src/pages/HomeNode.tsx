@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useMutation } from 'urql';
+import { gql, OperationContext, useMutation, useQuery } from 'urql';
 import IconCircleButton from '../components/molecules/IconCircleButton';
 import NodeCircle from '../components/molecules/NodeCircle';
 import { Mutation } from '../helpers/backend/dbAccessObj';
@@ -13,10 +13,16 @@ import { GetCurrentUser } from '../helpers/backend/userHelpers';
 //figure out how to call query on click urql
 //get document data and navigate to document view
 const HomeNode: React.FC = () => {
-  const nodes = GetNodes();
-  let user = GetCurrentUser('8f94b276-711d-4eeb-9348-c73f55a98459');
-  const createNode = CreateNode('1');
-  GetNodeDocumentView();
+  const [currNode, setCurrNode] = useState('');
+
+  const nodes = GetNodes(true).data?.nodeData;
+  let user = GetCurrentUser('8f94b276-711d-4eeb-9348-c73f55a98459', true).data
+    .data?.users[0];
+  const createNode = CreateNode();
+
+  const nodeDocQuery = GetNodeDocumentView(currNode);
+  console.log(nodeDocQuery.data);
+
   return (
     <div>
       <p>{'Hello ' + user?.metadata.name}</p>
@@ -27,7 +33,14 @@ const HomeNode: React.FC = () => {
 
       <div>
         {nodes?.map((node, i) => (
-          <NodeCircle text={node.id} key={i} onClick={() => ''} />
+          <NodeCircle
+            text={node.id}
+            key={i}
+            onClick={() => {
+              setCurrNode(node.id);
+              nodeDocQuery.execute();
+            }}
+          />
         ))}
       </div>
     </div>

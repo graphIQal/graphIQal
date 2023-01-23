@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useLocation, useParams } from 'react-router-dom';
 import SplitPane, {
   Divider,
   SplitPaneBottom,
@@ -8,9 +9,15 @@ import SplitPane, {
   SplitPaneRight,
   SplitPaneTop,
 } from '../../components/organisms/split-pane/SplitPane';
+import { GetNodeDocumentView } from '../../helpers/backend/nodeHelpers';
 import Document from './Document';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
+  const { state } = useLocation();
+
+  const currNode = GetNodeDocumentView(state.document.id).data?.nodeData[0]
+    .document;
+
   return (
     <DndProvider backend={HTML5Backend}>
       <SplitPane className='split-pane-row'>

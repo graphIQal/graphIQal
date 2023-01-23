@@ -87,5 +87,5 @@ export const GetNodeDocumentView = (nodeID: string) => {
     pause: nodeID === '',
   });
 
-  return { execute: executeQuery, data: data };
+  return { execute: executeQuery, data: data, fetching: fetching };
 };

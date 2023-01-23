@@ -2,6 +2,7 @@ import React from 'react';
 import { gql, useQuery } from 'urql';
 import { Query } from './dbAccessObj';
 
+//Method to get the current user's information from their ID (statically passed in for now, because we're dealing with one user)
 export const GetCurrentUser = (id: string, go: boolean) => {
   const getCurrentUserQuery = gql`
     query ($id: ID) {

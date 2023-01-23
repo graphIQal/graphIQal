@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
-import { gql, OperationContext, useMutation, useQuery } from 'urql';
-import { Query, Mutation } from './dbAccessObj';
-import { graphql } from '../../../src/gql';
+import { gql, useMutation, useQuery } from 'urql';
+//All queries will return an object that contains the 'execute' function (that can be called onClick), and the 'data' object (that contains the data returned)
+//All mutations will return just a callback method that executes the mutation
 
+//Method for creating a new node with an empty title, returns the node's ID
 export const CreateNode = () => {
   const nodeMutation = `
   mutation {
@@ -36,6 +37,7 @@ export const CreateNode = () => {
   }, [executeMutation]);
 };
 
+//Method to get ALL nodes (since right now we're only dealing with one user)
 export const GetNodes = (go: boolean) => {
   const allNodesQuery = /* GraphQL */ `
     query {
@@ -61,6 +63,7 @@ export const GetNodes = (go: boolean) => {
   return { execute: executeQuery, data: data };
 };
 
+//Method for getting the document view information of a node with a specific ID
 export const GetNodeDocumentView = (nodeID: string) => {
   interface DocumentQuery {
     nodeData: {

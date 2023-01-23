@@ -1,18 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { gql, OperationContext, useMutation, useQuery } from 'urql';
 import IconCircleButton from '../components/molecules/IconCircleButton';
 import NodeCircle from '../components/molecules/NodeCircle';
-import { Mutation } from '../helpers/backend/dbAccessObj';
-import {
-  CreateNode,
-  GetNodes,
-  GetNodeDocumentView,
-} from '../helpers/backend/nodeHelpers';
+import { CreateNode, GetNodes } from '../helpers/backend/nodeHelpers';
 import { GetCurrentUser } from '../helpers/backend/userHelpers';
-//hemingway bridge:
-//figure out how to call query on click urql
-//get document data and navigate to document view
+
 const HomeNode: React.FC = () => {
   let navigate = useNavigate();
 

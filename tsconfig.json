@@ -22,6 +22,7 @@
     "**/*.tsx",
     "**/*.ts",
     "postcss.config.js",
-    "tailwind.config.js"
+    "tailwind.config.js",
+    "codegen.ts"
   ]
 }

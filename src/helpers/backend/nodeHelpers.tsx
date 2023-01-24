@@ -1,12 +1,17 @@
 import { useCallback } from 'react';
-import { gql, useMutation, useQuery } from 'urql';
+import { gql, TypedDocumentNode, useMutation, useQuery } from 'urql';
+import {
+  CreateNodeDataMutationResponse,
+  GetAllNodesQueryQuery,
+  GetDocViewQueryQuery,
+} from '../../gql/graphql';
 //All queries will return an object that contains the 'execute' function (that can be called onClick), and the 'data' object (that contains the data returned)
 //All mutations will return just a callback method that executes the mutation
 
 //Method for creating a new node with an empty title, returns the node's ID
 export const CreateNode = () => {
-  const nodeMutation = `
-  mutation {
+  const createNodeDocument = `
+  mutation createNode {
 	createNodeData(input: {
     title: ""
 
@@ -25,7 +30,8 @@ export const CreateNode = () => {
 }
 `;
 
-  const [{ fetching, data }, executeMutation] = useMutation(nodeMutation);
+  const [{ fetching, data }, executeMutation] =
+    useMutation<CreateNodeDataMutationResponse>(createNodeDocument);
   return useCallback(() => {
     executeMutation().then(({ data }) => {
       if (fetching) {
@@ -39,8 +45,8 @@ export const CreateNode = () => {
 
 //Method to get ALL nodes (since right now we're only dealing with one user)
 export const GetNodes = (go: boolean) => {
-  const allNodesQuery = /* GraphQL */ `
-    query {
+  const getAllNodesQueryDocument = /* GraphQL */ `
+    query getAllNodesQuery {
       nodeData {
         title
         id
@@ -48,15 +54,8 @@ export const GetNodes = (go: boolean) => {
     }
   `;
 
-  interface NodesQuery {
-    nodeData: {
-      title: string;
-      id: string;
-    }[];
-  }
-
-  const [{ data }, executeQuery] = useQuery<NodesQuery>({
-    query: allNodesQuery,
+  const [{ data }, executeQuery] = useQuery<GetAllNodesQueryQuery>({
+    query: getAllNodesQueryDocument,
     pause: !go,
   });
 
@@ -65,16 +64,8 @@ export const GetNodes = (go: boolean) => {
 
 //Method for getting the document view information of a node with a specific ID
 export const GetNodeDocumentView = (nodeID: string) => {
-  interface DocumentQuery {
-    nodeData: {
-      document: {
-        id: string;
-        elements: [string];
-      };
-    }[];
-  }
-  const getNodeDocumentViewQuery = gql`
-    query ($id: ID) {
+  const getDocViewQueryDocument = gql`
+    query getDocViewQuery($id: ID) {
       nodeData(where: { id: $id }) {
         document {
           id
@@ -84,8 +75,8 @@ export const GetNodeDocumentView = (nodeID: string) => {
     }
   `;
 
-  const [{ data, fetching }, executeQuery] = useQuery<DocumentQuery>({
-    query: getNodeDocumentViewQuery,
+  const [{ data, fetching }, executeQuery] = useQuery<GetDocViewQueryQuery>({
+    query: getDocViewQueryDocument,
     variables: { id: nodeID },
     pause: nodeID === '',
   });

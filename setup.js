@@ -32,7 +32,7 @@ const typeDefs = gql`
   type DocumentView {
     id: ID! @id
     node: String
-    elements: [String!]!l
+    elements: [String!]!
   }
 
   type GraphView {

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { gql, TypedDocumentNode, useMutation, useQuery } from 'urql';
+import { gql, useMutation, useQuery } from 'urql';
 import {
   CreateNodeDataMutationResponse,
   GetAllNodesQueryQuery,
@@ -30,7 +30,7 @@ export const CreateNode = () => {
 }
 `;
 
-  const [{ fetching, data }, executeMutation] =
+  const [{ fetching }, executeMutation] =
     useMutation<CreateNodeDataMutationResponse>(createNodeDocument);
   return useCallback(() => {
     executeMutation().then(({ data }) => {

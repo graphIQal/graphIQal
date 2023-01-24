@@ -1,6 +1,4 @@
-import React from 'react';
-import { gql, TypedDocumentNode, useQuery } from 'urql';
-import { Query } from './dbAccessObj';
+import { useQuery } from 'urql';
 import { graphql } from '../../gql/gql';
 import { GetCurrentUserQueryQuery } from '../../gql/graphql';
 

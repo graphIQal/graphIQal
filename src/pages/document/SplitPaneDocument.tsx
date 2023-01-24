@@ -18,6 +18,8 @@ const SplitPaneWrapper: React.FC<{}> = () => {
   const currNode = GetNodeDocumentView(state.document.id).data?.nodeData[0]
     .document;
 
+  console.log('In document of node: ' + JSON.stringify(currNode));
+
   return (
     <DndProvider backend={HTML5Backend}>
       <SplitPane className='split-pane-row'>

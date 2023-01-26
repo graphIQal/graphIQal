@@ -26,11 +26,7 @@ export const CodeElement = (props: any) => {
 };
 
 export const Block = (props: any) => {
-	return (
-		<div className='text_box' /**{...props.attributes}**/>
-			{props.children}
-		</div>
-	);
+	return <div className='' /**{...props.attributes}**/>{props.children}</div>;
 };
 
 export const NodeBlock = (props: any) => {

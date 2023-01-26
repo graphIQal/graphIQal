@@ -58,7 +58,7 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 	return (
 		<div
 			style={styles.root.css}
-			className='.slate-Draggable-gutterLeft relative flex-row group'
+			className='.slate-Draggable-gutterLeft relative flex-row group flex'
 			ref={multiRootRef}
 		>
 			<div
@@ -67,7 +67,7 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 				// 	...(styles.gutterLeft?.css ?? []),
 				// ]}
 				// className={styles.gutterLeft?.className}
-				className='absolute top-0 flex h-full opacity-0 pointer-events-none cursor-text group-hover:opacity-70 mr-4'
+				className='flex h-full opacity-0 pointer-events-none cursor-text group-hover:opacity-70 mr-1'
 				contentEditable={false}
 			>
 				<div
@@ -98,7 +98,7 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 				// 	...(styles.block?.css ?? []),
 				// ]}
 				// Add div
-				className='ml-4'
+				className='w-full relative'
 			>
 				{children}
 

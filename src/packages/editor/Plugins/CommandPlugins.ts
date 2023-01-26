@@ -15,11 +15,13 @@ import {
 import { Block, H1, NodeBlock } from '../Elements/Elements';
 import {
 	COMMAND_NEST,
+	COMMAND_TEST,
 	createMyPluginFactory,
 	createMyPlugins,
 	ELEMENT_NODE,
 } from '../plateTypes';
 import { onKeyDownTab } from './NestedBlocksPlugin/onKeyDownTab';
+import { createTestCommandPlugin } from './TestCommand/TestCommand';
 
 const createNestedBlocksPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: COMMAND_NEST,
@@ -27,17 +29,20 @@ const createNestedBlocksPlugin = createMyPluginFactory<HotkeyPlugin>({
 	handlers: {
 		onKeyDown: onKeyDownTab,
 	},
-	// then: (editor, { options: { offset, unit } = {} }) => ({
+	// then: (editor) => ({
 	// 	inject: {
 	// 		props: {
 	// 			nodeKey: COMMAND_NEST,
-	// 			styleKey: 'marginLeft',
 	// 			validTypes: [isElement(editor)],
-	// 			transformNodeValue: ({ nodeValue }) =>
-	// 				nodeValue * offset! + unit!,
 	// 		},
 	// 	},
 	// }),
 });
 
-export const CommandPlugins = createMyPlugins([createNestedBlocksPlugin()], {});
+export const CommandPlugins = createMyPlugins(
+	[
+		createNestedBlocksPlugin(),
+		// createTestCommandPlugin()
+	],
+	{}
+);

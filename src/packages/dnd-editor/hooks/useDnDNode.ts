@@ -41,16 +41,6 @@ export const useDndNode = ({
 }: UseDndNodeOptions) => {
 	const editor = useMyEditorRef();
 
-	// Maybe this can work? It's fucky but it's possible?
-	const sourceEditorId = useEventPlateId();
-	const sourceEditor = useMyPlateEditorRef(sourceEditorId);
-
-	// console.log(sourceEditorId, sourceEditor);
-
-	// console.log(editor, id);
-
-	// if (!editor) return {dropLine : false, dragRef : null, isDragging: false }};
-
 	const [dropLine, setDropLine] = useState<DropLineDirection>('');
 
 	const [{ isDragging }, dragRef, preview] = useDragNode(editor, {

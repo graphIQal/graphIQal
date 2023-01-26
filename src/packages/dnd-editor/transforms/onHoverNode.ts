@@ -11,6 +11,7 @@ import { DragItemNode } from '../types';
 import { UseDropNodeOptions } from '../hooks/useDropNode';
 import { getHoverDirection } from '../utils/getHoverDirection';
 import { getNewDirection } from '../utils/getNewDirection';
+import { deselect } from '@udecode/plate';
 
 /**
  * Callback called when dragging a node and hovering nodes.
@@ -38,6 +39,7 @@ export const onHoverNode = <V extends MyValue>(
 		nodeRef,
 		id,
 	});
+
 	const dropLineDir = getNewDirection(dropLine, direction);
 	if (dropLineDir) onChangeDropLine(dropLineDir);
 

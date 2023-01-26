@@ -20,8 +20,8 @@
 
 .text_box {
   /* @apply border-dashed; */
-  @apply border-base_black;
-  border-width: theme(spacing[xxs]);
+  /* @apply border-base_black; */
+  /* border-width: theme(spacing[xxs]); */
   /* padding: theme(spacing[sm]); */
   /* margin-left: theme(spacing[sm]); */
   margin-bottom: theme(spacing[sm]);

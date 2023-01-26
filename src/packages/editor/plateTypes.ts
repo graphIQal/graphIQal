@@ -62,6 +62,7 @@ export const ELEMENT_NODE = 'node';
 export const ELEMENT_CONNECTION = 'connection';
 
 export const COMMAND_NEST = 'nested';
+export const COMMAND_TEST = 'test';
 /**
  * Text
  */

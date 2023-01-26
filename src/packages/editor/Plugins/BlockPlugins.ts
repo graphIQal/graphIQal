@@ -29,7 +29,7 @@ const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 		onKeyDown: onKeyDownToggleElement,
 	},
 	options: {
-		hotkey: ['cmd+g'],
+		// hotkey: ['cmd+g'],
 	},
 });
 

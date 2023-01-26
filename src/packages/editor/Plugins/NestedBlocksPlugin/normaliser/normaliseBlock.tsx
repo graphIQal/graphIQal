@@ -25,12 +25,14 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 	return ([node, path]: TNodeEntry) => {
 		normalizeNode([node, path]);
-
-		if (!isElement(node)) {
-			return;
-		}
+		// if (!isElement(node)) {
+		// 	normalizeNode([node, path]);
+		// 	return;
+		// }
 
 		const isBlock = node.type === blockType;
+
+		// console.log('prenormalise ', editor.children);
 
 		if (node.type === ELEMENT_PARAGRAPH) {
 			// Normalise p's so that they automatically lift if they're second.
@@ -78,5 +80,7 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 				}
 			}
 		}
+
+		// normalizeNode([node, path]);
 	};
 };

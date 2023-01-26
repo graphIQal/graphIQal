@@ -46,7 +46,9 @@ export const onDropNode = <V extends Value>(
 
 	if (!direction) return;
 
+	console.log('dropNode');
 	if (dragItem.sourceEditor.id === editor.id) {
+		console.log('same editor');
 		// same editor
 		const dragEntry = findNode(editor, {
 			at: [],
@@ -92,6 +94,7 @@ export const onDropNode = <V extends Value>(
 			});
 		}
 	} else {
+		console.log('different editor');
 		// different editors
 		const dragEntry = findNode(dragItem.sourceEditor, {
 			at: [],

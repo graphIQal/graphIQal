@@ -4,6 +4,7 @@
   "private": true,
   "main": "public/main.js",
   "dependencies": {
+    "@neo4j/graphql": "^3.14.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -12,20 +13,25 @@
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
     "@udecode/plate": "^18.13.1",
+    "apollo-server": "^3.11.1",
+    "dotenv": "^16.0.3",
     "electron": "^21.3.0",
+    "graphql": "^16.6.0",
     "install": "^0.13.0",
+    "neo4j-driver": "^5.4.0",
     "npm": "^9.2.0",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.7.0",
     "react-scripts": "5.0.1",
     "slate": "^0.86.0",
     "slate-history": "^0.86.0",
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.86.0",
     "styled-components": "^5.3.6",
-    "typescript": "^4.9.3",
+    "urql": "^3.0.3",
     "web-vitals": "^2.1.4"
   },
   "resolutions": {
@@ -36,7 +42,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-dev": "electron ."
+    "electron-dev": "electron .",
+    "codegen": "graphql-codegen"
   },
   "eslintConfig": {
     "extends": [
@@ -57,10 +64,16 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.16.4",
+    "@graphql-codegen/client-preset": "^1.2.6",
+    "@graphql-codegen/introspection": "2.2.3",
+    "@graphql-codegen/typescript": "^2.8.7",
     "@types/styled-components": "^5.1.26",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.20",
     "styled-icons": "^10.46.0",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
   }
 }

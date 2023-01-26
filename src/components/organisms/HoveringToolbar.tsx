@@ -13,6 +13,7 @@ type HoveringToolbarProps = {
   onRender: (ref: React.MutableRefObject<any>) => void;
 };
 
+//shows up on top of current selection of text
 const HoveringToolbar = React.forwardRef<
   MutableRefObject<any>,
   HoveringToolbarProps

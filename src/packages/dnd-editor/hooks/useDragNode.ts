@@ -1,7 +1,12 @@
 import { DragSourceHookSpec, useDrag } from 'react-dnd';
 // import { dndStore } from '../dndStore';
 
-import { collapseSelection, deselect, isCollapsed } from '@udecode/plate';
+import {
+	collapseSelection,
+	deselect,
+	deselectEditor,
+	isCollapsed,
+} from '@udecode/plate';
 import { MyEditor, MyValue } from '../../editor/plateTypes';
 import { DragItemNode } from '../types';
 export interface UseDragNodeOptions
@@ -34,14 +39,10 @@ export const useDragNode = (
 				// dndStore.set.isDragging(true);
 				editor.isDragging = true;
 
-				console.log('oioioi');
-				console.log(editor.selection);
-				console.log(isCollapsed(editor.selection));
-				deselect(editor);
-				deselect(sourceEditor);
-				console.log(sourceEditor);
-				console.log(editor);
-				// collapseSelection(editor);
+				// deselect(editor);
+				// deselect(sourceEditor);
+
+				deselectEditor(editor);
 
 				document.body.classList.add('dragging');
 

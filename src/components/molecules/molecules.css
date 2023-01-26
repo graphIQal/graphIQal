@@ -9,4 +9,9 @@
     @apply py-1;
     @apply bg-base_black;
   }
+
+  .button_text {
+    @apply text-sm;
+    @apply text-base_white;
+  }
 }

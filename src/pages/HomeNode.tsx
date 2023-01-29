@@ -23,7 +23,7 @@ const HomeNode: React.FC = () => {
       <div>
         {nodes?.map((node, i) => (
           <NodeCircle
-            text={node.id}
+            children={<h2>node.id</h2>}
             key={i}
             onClick={() => {
               navigate('/document/' + node.id, {

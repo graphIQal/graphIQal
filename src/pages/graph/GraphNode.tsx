@@ -1,4 +1,4 @@
-import type { CSSProperties, FC, ReactNode } from 'react';
+import { CSSProperties, FC, ReactNode, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import NodeCircle from '../../components/molecules/NodeCircle';
 
@@ -16,6 +16,19 @@ export const GraphNode: FC<NodeProps> = ({
   hideSourceOnDrag,
   children,
 }) => {
+  const [suspended, setSuspended] = useState<boolean>(false);
+  const lineRef = useRef<any>();
+  const onClick = (event: any) => {
+    let currentTargetRect = event.currentTarget.getBoundingClientRect();
+    const event_offsetX = event.pageX - currentTargetRect.left,
+      event_offsetY = event.pageY - currentTargetRect.top;
+    console.log('coords ' + event_offsetX, event_offsetY);
+    if (event_offsetX < 10 && event_offsetY < 10) {
+      setSuspended(true);
+    } else {
+      setSuspended(false);
+    }
+  };
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: 'node',
@@ -33,7 +46,8 @@ export const GraphNode: FC<NodeProps> = ({
   return (
     <div
       className='absolute cursor-move'
-      ref={drag}
+      onClick={onClick}
+      ref={!suspended ? drag : null}
       style={{ left, top }}
       data-testid='box'
     >

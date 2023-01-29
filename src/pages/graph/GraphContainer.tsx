@@ -9,7 +9,17 @@ import { CreateNode, GetNodes } from '../../helpers/backend/nodeHelpers';
 import EditorComponent from '../../packages/editor/EditorComponent';
 import NodeCircle from '../../components/molecules/NodeCircle';
 import GraphEditor from './GraphEditor';
+import { offset } from '@udecode/plate';
+import { ValidationContext } from 'graphql';
+import { useCanvas } from './useCanvas';
 
+/**
+ * hemingway bridge:
+ * - how can i combine start and endpoints into one object
+ * - how can I disable dnd when pressing the border + give element the same canvas ref
+ *    could i potentially put children inside the canvas eleemnt
+ * -clean up
+ */
 export interface ContainerProps {
   hideSourceOnDrag: boolean;
 }
@@ -32,16 +42,32 @@ export const GraphContainer: React.FC<ContainerProps> = ({
     b: { top: 180, left: 20, title: 'Drag me too' },
   });
 
-  const canvas = useRef<any>();
-  let ctx = null;
+  const [
+    coordinates,
+    setCoordinates,
+    canvasRef,
+    canvasWidth,
+    canvasHeight,
+    startPoints,
+    setStartPoints,
+    endPoints,
+    setEndPoints,
+  ] = useCanvas();
 
-  useEffect(() => {
-    const canvasEle = canvas.current;
-    if (canvasEle) {
-      canvasEle.width = canvasEle.clientWidth;
-      canvasEle.height = canvasEle.clientHeight;
-    }
-  });
+  const handleCanvasClick = (event: any) => {
+    const currentCoord = { x: event.clientX, y: event.clientY };
+    setCoordinates([...coordinates, currentCoord]);
+  };
+
+  const handleStartPoint = (event: any) => {
+    const currentCoord = { x: event.clientX, y: event.clientY };
+    setStartPoints([...startPoints, currentCoord]);
+  };
+
+  const handleEndPoint = (event: any) => {
+    const currentCoord = { x: event.clientX, y: event.clientY };
+    setEndPoints([...endPoints, currentCoord]);
+  };
 
   const moveNode = useCallback(
     (id: string, left: number, top: number) => {
@@ -73,25 +99,34 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       <div className='absolute bottom-10 right-10'>
         <IconCircleButton onClick={createNode} />
       </div>
-      {Object.keys(nodes).map((key) => {
-        const { left, top, title } = nodes[key] as {
-          top: number;
-          left: number;
-          title: string;
-        };
-        return (
-          <GraphNode
-            key={key}
-            left={left}
-            top={top}
-            hideSourceOnDrag={hideSourceOnDrag}
-            id={key}
-          >
-            {/* <NodeCircle children={title} /> */}
-            <GraphEditor />
-          </GraphNode>
-        );
-      })}
+      <canvas
+        ref={canvasRef}
+        width={canvasWidth}
+        height={canvasHeight}
+        onMouseDown={handleStartPoint}
+        onMouseUp={handleEndPoint}
+      />
+      <div>
+        {Object.keys(nodes).map((key) => {
+          const { left, top, title } = nodes[key] as {
+            top: number;
+            left: number;
+            title: string;
+          };
+          return (
+            <GraphNode
+              key={key}
+              left={left}
+              top={top}
+              hideSourceOnDrag={hideSourceOnDrag}
+              id={key}
+            >
+              {/* <NodeCircle children={title} /> */}
+              <GraphEditor />
+            </GraphNode>
+          );
+        })}
+      </div>
     </div>
   );
 };

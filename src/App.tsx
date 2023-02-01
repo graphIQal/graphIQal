@@ -14,7 +14,7 @@ function App() {
 	return (
 		<Provider value={client}>
 			<BrowserRouter>
-				<div className='container'>
+				<div className='w-full bg-base_white'>
 					<Window>
 						<View>
 							<Routes>

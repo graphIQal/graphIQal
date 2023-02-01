@@ -32,7 +32,7 @@ export const Block = (props: any) => {
 export const NodeBlock = (props: any) => {
 	return (
 		<Block>
-			<div className='bg-base_white'>{props.children}</div>
+			<div className=''>{props.children}</div>
 		</Block>
 	);
 };

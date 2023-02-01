@@ -46,9 +46,7 @@ export const onDropNode = <V extends Value>(
 
 	if (!direction) return;
 
-	console.log('dropNode');
 	if (dragItem.sourceEditor.id === editor.id) {
-		console.log('same editor');
 		// same editor
 		const dragEntry = findNode(editor, {
 			at: [],
@@ -94,7 +92,6 @@ export const onDropNode = <V extends Value>(
 			});
 		}
 	} else {
-		console.log('different editor');
 		// different editors
 		const dragEntry = findNode(dragItem.sourceEditor, {
 			at: [],
@@ -130,16 +127,20 @@ export const onDropNode = <V extends Value>(
 		}
 
 		if (direction) {
-			const _dropPath = dropPath as Path;
+			const _dropPath = Path.next(dropPath as Path);
+			console.log(_dropPath);
 
-			const before =
-				Path.isBefore(dragPath, _dropPath) &&
-				Path.isSibling(dragPath, _dropPath);
-			const to = before ? _dropPath : Path.next(_dropPath);
+			// const before =
+			// 	Path.isBefore(dragPath, _dropPath) &&
+			// 	Path.isSibling(dragPath, _dropPath);
+
+			// const to = before ? _dropPath : Path.next(_dropPath);
 
 			// change moveNodes to delete Notes in original editor and remove it
 			removeNodes(dragItem.sourceEditor, { at: dragPath });
-			insertNodes(editor, node as EElementOrText<MyValue>, { at: to });
+			insertNodes(editor, node as EElementOrText<MyValue>, {
+				at: _dropPath,
+			});
 		}
 	}
 };

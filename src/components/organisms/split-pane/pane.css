@@ -25,10 +25,6 @@
   @apply overflow-scroll;
 }
 
-.split-pane-left {
-  background-color: rgb(141, 211, 156, 0.3);
-  padding: theme(spacing[sm]);
-}
 
 .split-pane-top,
 .split-pane-bottom {

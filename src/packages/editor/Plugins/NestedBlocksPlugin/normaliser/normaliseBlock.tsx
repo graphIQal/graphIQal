@@ -1,4 +1,11 @@
-import { ELEMENT_PARAGRAPH, liftNodes, wrapNodes } from '@udecode/plate';
+import {
+	ELEMENT_H1,
+	ELEMENT_H2,
+	ELEMENT_H3,
+	ELEMENT_PARAGRAPH,
+	liftNodes,
+	wrapNodes,
+} from '@udecode/plate';
 import {
 	getChildren,
 	getPluginType,
@@ -17,6 +24,13 @@ import {
 } from '../../../plateTypes';
 import { outdent } from '../transforms/outdent';
 
+const wrappedELementTypes = {
+	[ELEMENT_PARAGRAPH]: true,
+	[ELEMENT_H1]: true,
+	[ELEMENT_H2]: true,
+	[ELEMENT_H3]: true,
+};
+
 // I will normalise the block by setting the first block to text and all future blocks as children
 export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 	const blockType = getPluginType(editor, ELEMENT_BLOCK);
@@ -32,9 +46,9 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 		const isBlock = node.type === blockType;
 
-		// console.log('prenormalise ', editor.children);
-
-		if (node.type === ELEMENT_PARAGRAPH) {
+		if ((node.type as string) in wrappedELementTypes) {
+			console.log('is ' + node.type);
+			console.log(node);
 			// Normalise p's so that they automatically lift if they're second.
 			// The trick is that something that is indented will actually already be wrapped in a block, but a automatically generated p will be naked.
 
@@ -51,13 +65,14 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			// outdent node to carry all children nodes.
 			outdent(editor);
 		} else if (isBlock) {
+			console.log('isBlock ', node);
 			// Children should all be code lines
 			const children = getChildren([node, path]);
 
 			// children returns array of tuples [child, path]
 			// gets data of first child, makes sure it's paragraph
-
-			if (children[0][0].type !== ELEMENT_PARAGRAPH) {
+			const firstChildType = children[0][0].type as string;
+			if (!(firstChildType in wrappedELementTypes)) {
 				wrapNodes(
 					editor,
 					{
@@ -69,9 +84,9 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 				);
 			}
 
-			// Iterates through remaining children, and they should not be ELEMENT_PARAGRAPH. They should be NODE, CONNECTION, or something else
+			// Iterates through remaining children, and they should not be a wrappedElementType. They should be a block
 			for (let i = 1; i < children.length; i++) {
-				if (children[i][0].type === ELEMENT_PARAGRAPH) {
+				if ((children[i][0].type as string) in wrappedELementTypes) {
 					setNodes<TElement>(
 						editor,
 						{ type: ELEMENT_BLOCK },

@@ -13,9 +13,6 @@ export const createBlockPlugin = createMyPluginFactory<HotkeyPlugin>({
 	handlers: {
 		onKeyDown: onKeyDownToggleElement,
 	},
-	options: {
-		hotkey: ['cmd+k'],
-	},
 	withOverrides: withBlock,
 	deserializeHtml: {
 		rules: [

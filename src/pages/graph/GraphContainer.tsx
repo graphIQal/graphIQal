@@ -12,6 +12,8 @@ import GraphEditor from './GraphEditor';
 import { offset } from '@udecode/plate';
 import { ValidationContext } from 'graphql';
 import { useCanvas } from './useCanvas';
+import { Xwrapper } from '../../packages/arrow_drawer';
+import Xarrow from '../../packages/arrow_drawer/Xarrow/Xarrow';
 
 /**
  * hemingway bridge:
@@ -19,6 +21,7 @@ import { useCanvas } from './useCanvas';
  * - how can I disable dnd when pressing the border + give element the same canvas ref
  *    could i potentially put children inside the canvas eleemnt
  * -clean up
+ * - maybe move ref for drop object up a level and assign null under some condition
  */
 export interface ContainerProps {
   hideSourceOnDrag: boolean;
@@ -38,8 +41,8 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   const createNode = CreateNode();
   const nodesList = GetNodes(true).data?.nodeData;
   const [nodes, setNodes] = useState<{ [key: string]: nodeState }>({
-    a: { top: 20, left: 80, title: 'Drag me around' },
-    b: { top: 180, left: 20, title: 'Drag me too' },
+    1: { top: 20, left: 80, title: 'Drag me around' },
+    2: { top: 180, left: 20, title: 'Drag me too' },
   });
 
   const [
@@ -53,11 +56,6 @@ export const GraphContainer: React.FC<ContainerProps> = ({
     endPoints,
     setEndPoints,
   ] = useCanvas();
-
-  const handleCanvasClick = (event: any) => {
-    const currentCoord = { x: event.clientX, y: event.clientY };
-    setCoordinates([...coordinates, currentCoord]);
-  };
 
   const handleStartPoint = (event: any) => {
     const currentCoord = { x: event.clientX, y: event.clientY };
@@ -106,27 +104,32 @@ export const GraphContainer: React.FC<ContainerProps> = ({
         onMouseDown={handleStartPoint}
         onMouseUp={handleEndPoint}
       />
-      <div>
-        {Object.keys(nodes).map((key) => {
-          const { left, top, title } = nodes[key] as {
-            top: number;
-            left: number;
-            title: string;
-          };
-          return (
-            <GraphNode
-              key={key}
-              left={left}
-              top={top}
-              hideSourceOnDrag={hideSourceOnDrag}
-              id={key}
-            >
-              {/* <NodeCircle children={title} /> */}
-              <GraphEditor />
-            </GraphNode>
-          );
-        })}
-      </div>
+      <Xwrapper>
+        <div className='z-40'>
+          {Object.keys(nodes).map((key) => {
+            const { left, top, title } = nodes[key] as {
+              top: number;
+              left: number;
+              title: string;
+            };
+            return (
+              <div>
+                <GraphNode
+                  key={key}
+                  left={left}
+                  top={top}
+                  hideSourceOnDrag={hideSourceOnDrag}
+                  id={key}
+                >
+                  {/* <NodeCircle children={title} /> */}
+                  <GraphEditor />
+                </GraphNode>
+                <Xarrow color='black' start='1' end='2' />
+              </div>
+            );
+          })}
+        </div>
+      </Xwrapper>
     </div>
   );
 };

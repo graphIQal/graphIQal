@@ -47,8 +47,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 		const isBlock = node.type === blockType;
 
 		if ((node.type as string) in wrappedELementTypes) {
-			console.log('is ' + node.type);
-			console.log(node);
 			// Normalise p's so that they automatically lift if they're second.
 			// The trick is that something that is indented will actually already be wrapped in a block, but a automatically generated p will be naked.
 
@@ -65,7 +63,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			// outdent node to carry all children nodes.
 			outdent(editor);
 		} else if (isBlock) {
-			console.log('isBlock ', node);
 			// Children should all be code lines
 			const children = getChildren([node, path]);
 

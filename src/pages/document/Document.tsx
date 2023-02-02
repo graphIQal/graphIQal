@@ -5,7 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // TypeScript users only add this code
 import EditorComponent from '../../packages/editor/EditorComponent';
 const Document: React.FC = () => {
-	const dragDropManager = useDragDropManager();
+	const title = 'Title';
 
 	return (
 		<div className='container'>

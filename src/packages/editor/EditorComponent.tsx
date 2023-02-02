@@ -27,7 +27,7 @@ const EditorComponent: React.FC = () => {
 		{
 			type: ELEMENT_H1,
 			id: 'asdkj123123a',
-			children: [{ text: 'title' }],
+			children: [{ text: 'h1' }],
 		} as MyH1Element,
 		{
 			type: 'block',

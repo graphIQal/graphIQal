@@ -46,7 +46,7 @@ module.exports = {
 			},
 			colors: {
 				base_black: '#424245',
-				base_white: '#FEF9EF',
+				base_white: 'rgba(255,255,255,0.9)',
 				linign: '242425',
 				node: '#8DD39C',
 				selected_white: '#FFF9E9',
@@ -82,8 +82,10 @@ module.exports = {
 					'em',
 			},
 			fontFamily: {
-				primary: 'serif',
-				secondary: 'sans-serif',
+				sans: ['Open Sans'],
+				body: ['Open Sans', 'sans-serif'],
+				primary: 'Open Sans',
+				secondary: 'Open Sans',
 				code: [
 					'source-code-pro',
 					'Menlo',

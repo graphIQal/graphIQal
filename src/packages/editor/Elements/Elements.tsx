@@ -41,7 +41,7 @@ export const H1 = (props: any) => {
 	// const plateUI = createPlateUI({})[ELEMENT_H1];
 	// return plateUI[ELEMENT_H1];
 
-	return <Block>{props.children}</Block>;
+	return <h1>{props.children}</h1>;
 };
 
 export const H2 = (props: any) => {

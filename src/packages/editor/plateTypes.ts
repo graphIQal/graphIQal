@@ -9,13 +9,16 @@ import {
 	EElement,
 	EElementEntry,
 	EElementOrText,
+	ELEMENT_BLOCKQUOTE,
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
+	ELEMENT_LI,
 	ELEMENT_LINK,
 	ELEMENT_MENTION,
 	ELEMENT_MENTION_INPUT,
 	ELEMENT_PARAGRAPH,
+	ELEMENT_TODO_LI,
 	EMarks,
 	ENode,
 	ENodeEntry,
@@ -194,6 +197,16 @@ export type MyRootBlock =
 	| MyH1Element
 	| MyH2Element
 	| MyH3Element;
+
+export const BlockwrappedElements = {
+	[ELEMENT_PARAGRAPH]: true,
+	[ELEMENT_H1]: true,
+	[ELEMENT_H2]: true,
+	[ELEMENT_H3]: true,
+	[ELEMENT_BLOCKQUOTE]: true,
+	[ELEMENT_LI]: true,
+	[ELEMENT_TODO_LI]: true,
+};
 
 export type MyValue = MyRootBlock[];
 

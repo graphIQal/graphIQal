@@ -17,19 +17,13 @@ import {
 	Value,
 } from '@udecode/plate-core';
 import {
+	BlockwrappedElements,
 	ELEMENT_BLOCK,
 	MyEditor,
 	MyParagraphElement,
 	MyValue,
 } from '../../../plateTypes';
 import { outdent } from '../transforms/outdent';
-
-const wrappedELementTypes = {
-	[ELEMENT_PARAGRAPH]: true,
-	[ELEMENT_H1]: true,
-	[ELEMENT_H2]: true,
-	[ELEMENT_H3]: true,
-};
 
 // I will normalise the block by setting the first block to text and all future blocks as children
 export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
@@ -46,7 +40,7 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 		const isBlock = node.type === blockType;
 
-		if ((node.type as string) in wrappedELementTypes) {
+		if ((node.type as string) in BlockwrappedElements) {
 			// Normalise p's so that they automatically lift if they're second.
 			// The trick is that something that is indented will actually already be wrapped in a block, but a automatically generated p will be naked.
 
@@ -69,7 +63,8 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			// children returns array of tuples [child, path]
 			// gets data of first child, makes sure it's paragraph
 			const firstChildType = children[0][0].type as string;
-			if (!(firstChildType in wrappedELementTypes)) {
+
+			if (!(firstChildType in BlockwrappedElements)) {
 				wrapNodes(
 					editor,
 					{
@@ -83,7 +78,7 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 			// Iterates through remaining children, and they should not be a wrappedElementType. They should be a block
 			for (let i = 1; i < children.length; i++) {
-				if ((children[i][0].type as string) in wrappedELementTypes) {
+				if ((children[i][0].type as string) in BlockwrappedElements) {
 					setNodes<TElement>(
 						editor,
 						{ type: ELEMENT_BLOCK },

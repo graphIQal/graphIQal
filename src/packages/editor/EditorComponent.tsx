@@ -2,6 +2,7 @@ import {
 	createComboboxPlugin,
 	createNodeIdPlugin,
 	ELEMENT_H1,
+	KEYS_HEADING,
 	Plate,
 } from '@udecode/plate';
 import React, { useEffect, useMemo, useState } from 'react';

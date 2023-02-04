@@ -4,6 +4,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Circle from '../../components/atoms/Circle';
 import { GraphContainer } from './GraphContainer';
+import { GraphNode } from './GraphNode2';
 
 const Graph: React.FC = () => {
   return (

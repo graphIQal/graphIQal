@@ -1,0 +1,63 @@
+@config '../../../tailwind.config.js';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.resizable {
+  @apply absolute;
+  @apply border-2;
+  @apply border-base_black;
+  width: 100px;
+  height: 100px;
+  @apply rounded-sm;
+  @apply flex;
+  @apply min-w-[15px];
+  @apply min-h-[15px];
+  @apply overflow-hidden;
+}
+
+.resizer {
+  @apply absolute;
+  @apply bg-black;
+}
+
+.resizer-r {
+  @apply cursor-col-resize;
+  @apply h-full;
+  right: 0;
+  top: 0;
+  @apply w-xxs;
+}
+
+.resizer-t {
+  @apply cursor-row-resize;
+  @apply w-full;
+  left: 0;
+  top: 0;
+  @apply h-xxs;
+}
+
+.resizer-b {
+  @apply cursor-row-resize;
+  @apply w-full;
+  left: 0;
+  bottom: 0;
+  @apply h-xxs;
+}
+
+.resizer-l {
+  @apply cursor-col-resize;
+  @apply h-full;
+  left: 0;
+  top: 0;
+  @apply w-xxs;
+}
+
+.resizer-br {
+  @apply cursor-nwse-resize;
+  @apply h-xxs;
+  bottom: 0;
+  right: 0;
+  @apply w-xxs;
+}

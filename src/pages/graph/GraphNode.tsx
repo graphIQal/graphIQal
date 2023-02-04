@@ -6,17 +6,6 @@ import { useXarrow } from '../../packages/arrow_drawer';
 import { getElemPos } from '../../packages/arrow_drawer/Xarrow/utils';
 import { getPosition } from '../../packages/arrow_drawer/Xarrow/utils/GetPosition';
 
-const CustomDragLayer = () => {
-  const { itemType, isDragging, item, initialOffset, currentOffset } =
-    useDragLayer((monitor) => ({
-      item: monitor.getItem(),
-      itemType: monitor.getItemType(),
-      initialOffset: monitor.getInitialSourceClientOffset(),
-      currentOffset: monitor.getSourceClientOffset(),
-      isDragging: monitor.isDragging(),
-    }));
-};
-
 export interface NodeProps {
   id: any;
   left: number;

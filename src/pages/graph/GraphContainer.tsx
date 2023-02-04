@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDrop } from 'react-dnd';
 import { DragItemGraph } from './DragItemGraph';
-import { GraphNode } from './GraphNode';
+import { GraphNode } from './GraphNode2';
 import update from 'immutability-helper';
 import IconCircleButton from '../../components/molecules/IconCircleButton';
 import { CreateNode, GetNodes } from '../../helpers/backend/nodeHelpers';
@@ -42,30 +42,30 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   const nodesList = GetNodes(true).data?.nodeData;
   const [nodes, setNodes] = useState<{ [key: string]: nodeState }>({
     1: { top: 20, left: 80, title: 'Drag me around' },
-    2: { top: 180, left: 20, title: 'Drag me too' },
+    // 2: { top: 180, left: 20, title: 'Drag me too' },
   });
 
-  const [
-    coordinates,
-    setCoordinates,
-    canvasRef,
-    canvasWidth,
-    canvasHeight,
-    startPoints,
-    setStartPoints,
-    endPoints,
-    setEndPoints,
-  ] = useCanvas();
+  // const [
+  //   coordinates,
+  //   setCoordinates,
+  //   canvasRef,
+  //   canvasWidth,
+  //   canvasHeight,
+  //   startPoints,
+  //   setStartPoints,
+  //   endPoints,
+  //   setEndPoints,
+  // ] = useCanvas();
 
-  const handleStartPoint = (event: any) => {
-    const currentCoord = { x: event.clientX, y: event.clientY };
-    setStartPoints([...startPoints, currentCoord]);
-  };
+  // const handleStartPoint = (event: any) => {
+  //   const currentCoord = { x: event.clientX, y: event.clientY };
+  //   setStartPoints([...startPoints, currentCoord]);
+  // };
 
-  const handleEndPoint = (event: any) => {
-    const currentCoord = { x: event.clientX, y: event.clientY };
-    setEndPoints([...endPoints, currentCoord]);
-  };
+  // const handleEndPoint = (event: any) => {
+  //   const currentCoord = { x: event.clientX, y: event.clientY };
+  //   setEndPoints([...endPoints, currentCoord]);
+  // };
 
   const moveNode = useCallback(
     (id: string, left: number, top: number) => {
@@ -97,7 +97,27 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       <div className='absolute bottom-10 right-10'>
         <IconCircleButton onClick={createNode} />
       </div>
-      <canvas
+      {Object.keys(nodes).map((key) => {
+        const { left, top, title } = nodes[key] as {
+          top: number;
+          left: number;
+          title: string;
+        };
+        return (
+          <div>
+            <GraphNode
+              key={key}
+              left={left}
+              top={top}
+              hideSourceOnDrag={hideSourceOnDrag}
+              id={key}
+            >
+              <GraphEditor />
+            </GraphNode>
+          </div>
+        );
+      })}
+      {/* <canvas
         ref={canvasRef}
         width={canvasWidth}
         height={canvasHeight}
@@ -121,7 +141,6 @@ export const GraphContainer: React.FC<ContainerProps> = ({
                   hideSourceOnDrag={hideSourceOnDrag}
                   id={key}
                 >
-                  {/* <NodeCircle children={title} /> */}
                   <GraphEditor />
                 </GraphNode>
                 <Xarrow color='black' start='1' end='2' />
@@ -129,7 +148,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
             );
           })}
         </div>
-      </Xwrapper>
+      </Xwrapper> */}
     </div>
   );
 };

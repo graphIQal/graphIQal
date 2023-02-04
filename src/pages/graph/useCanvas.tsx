@@ -8,8 +8,8 @@ const SVG_PATH = new Path2D(heartSVG);
 // Scaling Constants for Canvas
 const SCALE = 0.1;
 const OFFSET = 80;
-export const canvasWidth = window.innerWidth * 0.5;
-export const canvasHeight = window.innerHeight * 0.5;
+export const canvasWidth = window.innerWidth;
+export const canvasHeight = window.innerHeight;
 
 export function drawLine(
   ctx: any,

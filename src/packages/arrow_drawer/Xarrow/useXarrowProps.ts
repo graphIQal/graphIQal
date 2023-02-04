@@ -137,7 +137,6 @@ const parseGridBreak = (
   if (!resGridBreak) resGridBreak = { relative: 0.5, abs: 0 };
   return resGridBreak;
 };
-
 /**
  * should be wrapped with any changed prop that is affecting the points path positioning
  * @param propVal
@@ -147,7 +146,7 @@ const withUpdate = (propVal: any, updateRef: any) => {
   if (updateRef) updateRef.current = true;
   return propVal;
 };
-
+console.log();
 const noParse = (userProp: any) => userProp;
 const noParseWithUpdatePos = (userProp: any, _: any, updatePos: any) =>
   withUpdate(userProp, updatePos);
@@ -353,7 +352,8 @@ const useXarrowProps = (
   // const propsRefs = _propsRefs.current;
   propsRefs['shouldUpdatePosition'] = shouldUpdatePosition;
   const curProps = { ...defaultProps, ...userProps };
-  console.log(propsRefs['shouldUpdatePosition']);
+  console.log();
+  // console.log(propsRefs['shouldUpdatePosition']);
   // react states the number of hooks per render must stay constant,
   // this is ok we are using these hooks in a loop, because the number of props in defaultProps is constant,
   // so the number of hook we will fire each render will always be the same.
@@ -414,7 +414,7 @@ const useXarrowProps = (
 
   // rerender whenever position of start element or end element changes
   const [valVars, setValVars] = useState(initialValVars);
-  // console.log(propsRefs.start == null || propsRefs.start == undefined);
+  console.log(propsRefs.start == null || propsRefs.start == undefined);
   const startPos = getElemPos(propsRefs.start);
   const endPos = getElemPos(propsRefs.end);
   useDeepCompareEffect(() => {
@@ -430,7 +430,7 @@ const useXarrowProps = (
     shouldUpdatePosition.current = true;
     setValVars({ ...valVars });
   }, [propsRefs.headShape.svgElem, propsRefs.tailShape.svgElem]);
-  console.log('valvars' + JSON.stringify(valVars));
+  // console.log('valvars' + JSON.stringify(valVars));
 
   return [propsRefs, valVars] as const;
 };

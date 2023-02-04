@@ -10,9 +10,6 @@ export const createBlockPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_BLOCK,
 	component: withDraggable(Block),
 	isElement: true,
-	handlers: {
-		onKeyDown: onKeyDownToggleElement,
-	},
 	withOverrides: withBlock,
 	deserializeHtml: {
 		rules: [

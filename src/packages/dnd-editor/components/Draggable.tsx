@@ -5,6 +5,7 @@ import { useDndNode } from '../hooks/useDnDNode';
 import { getBlockStyles } from './Draggable.styles';
 import { DraggableProps, DragHandleProps } from './Draggable.types';
 import { getMyEditor, MyValue, useMyEditorRef } from '../../editor/plateTypes';
+import { deselect } from '@udecode/plate';
 
 const DragHandle = ({ styles, ...props }: DragHandleProps) => {
 	return (
@@ -85,12 +86,18 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 						// className={styles.blockToolbar?.className}
 						className=' mr-1 pointer-events-auto'
 						ref={multiDragRef}
+						onMouseDown={(e: any) => {
+							deselect(editor);
+							e.stopPropagation();
+						}}
 					>
 						<DragHandle
 							// element={element}
 							// className={styles.dragHandle?.className}
 							className='p-0 bg-transparent bg-no-repeat cursor-pointer overflow-hidden outline-none border-none minWidth[18px] height[18px]'
-							onMouseDown={(e: any) => e.stopPropagation()}
+							onMouseDown={(e: any) => {
+								e.stopPropagation();
+							}}
 						/>
 					</div>
 				</div>

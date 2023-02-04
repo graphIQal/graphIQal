@@ -87,6 +87,7 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 						className=' mr-1 pointer-events-auto'
 						ref={multiDragRef}
 						onMouseDown={(e: any) => {
+							// If I want to make multi block selection, I can figure it out based on selected text now.
 							deselect(editor);
 							e.stopPropagation();
 						}}

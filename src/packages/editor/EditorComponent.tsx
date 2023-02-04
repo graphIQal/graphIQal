@@ -21,6 +21,7 @@ import { CommandPlugins } from './Plugins/CommandPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 import { useQuery } from 'urql';
+import { FormatPlugins } from './Plugins/FormatPlugins';
 
 const EditorComponent: React.FC = () => {
 	const [value, setValue] = useState([
@@ -56,6 +57,7 @@ const EditorComponent: React.FC = () => {
 				...BlockPlugins,
 				// Commands,
 				...CommandPlugins,
+				...FormatPlugins,
 				createBlockPlugin(),
 				createComboboxPlugin(),
 				createNodeIdPlugin(),

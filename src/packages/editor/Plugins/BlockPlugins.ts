@@ -4,12 +4,14 @@ import {
 	createParagraphPlugin,
 	createPlateUI,
 	ELEMENT_H1,
+	ELEMENT_H2,
+	ELEMENT_H3,
 	ELEMENT_PARAGRAPH,
 	HotkeyPlugin,
 	MARK_BOLD,
 	onKeyDownToggleElement,
 } from '@udecode/plate';
-import { Block, H1 } from '../Elements/Elements';
+import { Block, H1, H2, H3 } from '../Elements/Elements';
 import {
 	createMyPluginFactory,
 	createMyPlugins,
@@ -41,6 +43,8 @@ export const BlockPlugins = createMyPlugins(
 		components: {
 			// ...createPlateUI({}),
 			[ELEMENT_H1]: H1,
+			[ELEMENT_H2]: H2,
+			[ELEMENT_H3]: H3,
 		},
 	}
 );

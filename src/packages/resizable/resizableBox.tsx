@@ -5,7 +5,9 @@ const ResizableBox: React.FC<{
   children: any;
   classes?: string;
   style?: object;
-}> = ({ children, classes, style }) => {
+  dragOn: () => void;
+  dragOff: () => void;
+}> = ({ children, classes, style, dragOn, dragOff }) => {
   const ref = useRef(null);
   const refLeft = useRef(null);
   const refTop = useRef(null);
@@ -21,9 +23,6 @@ const ResizableBox: React.FC<{
     let x = 0;
     let y = 0;
 
-    resizeableEle.style.top = '50px';
-    resizeableEle.style.left = '50px';
-
     //Bi-directional Resize
     const onMouseMoveBottomRightResize = (event: any) => {
       const e = event as any;
@@ -38,9 +37,11 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
+      //   dragOn();
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
     };
     const onMouseDownBottomRightResize = (event: any) => {
+      //   dragOff();
       x = event.clientX;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.left = styles.left;
@@ -62,9 +63,11 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpRightResize = (event: Event) => {
+      //   dragOn();
       document.removeEventListener('mousemove', onMouseMoveRightResize);
     };
     const onMouseDownRightResize = (event: any) => {
+      //   dragOff();
       x = event.clientX;
       resizeableEle.style.left = styles.left;
       resizeableEle.style.right = null;
@@ -82,9 +85,11 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpTopResize = (event: Event) => {
+      //   dragOn();
       document.removeEventListener('mousemove', onMouseMoveTopResize);
     };
     const onMouseDownTopResize = (event: any) => {
+      //   dragOff();
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.bottom = styles.bottom;
@@ -103,9 +108,11 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpBottomResize = (event: Event) => {
+      //   dragOn();
       document.removeEventListener('mousemove', onMouseMoveBottomResize);
     };
     const onMouseDownBottomResize = (event: any) => {
+      //   dragOff();
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.top = styles.top;
@@ -124,9 +131,11 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpLeftResize = (event: Event) => {
+      //   dragOn();
       document.removeEventListener('mousemove', onMouseMoveLeftResize);
     };
     const onMouseDownLeftResize = (event: any) => {
+      //   dragOff();
       x = event.clientX;
       resizeableEle.style.right = styles.right;
       resizeableEle.style.left = null;

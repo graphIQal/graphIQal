@@ -36,6 +36,7 @@ export const GraphNode: FC<NodeProps> = ({
       top: initialOffset.y,
     };
 
+  const [canDrag, setCanDrag] = useState(true);
   const [{ isDragging }, drag, dragPreview] = useDrag(
     () => ({
       type: 'node',
@@ -43,6 +44,7 @@ export const GraphNode: FC<NodeProps> = ({
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
+      canDrag: canDrag,
     }),
     [id, left, top]
   );
@@ -54,13 +56,13 @@ export const GraphNode: FC<NodeProps> = ({
     width: '20rem',
   };
 
-  const handleStyle: CSSProperties = {
-    backgroundColor: 'green',
-    width: '1rem',
-    height: '1rem',
-    display: 'inline-block',
-    marginRight: '0.75rem',
-    cursor: 'move',
+  const dragOn = () => {
+    console.log('here');
+    setCanDrag(true);
+  };
+  const dragOff = () => {
+    console.log('here2');
+    setCanDrag(false);
   };
 
   if (isDragging && hideSourceOnDrag) {
@@ -68,13 +70,17 @@ export const GraphNode: FC<NodeProps> = ({
   }
   return (
     <div
-      className='absolute cursor-move min-h-[40px]'
+      className='absolute cursor-move'
       ref={drag}
       id={id}
       style={{ ...moreStyle, left, top }}
       data-testid='box'
     >
-      <ResizableBox classes='p-sm overflow-hidden h-full w-full'>
+      <ResizableBox
+        dragOn={dragOn}
+        dragOff={dragOff}
+        classes='p-sm overflow-hidden h-full w-full'
+      >
         <EditorComponent />
       </ResizableBox>
     </div>

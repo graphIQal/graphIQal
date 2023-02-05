@@ -9,11 +9,13 @@ import { CreateNode, GetNodes } from '../../helpers/backend/nodeHelpers';
 import EditorComponent from '../../packages/editor/EditorComponent';
 import NodeCircle from '../../components/molecules/NodeCircle';
 import GraphEditor from './GraphEditor';
-import { offset } from '@udecode/plate';
+import { offset, size } from '@udecode/plate';
 import { ValidationContext } from 'graphql';
 import { useCanvas } from './useCanvas';
-import { Xwrapper } from '../../packages/arrow_drawer';
+import { xarrowPropsType, Xwrapper } from '../../packages/arrow_drawer';
 import Xarrow from '../../packages/arrow_drawer/Xarrow/Xarrow';
+import { GraphViewElement } from '../../gql/graphql';
+import { GraphNode as GraphElement } from '../../gql/graphql';
 
 /**
  * hemingway bridge:
@@ -39,42 +41,38 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   hideSourceOnDrag,
 }) => {
   const createNode = CreateNode();
-  const nodesList = GetNodes(true).data?.nodeData;
-  const [nodes, setNodes] = useState<{ [key: string]: nodeState }>({
-    1: { top: 20, left: 80, title: 'Drag me around' },
-    // 2: { top: 180, left: 20, title: 'Drag me too' },
+  const [nodesList, setNodesList] = useState(GetNodes(true).data?.nodeData);
+  // const [nodes, setNodes] = useState<{ [key: string]: nodeState }>({
+  //   1: { top: 20, left: 80, title: 'Drag me around' },
+  //   // 2: { top: 180, left: 20, title: 'Drag me too' },
+  // });
+
+  const [nodes, setNodes] = useState<{ [key: string]: GraphViewElement }>({
+    a: { id: 'a', graphNode: { index: 0, x: 80, y: 20, size: [100, 100] } },
   });
 
-  // const [
-  //   coordinates,
-  //   setCoordinates,
-  //   canvasRef,
-  //   canvasWidth,
-  //   canvasHeight,
-  //   startPoints,
-  //   setStartPoints,
-  //   endPoints,
-  //   setEndPoints,
-  // ] = useCanvas();
-
-  // const handleStartPoint = (event: any) => {
-  //   const currentCoord = { x: event.clientX, y: event.clientY };
-  //   setStartPoints([...startPoints, currentCoord]);
-  // };
-
-  // const handleEndPoint = (event: any) => {
-  //   const currentCoord = { x: event.clientX, y: event.clientY };
-  //   setEndPoints([...endPoints, currentCoord]);
-  // };
-
-  const moveNode = useCallback(
-    (id: string, left: number, top: number) => {
+  const updateSize = useCallback(
+    (id: number, width: number, height: number) => {
+      console.log('updating node ' + id + ' ' + width + ' ' + height);
+      const newSize = [width, height];
       setNodes(
         update(nodes, {
-          [id]: { $merge: { left, top } },
+          [id]: { graphNode: { $merge: { size: newSize } } },
         })
       );
     },
+    [nodes, setNodes]
+  );
+
+  const moveNode = useCallback(
+    (id: string, x: number, y: number) => {
+      setNodes(
+        update(nodes, {
+          [id]: { graphNode: { $merge: { x, y } } },
+        })
+      );
+    },
+
     [nodes, setNodes]
   );
 
@@ -92,25 +90,30 @@ export const GraphContainer: React.FC<ContainerProps> = ({
     [moveNode]
   );
 
+  console.log(
+    'objects ' + JSON.stringify(Object.keys(nodes).map((key) => nodes[key]))
+  );
   return (
     <div className='w-screen h-screen border-solid border relative' ref={drop}>
       <div className='absolute bottom-10 right-10'>
         <IconCircleButton onClick={createNode} />
       </div>
-      {Object.keys(nodes).map((key) => {
-        const { left, top, title } = nodes[key] as {
-          top: number;
-          left: number;
-          title: string;
-        };
+      {Object.values(nodes).map((node) => {
         return (
           <div>
             <GraphNode
-              key={key}
-              left={left}
-              top={top}
+              key={node.id}
+              left={node.graphNode?.x == undefined ? 0 : node.graphNode?.x}
+              top={node.graphNode?.y == undefined ? 0 : node.graphNode?.y}
               hideSourceOnDrag={hideSourceOnDrag}
-              id={key}
+              id={node.id}
+              node={nodesList != undefined ? (nodesList as any)[node.id] : null}
+              size={
+                node.graphNode?.size == undefined
+                  ? [100, 100]
+                  : node.graphNode.size
+              }
+              updateSize={updateSize}
             >
               <GraphEditor />
             </GraphNode>

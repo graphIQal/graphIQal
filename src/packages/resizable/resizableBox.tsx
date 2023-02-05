@@ -7,7 +7,8 @@ const ResizableBox: React.FC<{
   style?: object;
   dragOn: () => void;
   dragOff: () => void;
-}> = ({ children, classes, style, dragOn, dragOff }) => {
+  updateSize: (width: number, height: number) => any;
+}> = ({ children, classes, style, dragOn, dragOff, updateSize }) => {
   const ref = useRef(null);
   const refLeft = useRef(null);
   const refTop = useRef(null);
@@ -17,6 +18,7 @@ const ResizableBox: React.FC<{
 
   useEffect(() => {
     const resizeableEle = ref.current as any;
+
     const styles = window.getComputedStyle(resizeableEle);
     let width = parseInt(styles.width, 10);
     let height = parseInt(styles.height, 10);
@@ -34,14 +36,15 @@ const ResizableBox: React.FC<{
       height = height + dy;
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
+      updateSize(width, height);
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
-      //   dragOn();
+      dragOn();
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
     };
     const onMouseDownBottomRightResize = (event: any) => {
-      //   dragOff();
+      dragOff();
       x = event.clientX;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.left = styles.left;
@@ -49,6 +52,7 @@ const ResizableBox: React.FC<{
       y = event.clientY;
       resizeableEle.style.top = styles.top;
       resizeableEle.style.bottom = null;
+
       document.addEventListener('mousemove', onMouseMoveBottomRightResize);
       document.addEventListener('mouseup', onMouseUpBottomRightResize);
     };
@@ -59,15 +63,16 @@ const ResizableBox: React.FC<{
       const dx = e.clientX - x;
       x = e.clientX;
       width = width + dx;
+      updateSize(width, resizeableEle.style.height);
       resizeableEle.style.width = width + 'px';
     };
 
     const onMouseUpRightResize = (event: Event) => {
-      //   dragOn();
+      dragOn();
       document.removeEventListener('mousemove', onMouseMoveRightResize);
     };
     const onMouseDownRightResize = (event: any) => {
-      //   dragOff();
+      dragOff();
       x = event.clientX;
       resizeableEle.style.left = styles.left;
       resizeableEle.style.right = null;
@@ -82,14 +87,15 @@ const ResizableBox: React.FC<{
       height = height - dy;
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
+      updateSize(resizeableEle.style.width, height);
     };
 
     const onMouseUpTopResize = (event: Event) => {
-      //   dragOn();
+      dragOn();
       document.removeEventListener('mousemove', onMouseMoveTopResize);
     };
     const onMouseDownTopResize = (event: any) => {
-      //   dragOff();
+      dragOff();
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.bottom = styles.bottom;
@@ -105,14 +111,15 @@ const ResizableBox: React.FC<{
       height = height + dy;
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
+      updateSize(resizeableEle.style.width, height);
     };
 
     const onMouseUpBottomResize = (event: Event) => {
-      //   dragOn();
+      dragOn();
       document.removeEventListener('mousemove', onMouseMoveBottomResize);
     };
     const onMouseDownBottomResize = (event: any) => {
-      //   dragOff();
+      dragOff();
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.top = styles.top;
@@ -128,14 +135,15 @@ const ResizableBox: React.FC<{
       x = e.clientX;
       width = width - dx;
       resizeableEle.style.width = width + 'px';
+      updateSize(width, resizeableEle.style.height);
     };
 
     const onMouseUpLeftResize = (event: Event) => {
-      //   dragOn();
+      dragOn();
       document.removeEventListener('mousemove', onMouseMoveLeftResize);
     };
     const onMouseDownLeftResize = (event: any) => {
-      //   dragOff();
+      dragOff();
       x = event.clientX;
       resizeableEle.style.right = styles.right;
       resizeableEle.style.left = null;
@@ -181,13 +189,14 @@ const ResizableBox: React.FC<{
 
   return (
     <div>
-      <div ref={ref} className={'resizable ' + classes}>
+      <div ref={ref} style={style} className={'resizable ' + classes}>
         <div ref={refLeft} className='resizer resizer-l'></div>
         <div ref={refTop} className='resizer resizer-t'></div>
         <div ref={refRight} className='resizer resizer-r'></div>
         <div ref={refBottom} className='resizer resizer-b'></div>
         <div ref={refBottomRight} className='resizer resizer-br'></div>
-        {children}
+
+        <div className='w-full h-full z-[0]'>{children}</div>
       </div>
     </div>
   );

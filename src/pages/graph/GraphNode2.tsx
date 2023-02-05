@@ -2,6 +2,7 @@ import { getElementAbsolutePosition } from '@udecode/plate';
 import { CSSProperties, FC, ReactNode, useRef, useState } from 'react';
 import { useDrag, useDragLayer } from 'react-dnd';
 import NodeCircle from '../../components/molecules/NodeCircle';
+import { NodeData } from '../../gql/graphql';
 import { useXarrow } from '../../packages/arrow_drawer';
 import { getElemPos } from '../../packages/arrow_drawer/Xarrow/utils';
 import { getPosition } from '../../packages/arrow_drawer/Xarrow/utils/GetPosition';
@@ -18,6 +19,9 @@ export interface NodeProps {
   children?: ReactNode;
   initialOffset?: any;
   reference?: number;
+  node: NodeData;
+  size: number[];
+  updateSize: (id: number, width: number, height: number) => void;
 }
 export const GraphNode: FC<NodeProps> = ({
   id,
@@ -27,7 +31,11 @@ export const GraphNode: FC<NodeProps> = ({
   children,
   initialOffset = undefined,
   reference,
+  node,
+  size,
+  updateSize,
 }) => {
+  console.log('props ' + size + ' ' + top);
   let moreStyle = {};
   if (initialOffset)
     moreStyle = {
@@ -46,22 +54,13 @@ export const GraphNode: FC<NodeProps> = ({
       }),
       canDrag: canDrag,
     }),
-    [id, left, top]
+    [id, left, top, canDrag]
   );
-  const style1: CSSProperties = {
-    border: '1px dashed gray',
-    padding: '0.5rem 1rem',
-    marginBottom: '.5rem',
-    backgroundColor: 'white',
-    width: '20rem',
-  };
 
   const dragOn = () => {
-    console.log('here');
     setCanDrag(true);
   };
   const dragOff = () => {
-    console.log('here2');
     setCanDrag(false);
   };
 
@@ -71,16 +70,28 @@ export const GraphNode: FC<NodeProps> = ({
   return (
     <div
       className='absolute cursor-move'
+      style={{
+        left,
+        top,
+        ...moreStyle,
+      }}
       ref={drag}
       id={id}
-      style={{ ...moreStyle, left, top }}
       data-testid='box'
     >
       <ResizableBox
         dragOn={dragOn}
         dragOff={dragOff}
         classes='p-sm overflow-hidden h-full w-full'
+        style={{
+          width: size[0],
+          height: size[1],
+        }}
+        updateSize={(width: number, height: number) =>
+          updateSize(id, width, height)
+        }
       >
+        {/* <h2>{node.title}</h2> */}
         <EditorComponent />
       </ResizableBox>
     </div>

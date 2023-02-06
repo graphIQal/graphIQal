@@ -49,28 +49,44 @@ export const GraphContainer: React.FC<ContainerProps> = ({
 
   const [nodes, setNodes] = useState<{ [key: string]: GraphViewElement }>({
     a: { id: 'a', graphNode: { index: 0, x: 80, y: 20, size: [100, 100] } },
+    b: { id: 'b', graphNode: { index: 0, x: 400, y: 20, size: [20, 100] } },
   });
+
+  console.log('curr ' + JSON.stringify(nodes));
 
   const updateSize = useCallback(
     (id: number, width: number, height: number) => {
       console.log('updating node ' + id + ' ' + width + ' ' + height);
       const newSize = [width, height];
-      setNodes(
-        update(nodes, {
-          [id]: { graphNode: { $merge: { size: newSize } } },
-        })
-      );
+      let newNodes: any = {};
+      for (const node in nodes) {
+        newNodes[node] = nodes[node];
+      }
+      newNodes[id].graphNode.size = newSize;
+      setNodes(newNodes);
+      // setNodes(
+      //   update(nodes, {
+      //     [id]: { graphNode: { $merge: { size: newSize } } },
+      //   })
+      // );
     },
     [nodes, setNodes]
   );
 
   const moveNode = useCallback(
     (id: string, x: number, y: number) => {
-      setNodes(
-        update(nodes, {
-          [id]: { graphNode: { $merge: { x, y } } },
-        })
-      );
+      let newNodes: any = {};
+      for (const node in nodes) {
+        newNodes[node] = nodes[node];
+      }
+      newNodes[id].graphNode.x = x;
+      newNodes[id].graphNode.y = y;
+      setNodes(newNodes);
+      // setNodes(
+      //   update(nodes, {
+      //     [id]: { graphNode: { $merge: { x, y } } },
+      //   })
+      // );
     },
 
     [nodes, setNodes]

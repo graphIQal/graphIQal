@@ -9,6 +9,7 @@ const ResizableBox: React.FC<{
   dragOff: () => void;
   updateSize: (width: number, height: number) => any;
 }> = ({ children, classes, style, dragOn, dragOff, updateSize }) => {
+  console.log('style ' + JSON.stringify(style));
   const ref = useRef(null);
   const refLeft = useRef(null);
   const refTop = useRef(null);
@@ -86,6 +87,7 @@ const ResizableBox: React.FC<{
       const dy = e.clientY - y;
       height = height - dy;
       y = e.clientY;
+      resizeableEle.style.top -= dy;
       resizeableEle.style.height = height + 'px';
       updateSize(resizeableEle.style.width, height);
     };
@@ -188,16 +190,14 @@ const ResizableBox: React.FC<{
   }, []);
 
   return (
-    <div>
-      <div ref={ref} style={style} className={'resizable ' + classes}>
-        <div ref={refLeft} className='resizer resizer-l'></div>
-        <div ref={refTop} className='resizer resizer-t'></div>
-        <div ref={refRight} className='resizer resizer-r'></div>
-        <div ref={refBottom} className='resizer resizer-b'></div>
-        <div ref={refBottomRight} className='resizer resizer-br'></div>
+    <div ref={ref} style={style} className={'resizable ' + classes}>
+      <div ref={refLeft} className='resizer resizer-l'></div>
+      <div ref={refTop} className='resizer resizer-t'></div>
+      <div ref={refRight} className='resizer resizer-r'></div>
+      <div ref={refBottom} className='resizer resizer-b'></div>
+      <div ref={refBottomRight} className='resizer resizer-br'></div>
 
-        <div className='w-full h-full z-[0]'>{children}</div>
-      </div>
+      <div className='w-full h-full z-[0]'>{children}</div>
     </div>
   );
 };

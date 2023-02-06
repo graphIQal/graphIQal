@@ -1,5 +1,12 @@
 import { getElementAbsolutePosition } from '@udecode/plate';
-import { CSSProperties, FC, ReactNode, useRef, useState } from 'react';
+import {
+  CSSProperties,
+  FC,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useDrag, useDragLayer } from 'react-dnd';
 import NodeCircle from '../../components/molecules/NodeCircle';
 import { NodeData } from '../../gql/graphql';
@@ -65,7 +72,17 @@ export const GraphNode: FC<NodeProps> = ({
   };
 
   if (isDragging && hideSourceOnDrag) {
-    return <div ref={drag} />;
+    return (
+      <div
+        style={{
+          left,
+          top,
+          ...moreStyle,
+        }}
+        className='absolute'
+        ref={drag}
+      />
+    );
   }
   return (
     <div
@@ -74,6 +91,8 @@ export const GraphNode: FC<NodeProps> = ({
         left,
         top,
         ...moreStyle,
+        width: size[0],
+        height: size[1],
       }}
       ref={drag}
       id={id}
@@ -91,7 +110,6 @@ export const GraphNode: FC<NodeProps> = ({
           updateSize(id, width, height)
         }
       >
-        {/* <h2>{node.title}</h2> */}
         <EditorComponent />
       </ResizableBox>
     </div>

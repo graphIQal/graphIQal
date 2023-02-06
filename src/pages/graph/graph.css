@@ -1,0 +1,31 @@
+@config '../../../tailwind.config.js';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.draw-circle {
+  @apply absolute;
+  @apply right-0;
+  /* @apply opacity-0; */
+  @apply hover:opacity-100;
+  @apply z-40;
+}
+
+.draw-circle-t {
+  margin-top: calc(-3 * theme(spacing[xxs]));
+  margin-left: calc(-2.5 * theme(spacing[xxs]));
+}
+
+.draw-circle-l {
+  margin-top: calc(-3 * theme(spacing[xxs]));
+  margin-left: calc(-2.5 * theme(spacing[xxs]));
+}
+.draw-circle-b {
+  margin-bottom: calc(-3 * theme(spacing[xxs]));
+  margin-left: calc(-3 * theme(spacing[xxs]));
+}
+.draw-circle-r {
+  margin-top: calc(-3 * theme(spacing[xxs]));
+  margin-right: calc(-3 * theme(spacing[xxs]));
+}

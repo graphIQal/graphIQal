@@ -35,7 +35,6 @@ const Xarrow: React.FC<xarrowPropsType> = (props: xarrowPropsType) => {
   } = mainRef.current;
   useContext(XarrowContext);
   const xProps = useXarrowProps(props, mainRef.current);
-  console.log(xProps);
   const [propsRefs] = xProps;
 
   let {

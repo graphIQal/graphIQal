@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react';
 import { useDrag, useDragLayer } from 'react-dnd';
+import Circle from '../../components/atoms/Circle';
 import NodeCircle from '../../components/molecules/NodeCircle';
 import { NodeData } from '../../gql/graphql';
 import { useXarrow } from '../../packages/arrow_drawer';
@@ -17,6 +18,7 @@ import { Rnd } from '../../packages/draggable-resizable';
 import EditorComponent from '../../packages/editor/EditorComponent';
 import { Resizable } from '../../packages/resizable';
 import ResizableBox from '../../packages/resizable/resizableBox';
+import './graph.css';
 
 export interface NodeProps {
   id: any;
@@ -71,6 +73,10 @@ export const GraphNode: FC<NodeProps> = ({
     setCanDrag(false);
   };
 
+  const connectionPoint = (top: number, left: number) => {
+    console.log(id, top, left);
+  };
+
   if (isDragging && hideSourceOnDrag) {
     return (
       <div
@@ -85,33 +91,59 @@ export const GraphNode: FC<NodeProps> = ({
     );
   }
   return (
-    <div
-      className='absolute cursor-move'
-      style={{
-        left,
-        top,
-        ...moreStyle,
-        width: size[0],
-        height: size[1],
-      }}
-      ref={drag}
-      id={id}
-      data-testid='box'
-    >
-      <ResizableBox
-        dragOn={dragOn}
-        dragOff={dragOff}
-        classes='p-sm overflow-hidden h-full w-full'
+    <div>
+      <div
+        className='absolute cursor-move'
         style={{
+          left,
+          top,
+          ...moreStyle,
           width: size[0],
           height: size[1],
         }}
-        updateSize={(width: number, height: number) =>
-          updateSize(id, width, height)
-        }
+        ref={drag}
+        id={id}
+        data-testid='box'
       >
-        <EditorComponent />
-      </ResizableBox>
+        <ResizableBox
+          dragOn={dragOn}
+          dragOff={dragOff}
+          classes='p-sm overflow-hidden h-full w-full'
+          style={{
+            width: size[0],
+            height: size[1],
+          }}
+          updateSize={(width: number, height: number) =>
+            updateSize(id, width, height)
+          }
+        >
+          <EditorComponent />
+        </ResizableBox>
+        <div
+          style={{ left: size[0] / 2 }}
+          className='draw-circle draw-circle-t'
+        >
+          <Circle diameter={10} backgroundClass='bg-node' />
+        </div>
+        <div
+          style={{ left: size[0] / 2, bottom: 0 }}
+          className='draw-circle draw-circle-b'
+        >
+          <Circle diameter={10} backgroundClass='bg-node' />
+        </div>
+        <div
+          style={{ top: size[1] / 2, left: 0 }}
+          className='draw-circle draw-circle-l'
+        >
+          <Circle diameter={10} backgroundClass='bg-node' />
+        </div>
+        <div
+          style={{ top: size[1] / 2, right: 0 }}
+          className='draw-circle draw-circle-r'
+        >
+          <Circle diameter={10} backgroundClass='bg-node' />
+        </div>
+      </div>
     </div>
   );
   // return (

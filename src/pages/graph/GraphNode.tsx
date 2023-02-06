@@ -24,9 +24,6 @@ export const GraphNode: FC<NodeProps> = ({
   initialOffset = undefined,
   reference,
 }) => {
-  // const updateXarrow = useXarrow();
-
-  // console.log('offset' + initialOffset);
   const [width, setWidth] = useState<number | undefined>(100);
   const [height, setHeight] = useState<number | undefined>(40);
 

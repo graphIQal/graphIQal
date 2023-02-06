@@ -52,11 +52,8 @@ export const GraphContainer: React.FC<ContainerProps> = ({
     b: { id: 'b', graphNode: { index: 0, x: 400, y: 20, size: [20, 100] } },
   });
 
-  console.log('curr ' + JSON.stringify(nodes));
-
   const updateSize = useCallback(
     (id: number, width: number, height: number) => {
-      console.log('updating node ' + id + ' ' + width + ' ' + height);
       const newSize = [width, height];
       let newNodes: any = {};
       for (const node in nodes) {

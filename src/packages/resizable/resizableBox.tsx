@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, MutableRefObject, Children } from 'react';
+import Circle from '../../components/atoms/Circle';
 import './resizable.css';
 
 const ResizableBox: React.FC<{
@@ -196,7 +197,6 @@ const ResizableBox: React.FC<{
       <div ref={refRight} className='resizer resizer-r'></div>
       <div ref={refBottom} className='resizer resizer-b'></div>
       <div ref={refBottomRight} className='resizer resizer-br'></div>
-
       <div className='w-full h-full z-[0]'>{children}</div>
     </div>
   );

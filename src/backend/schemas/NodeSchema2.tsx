@@ -13,4 +13,16 @@ type Node = {
 	blocks: Block[];
 };
 
-type Connection = {};
+type Connection = {
+	// nodes: [Node, Node];
+	type: 'IN' | 'DIRECTED' | 'EQUAL';
+	content: Block[];
+	block_one: {
+		id: string;
+		all: boolean;
+	};
+	block_two: {
+		id: string;
+		all: boolean;
+	};
+};

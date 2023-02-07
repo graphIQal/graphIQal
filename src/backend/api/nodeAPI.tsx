@@ -5,6 +5,7 @@ import {
 	GetAllNodesQueryQuery,
 	GetDocViewQueryQuery,
 } from '../gql/graphql';
+
 //All queries will return an object that contains the 'execute' function (that can be called onClick), and the 'data' object (that contains the data returned)
 //All mutations will return just a callback method that executes the mutation
 

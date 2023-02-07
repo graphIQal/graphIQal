@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CreateNode, GetNodes } from '../backend/helpers/nodeHelpers';
-import { GetCurrentUser } from '../backend/helpers/userHelpers';
+import { CreateNode, GetNodes } from '../backend/api/nodeAPI';
+import { GetCurrentUser } from '../backend/api/userAPI';
 import IconCircleButton from '../components/molecules/IconCircleButton';
 import NodeCircle from '../components/molecules/NodeCircle';
 // import { CreateNode, GetNodes } from '../helpers/backend/nodeHelpers';

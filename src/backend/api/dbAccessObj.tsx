@@ -24,7 +24,6 @@ export const Query = (query: string, variables: object) => {
 };
 
 export const Mutation = (mutation: string) => {
-	console.log('here2');
 	//mutation is not automatically triggered, you must manually call the update function
 	const [updateResult, update] = useMutation(mutation);
 	return update;

@@ -9,7 +9,6 @@ import SplitPane, {
 	SplitPaneRight,
 	SplitPaneTop,
 } from '../../components/organisms/split-pane/SplitPane';
-import { GetNodeDocumentView } from '../../helpers/backend/nodeHelpers';
 import ShelfEditor from '../../packages/shelf-editor/ShelfEditor';
 import Document from './Document';
 

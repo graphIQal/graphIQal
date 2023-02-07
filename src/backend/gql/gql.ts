@@ -13,9 +13,9 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
-    "\n    query getAllNodesQuery {\n      nodeData {\n        title\n        id\n      }\n    }\n  ": types.GetAllNodesQueryDocument,
-    "\n    query getDocViewQuery($id: ID) {\n      nodeData(where: { id: $id }) {\n        document {\n          id\n          elements\n        }\n      }\n    }\n  ": types.GetDocViewQueryDocument,
-    "\n    query getCurrentUserQuery($id: ID) {\n      users(where: { id: $id }) {\n        id\n        metadata {\n          name\n        }\n      }\n    }\n  ": types.GetCurrentUserQueryDocument,
+    "\n\t\tquery getAllNodesQuery {\n\t\t\tnodeData {\n\t\t\t\ttitle\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t": types.GetAllNodesQueryDocument,
+    "\n\t\tquery getDocViewQuery($id: ID) {\n\t\t\tnodeData(where: { id: $id }) {\n\t\t\t\tdocument {\n\t\t\t\t\tid\n\t\t\t\t\telements\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t": types.GetDocViewQueryDocument,
+    "\n\t\tquery getCurrentUserQuery($id: ID) {\n\t\t\tusers(where: { id: $id }) {\n\t\t\t\tid\n\t\t\t\tmetadata {\n\t\t\t\t\tname\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t": types.GetCurrentUserQueryDocument,
 };
 
 /**
@@ -35,15 +35,15 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query getAllNodesQuery {\n      nodeData {\n        title\n        id\n      }\n    }\n  "): (typeof documents)["\n    query getAllNodesQuery {\n      nodeData {\n        title\n        id\n      }\n    }\n  "];
+export function graphql(source: "\n\t\tquery getAllNodesQuery {\n\t\t\tnodeData {\n\t\t\t\ttitle\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t"): (typeof documents)["\n\t\tquery getAllNodesQuery {\n\t\t\tnodeData {\n\t\t\t\ttitle\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query getDocViewQuery($id: ID) {\n      nodeData(where: { id: $id }) {\n        document {\n          id\n          elements\n        }\n      }\n    }\n  "): (typeof documents)["\n    query getDocViewQuery($id: ID) {\n      nodeData(where: { id: $id }) {\n        document {\n          id\n          elements\n        }\n      }\n    }\n  "];
+export function graphql(source: "\n\t\tquery getDocViewQuery($id: ID) {\n\t\t\tnodeData(where: { id: $id }) {\n\t\t\t\tdocument {\n\t\t\t\t\tid\n\t\t\t\t\telements\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"): (typeof documents)["\n\t\tquery getDocViewQuery($id: ID) {\n\t\t\tnodeData(where: { id: $id }) {\n\t\t\t\tdocument {\n\t\t\t\t\tid\n\t\t\t\t\telements\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query getCurrentUserQuery($id: ID) {\n      users(where: { id: $id }) {\n        id\n        metadata {\n          name\n        }\n      }\n    }\n  "): (typeof documents)["\n    query getCurrentUserQuery($id: ID) {\n      users(where: { id: $id }) {\n        id\n        metadata {\n          name\n        }\n      }\n    }\n  "];
+export function graphql(source: "\n\t\tquery getCurrentUserQuery($id: ID) {\n\t\t\tusers(where: { id: $id }) {\n\t\t\t\tid\n\t\t\t\tmetadata {\n\t\t\t\t\tname\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"): (typeof documents)["\n\t\tquery getCurrentUserQuery($id: ID) {\n\t\t\tusers(where: { id: $id }) {\n\t\t\t\tid\n\t\t\t\tmetadata {\n\t\t\t\t\tname\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

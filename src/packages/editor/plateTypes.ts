@@ -189,7 +189,7 @@ export interface MyH3Element extends BlockElements {
 export type MyBlock = Exclude<MyElement, InlineElements>;
 export type MyBlockEntry = TNodeEntry<MyBlock>;
 
-export type MyRootBlock =
+export type Block =
 	| MyBlockElement
 	| MyNodeElement
 	| MyConnectionElement
@@ -208,7 +208,7 @@ export const BlockwrappedElements = {
 	[ELEMENT_TODO_LI]: true,
 };
 
-export type MyValue = MyRootBlock[];
+export type MyValue = Block[];
 
 /**
  * Editor types

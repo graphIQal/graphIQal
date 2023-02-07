@@ -7,7 +7,7 @@ export type CustomText = {
 
 type Block = {
 	id: string;
-	content: CustomText[];
+	children: CustomText[];
 };
 
 type Connection = {

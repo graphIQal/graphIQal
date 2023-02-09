@@ -81,17 +81,44 @@ const typeDefs = gql`
 
 	type User {
 		id: ID! @id
-		metadata: UserMetadata @relationship(type: "HAS_DATA", direction: OUT)
+		name: String
+		email: String
 		home_node: NodeData @relationship(type: "HOME_VIEW", direction: OUT)
 		homeless_node: NodeData
 			@relationship(type: "HOMELESS_VIEW", direction: OUT)
 	}
+`;
 
-	type UserMetadata {
+const typeDefs2 = gql`
+	type User {
 		id: ID! @id
-		name: String
-		email: String
+		name: String!
+		email: String!
+		username: String!
+		home_node: Node!
+		homeless_node: Node!
 	}
+
+	type Node {
+		id: ID! @id
+		blocks: [Block!]!
+		title: String
+	}
+
+	type Block {
+		id: ID! @id
+		type: String
+		children: [BlockChildren!]!
+	}
+
+	type CustomText {
+		text: string
+		bold: Boolean
+		italics: Boolean
+		underline: Boolean
+	}
+
+	union BlockChildren = CustomText | Block
 `;
 
 const driver = neo4j.driver(

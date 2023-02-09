@@ -14,8 +14,7 @@ export const CreateNode = () => {
 	const createNodeDocument = `
   mutation createNode {
 	createNodeData(input: {
-    title: ""
-
+    	title: ""
 		document: {
 			create: {
 				node: {node: "", elements:[]}

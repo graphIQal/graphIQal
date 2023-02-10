@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDrop } from 'react-dnd';
-import IconCircleButton from '../../components/molecules/IconCircleButton';
-import { GraphViewElement } from '../../gql/graphql';
-import { CreateNode, GetNodes } from '../../helpers/backend/nodeHelpers';
-import { DragItemGraph } from './DragItemGraph';
+import IconCircleButton from '../../../components/molecules/IconCircleButton';
+import { GraphViewElement } from '../../../gql/graphql';
+import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
+import { DragItemGraph } from '../DragItemGraph';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
-import { useCanvas } from './useCanvas';
+import { useCanvas } from '../useCanvas';
 
 export interface ContainerProps {
   hideSourceOnDrag: boolean;
@@ -142,7 +142,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       </div>
       {Object.values(nodes).map((node) => {
         return (
-          <div>
+          <div key={node.id}>
             <GraphNode
               startDraw={handleStartPoint}
               key={node.id}

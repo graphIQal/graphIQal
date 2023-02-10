@@ -1,5 +1,5 @@
 import React from 'react';
-import EditorComponent from '../../packages/editor/EditorComponent';
+import EditorComponent from '../../../packages/editor/EditorComponent';
 
 const GraphEditor: React.FC = () => {
   return (

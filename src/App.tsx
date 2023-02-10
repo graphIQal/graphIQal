@@ -5,7 +5,7 @@ import SplitPaneDocument from './pages/document/SplitPaneDocument';
 import View from './components/layouts/View';
 import Window from './components/layouts/Window';
 import HomeNode from './pages/HomeNode';
-import Graph from './pages/graph/Graph';
+import Graph from './pages/graph/components/Graph';
 
 const client = createClient({
   url: 'http://localhost:4000/',

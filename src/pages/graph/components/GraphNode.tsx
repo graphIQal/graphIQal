@@ -1,10 +1,10 @@
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
-import Circle from '../../components/atoms/Circle';
-import { NodeData } from '../../gql/graphql';
-import EditorComponent from '../../packages/editor/EditorComponent';
-import ResizableBox from '../../packages/resizable/resizableBox';
-import './graph.css';
+import Circle from '../../../components/atoms/Circle';
+import { NodeData } from '../../../gql/graphql';
+import EditorComponent from '../../../packages/editor/EditorComponent';
+import ResizableBox from '../../../packages/resizable/resizableBox';
+import '../graph.css';
 
 export interface NodeProps {
   id: any;

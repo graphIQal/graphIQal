@@ -1,9 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-
-// Path2D for a Heart SVG
-const heartSVG =
-  'M0 200 v-200 h200 a100,100 90 0,1 0,200 a100,100 90 0,1 -200,0 z';
-const SVG_PATH = new Path2D(heartSVG);
+import React, { useState, useEffect, useRef, MutableRefObject } from 'react';
 
 // Scaling Constants for Canvas
 const SCALE = 0.1;
@@ -31,8 +26,21 @@ export function drawLine(
 export function useCanvas() {
   const canvasRef = useRef<any>(null);
   const [coordinates, setCoordinates] = useState<any>([]);
-  const [startPoints, setStartPoints] = useState<any>([]);
-  const [endPoints, setEndPoints] = useState<any>([]);
+
+  type Coord = {
+    x: number;
+    y: number;
+  };
+  type Line = {
+    start: Coord;
+    end: Coord;
+  };
+  const [lines, setLines] = useState<Line[]>([]);
+  const lineRef = useRef(lines);
+  const setLineAll = (data: Line[]) => {
+    lineRef.current = data;
+    setLines(data);
+  };
 
   useEffect(() => {
     const canvasObj = canvasRef.current;
@@ -41,17 +49,16 @@ export function useCanvas() {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     // draw all coordinates held in state
-
-    for (const startPoint in startPoints) {
+    for (const line in lineRef.current) {
       drawLine(
         ctx,
-        startPoints[startPoint].x,
-        startPoints[startPoint].y,
-        endPoints[startPoint].x + 10,
-        endPoints[startPoint].y + 10
+        lines[line].start.x,
+        lines[line].start.y,
+        lines[line].end.x,
+        lines[line].end.y
       );
     }
-  }, [endPoints]);
+  }, [lines, setLines, lineRef, setLineAll]);
 
   return [
     coordinates,
@@ -59,9 +66,7 @@ export function useCanvas() {
     canvasRef,
     canvasWidth,
     canvasHeight,
-    startPoints,
-    setStartPoints,
-    endPoints,
-    setEndPoints,
+    lines,
+    setLineAll,
   ];
 }

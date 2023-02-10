@@ -1,30 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDrop } from 'react-dnd';
-import { DragItemGraph } from './DragItemGraph';
-import { GraphNode } from './GraphNode2';
-import update from 'immutability-helper';
 import IconCircleButton from '../../components/molecules/IconCircleButton';
-import { CreateNode, GetNodes } from '../../helpers/backend/nodeHelpers';
-import EditorComponent from '../../packages/editor/EditorComponent';
-import NodeCircle from '../../components/molecules/NodeCircle';
-import GraphEditor from './GraphEditor';
-import { offset, size } from '@udecode/plate';
-import { ValidationContext } from 'graphql';
-import { useCanvas } from './useCanvas';
-import { xarrowPropsType, Xwrapper } from '../../packages/arrow_drawer';
-import Xarrow from '../../packages/arrow_drawer/Xarrow/Xarrow';
 import { GraphViewElement } from '../../gql/graphql';
-import { GraphNode as GraphElement } from '../../gql/graphql';
+import { CreateNode, GetNodes } from '../../helpers/backend/nodeHelpers';
+import { DragItemGraph } from './DragItemGraph';
+import GraphEditor from './GraphEditor';
+import { GraphNode } from './GraphNode';
+import { useCanvas } from './useCanvas';
 
-/**
- * hemingway bridge:
- * - how can i combine start and endpoints into one object
- * - how can I disable dnd when pressing the border + give element the same canvas ref
- *    could i potentially put children inside the canvas eleemnt
- * -clean up
- * - maybe move ref for drop object up a level and assign null under some condition
- */
 export interface ContainerProps {
   hideSourceOnDrag: boolean;
 }
@@ -42,16 +26,72 @@ export const GraphContainer: React.FC<ContainerProps> = ({
 }) => {
   const createNode = CreateNode();
   const [nodesList, setNodesList] = useState(GetNodes(true).data?.nodeData);
-  // const [nodes, setNodes] = useState<{ [key: string]: nodeState }>({
-  //   1: { top: 20, left: 80, title: 'Drag me around' },
-  //   // 2: { top: 180, left: 20, title: 'Drag me too' },
-  // });
 
+  //canvas stuff
+  const canvas = useRef<any>();
+  const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  let ctx = null;
+  const [
+    coordinates,
+    setCoordinates,
+    canvasRef,
+    canvasWidth,
+    canvasHeight,
+    lines,
+    setLineAll,
+  ] = useCanvas();
+
+  useEffect(() => {
+    const canvasEle = canvas.current;
+    if (canvasEle) {
+      canvasEle.width = canvasEle.clientWidth;
+      canvasEle.height = canvasEle.clientHeight;
+    }
+  });
+
+  //Handling drawing methods
+  const handleStartPoint = (event: any) => {
+    const currentCoord = { x: event.clientX, y: event.clientY };
+    setLineAll([...lines, { start: currentCoord, end: currentCoord }]);
+
+    //this staste call isn't happening before mousemove handler, so it's changing the previous one at length - 1
+    document.addEventListener('mousemove', handleDrawing);
+    document.addEventListener('mouseup', handleEndPoint);
+  };
+
+  const handleDrawing = (event: any) => {
+    const currentCoord = { x: event.clientX, y: event.clientY };
+    console.log('current moving ' + JSON.stringify(currentCoord));
+    if (lines.length == 0) {
+      return;
+    }
+    const nextLines = lines.map((e: any, i: number) => {
+      if (i === lines.length - 1) {
+        return { start: e.start, end: currentCoord };
+      } else {
+        return e;
+      }
+    });
+    console.log('current updating ' + JSON.stringify(nextLines));
+
+    setLineAll(nextLines);
+  };
+
+  const handleEndPoint = (event: any) => {
+    const currentCoord = { x: event.clientX, y: event.clientY };
+    console.log('current stopping ' + JSON.stringify(currentCoord));
+
+    document.removeEventListener('mousemove', handleDrawing);
+    document.removeEventListener('mouseup', handleEndPoint);
+  };
+
+  //Mock node data
   const [nodes, setNodes] = useState<{ [key: string]: GraphViewElement }>({
     a: { id: 'a', graphNode: { index: 0, x: 80, y: 20, size: [100, 100] } },
     b: { id: 'b', graphNode: { index: 0, x: 400, y: 20, size: [20, 100] } },
   });
 
+  //When box is resized
   const updateSize = useCallback(
     (id: number, width: number, height: number) => {
       const newSize = [width, height];
@@ -61,15 +101,11 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       }
       newNodes[id].graphNode.size = newSize;
       setNodes(newNodes);
-      // setNodes(
-      //   update(nodes, {
-      //     [id]: { graphNode: { $merge: { size: newSize } } },
-      //   })
-      // );
     },
     [nodes, setNodes]
   );
 
+  //When box is dragged
   const moveNode = useCallback(
     (id: string, x: number, y: number) => {
       let newNodes: any = {};
@@ -79,16 +115,12 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       newNodes[id].graphNode.x = x;
       newNodes[id].graphNode.y = y;
       setNodes(newNodes);
-      // setNodes(
-      //   update(nodes, {
-      //     [id]: { graphNode: { $merge: { x, y } } },
-      //   })
-      // );
     },
 
     [nodes, setNodes]
   );
 
+  //Handling drop event
   const [, drop] = useDrop(
     () => ({
       accept: 'node',
@@ -103,9 +135,6 @@ export const GraphContainer: React.FC<ContainerProps> = ({
     [moveNode]
   );
 
-  console.log(
-    'objects ' + JSON.stringify(Object.keys(nodes).map((key) => nodes[key]))
-  );
   return (
     <div className='w-screen h-screen border-solid border relative' ref={drop}>
       <div className='absolute bottom-10 right-10'>
@@ -115,56 +144,35 @@ export const GraphContainer: React.FC<ContainerProps> = ({
         return (
           <div>
             <GraphNode
+              startDraw={handleStartPoint}
               key={node.id}
               left={node.graphNode?.x == undefined ? 0 : node.graphNode?.x}
               top={node.graphNode?.y == undefined ? 0 : node.graphNode?.y}
               hideSourceOnDrag={hideSourceOnDrag}
               id={node.id}
-              node={nodesList != undefined ? (nodesList as any)[node.id] : null}
               size={
                 node.graphNode?.size == undefined
                   ? [100, 100]
                   : node.graphNode.size
               }
               updateSize={updateSize}
+              setLineAll={setLineAll}
+              lines={lines}
+              isDrawing={isDrawing}
+              setIsDrawing={setIsDrawing}
             >
               <GraphEditor />
             </GraphNode>
           </div>
         );
       })}
-      {/* <canvas
+      <canvas
         ref={canvasRef}
         width={canvasWidth}
         height={canvasHeight}
-        onMouseDown={handleStartPoint}
-        onMouseUp={handleEndPoint}
+        // onMouseDown={handleStartPoint}
+        // onMouseUp={handleEndPoint}
       />
-      <Xwrapper>
-        <div className='z-40'>
-          {Object.keys(nodes).map((key) => {
-            const { left, top, title } = nodes[key] as {
-              top: number;
-              left: number;
-              title: string;
-            };
-            return (
-              <div>
-                <GraphNode
-                  key={key}
-                  left={left}
-                  top={top}
-                  hideSourceOnDrag={hideSourceOnDrag}
-                  id={key}
-                >
-                  <GraphEditor />
-                </GraphNode>
-                <Xarrow color='black' start='1' end='2' />
-              </div>
-            );
-          })}
-        </div>
-      </Xwrapper> */}
     </div>
   );
 };

@@ -1,5 +1,4 @@
-import React, { useRef, useEffect, MutableRefObject, Children } from 'react';
-import Circle from '../../components/atoms/Circle';
+import React, { useEffect, useRef } from 'react';
 import './resizable.css';
 
 const ResizableBox: React.FC<{
@@ -10,7 +9,6 @@ const ResizableBox: React.FC<{
   dragOff: () => void;
   updateSize: (width: number, height: number) => any;
 }> = ({ children, classes, style, dragOn, dragOff, updateSize }) => {
-  console.log('style ' + JSON.stringify(style));
   const ref = useRef(null);
   const refLeft = useRef(null);
   const refTop = useRef(null);

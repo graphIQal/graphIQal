@@ -7,7 +7,7 @@
 .draw-circle {
   @apply absolute;
   @apply right-0;
-  /* @apply opacity-0; */
+  @apply opacity-0;
   @apply hover:opacity-100;
   @apply z-40;
 }

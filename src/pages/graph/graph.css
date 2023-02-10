@@ -15,17 +15,25 @@
 .draw-circle-t {
   margin-top: calc(-3 * theme(spacing[xxs]));
   margin-left: calc(-2.5 * theme(spacing[xxs]));
+  width: 10px;
+  height: 10px;
 }
 
 .draw-circle-l {
   margin-top: calc(-3 * theme(spacing[xxs]));
   margin-left: calc(-2.5 * theme(spacing[xxs]));
+  width: 10px;
+  height: 10px;
 }
 .draw-circle-b {
-  margin-bottom: calc(-3 * theme(spacing[xxs]));
-  margin-left: calc(-3 * theme(spacing[xxs]));
+  margin-bottom: calc(theme(spacing[xxs]));
+  margin-left: calc(-2.5 * theme(spacing[xxs]));
+  width: 10px;
+  height: 10px;
 }
 .draw-circle-r {
   margin-top: calc(-3 * theme(spacing[xxs]));
-  margin-right: calc(-3 * theme(spacing[xxs]));
+  margin-right: calc(theme(spacing[xxs]));
+  width: 10px;
+  height: 10px;
 }

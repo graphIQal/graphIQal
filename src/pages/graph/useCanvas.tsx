@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, MutableRefObject } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Scaling Constants for Canvas
 const SCALE = 0.1;

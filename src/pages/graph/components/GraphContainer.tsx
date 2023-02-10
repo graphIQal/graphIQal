@@ -30,7 +30,6 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   //canvas stuff
   const canvas = useRef<any>();
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  let ctx = null;
   const [
     coordinates,
     setCoordinates,
@@ -62,7 +61,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   const handleDrawing = (event: any) => {
     const currentCoord = { x: event.clientX, y: event.clientY };
     console.log('current moving ' + JSON.stringify(currentCoord));
-    if (lines.length == 0) {
+    if (lines.length === 0) {
       return;
     }
     const nextLines = lines.map((e: any, i: number) => {

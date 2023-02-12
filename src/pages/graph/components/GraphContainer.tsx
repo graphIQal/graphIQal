@@ -105,10 +105,20 @@ export const GraphContainer: React.FC<ContainerProps> = ({
         newNodes[node] = nodes[node];
       }
       if (tag === 'top') {
-        newNodes[id].graphNode.y += newNodes[id].graphNode.size[1] - newSize[1];
+        const newVal =
+          newNodes[id].graphNode.y +
+          newNodes[id].graphNode.size[1] -
+          newSize[1];
+        if (Number.isFinite(newVal)) {
+          newNodes[id].graphNode.y = newVal;
+        }
       }
       if (tag === 'left') {
-        newNodes[id].graphNode.x += newNodes[id].graphNode.size[0] - newSize[0];
+        const newVal =
+          newNodes[id].graphNode.x +
+          newNodes[id].graphNode.size[0] -
+          newSize[0];
+        if (Number.isFinite(newVal)) newNodes[id].graphNode.x = newVal;
       }
       newNodes[id].graphNode.size = newSize;
 
@@ -120,6 +130,8 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   //When box is dragged
   const moveNode = useCallback(
     (id: string, x: number, y: number) => {
+      console.log('x ' + x);
+      console.log('y ' + y);
       let newNodes: any = {};
       for (const node in nodes) {
         newNodes[node] = nodes[node];

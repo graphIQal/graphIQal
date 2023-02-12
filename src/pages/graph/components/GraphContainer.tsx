@@ -4,12 +4,10 @@ import { useDrop } from 'react-dnd';
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import { GraphViewElement } from '../../../gql/graphql';
 import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
+import LineTo from '../../../packages/lineto';
 import { DragItemGraph } from '../DragItemGraph';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
-import { useCanvas } from '../useCanvas';
-import LineTo, { Line } from '../../../packages/lineto';
-import { useLines } from '../../../packages/lineto/useLines';
 
 export interface ContainerProps {
   hideSourceOnDrag: boolean;
@@ -32,15 +30,6 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   //canvas stuff
   const canvas = useRef<any>();
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  // const [
-  //   coordinates,
-  //   setCoordinates,
-  //   canvasRef,
-  //   canvasWidth,
-  //   canvasHeight,
-  //   lines,
-  //   setLineAll,
-  // ] = useCanvas();
 
   //Mock node data
   const [nodes, setNodes] = useState<{ [key: string]: GraphViewElement }>({
@@ -70,6 +59,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   // }, [lines]);
 
   //Handling drawing methods
+  //These aren't being used at the moment because it's being handled inside GraphNode where the circles are
   const handleStartPoint = (event: any) => {
     // const currentCoord = { x: event.clientX, y: event.clientY };
     // setLineAll([...lines, { start: currentCoord, end: currentCoord }]);
@@ -191,19 +181,6 @@ export const GraphContainer: React.FC<ContainerProps> = ({
           </div>
         );
       })}
-      {/* <Line x0={0} x1={30} y0={0} y1={30} /> */}
-      {/* <LineTo
-        from={Object.values(nodes)[0].id}
-        to={Object.values(nodes)[1].id}
-      /> */}
-
-      {/* <canvas
-        ref={canvasRef}
-        width={canvasWidth}
-        height={canvasHeight}
-        onMouseDown={handleStartPoint}
-        onMouseUp={handleEndPoint}
-      /> */}
     </div>
   );
 };

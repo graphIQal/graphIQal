@@ -6,6 +6,8 @@ import EditorComponent from '../../../packages/editor/EditorComponent';
 import ResizableBox from '../../../packages/resizable/resizableBox';
 import '../graph.css';
 
+//restructure some object so that passed in line array is IDs of the two elements to connect
+//make it work on drag
 export interface NodeProps {
   id: any;
   left: number;
@@ -14,7 +16,7 @@ export interface NodeProps {
   initialOffset?: any;
   size: number[];
   children: ReactNode;
-  updateSize: (id: number, width: number, height: number) => void;
+  updateSize: (id: number, width: number, height: number, tag?: string) => void;
   startDraw: (event: any) => void;
   setLineAll: (x: any) => void;
   lines: any;
@@ -181,8 +183,8 @@ export const GraphNode: FC<NodeProps> = ({
             width: size[0],
             height: size[1],
           }}
-          updateSize={(width: number, height: number) =>
-            updateSize(id, width, height)
+          updateSize={(width: number, height: number, tag?: string) =>
+            updateSize(id, width, height, tag)
           }
         >
           <EditorComponent />

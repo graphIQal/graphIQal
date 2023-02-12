@@ -7,7 +7,7 @@ const ResizableBox: React.FC<{
   style?: object;
   dragOn: () => void;
   dragOff: () => void;
-  updateSize: (width: number, height: number) => any;
+  updateSize: (width: number, height: number, tag?: string) => any;
 }> = ({ children, classes, style, dragOn, dragOff, updateSize }) => {
   const ref = useRef(null);
   const refLeft = useRef(null);
@@ -83,12 +83,12 @@ const ResizableBox: React.FC<{
     //Top Resize
     const onMouseMoveTopResize = (event: any) => {
       const e = event as any;
-      const dy = e.clientY - y;
-      height = height - dy;
+      const dy = y - e.clientY;
+      height = height + dy;
       y = e.clientY;
-      resizeableEle.style.top -= dy;
+      //   resizeableEle.style.top -= dy;
       resizeableEle.style.height = height + 'px';
-      updateSize(resizeableEle.style.width, height);
+      updateSize(resizeableEle.style.width, height, 'top');
     };
 
     const onMouseUpTopResize = (event: Event) => {
@@ -136,7 +136,7 @@ const ResizableBox: React.FC<{
       x = e.clientX;
       width = width - dx;
       resizeableEle.style.width = width + 'px';
-      updateSize(width, resizeableEle.style.height);
+      updateSize(width, resizeableEle.style.height, 'left');
     };
 
     const onMouseUpLeftResize = (event: Event) => {

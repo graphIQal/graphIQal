@@ -8,6 +8,8 @@ import { DragItemGraph } from '../DragItemGraph';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
 import { useCanvas } from '../useCanvas';
+import LineTo, { Line } from '../../../packages/lineto';
+import { useLines } from '../../../packages/lineto/useLines';
 
 export interface ContainerProps {
   hideSourceOnDrag: boolean;
@@ -30,15 +32,21 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   //canvas stuff
   const canvas = useRef<any>();
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const [
-    coordinates,
-    setCoordinates,
-    canvasRef,
-    canvasWidth,
-    canvasHeight,
-    lines,
-    setLineAll,
-  ] = useCanvas();
+  // const [
+  //   coordinates,
+  //   setCoordinates,
+  //   canvasRef,
+  //   canvasWidth,
+  //   canvasHeight,
+  //   lines,
+  //   setLineAll,
+  // ] = useCanvas();
+
+  //Mock node data
+  const [nodes, setNodes] = useState<{ [key: string]: GraphViewElement }>({
+    a: { id: 'a', graphNode: { index: 0, x: 80, y: 20, size: [100, 100] } },
+    b: { id: 'b', graphNode: { index: 0, x: 400, y: 20, size: [20, 100] } },
+  });
 
   useEffect(() => {
     const canvasEle = canvas.current;
@@ -48,10 +56,23 @@ export const GraphContainer: React.FC<ContainerProps> = ({
     }
   });
 
+  type LineRefs = {
+    start: string;
+    end: string;
+  };
+  const [lines, setLines] = useState<LineRefs[]>([
+    { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
+  ]);
+  // useEffect(() => {
+  //   setLines([
+  //     { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
+  //   ]);
+  // }, [lines]);
+
   //Handling drawing methods
   const handleStartPoint = (event: any) => {
-    const currentCoord = { x: event.clientX, y: event.clientY };
-    setLineAll([...lines, { start: currentCoord, end: currentCoord }]);
+    // const currentCoord = { x: event.clientX, y: event.clientY };
+    // setLineAll([...lines, { start: currentCoord, end: currentCoord }]);
 
     //this staste call isn't happening before mousemove handler, so it's changing the previous one at length - 1
     document.addEventListener('mousemove', handleDrawing);
@@ -73,7 +94,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
     });
     console.log('current updating ' + JSON.stringify(nextLines));
 
-    setLineAll(nextLines);
+    setLines(nextLines);
   };
 
   const handleEndPoint = (event: any) => {
@@ -84,21 +105,23 @@ export const GraphContainer: React.FC<ContainerProps> = ({
     document.removeEventListener('mouseup', handleEndPoint);
   };
 
-  //Mock node data
-  const [nodes, setNodes] = useState<{ [key: string]: GraphViewElement }>({
-    a: { id: 'a', graphNode: { index: 0, x: 80, y: 20, size: [100, 100] } },
-    b: { id: 'b', graphNode: { index: 0, x: 400, y: 20, size: [20, 100] } },
-  });
-
   //When box is resized
   const updateSize = useCallback(
-    (id: number, width: number, height: number) => {
+    (id: number, width: number, height: number, tag?: string) => {
+      console.log('tag ' + tag);
       const newSize = [width, height];
       let newNodes: any = {};
       for (const node in nodes) {
         newNodes[node] = nodes[node];
       }
+      if (tag === 'top') {
+        newNodes[id].graphNode.y += newNodes[id].graphNode.size[1] - newSize[1];
+      }
+      if (tag === 'left') {
+        newNodes[id].graphNode.x += newNodes[id].graphNode.size[0] - newSize[0];
+      }
       newNodes[id].graphNode.size = newSize;
+
       setNodes(newNodes);
     },
     [nodes, setNodes]
@@ -131,7 +154,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
         return undefined;
       },
     }),
-    [moveNode]
+    [moveNode, nodes, setNodes]
   );
 
   return (
@@ -139,9 +162,12 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       <div className='absolute bottom-10 right-10'>
         <IconCircleButton onClick={createNode} />
       </div>
+      {lines.map(function (line, i) {
+        return <LineTo key={i} from={line.start} to={line.end} />;
+      })}
       {Object.values(nodes).map((node) => {
         return (
-          <div key={node.id}>
+          <div className={node.id} key={node.id}>
             <GraphNode
               startDraw={handleStartPoint}
               key={node.id}
@@ -155,7 +181,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
                   : node.graphNode.size
               }
               updateSize={updateSize}
-              setLineAll={setLineAll}
+              setLineAll={setLines}
               lines={lines}
               isDrawing={isDrawing}
               setIsDrawing={setIsDrawing}
@@ -165,13 +191,19 @@ export const GraphContainer: React.FC<ContainerProps> = ({
           </div>
         );
       })}
-      <canvas
+      {/* <Line x0={0} x1={30} y0={0} y1={30} /> */}
+      {/* <LineTo
+        from={Object.values(nodes)[0].id}
+        to={Object.values(nodes)[1].id}
+      /> */}
+
+      {/* <canvas
         ref={canvasRef}
         width={canvasWidth}
         height={canvasHeight}
-        // onMouseDown={handleStartPoint}
-        // onMouseUp={handleEndPoint}
-      />
+        onMouseDown={handleStartPoint}
+        onMouseUp={handleEndPoint}
+      /> */}
     </div>
   );
 };

@@ -5,4 +5,11 @@ export interface DragItemGraph {
   id: string;
   left: number;
   top: number;
+  width: number;
+  height: number;
 }
+
+export type LineRefs = {
+  start: string;
+  end: string;
+};

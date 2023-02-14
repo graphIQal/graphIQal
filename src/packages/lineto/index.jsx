@@ -14,29 +14,11 @@ const optionalStyleProps = {
 };
 
 export default class LineTo extends Component {
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     this.fromAnchor = this.parseAnchor(this.props.fromAnchor);
     this.toAnchor = this.parseAnchor(this.props.toAnchor);
     this.delay = this.parseDelay(this.props.delay);
-  }
-
-  componentDidMount() {
     this.delay = this.parseDelay(this.props.delay);
-    if (typeof this.delay !== 'undefined') {
-      this.deferUpdate(this.delay);
-    }
-  }
-
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.fromAnchor !== this.props.fromAnchor) {
-      this.fromAnchor = this.parseAnchor(this.props.fromAnchor);
-    }
-    if (nextProps.toAnchor !== this.props.toAnchor) {
-      this.toAnchor = this.parseAnchor(this.props.toAnchor);
-    }
-    this.delay = this.parseDelay(nextProps.delay);
     if (typeof this.delay !== 'undefined') {
       this.deferUpdate(this.delay);
     }
@@ -120,7 +102,6 @@ export default class LineTo extends Component {
       fromAnchor += 'top';
       toAnchor += 'bottom';
     } else {
-      console.log('middle case');
       fromAnchor += 'center';
       toAnchor += 'center';
     }
@@ -176,7 +157,6 @@ export default class LineTo extends Component {
       const anchors = this.calcAnchor(a, b);
       anchor0 = this.parseAnchor(anchors.fromAnchor);
       anchor1 = this.parseAnchor(anchors.toAnchor);
-      console.log('anchors' + anchor0 + ' ' + anchor1);
     }
     const box0 = a.getBoundingClientRect();
     const box1 = b.getBoundingClientRect();

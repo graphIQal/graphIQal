@@ -36,7 +36,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
 
   //Mock line data
   const [lines, setLines] = useState<LineRefs[]>([
-    { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
+    // { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
   ]);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
 
   const [zoomFactor, setZoomFactor] = useState(1);
   const theta = 0.1;
-  const [lastZoomCenter, setLastZoomCenter] = useState({ x: 0, y: 0 });
+  const [lastZoomCenter, setLastZoomCenter] = useState(null);
   const [pointersDown, setPointersDown] = useState<PointerEvent[]>([]);
 
   //DND stuff
@@ -103,9 +103,6 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   //drawing stuff
   const [drawingMode, setDrawingMode] = useState(false);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  useEffect(() => {
-    console.log('is drawing' + isDrawing);
-  });
 
   const canvas = useRef<any>();
   const {
@@ -135,13 +132,43 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       console.log('here' + startNode.current + endNode.current);
       setLines([...lines, { start: startNode.current, end: endNode.current }]);
     }
-    console.log('lines ' + JSON.stringify(lines));
+    window.removeEventListener('mousemove', handleDrawing);
   }, [endNode.current]);
+
+  //drawing functions
+  const handleStartPoint = (event: any, id: string) => {
+    console.log('in node ' + id);
+    setStartCoordinate({ x: event.clientX, y: event.clientY });
+    startNode.current = id;
+    setIsDrawing(true);
+    document.addEventListener('mouseup', () => {
+      setIsDrawing(false);
+      setStartCoordinate({ x: 0, y: 0 });
+      setEndCoordinate({ x: 0, y: 0 });
+    });
+  };
+  const handleDrawing = (event: any) => {
+    setEndCoordinate({ x: event.clientX, y: event.clientY });
+  };
+  const handleEndPoint = (event: any, id: string) => {
+    console.log('out of node ' + id);
+    setStartCoordinate({ x: 0, y: 0 });
+    setEndCoordinate({ x: 0, y: 0 });
+    endNode.current = id;
+    setIsDrawing(false);
+  };
 
   return (
     <div
       // onPointerDown={(event:PointerEvent) => onPointDown(event, pointersDown, setPointersDown)}
       className='w-screen h-screen border-solid border relative'
+      onMouseMove={
+        isDrawing
+          ? handleDrawing
+          : () => {
+              return null;
+            }
+      }
       ref={drop}
     >
       <div className='absolute bottom-10 right-10'>
@@ -157,7 +184,24 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       })}
       {Object.values(nodes).map((node) => {
         return (
-          <div className={node.id} key={node.id}>
+          <div
+            className={node.id}
+            key={node.id}
+            onMouseDown={
+              drawingMode
+                ? (event: any) => handleStartPoint(event, node.id)
+                : () => {
+                    return null;
+                  }
+            }
+            onMouseUp={
+              isDrawing
+                ? (event: any) => handleEndPoint(event, node.id)
+                : () => {
+                    return null;
+                  }
+            }
+          >
             <GraphNode
               key={node.id}
               left={node.graphNode?.x == undefined ? 0 : node.graphNode?.x}

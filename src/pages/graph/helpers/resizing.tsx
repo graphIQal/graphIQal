@@ -9,7 +9,6 @@ export const updateSizeCallback = (
   setNodes: (val: any) => void,
   tag?: string
 ) => {
-  console.log('here');
   const newSize = [width, height];
   let newNodes: any = {};
   for (const node in nodes) {

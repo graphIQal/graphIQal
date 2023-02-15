@@ -104,25 +104,6 @@ export const GraphNode: FC<NodeProps> = ({
     );
   }
 
-  //drawing functions
-  const handleStartPoint = (event: any) => {
-    console.log('in node ' + id);
-    setStartCoordinate({ x: event.clientX, y: event.clientY });
-    startNode.current = id;
-    document.addEventListener('mousemove', handleDrawing);
-    document.addEventListener('mouseup', handleEndPoint);
-  };
-  const handleDrawing = (event: MouseEvent) => {
-    setEndCoordinate({ x: event.clientX, y: event.clientY });
-  };
-  const handleEndPoint = (event: any) => {
-    console.log('out of node ' + id);
-    setEndCoordinate({ x: event.clientX, y: event.clientY });
-    endNode.current = id;
-    document.removeEventListener('mousemove', handleDrawing);
-    document.removeEventListener('mouseup', handleEndPoint);
-  };
-
   return (
     <div>
       <div
@@ -135,13 +116,6 @@ export const GraphNode: FC<NodeProps> = ({
         }}
         ref={drag}
         id={id}
-        onMouseDown={
-          drawingMode
-            ? handleStartPoint
-            : () => {
-                return null;
-              }
-        }
       >
         <ResizableBox
           dragOn={dragOn}

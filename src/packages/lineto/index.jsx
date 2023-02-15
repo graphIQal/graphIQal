@@ -138,21 +138,24 @@ export default class LineTo extends Component {
   }
 
   findElement(id) {
+    //not finding element that was just dropped
     return document.getElementById(id);
   }
 
   detect() {
     const { from, to, within = '' } = this.props;
-
+    console.log('props ' + JSON.stringify(this.props));
     const a = this.findElement(from);
     const b = this.findElement(to);
-
+    console.log('apple ' + a);
+    console.log('apple2 ' + b);
     if (!a || !b) {
       return false;
     }
 
     let anchor0 = this.fromAnchor;
     let anchor1 = this.toAnchor;
+
     if (!anchor0 || !anchor1) {
       const anchors = this.calcAnchor(a, b);
       anchor0 = this.parseAnchor(anchors.fromAnchor);

@@ -1,4 +1,11 @@
-import { FC, ReactNode, useEffect, useRef, useState } from 'react';
+import {
+  FC,
+  MutableRefObject,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import ResizableBox from '../../../packages/resizable/resizableBox';
 import '../graph.css';
@@ -17,6 +24,12 @@ export interface NodeProps {
   lines: any;
   isDrawing: boolean;
   setIsDrawing: (x: boolean) => void;
+  setStartCoordinate: (val: any) => void;
+  setEndCoordinate: (val: any) => void;
+  drawingMode: boolean;
+  setDrawingMode: (val: any) => void;
+  startNode: MutableRefObject<string>;
+  endNode: MutableRefObject<string>;
 }
 export const GraphNode: FC<NodeProps> = ({
   id,
@@ -30,25 +43,31 @@ export const GraphNode: FC<NodeProps> = ({
   isDrawing,
   setIsDrawing,
   children,
+  setStartCoordinate,
+  setEndCoordinate,
+  drawingMode,
+  setDrawingMode,
+  startNode,
+  endNode,
 }) => {
   //refs for the circles we're drawing with
   const circleRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   //attach listeners to circles for release if drawing
   useEffect(() => {
-    if (isDrawing) {
+    if (drawingMode) {
       setCanDrag(false);
-      for (const ref in circleRefs) {
-        (circleRefs[ref].current as any).addEventListener(
-          'mouseup',
-          (event: MouseEvent) =>
-            handleEndPoint(event, setCanDrag, lines, setLineAll, circleRefs)
-        );
-      }
+      // for (const ref in circleRefs) {
+      //   (circleRefs[ref].current as any).addEventListener(
+      //     'mouseup',
+      //     (event: MouseEvent) =>
+      //       handleEndPoint(event, setCanDrag, lines, setLineAll, circleRefs)
+      //   );
+      // }
     } else {
       setCanDrag(true);
     }
-  }, [isDrawing]);
+  }, [drawingMode]);
 
   //can drag based on whether or not we're resizing
   const [canDrag, setCanDrag] = useState(true);
@@ -84,6 +103,26 @@ export const GraphNode: FC<NodeProps> = ({
       />
     );
   }
+
+  //drawing functions
+  const handleStartPoint = (event: any) => {
+    console.log('in node ' + id);
+    setStartCoordinate({ x: event.clientX, y: event.clientY });
+    startNode.current = id;
+    document.addEventListener('mousemove', handleDrawing);
+    document.addEventListener('mouseup', handleEndPoint);
+  };
+  const handleDrawing = (event: MouseEvent) => {
+    setEndCoordinate({ x: event.clientX, y: event.clientY });
+  };
+  const handleEndPoint = (event: any) => {
+    console.log('out of node ' + id);
+    setEndCoordinate({ x: event.clientX, y: event.clientY });
+    endNode.current = id;
+    document.removeEventListener('mousemove', handleDrawing);
+    document.removeEventListener('mouseup', handleEndPoint);
+  };
+
   return (
     <div>
       <div
@@ -96,6 +135,13 @@ export const GraphNode: FC<NodeProps> = ({
         }}
         ref={drag}
         id={id}
+        onMouseDown={
+          drawingMode
+            ? handleStartPoint
+            : () => {
+                return null;
+              }
+        }
       >
         <ResizableBox
           dragOn={dragOn}

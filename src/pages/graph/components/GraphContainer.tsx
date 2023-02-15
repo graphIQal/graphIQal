@@ -1,4 +1,10 @@
-import { useCallback, useRef, useState } from 'react';
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDrop } from 'react-dnd';
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
@@ -8,6 +14,7 @@ import LineTo from '../../../packages/lineto';
 import { DragItemGraph, LineRefs } from '../graphTypes';
 import { moveNodeCallback } from '../helpers/dragging';
 import { updateSizeCallback } from '../helpers/resizing';
+import { useCanvas } from '../hooks/useCanvas';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
 
@@ -32,11 +39,9 @@ export const GraphContainer: React.FC<ContainerProps> = ({
     { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
   ]);
 
-  // useEffect(() => {
-  //   setLines([
-  //     { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
-  //   ]);
-  // }, [lines]);
+  useEffect(() => {
+    setLines([...lines]);
+  }, [nodes]);
 
   //Resize stuff
 
@@ -96,7 +101,42 @@ export const GraphContainer: React.FC<ContainerProps> = ({
   );
 
   //drawing stuff
+  const [drawingMode, setDrawingMode] = useState(false);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  useEffect(() => {
+    console.log('is drawing' + isDrawing);
+  });
+
+  const canvas = useRef<any>();
+  const {
+    setStartCoordinate,
+    setEndCoordinate,
+    canvasRef,
+    canvasWidth,
+    canvasHeight,
+  } = useCanvas();
+
+  useEffect(() => {
+    const canvasEle = canvas.current;
+    if (canvasEle) {
+      canvasEle.width = canvasEle.clientWidth;
+      canvasEle.height = canvasEle.clientHeight;
+    }
+  });
+
+  const startNode = useRef<string>('');
+  const endNode = useRef<string>('');
+  console.log(startNode.current);
+  useEffect(() => {
+    if (!startNode || !endNode) {
+      return;
+    }
+    if (startNode.current !== '' && endNode.current !== '') {
+      console.log('here' + startNode.current + endNode.current);
+      setLines([...lines, { start: startNode.current, end: endNode.current }]);
+    }
+    console.log('lines ' + JSON.stringify(lines));
+  }, [endNode.current]);
 
   return (
     <div
@@ -105,9 +145,14 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       ref={drop}
     >
       <div className='absolute bottom-10 right-10'>
-        <IconCircleButton onClick={createNode} />
+        <IconCircleButton onClick={() => setDrawingMode(!drawingMode)} />
       </div>
       {lines.map(function (line, i) {
+        console.log('drawing line');
+        console.log(document.getElementById(line.start));
+        console.log(document.getElementById(line.end));
+
+        console.log(i);
         return <LineTo key={i} from={line.start} to={line.end} />;
       })}
       {Object.values(nodes).map((node) => {
@@ -134,12 +179,19 @@ export const GraphContainer: React.FC<ContainerProps> = ({
               lines={lines}
               isDrawing={isDrawing}
               setIsDrawing={setIsDrawing}
+              drawingMode={drawingMode}
+              setDrawingMode={setDrawingMode}
+              setStartCoordinate={setStartCoordinate}
+              setEndCoordinate={setEndCoordinate}
+              startNode={startNode}
+              endNode={endNode}
             >
               <GraphEditor />
             </GraphNode>
           </div>
         );
       })}
+      <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
     </div>
   );
 };

@@ -2,13 +2,14 @@ import { useCallback } from 'react';
 
 //When box is resized
 export const updateSizeCallback = (
-  id: number,
+  id: number | string,
   width: number,
   height: number,
   nodes: any,
   setNodes: (val: any) => void,
   tag?: string
 ) => {
+  console.log('here');
   const newSize = [width, height];
   let newNodes: any = {};
   for (const node in nodes) {

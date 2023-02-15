@@ -8,7 +8,16 @@ const ResizableBox: React.FC<{
   dragOn: () => void;
   dragOff: () => void;
   updateSize: (width: number, height: number, tag?: string) => any;
-}> = ({ children, classes, style, dragOn, dragOff, updateSize }) => {
+  drawingMode: boolean;
+}> = ({
+  children,
+  classes,
+  style,
+  dragOn,
+  dragOff,
+  updateSize,
+  drawingMode,
+}) => {
   const ref = useRef(null);
   const refLeft = useRef(null);
   const refTop = useRef(null);
@@ -18,7 +27,9 @@ const ResizableBox: React.FC<{
 
   useEffect(() => {
     const resizeableEle = ref.current as any;
-
+    if (!resizeableEle) {
+      return;
+    }
     const styles = window.getComputedStyle(resizeableEle);
     let width = parseInt(styles.width, 10);
     let height = parseInt(styles.height, 10);

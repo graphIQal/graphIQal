@@ -13,6 +13,11 @@ import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
 import LineTo from '../../../packages/lineto';
 import { DragItemGraph, LineRefs } from '../graphTypes';
 import { moveNodeCallback } from '../helpers/dragging';
+import {
+  handleDrawing,
+  handleEndPoint,
+  handleStartPoint,
+} from '../helpers/drawing';
 import { updateSizeCallback } from '../helpers/resizing';
 import { useCanvas } from '../hooks/useCanvas';
 import GraphEditor from './GraphEditor';
@@ -123,40 +128,14 @@ export const GraphContainer: React.FC<ContainerProps> = ({
 
   const startNode = useRef<string>('');
   const endNode = useRef<string>('');
-  console.log(startNode.current);
   useEffect(() => {
     if (!startNode || !endNode) {
       return;
     }
     if (startNode.current !== '' && endNode.current !== '') {
-      console.log('here' + startNode.current + endNode.current);
       setLines([...lines, { start: startNode.current, end: endNode.current }]);
     }
-    window.removeEventListener('mousemove', handleDrawing);
   }, [endNode.current]);
-
-  //drawing functions
-  const handleStartPoint = (event: any, id: string) => {
-    console.log('in node ' + id);
-    setStartCoordinate({ x: event.clientX, y: event.clientY });
-    startNode.current = id;
-    setIsDrawing(true);
-    document.addEventListener('mouseup', () => {
-      setIsDrawing(false);
-      setStartCoordinate({ x: 0, y: 0 });
-      setEndCoordinate({ x: 0, y: 0 });
-    });
-  };
-  const handleDrawing = (event: any) => {
-    setEndCoordinate({ x: event.clientX, y: event.clientY });
-  };
-  const handleEndPoint = (event: any, id: string) => {
-    console.log('out of node ' + id);
-    setStartCoordinate({ x: 0, y: 0 });
-    setEndCoordinate({ x: 0, y: 0 });
-    endNode.current = id;
-    setIsDrawing(false);
-  };
 
   return (
     <div
@@ -164,7 +143,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       className='w-screen h-screen border-solid border relative'
       onMouseMove={
         isDrawing
-          ? handleDrawing
+          ? (event: any) => handleDrawing(event, setEndCoordinate)
           : () => {
               return null;
             }
@@ -172,14 +151,14 @@ export const GraphContainer: React.FC<ContainerProps> = ({
       ref={drop}
     >
       <div className='absolute bottom-10 right-10'>
-        <IconCircleButton onClick={() => setDrawingMode(!drawingMode)} />
+        <IconCircleButton src='plus' onClick={() => createNode} />
+        <IconCircleButton
+          src='draw'
+          onClick={() => setDrawingMode(!drawingMode)}
+          selected={drawingMode}
+        />
       </div>
       {lines.map(function (line, i) {
-        console.log('drawing line');
-        console.log(document.getElementById(line.start));
-        console.log(document.getElementById(line.end));
-
-        console.log(i);
         return <LineTo key={i} from={line.start} to={line.end} />;
       })}
       {Object.values(nodes).map((node) => {
@@ -189,14 +168,30 @@ export const GraphContainer: React.FC<ContainerProps> = ({
             key={node.id}
             onMouseDown={
               drawingMode
-                ? (event: any) => handleStartPoint(event, node.id)
+                ? (event: any) =>
+                    handleStartPoint(
+                      event,
+                      node.id,
+                      setStartCoordinate,
+                      setEndCoordinate,
+                      startNode,
+                      setIsDrawing
+                    )
                 : () => {
                     return null;
                   }
             }
             onMouseUp={
               isDrawing
-                ? (event: any) => handleEndPoint(event, node.id)
+                ? (event: any) =>
+                    handleEndPoint(
+                      event,
+                      node.id,
+                      setStartCoordinate,
+                      setEndCoordinate,
+                      endNode,
+                      setIsDrawing
+                    )
                 : () => {
                     return null;
                   }
@@ -219,16 +214,7 @@ export const GraphContainer: React.FC<ContainerProps> = ({
                 height: number,
                 tag?: string
               ) => updateSize(id, width, height, nodes, setNodes, tag)}
-              setLineAll={setLines}
-              lines={lines}
-              isDrawing={isDrawing}
-              setIsDrawing={setIsDrawing}
               drawingMode={drawingMode}
-              setDrawingMode={setDrawingMode}
-              setStartCoordinate={setStartCoordinate}
-              setEndCoordinate={setEndCoordinate}
-              startNode={startNode}
-              endNode={endNode}
             >
               <GraphEditor />
             </GraphNode>

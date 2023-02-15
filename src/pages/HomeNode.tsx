@@ -17,7 +17,7 @@ const HomeNode: React.FC = () => {
       <p>{'Hello ' + user?.users[0].metadata?.name}</p>
       <div className='flex flex-row justify-items-stretch w-xxl h-xxl'>
         <h1>My Nodes</h1>
-        <IconCircleButton onClick={createNode} />
+        <IconCircleButton src='plus' onClick={createNode} />
       </div>
 
       <div>

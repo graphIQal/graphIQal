@@ -144,11 +144,9 @@ export default class LineTo extends Component {
 
   detect() {
     const { from, to, within = '' } = this.props;
-    console.log('props ' + JSON.stringify(this.props));
     const a = this.findElement(from);
     const b = this.findElement(to);
-    console.log('apple ' + a);
-    console.log('apple2 ' + b);
+
     if (!a || !b) {
       return false;
     }

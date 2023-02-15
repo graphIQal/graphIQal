@@ -25,8 +25,14 @@ export function drawLine(
 
 export function useCanvas() {
   const canvasRef = useRef<any>(null);
-  const [startCoordinate, setStartCoordinate] = useState({ x: 0, y: 0 });
-  const [endCoordinate, setEndCoordinate] = useState({ x: 0, y: 0 });
+  const [startCoordinate, setStartCoordinate] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [endCoordinate, setEndCoordinate] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   type Coord = {
     x: number;
@@ -44,7 +50,9 @@ export function useCanvas() {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     // draw all coordinates held in state
-
+    if (startCoordinate == null || endCoordinate == null) {
+      return;
+    }
     drawLine(
       ctx,
       startCoordinate.x,

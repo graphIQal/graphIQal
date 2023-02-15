@@ -9,7 +9,6 @@ import {
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import ResizableBox from '../../../packages/resizable/resizableBox';
 import '../graph.css';
-import { handleEndPoint } from '../helpers/drawing';
 import { useDragNode } from '../hooks/useDrag';
 
 export interface NodeProps {
@@ -20,16 +19,7 @@ export interface NodeProps {
   size: number[];
   children: ReactNode;
   updateSize: (id: number, width: number, height: number, tag?: string) => void;
-  setLineAll: (x: any) => void;
-  lines: any;
-  isDrawing: boolean;
-  setIsDrawing: (x: boolean) => void;
-  setStartCoordinate: (val: any) => void;
-  setEndCoordinate: (val: any) => void;
   drawingMode: boolean;
-  setDrawingMode: (val: any) => void;
-  startNode: MutableRefObject<string>;
-  endNode: MutableRefObject<string>;
 }
 export const GraphNode: FC<NodeProps> = ({
   id,
@@ -38,22 +28,18 @@ export const GraphNode: FC<NodeProps> = ({
   hideSourceOnDrag,
   size,
   updateSize,
-  setLineAll,
-  lines,
-  isDrawing,
-  setIsDrawing,
   children,
-  setStartCoordinate,
-  setEndCoordinate,
+
   drawingMode,
-  setDrawingMode,
-  startNode,
-  endNode,
 }) => {
   //refs for the circles we're drawing with
   const circleRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   //attach listeners to circles for release if drawing
+
+  //can drag based on whether or not we're resizing
+  const [canDrag, setCanDrag] = useState(false);
+
   useEffect(() => {
     if (drawingMode) {
       setCanDrag(false);
@@ -69,8 +55,6 @@ export const GraphNode: FC<NodeProps> = ({
     }
   }, [drawingMode]);
 
-  //can drag based on whether or not we're resizing
-  const [canDrag, setCanDrag] = useState(true);
   const dragOn = () => {
     setCanDrag(true);
   };
@@ -128,6 +112,7 @@ export const GraphNode: FC<NodeProps> = ({
           updateSize={(width: number, height: number, tag?: string) =>
             updateSize(id, width, height, tag)
           }
+          drawingMode={drawingMode}
         >
           <EditorComponent />
         </ResizableBox>

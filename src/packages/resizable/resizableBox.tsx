@@ -1,23 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
+import GraphContext, {
+  GraphContextInterface,
+} from '../../pages/graph/GraphContext';
 import './resizable.css';
 
 const ResizableBox: React.FC<{
   children: any;
   classes?: string;
   style?: object;
-  dragOn: () => void;
-  dragOff: () => void;
-  updateSize: (width: number, height: number, tag?: string) => any;
-  drawingMode: boolean;
-}> = ({
-  children,
-  classes,
-  style,
-  dragOn,
-  dragOff,
-  updateSize,
-  drawingMode,
-}) => {
+  id: string | number;
+}> = ({ children, classes, style, id }) => {
+  const { drawingMode, canDrag, setCanDrag, updateSize } = useContext(
+    GraphContext
+  ) as GraphContextInterface;
   const ref = useRef(null);
   const refLeft = useRef(null);
   const refTop = useRef(null);
@@ -47,15 +42,15 @@ const ResizableBox: React.FC<{
       height = height + dy;
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
-      updateSize(width, height);
+      updateSize(id, width, height);
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
-      dragOn();
+      setCanDrag(true);
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
     };
     const onMouseDownBottomRightResize = (event: any) => {
-      dragOff();
+      setCanDrag(false);
       x = event.clientX;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.left = styles.left;
@@ -74,16 +69,16 @@ const ResizableBox: React.FC<{
       const dx = e.clientX - x;
       x = e.clientX;
       width = width + dx;
-      updateSize(width, resizeableEle.style.height);
+      updateSize(id, width, resizeableEle.style.height);
       resizeableEle.style.width = width + 'px';
     };
 
     const onMouseUpRightResize = (event: Event) => {
-      dragOn();
+      setCanDrag(true);
       document.removeEventListener('mousemove', onMouseMoveRightResize);
     };
     const onMouseDownRightResize = (event: any) => {
-      dragOff();
+      setCanDrag(false);
       x = event.clientX;
       resizeableEle.style.left = styles.left;
       resizeableEle.style.right = null;
@@ -99,15 +94,15 @@ const ResizableBox: React.FC<{
       y = e.clientY;
       //   resizeableEle.style.top -= dy;
       resizeableEle.style.height = height + 'px';
-      updateSize(resizeableEle.style.width, height, 'top');
+      updateSize(id, resizeableEle.style.width, height, 'top');
     };
 
     const onMouseUpTopResize = (event: Event) => {
-      dragOn();
+      setCanDrag(true);
       document.removeEventListener('mousemove', onMouseMoveTopResize);
     };
     const onMouseDownTopResize = (event: any) => {
-      dragOff();
+      setCanDrag(false);
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.bottom = styles.bottom;
@@ -123,15 +118,15 @@ const ResizableBox: React.FC<{
       height = height + dy;
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
-      updateSize(resizeableEle.style.width, height);
+      updateSize(id, resizeableEle.style.width, height);
     };
 
     const onMouseUpBottomResize = (event: Event) => {
-      dragOn();
+      setCanDrag(true);
       document.removeEventListener('mousemove', onMouseMoveBottomResize);
     };
     const onMouseDownBottomResize = (event: any) => {
-      dragOff();
+      setCanDrag(false);
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.top = styles.top;
@@ -147,15 +142,15 @@ const ResizableBox: React.FC<{
       x = e.clientX;
       width = width - dx;
       resizeableEle.style.width = width + 'px';
-      updateSize(width, resizeableEle.style.height, 'left');
+      updateSize(id, width, resizeableEle.style.height, 'left');
     };
 
     const onMouseUpLeftResize = (event: Event) => {
-      dragOn();
+      setCanDrag(true);
       document.removeEventListener('mousemove', onMouseMoveLeftResize);
     };
     const onMouseDownLeftResize = (event: any) => {
-      dragOff();
+      setCanDrag(false);
       x = event.clientX;
       resizeableEle.style.right = styles.right;
       resizeableEle.style.left = null;

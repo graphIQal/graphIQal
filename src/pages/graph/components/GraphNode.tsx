@@ -2,6 +2,7 @@ import {
   FC,
   MutableRefObject,
   ReactNode,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -9,36 +10,25 @@ import {
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import ResizableBox from '../../../packages/resizable/resizableBox';
 import '../graph.css';
+import GraphContext, { GraphContextInterface } from '../GraphContext';
 import { useDragNode } from '../hooks/useDrag';
 
 export interface NodeProps {
   id: any;
   left: number;
   top: number;
-  hideSourceOnDrag?: boolean;
   size: number[];
   children: ReactNode;
-  updateSize: (id: number, width: number, height: number, tag?: string) => void;
-  drawingMode: boolean;
 }
-export const GraphNode: FC<NodeProps> = ({
-  id,
-  left,
-  top,
-  hideSourceOnDrag,
-  size,
-  updateSize,
-  children,
+export const GraphNode: FC<NodeProps> = ({ id, left, top, size, children }) => {
+  const { drawingMode, canDrag, setCanDrag, hideSourceOnDrag } = useContext(
+    GraphContext
+  ) as GraphContextInterface;
 
-  drawingMode,
-}) => {
   //refs for the circles we're drawing with
   const circleRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   //attach listeners to circles for release if drawing
-
-  //can drag based on whether or not we're resizing
-  const [canDrag, setCanDrag] = useState(false);
 
   useEffect(() => {
     if (drawingMode) {
@@ -54,13 +44,6 @@ export const GraphNode: FC<NodeProps> = ({
       setCanDrag(true);
     }
   }, [drawingMode]);
-
-  const dragOn = () => {
-    setCanDrag(true);
-  };
-  const dragOff = () => {
-    setCanDrag(false);
-  };
 
   //DND dragging hook
   const [{ isDragging }, drag, preview] = useDragNode(
@@ -102,17 +85,12 @@ export const GraphNode: FC<NodeProps> = ({
         id={id}
       >
         <ResizableBox
-          dragOn={dragOn}
-          dragOff={dragOff}
           classes='p-sm overflow-hidden h-full w-full'
           style={{
             width: size[0],
             height: size[1],
           }}
-          updateSize={(width: number, height: number, tag?: string) =>
-            updateSize(id, width, height, tag)
-          }
-          drawingMode={drawingMode}
+          id={id}
         >
           <EditorComponent />
         </ResizableBox>

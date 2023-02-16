@@ -18,12 +18,14 @@ export const handleStartPoint = (
     setEndCoordinate(null);
   });
 };
+
 export const handleDrawing = (
   event: any,
   setEndCoordinate: (val: any) => void
 ) => {
   setEndCoordinate({ x: event.clientX, y: event.clientY });
 };
+
 export const handleEndPoint = (
   event: any,
   id: string,

@@ -34,7 +34,7 @@ const Graph: React.FC = () => {
 
   //Mock line data
   const [lines, setLines] = useState<LineRefs[]>([
-    // { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
+    { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
   ]);
 
   //Resize function called by components

@@ -16,9 +16,12 @@ import GraphContext, { GraphContextInterface } from '../GraphContext';
 import { DragItemGraph, LineRefs } from '../graphTypes';
 import { moveNodeCallback } from '../helpers/dragging';
 import {
+  Coord,
+  handleCircleDrawing,
   handleDrawing,
   handleEndPoint,
   handleStartPoint,
+  isCircle,
 } from '../helpers/drawing';
 import { useCanvas } from '../hooks/useCanvas';
 import GraphEditor from './GraphEditor';
@@ -96,13 +99,8 @@ export const GraphContainer: React.FC = () => {
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
   const canvas = useRef<any>();
-  const {
-    setStartCoordinate,
-    setEndCoordinate,
-    canvasRef,
-    canvasWidth,
-    canvasHeight,
-  } = useCanvas();
+  const { canvasRef, canvasWidth, canvasHeight, points, setPoints } =
+    useCanvas();
 
   useEffect(() => {
     const canvasEle = canvas.current;
@@ -127,9 +125,34 @@ export const GraphContainer: React.FC = () => {
     <div
       // onPointerDown={(event:PointerEvent) => onPointDown(event, pointersDown, setPointersDown)}
       className='w-screen h-screen border-solid border relative'
+      onMouseDown={
+        drawingMode
+          ? (event: any) => handleStartPoint(event, '', startNode, setIsDrawing)
+          : () => {
+              return null;
+            }
+      }
       onMouseMove={
         isDrawing
-          ? (event: any) => handleDrawing(event, setEndCoordinate)
+          ? (event: any) => {
+              handleDrawing(event, points, setPoints);
+            }
+          : () => {
+              return null;
+            }
+      }
+      onMouseUp={
+        isDrawing
+          ? (event: any) => {
+              handleCircleDrawing(
+                event,
+                setIsDrawing,
+                points,
+                setPoints,
+                nodes,
+                setNodes
+              );
+            }
           : () => {
               return null;
             }
@@ -158,8 +181,7 @@ export const GraphContainer: React.FC = () => {
                     handleStartPoint(
                       event,
                       node.id,
-                      setStartCoordinate,
-                      setEndCoordinate,
+
                       startNode,
                       setIsDrawing
                     )
@@ -173,10 +195,10 @@ export const GraphContainer: React.FC = () => {
                     handleEndPoint(
                       event,
                       node.id,
-                      setStartCoordinate,
-                      setEndCoordinate,
+
                       endNode,
-                      setIsDrawing
+                      setIsDrawing,
+                      setPoints
                     )
                 : () => {
                     return null;

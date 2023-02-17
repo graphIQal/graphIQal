@@ -10,7 +10,7 @@ const ResizableBox: React.FC<{
   style?: object;
   id: string | number;
 }> = ({ children, classes, style, id }) => {
-  const { drawingMode, canDrag, setCanDrag, updateSize } = useContext(
+  const { setCanDrag, updateSize } = useContext(
     GraphContext
   ) as GraphContextInterface;
   const ref = useRef(null);
@@ -31,14 +31,21 @@ const ResizableBox: React.FC<{
     let x = 0;
     let y = 0;
 
+    const MIN = 100;
     //Bi-directional Resize
     const onMouseMoveBottomRightResize = (event: any) => {
       const e = event as any;
       const dx = e.clientX - x;
       x = e.clientX;
+      if (width + dx < MIN) {
+        return;
+      }
       width = width + dx;
       resizeableEle.style.width = width + 'px';
       const dy = e.clientY - y;
+      if (height + dy < MIN) {
+        return;
+      }
       height = height + dy;
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
@@ -68,6 +75,9 @@ const ResizableBox: React.FC<{
       const e = event as any;
       const dx = e.clientX - x;
       x = e.clientX;
+      if (width + dx < 100) {
+        return;
+      }
       width = width + dx;
       updateSize(id, width, resizeableEle.style.height);
       resizeableEle.style.width = width + 'px';
@@ -90,6 +100,10 @@ const ResizableBox: React.FC<{
     const onMouseMoveTopResize = (event: any) => {
       const e = event as any;
       const dy = y - e.clientY;
+      if (height + dy < 100) {
+        return;
+      }
+
       height = height + dy;
       y = e.clientY;
       //   resizeableEle.style.top -= dy;
@@ -115,6 +129,10 @@ const ResizableBox: React.FC<{
     const onMouseMoveBottomResize = (event: any) => {
       const e = event as any;
       const dy = e.clientY - y;
+      if (height + dy < 100) {
+        return;
+      }
+
       height = height + dy;
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
@@ -140,6 +158,10 @@ const ResizableBox: React.FC<{
       const e = event as any;
       const dx = e.clientX - x;
       x = e.clientX;
+      if (width + dx < 100) {
+        return;
+      }
+
       width = width - dx;
       resizeableEle.style.width = width + 'px';
       updateSize(id, width, resizeableEle.style.height, 'left');

@@ -25,14 +25,8 @@ export function drawLine(
 
 export function useCanvas() {
   const canvasRef = useRef<any>(null);
-  const [startCoordinate, setStartCoordinate] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-  const [endCoordinate, setEndCoordinate] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
+
+  const [points, setPoints] = useState<Coord[]>([]);
 
   type Coord = {
     x: number;
@@ -49,24 +43,33 @@ export function useCanvas() {
     // clear the canvas area before rendering the coordinates held in state
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    // draw all coordinates held in state
-    if (startCoordinate == null || endCoordinate == null) {
+    // drawLine(
+    //   ctx,
+    //   startCoordinate.x,
+    //   startCoordinate.y,
+    //   endCoordinate.x,
+    //   endCoordinate.y
+    // );
+    if (points == null) {
       return;
     }
-    drawLine(
-      ctx,
-      startCoordinate.x,
-      startCoordinate.y,
-      endCoordinate.x,
-      endCoordinate.y
-    );
-  }, [startCoordinate, setStartCoordinate, endCoordinate, setEndCoordinate]);
+    for (let i = 0; i < points.length - 1; ++i) {
+      if (points[i] == null) break;
+      drawLine(
+        ctx,
+        (points[i] as any).x,
+        (points[i] as any).y,
+        (points[i + 1] as any).x,
+        (points[i + 1] as any).y
+      );
+    }
+  }, [points, setPoints]);
 
   return {
-    setStartCoordinate: setStartCoordinate,
-    setEndCoordinate: setEndCoordinate,
     canvasRef: canvasRef,
     canvasWidth: canvasWidth,
     canvasHeight: canvasHeight,
+    points,
+    setPoints,
   };
 }

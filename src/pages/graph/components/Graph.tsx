@@ -29,12 +29,12 @@ const Graph: React.FC = () => {
   //Mock node data
   const [nodes, setNodes] = useState<{ [key: string]: GraphViewElement }>({
     a: { id: 'a', graphNode: { index: 0, x: 80, y: 20, size: [100, 100] } },
-    b: { id: 'b', graphNode: { index: 0, x: 400, y: 20, size: [20, 100] } },
+    b: { id: 'b', graphNode: { index: 0, x: 400, y: 20, size: [100, 100] } },
   });
 
   //Mock line data
   const [lines, setLines] = useState<LineRefs[]>([
-    { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
+    // { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
   ]);
 
   //Resize function called by components

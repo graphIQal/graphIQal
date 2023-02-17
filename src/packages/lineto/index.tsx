@@ -167,7 +167,6 @@ type LineProps = {
 };
 
 const Line: React.FC<LineProps> = (props) => {
-  console.log('props ' + JSON.stringify(props));
   const el = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (el.current != null) {

@@ -4,42 +4,114 @@ import { MutableRefObject } from 'react';
 export const handleStartPoint = (
   event: any,
   id: string,
-  setStartCoordinate: (val: any) => void,
-  setEndCoordinate: (val: any) => void,
   startNode: MutableRefObject<string>,
   setIsDrawing: (val: boolean) => void
 ) => {
-  setStartCoordinate({ x: event.clientX, y: event.clientY });
-  startNode.current = id;
+  if (id !== '') {
+    startNode.current = id;
+  }
   setIsDrawing(true);
-  document.addEventListener('mouseup', () => {
-    setIsDrawing(false);
-    setStartCoordinate(null);
-    setEndCoordinate(null);
-  });
 };
 
+export type Coord = {
+  x: number;
+  y: number;
+};
 export const handleDrawing = (
   event: any,
-  setEndCoordinate: (val: any) => void
+  points: Coord[],
+  setPoints: (val: Coord[]) => void
 ) => {
-  setEndCoordinate({ x: event.clientX, y: event.clientY });
+  setPoints([...points, { x: event.clientX, y: event.clientY }]);
 };
 
 export const handleEndPoint = (
   event: any,
   id: string,
-  setStartCoordinate: (val: any) => void,
-  setEndCoordinate: (val: any) => void,
   endNode: MutableRefObject<string>,
-  setIsDrawing: (val: boolean) => void
+  setIsDrawing: (val: boolean) => void,
+  setPoints: (val: any) => void
 ) => {
-  setStartCoordinate(null);
-  setEndCoordinate(null);
+  setPoints([]);
   endNode.current = id;
   setIsDrawing(false);
 };
 
+export const isCircle = (coords: Coord[]) => {
+  let xAvg = 0;
+  let yAvg = 0;
+  for (const coord in coords) {
+    xAvg += coords[coord].x;
+    yAvg += coords[coord].y;
+  }
+  xAvg = xAvg / coords.length;
+  yAvg = yAvg / coords.length;
+  let avgDist = 0;
+  for (const coord in coords) {
+    let dx = coords[coord].x - xAvg;
+    let dy = coords[coord].y - yAvg;
+    avgDist += Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+  }
+  avgDist = avgDist / coords.length;
+  const min = avgDist * 0.8;
+  const max = avgDist * 1.2;
+  let countWithin = 0;
+  for (const coord in coords) {
+    let dx = coords[coord].x - xAvg;
+    let dy = coords[coord].y - yAvg;
+    let distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+    if (distance >= min && distance <= max) {
+      countWithin = countWithin + 1;
+    }
+  }
+  console.log(countWithin / coords.length);
+  return {
+    circle: countWithin / coords.length >= 0.5,
+    center: [xAvg, yAvg],
+    size: avgDist,
+  };
+};
+
+export const handleCircleDrawing = (
+  event: any,
+  setIsDrawing: (val: any) => void,
+  points: Coord[],
+  setPoints: (val: Coord[]) => void,
+  nodes: any,
+  setNodes: (val: any) => void
+) => {
+  setIsDrawing(false);
+  const { circle, center, size } = isCircle(points);
+  const ids = [
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+  ];
+  if (circle) {
+    let newNodes = { ...nodes };
+    newNodes[ids[Object.keys(nodes).length + 1]] = {
+      id: ids[Object.keys(nodes).length + 1],
+      graphNode: { index: 0, x: center[0], y: center[1], size: [size, size] },
+    };
+    setNodes(newNodes);
+  }
+  setPoints([]);
+};
 //When a circle is clicked
 //Circle stuff not being used at the moment
 // export const handleMouseDownCircle = (

@@ -7,9 +7,7 @@ export const handleStartPoint = (
   startNode: MutableRefObject<string>,
   setIsDrawing: (val: boolean) => void
 ) => {
-  if (id !== '') {
-    startNode.current = id;
-  }
+  startNode.current = id;
   setIsDrawing(true);
 };
 

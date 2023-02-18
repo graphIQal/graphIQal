@@ -3,6 +3,7 @@ import React, {
   MutableRefObject,
   RefObject,
   useCallback,
+  useEffect,
   useRef,
   useState,
 } from 'react';
@@ -28,8 +29,8 @@ const Graph: React.FC = () => {
 
   //Mock node data
   const [nodes, setNodes] = useState<{ [key: string]: GraphViewElement }>({
-    a: { id: 'a', graphNode: { index: 0, x: 80, y: 20, size: [100, 100] } },
-    b: { id: 'b', graphNode: { index: 0, x: 400, y: 20, size: [100, 100] } },
+    // a: { id: 'a', graphNode: { index: 0, x: 80, y: 20, size: [100, 100] } },
+    // b: { id: 'b', graphNode: { index: 0, x: 400, y: 20, size: [100, 100] } },
   });
 
   //Mock line data
@@ -40,10 +41,14 @@ const Graph: React.FC = () => {
   //Resize function called by components
   const updateSize = useCallback(
     (id: number | string, width: number, height: number, tag?: string) => {
+      console.log('nodes receiving ' + JSON.stringify(nodes));
       updateSizeCallback(id, width, height, nodes, setNodes, tag);
     },
     [nodes, setNodes]
   );
+  useEffect(() => {
+    console.log('drawing mode ' + drawingMode);
+  }, [drawingMode]);
 
   return (
     <DndProvider backend={HTML5Backend}>

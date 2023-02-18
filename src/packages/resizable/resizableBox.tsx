@@ -10,7 +10,7 @@ const ResizableBox: React.FC<{
   style?: object;
   id: string | number;
 }> = ({ children, classes, style, id }) => {
-  const { setCanDrag, updateSize } = useContext(
+  const { setCanDrag, updateSize, nodes, drawingMode } = useContext(
     GraphContext
   ) as GraphContextInterface;
   const ref = useRef(null);
@@ -30,7 +30,7 @@ const ResizableBox: React.FC<{
     let height = parseInt(styles.height, 10);
     let x = 0;
     let y = 0;
-
+    console.log('receiving nodes ' + Object.keys(nodes).length);
     const MIN = 100;
     //Bi-directional Resize
     const onMouseMoveBottomRightResize = (event: any) => {
@@ -38,22 +38,25 @@ const ResizableBox: React.FC<{
       const dx = e.clientX - x;
       x = e.clientX;
       if (width + dx < MIN) {
-        return;
+        width = MIN;
+      } else {
+        width = width + dx;
       }
-      width = width + dx;
       resizeableEle.style.width = width + 'px';
       const dy = e.clientY - y;
       if (height + dy < MIN) {
-        return;
+        height = MIN;
+      } else {
+        height = height + dy;
       }
-      height = height + dy;
+
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
       updateSize(id, width, height);
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
-      setCanDrag(true);
+      setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
     };
     const onMouseDownBottomRightResize = (event: any) => {
@@ -75,16 +78,18 @@ const ResizableBox: React.FC<{
       const e = event as any;
       const dx = e.clientX - x;
       x = e.clientX;
-      if (width + dx < 100) {
-        return;
+      if (width + dx < MIN) {
+        width = MIN;
+      } else {
+        width = width + dx;
       }
-      width = width + dx;
+
       updateSize(id, width, resizeableEle.style.height);
       resizeableEle.style.width = width + 'px';
     };
 
     const onMouseUpRightResize = (event: Event) => {
-      setCanDrag(true);
+      setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveRightResize);
     };
     const onMouseDownRightResize = (event: any) => {
@@ -100,11 +105,12 @@ const ResizableBox: React.FC<{
     const onMouseMoveTopResize = (event: any) => {
       const e = event as any;
       const dy = y - e.clientY;
-      if (height + dy < 100) {
-        return;
+      if (height + dy < MIN) {
+        height = MIN;
+      } else {
+        height = height + dy;
       }
 
-      height = height + dy;
       y = e.clientY;
       //   resizeableEle.style.top -= dy;
       resizeableEle.style.height = height + 'px';
@@ -112,7 +118,7 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpTopResize = (event: Event) => {
-      setCanDrag(true);
+      setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveTopResize);
     };
     const onMouseDownTopResize = (event: any) => {
@@ -129,18 +135,19 @@ const ResizableBox: React.FC<{
     const onMouseMoveBottomResize = (event: any) => {
       const e = event as any;
       const dy = e.clientY - y;
-      if (height + dy < 100) {
-        return;
+      if (height + dy < MIN) {
+        height = MIN;
+      } else {
+        height = height + dy;
       }
 
-      height = height + dy;
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
       updateSize(id, resizeableEle.style.width, height);
     };
 
     const onMouseUpBottomResize = (event: Event) => {
-      setCanDrag(true);
+      setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveBottomResize);
     };
     const onMouseDownBottomResize = (event: any) => {
@@ -158,17 +165,18 @@ const ResizableBox: React.FC<{
       const e = event as any;
       const dx = e.clientX - x;
       x = e.clientX;
-      if (width + dx < 100) {
-        return;
+      if (width + dx < MIN) {
+        width = MIN;
+      } else {
+        width = width - dx;
       }
 
-      width = width - dx;
       resizeableEle.style.width = width + 'px';
       updateSize(id, width, resizeableEle.style.height, 'left');
     };
 
     const onMouseUpLeftResize = (event: Event) => {
-      setCanDrag(true);
+      setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveLeftResize);
     };
     const onMouseDownLeftResize = (event: any) => {
@@ -214,7 +222,7 @@ const ResizableBox: React.FC<{
         onMouseDownBottomRightResize
       );
     };
-  }, []);
+  }, [nodes]);
 
   return (
     <div ref={ref} style={style} className={'resizable ' + classes}>
@@ -226,5 +234,6 @@ const ResizableBox: React.FC<{
       <div className='w-full h-full z-[0]'>{children}</div>
     </div>
   );
+  //maybe try putting listeners on div element to make sure they're updating
 };
 export default ResizableBox;

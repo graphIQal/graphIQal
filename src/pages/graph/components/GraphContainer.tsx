@@ -113,7 +113,12 @@ export const GraphContainer: React.FC = () => {
   const startNode = useRef<string>('');
   const endNode = useRef<string>('');
   useEffect(() => {
-    if (!startNode || !endNode) {
+    if (
+      !startNode ||
+      !endNode ||
+      startNode.current == '' ||
+      endNode.current == ''
+    ) {
       return;
     }
     if (startNode.current !== '' && endNode.current !== '') {
@@ -125,38 +130,6 @@ export const GraphContainer: React.FC = () => {
     <div
       // onPointerDown={(event:PointerEvent) => onPointDown(event, pointersDown, setPointersDown)}
       className='w-screen h-screen border-solid border relative'
-      onMouseDown={
-        drawingMode
-          ? (event: any) => handleStartPoint(event, '', startNode, setIsDrawing)
-          : () => {
-              return null;
-            }
-      }
-      onMouseMove={
-        isDrawing
-          ? (event: any) => {
-              handleDrawing(event, points, setPoints);
-            }
-          : () => {
-              return null;
-            }
-      }
-      onMouseUp={
-        isDrawing
-          ? (event: any) => {
-              handleCircleDrawing(
-                event,
-                setIsDrawing,
-                points,
-                setPoints,
-                nodes,
-                setNodes
-              );
-            }
-          : () => {
-              return null;
-            }
-      }
       ref={drop}
     >
       <div className='absolute bottom-10 right-10'>
@@ -178,13 +151,7 @@ export const GraphContainer: React.FC = () => {
             onMouseDown={
               drawingMode
                 ? (event: any) =>
-                    handleStartPoint(
-                      event,
-                      node.id,
-
-                      startNode,
-                      setIsDrawing
-                    )
+                    handleStartPoint(event, node.id, startNode, setIsDrawing)
                 : () => {
                     return null;
                   }
@@ -221,7 +188,45 @@ export const GraphContainer: React.FC = () => {
           </div>
         );
       })}
-      <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
+      <div
+        onMouseDown={
+          drawingMode
+            ? (event: any) => {
+                handleStartPoint(event, '', startNode, setIsDrawing);
+                console.log('drawing mode ' + drawingMode);
+              }
+            : () => {
+                return null;
+              }
+        }
+        onMouseMove={
+          isDrawing
+            ? (event: any) => {
+                handleDrawing(event, points, setPoints);
+              }
+            : () => {
+                return null;
+              }
+        }
+        onMouseUp={
+          isDrawing
+            ? (event: any) => {
+                handleCircleDrawing(
+                  event,
+                  setIsDrawing,
+                  points,
+                  setPoints,
+                  nodes,
+                  setNodes
+                );
+              }
+            : () => {
+                return null;
+              }
+        }
+      >
+        <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
+      </div>
     </div>
   );
 };

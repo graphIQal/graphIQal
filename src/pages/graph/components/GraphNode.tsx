@@ -34,13 +34,6 @@ export const GraphNode: FC<NodeProps> = ({ id, left, top, size, children }) => {
   useEffect(() => {
     if (drawingMode) {
       setCanDrag(false);
-      // for (const ref in circleRefs) {
-      //   (circleRefs[ref].current as any).addEventListener(
-      //     'mouseup',
-      //     (event: MouseEvent) =>
-      //       handleEndPoint(event, setCanDrag, lines, setLineAll, circleRefs)
-      //   );
-      // }
     } else {
       setCanDrag(true);
     }
@@ -93,7 +86,7 @@ export const GraphNode: FC<NodeProps> = ({ id, left, top, size, children }) => {
           }}
           id={id}
         >
-          {size[0] > 105 && size[1] > 105 ? (
+          {size[0] > 105 || size[1] > 105 ? (
             <EditorComponent />
           ) : (
             <h3>Title of node</h3>

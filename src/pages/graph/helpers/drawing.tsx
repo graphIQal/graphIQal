@@ -8,6 +8,7 @@ export const handleStartPoint = (
   setIsDrawing: (val: boolean) => void
 ) => {
   startNode.current = id;
+  console.log('enter ' + id);
   setIsDrawing(true);
 };
 
@@ -31,6 +32,7 @@ export const handleEndPoint = (
   setPoints: (val: any) => void
 ) => {
   setPoints([]);
+  console.log('exit ' + id);
   endNode.current = id;
   setIsDrawing(false);
 };
@@ -102,9 +104,15 @@ export const handleCircleDrawing = (
   ];
   if (circle) {
     let newNodes = { ...nodes };
+    let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
     newNodes[ids[Object.keys(nodes).length + 1]] = {
       id: ids[Object.keys(nodes).length + 1],
-      graphNode: { index: 0, x: center[0], y: center[1], size: [size, size] },
+      graphNode: {
+        index: 0,
+        x: center[0] - dimension / 2,
+        y: center[1] - dimension / 2,
+        size: [dimension, dimension],
+      },
     };
     setNodes(newNodes);
   }

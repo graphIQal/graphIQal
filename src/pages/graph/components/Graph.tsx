@@ -41,14 +41,10 @@ const Graph: React.FC = () => {
   //Resize function called by components
   const updateSize = useCallback(
     (id: number | string, width: number, height: number, tag?: string) => {
-      console.log('nodes receiving ' + JSON.stringify(nodes));
       updateSizeCallback(id, width, height, nodes, setNodes, tag);
     },
     [nodes, setNodes]
   );
-  useEffect(() => {
-    console.log('drawing mode ' + drawingMode);
-  }, [drawingMode]);
 
   return (
     <DndProvider backend={HTML5Backend}>

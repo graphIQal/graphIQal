@@ -215,7 +215,6 @@ export class Line extends PureComponent {
     // Append rendered DOM element to the container the
     // offsets were calculated for
     this.within.appendChild(this.el);
-    console.log(this.el.style);
   }
 
   componentWillUnmount() {
@@ -227,7 +226,6 @@ export class Line extends PureComponent {
   }
 
   render() {
-    console.log('props ' + JSON.stringify(this.props));
     const { x0, y0, x1, y1, within = '' } = this.props;
 
     this.within = within ? this.findElement(within) : document.body;

@@ -30,7 +30,6 @@ const ResizableBox: React.FC<{
     let height = parseInt(styles.height, 10);
     let x = 0;
     let y = 0;
-    console.log('receiving nodes ' + Object.keys(nodes).length);
     const MIN = 100;
     //Bi-directional Resize
     const onMouseMoveBottomRightResize = (event: any) => {

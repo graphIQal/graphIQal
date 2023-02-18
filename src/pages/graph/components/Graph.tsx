@@ -46,6 +46,10 @@ const Graph: React.FC = () => {
     [nodes, setNodes]
   );
 
+  //Drawing line data
+  const startNode = useRef<string>('');
+  const endNode = useRef<string>('');
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className='w-screen h-screen overflow-scroll' ref={containerRef}>
@@ -63,6 +67,8 @@ const Graph: React.FC = () => {
             setLines,
             updateSize,
             createNode,
+            startNode: startNode,
+            endNode: endNode,
           }}
         >
           <GraphContainer />

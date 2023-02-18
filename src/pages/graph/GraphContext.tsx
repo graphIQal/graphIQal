@@ -20,6 +20,8 @@ export type GraphContextInterface = {
     tag?: string | undefined
   ) => void;
   createNode: (val: any) => any;
+  startNode: MutableRefObject<string>;
+  endNode: MutableRefObject<string>;
 };
 
 const GraphContext = createContext<GraphContextInterface | null>(null);

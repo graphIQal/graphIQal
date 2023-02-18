@@ -36,6 +36,8 @@ export const GraphContainer: React.FC = () => {
     lines,
     setLines,
     createNode,
+    startNode,
+    endNode,
   } = useContext(GraphContext) as GraphContextInterface;
 
   useEffect(() => {
@@ -110,10 +112,7 @@ export const GraphContainer: React.FC = () => {
     }
   });
 
-  const startNode = useRef<string>('');
-  const endNode = useRef<string>('');
   useEffect(() => {
-    console.log(startNode.current + ' in ' + endNode.current);
     if (
       !startNode ||
       !endNode ||
@@ -123,7 +122,6 @@ export const GraphContainer: React.FC = () => {
       return;
     }
     if (startNode.current !== '' && endNode.current !== '') {
-      console.log('start ' + startNode.current + ' end ' + endNode.current);
       setLines([...lines, { start: startNode.current, end: endNode.current }]);
     }
   }, [endNode.current]);

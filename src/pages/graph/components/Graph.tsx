@@ -46,6 +46,11 @@ const Graph: React.FC = () => {
     [nodes, setNodes]
   );
 
+  useEffect(() => {
+    if (drawingMode && canDrag) {
+      setCanDrag(false);
+    }
+  }, [nodes, setNodes]);
   //Drawing line data
   const startNode = useRef<string>('');
   const endNode = useRef<string>('');

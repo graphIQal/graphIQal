@@ -233,6 +233,5 @@ const ResizableBox: React.FC<{
       <div className='w-full h-full z-[0]'>{children}</div>
     </div>
   );
-  //maybe try putting listeners on div element to make sure they're updating
 };
 export default ResizableBox;

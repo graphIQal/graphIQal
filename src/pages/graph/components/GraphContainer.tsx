@@ -23,6 +23,7 @@ import {
   handleStartPoint,
   isCircle,
 } from '../helpers/drawing';
+import { snapToGrid } from '../helpers/snapping';
 import { useCanvas } from '../hooks/useCanvas';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
@@ -87,8 +88,9 @@ export const GraphContainer: React.FC = () => {
       accept: 'node',
       drop(item: DragItemGraph, monitor) {
         const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
-        const left = Math.round(item.left + delta.x);
-        const top = Math.round(item.top + delta.y);
+        let left = Math.round(item.left + delta.x);
+        let top = Math.round(item.top + delta.y);
+        [left, top] = snapToGrid(left, top);
         moveNode(item.id, left, top, nodes, setNodes);
 
         return undefined;
@@ -165,7 +167,8 @@ export const GraphContainer: React.FC = () => {
 
                       endNode,
                       setIsDrawing,
-                      setPoints
+                      setPoints,
+                      setDrawingMode
                     )
                 : () => {
                     return null;
@@ -216,7 +219,8 @@ export const GraphContainer: React.FC = () => {
                   points,
                   setPoints,
                   nodes,
-                  setNodes
+                  setNodes,
+                  setDrawingMode
                 );
               }
             : () => {

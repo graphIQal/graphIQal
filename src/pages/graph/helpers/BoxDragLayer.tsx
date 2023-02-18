@@ -1,6 +1,7 @@
 import { CSSProperties, FC, MutableRefObject, useRef } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDragLayer } from 'react-dnd';
+import { snapToGrid } from './snapping';
 
 const layerStyles: CSSProperties = {
   position: 'fixed',
@@ -23,6 +24,12 @@ function getItemStyles(
   }
 
   let { x, y } = currentOffset;
+
+  x -= initialOffset.x;
+  y -= initialOffset.y;
+  [x, y] = snapToGrid(x, y);
+  x += initialOffset.x;
+  y += initialOffset.y;
 
   const transform = `translate(${x}px, ${y}px)`;
   return {

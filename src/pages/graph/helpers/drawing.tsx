@@ -8,7 +8,6 @@ export const handleStartPoint = (
   setIsDrawing: (val: boolean) => void
 ) => {
   startNode.current = id;
-  console.log('enter ' + id);
   setIsDrawing(true);
 };
 
@@ -29,12 +28,13 @@ export const handleEndPoint = (
   id: string,
   endNode: MutableRefObject<string>,
   setIsDrawing: (val: boolean) => void,
-  setPoints: (val: any) => void
+  setPoints: (val: any) => void,
+  setDrawingMode: (val: boolean) => void
 ) => {
   setPoints([]);
-  console.log('exit ' + id);
   endNode.current = id;
   setIsDrawing(false);
+  setDrawingMode(false);
 };
 
 export const isCircle = (coords: Coord[]) => {
@@ -64,7 +64,6 @@ export const isCircle = (coords: Coord[]) => {
       countWithin = countWithin + 1;
     }
   }
-  console.log(countWithin / coords.length);
   return {
     circle: countWithin / coords.length >= 0.5,
     center: [xAvg, yAvg],
@@ -78,7 +77,8 @@ export const handleCircleDrawing = (
   points: Coord[],
   setPoints: (val: Coord[]) => void,
   nodes: any,
-  setNodes: (val: any) => void
+  setNodes: (val: any) => void,
+  setDrawingMode: (val: boolean) => void
 ) => {
   setIsDrawing(false);
   const { circle, center, size } = isCircle(points);
@@ -103,6 +103,8 @@ export const handleCircleDrawing = (
     'r',
   ];
   if (circle) {
+    setDrawingMode(false);
+
     let newNodes = { ...nodes };
     let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
     newNodes[ids[Object.keys(nodes).length + 1]] = {
@@ -118,6 +120,23 @@ export const handleCircleDrawing = (
   }
   setPoints([]);
 };
+
+export const handleDrawingHotkey = (
+  event: any,
+  controlPressed: MutableRefObject<boolean>,
+  drawingMode: boolean,
+  setDrawingMode: (val: boolean) => void
+) => {
+  if (controlPressed.current) {
+    if (event.code == 'KeyE') {
+      setDrawingMode(!drawingMode);
+    }
+  }
+  if (event.metaKey) {
+    controlPressed.current = true;
+  }
+};
+
 //When a circle is clicked
 //Circle stuff not being used at the moment
 // export const handleMouseDownCircle = (

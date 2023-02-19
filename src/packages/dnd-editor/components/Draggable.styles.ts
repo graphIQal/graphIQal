@@ -11,12 +11,17 @@ export const getBlockStyles = <V extends MyValue>(
 				backgroundColor: props.selected ? 'rgb(181, 215, 255)' : '',
 				opacity: props.isDragging ? `50%` : '100%',
 			},
-			className: '.slate-Draggable-gutterLeft relative',
+			className:
+				'group/' +
+				'aa' +
+				' .slate-Draggable-gutterLeft relative flex-row flex',
 		},
 		gutterLeft: {
 			css: { transform: 'translateX(-100%)' },
 			className:
-				'absolute top-0 flex h-full opacity-0 pointer-events-none cursor-text',
+				'flex h-full opacity-0 pointer-events-none cursor-text mr-1 group-hover/' +
+				'aa' +
+				':opacity-70 ',
 		},
 		dragHandle: {
 			className:

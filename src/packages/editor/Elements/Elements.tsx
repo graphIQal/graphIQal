@@ -26,17 +26,13 @@ export const CodeElement = (props: any) => {
 };
 
 export const Block = (props: any) => {
-	return (
-		<div className='text_box' /**{...props.attributes}**/>
-			{props.children}
-		</div>
-	);
+	return <div className='' /**{...props.attributes}**/>{props.children}</div>;
 };
 
 export const NodeBlock = (props: any) => {
 	return (
 		<Block>
-			<div className='bg-base_white'>{props.children}</div>
+			<div className=''>{props.children}</div>
 		</Block>
 	);
 };
@@ -45,7 +41,7 @@ export const H1 = (props: any) => {
 	// const plateUI = createPlateUI({})[ELEMENT_H1];
 	// return plateUI[ELEMENT_H1];
 
-	return <Block>{props.children}</Block>;
+	return <h1>{props.children}</h1>;
 };
 
 export const H2 = (props: any) => {

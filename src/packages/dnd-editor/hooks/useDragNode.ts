@@ -39,11 +39,6 @@ export const useDragNode = (
 				// dndStore.set.isDragging(true);
 				editor.isDragging = true;
 
-				// deselect(editor);
-				// deselect(sourceEditor);
-
-				deselectEditor(editor);
-
 				document.body.classList.add('dragging');
 
 				const _item = typeof item === 'function' ? item(monitor) : item;

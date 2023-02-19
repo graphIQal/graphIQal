@@ -2,6 +2,7 @@ import {
 	createComboboxPlugin,
 	createNodeIdPlugin,
 	ELEMENT_H1,
+	KEYS_HEADING,
 	Plate,
 } from '@udecode/plate';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -21,13 +22,14 @@ import { CommandPlugins } from './Plugins/CommandPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 import { useQuery } from 'urql';
+import { FormatPlugins } from './Plugins/FormatPlugins';
 
 const EditorComponent: React.FC = () => {
 	const [value, setValue] = useState([
 		{
 			type: ELEMENT_H1,
 			id: 'asdkj123123a',
-			children: [{ text: 'title' }],
+			children: [{ text: 'h1' }],
 		} as MyH1Element,
 		{
 			type: 'block',
@@ -56,6 +58,7 @@ const EditorComponent: React.FC = () => {
 				...BlockPlugins,
 				// Commands,
 				...CommandPlugins,
+				...FormatPlugins,
 				createBlockPlugin(),
 				createComboboxPlugin(),
 				createNodeIdPlugin(),

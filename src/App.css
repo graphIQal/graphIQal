@@ -35,6 +35,10 @@
 }
 
 .container {
-  @apply bg-base_white;
+  /* @apply bg-base_white; */
   @apply h-screen;
+  @apply w-max;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 5vh
 }

@@ -1,4 +1,11 @@
-import { ELEMENT_PARAGRAPH, liftNodes, wrapNodes } from '@udecode/plate';
+import {
+	ELEMENT_H1,
+	ELEMENT_H2,
+	ELEMENT_H3,
+	ELEMENT_PARAGRAPH,
+	liftNodes,
+	wrapNodes,
+} from '@udecode/plate';
 import {
 	getChildren,
 	getPluginType,
@@ -10,6 +17,7 @@ import {
 	Value,
 } from '@udecode/plate-core';
 import {
+	BlockwrappedElements,
 	ELEMENT_BLOCK,
 	MyEditor,
 	MyParagraphElement,
@@ -32,9 +40,7 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 		const isBlock = node.type === blockType;
 
-		// console.log('prenormalise ', editor.children);
-
-		if (node.type === ELEMENT_PARAGRAPH) {
+		if ((node.type as string) in BlockwrappedElements) {
 			// Normalise p's so that they automatically lift if they're second.
 			// The trick is that something that is indented will actually already be wrapped in a block, but a automatically generated p will be naked.
 
@@ -56,8 +62,9 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 			// children returns array of tuples [child, path]
 			// gets data of first child, makes sure it's paragraph
+			const firstChildType = children[0][0].type as string;
 
-			if (children[0][0].type !== ELEMENT_PARAGRAPH) {
+			if (!(firstChildType in BlockwrappedElements)) {
 				wrapNodes(
 					editor,
 					{
@@ -69,9 +76,9 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 				);
 			}
 
-			// Iterates through remaining children, and they should not be ELEMENT_PARAGRAPH. They should be NODE, CONNECTION, or something else
+			// Iterates through remaining children, and they should not be a wrappedElementType. They should be a block
 			for (let i = 1; i < children.length; i++) {
-				if (children[i][0].type === ELEMENT_PARAGRAPH) {
+				if ((children[i][0].type as string) in BlockwrappedElements) {
 					setNodes<TElement>(
 						editor,
 						{ type: ELEMENT_BLOCK },

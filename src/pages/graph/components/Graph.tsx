@@ -37,7 +37,6 @@ const Graph: React.FC = () => {
   //Drawing/dragging states
   const containerRef = useRef(null);
   const [drawingMode, setDrawingMode] = useState(false);
-  let controlPressed = useRef<boolean>(false);
 
   const [canDrag, setCanDrag] = useState(false);
   useEffect(() => {
@@ -62,14 +61,8 @@ const Graph: React.FC = () => {
     <DndProvider backend={HTML5Backend}>
       <div
         onKeyDown={(event) =>
-          handleDrawingHotkey(
-            event,
-            controlPressed,
-            drawingMode,
-            setDrawingMode
-          )
+          handleDrawingHotkey(event, drawingMode, setDrawingMode)
         }
-        onKeyUp={() => (controlPressed.current = false)}
         tabIndex={-1}
         className='w-screen h-screen overflow-scroll'
         ref={containerRef}

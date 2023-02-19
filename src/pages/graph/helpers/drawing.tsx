@@ -123,17 +123,11 @@ export const handleCircleDrawing = (
 
 export const handleDrawingHotkey = (
   event: any,
-  controlPressed: MutableRefObject<boolean>,
   drawingMode: boolean,
   setDrawingMode: (val: boolean) => void
 ) => {
-  if (controlPressed.current) {
-    if (event.code == 'KeyE') {
-      setDrawingMode(!drawingMode);
-    }
-  }
-  if (event.metaKey) {
-    controlPressed.current = true;
+  if (event.code == 'KeyD') {
+    setDrawingMode(!drawingMode);
   }
 };
 

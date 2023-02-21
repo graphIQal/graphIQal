@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react';
 import NodeCircle from '../../../components/molecules/NodeCircle';
+import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode';
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import ResizableBox from '../../../packages/resizable/resizableBox';
 import '../graph.css';
@@ -86,10 +87,10 @@ export const GraphNode: FC<NodeProps> = ({ id, left, top, size, children }) => {
           }}
           id={id}
         >
-          {size[0] > 105 || size[1] > 105 ? (
+          {size[0] > 205 || size[1] > 80 ? (
             <EditorComponent />
           ) : (
-            <h3>Title of node</h3>
+            <CollapsedGraphNode />
           )}
         </ResizableBox>
         {/* <div

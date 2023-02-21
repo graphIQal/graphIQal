@@ -1,4 +1,6 @@
-import { MutableRefObject } from 'react';
+import { MutableRefObject, useContext } from 'react';
+import GraphContext from '../GraphContext';
+import { Action } from '../hooks/useHistoryState';
 
 //drawing functions
 export const handleStartPoint = (
@@ -78,7 +80,8 @@ export const handleCircleDrawing = (
   setPoints: (val: Coord[]) => void,
   nodes: any,
   setNodes: (val: any) => void,
-  setDrawingMode: (val: boolean) => void
+  setDrawingMode: (val: boolean) => void,
+  addAction: (val: Action) => void
 ) => {
   setIsDrawing(false);
   const { circle, center, size } = isCircle(points);
@@ -107,16 +110,22 @@ export const handleCircleDrawing = (
 
     let newNodes = { ...nodes };
     let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
-    newNodes[ids[Object.keys(nodes).length + 1]] = {
-      id: ids[Object.keys(nodes).length + 1],
+    let id = ids[Object.keys(nodes).length + 1];
+    newNodes[id] = {
+      id: id,
       graphNode: {
         index: 0,
-        x: center[0] - dimension / 2,
-        y: center[1] - dimension / 2,
-        size: [dimension, dimension],
+        x: center[0] - 200 / 2,
+        y: center[1] - 75 / 2,
+        // size: [dimension, dimension],
+        size: [200, 75],
       },
     };
     setNodes(newNodes);
+    addAction({
+      undo: { id: id, value: null, type: 'ADD' },
+      redo: { id: id, value: newNodes[id], type: 'ADD' },
+    });
   }
   setPoints([]);
 };

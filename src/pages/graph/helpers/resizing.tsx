@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { Action } from '../hooks/useHistoryState';
 
 //When box is resized
 export const updateSizeCallback = (
@@ -7,6 +8,7 @@ export const updateSizeCallback = (
   height: number,
   nodes: any,
   setNodes: (val: any) => void,
+  addAction: (val: Action) => void,
   tag?: string
 ) => {
   const newSize = [width, height];

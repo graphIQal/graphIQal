@@ -27,7 +27,7 @@
   @apply h-full;
   right: 0;
   top: 0;
-  @apply w-xxs;
+  @apply w-lining;
 }
 
 .resizer-t {
@@ -35,7 +35,7 @@
   @apply w-full;
   left: 0;
   top: 0;
-  @apply h-xxs;
+  @apply h-lining;
 }
 
 .resizer-b {
@@ -43,7 +43,7 @@
   @apply w-full;
   left: 0;
   bottom: 0;
-  @apply h-xxs;
+  @apply h-lining;
 }
 
 .resizer-l {
@@ -51,13 +51,16 @@
   @apply h-full;
   left: 0;
   top: 0;
-  @apply w-xxs;
+  @apply w-lining;
 }
 
 .resizer-br {
   @apply cursor-nwse-resize;
-  @apply h-xxs;
-  bottom: 0;
-  right: 0;
-  @apply w-xxs;
+  @apply h-sm;
+  bottom: calc(-0.5 * theme(spacing[xs]));
+  right: calc(-0.5 * theme(spacing[xs]));
+  @apply rounded-md;
+  @apply opacity-0;
+  @apply hover:opacity-100;
+  @apply w-sm;
 }

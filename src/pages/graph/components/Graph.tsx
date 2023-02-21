@@ -16,6 +16,7 @@ import { LineRefs } from '../graphTypes';
 import { BoxDragLayer } from '../helpers/BoxDragLayer';
 import { handleDrawingHotkey } from '../helpers/drawing';
 import { updateSizeCallback } from '../helpers/resizing';
+import { Action, useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
 
 const Graph: React.FC = () => {
@@ -48,7 +49,8 @@ const Graph: React.FC = () => {
   //Resize function called by components
   const updateSize = useCallback(
     (id: number | string, width: number, height: number, tag?: string) => {
-      updateSizeCallback(id, width, height, nodes, setNodes, tag);
+      console.log('nodes on resize ' + JSON.stringify(nodes));
+      updateSizeCallback(id, width, height, nodes, setNodes, addAction, tag);
     },
     [nodes, setNodes]
   );
@@ -56,6 +58,26 @@ const Graph: React.FC = () => {
   //Drawing line data
   const startNode = useRef<string>('');
   const endNode = useRef<string>('');
+
+  //History
+  const [history, setHistory] = useState<Action[]>([]);
+  const [pointer, setPointer] = useState<number>(-1);
+  const { addAction, undo, redo } = useHistoryState(nodes, setNodes);
+
+  useEffect(() => {
+    const listenerFunc = (evt: any) => {
+      evt.stopImmediatePropagation();
+      if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
+        redo();
+      } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+        undo();
+      }
+    };
+    document.addEventListener('keydown', (event) => listenerFunc(event));
+    return document.removeEventListener('keydown', (event) =>
+      listenerFunc(event)
+    );
+  }, []);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -83,6 +105,7 @@ const Graph: React.FC = () => {
             createNode,
             startNode: startNode,
             endNode: endNode,
+            addAction: addAction,
           }}
         >
           <GraphContainer />

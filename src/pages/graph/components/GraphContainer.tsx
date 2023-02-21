@@ -25,6 +25,7 @@ import {
 } from '../helpers/drawing';
 import { snapToGrid } from '../helpers/snapping';
 import { useCanvas } from '../hooks/useCanvas';
+import { useHistoryState } from '../hooks/useHistoryState';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
 
@@ -39,6 +40,7 @@ export const GraphContainer: React.FC = () => {
     createNode,
     startNode,
     endNode,
+    addAction,
   } = useContext(GraphContext) as GraphContextInterface;
 
   useEffect(() => {
@@ -101,7 +103,6 @@ export const GraphContainer: React.FC = () => {
 
   //drawing stuff
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-
   const canvas = useRef<any>();
   const { canvasRef, canvasWidth, canvasHeight, points, setPoints } =
     useCanvas();
@@ -131,16 +132,17 @@ export const GraphContainer: React.FC = () => {
   return (
     <div
       // onPointerDown={(event:PointerEvent) => onPointDown(event, pointersDown, setPointersDown)}
-      className='w-screen h-screen border-solid border relative'
+      className='w-screen h-screen relative'
       ref={drop}
     >
-      <div className='absolute bottom-10 right-10'>
-        <IconCircleButton src='plus' onClick={() => createNode} />
+      <div className=' absolute  flex-row w-10'>
         <IconCircleButton
           src='draw'
           onClick={() => setDrawingMode(!drawingMode)}
           selected={drawingMode}
         />
+        <IconCircleButton src='undo' onClick={() => {}} selected={false} />
+        <IconCircleButton src='redo' onClick={() => {}} selected={false} />
       </div>
       {lines.map(function (line, i) {
         return <LineTo key={i} from={line.start} to={line.end} />;
@@ -220,7 +222,8 @@ export const GraphContainer: React.FC = () => {
                   setPoints,
                   nodes,
                   setNodes,
-                  setDrawingMode
+                  setDrawingMode,
+                  addAction
                 );
               }
             : () => {

@@ -3,6 +3,10 @@ import Circle from '../atoms/Circle';
 import IconButton from '../atoms/IconButton';
 import { Plus } from '@styled-icons/fa-solid/Plus';
 import { Pencil } from '@styled-icons/bootstrap/Pencil';
+import { Cube } from '@styled-icons/boxicons-solid/Cube';
+import { Undo } from '@styled-icons/icomoon/Undo';
+import { Redo } from '@styled-icons/icomoon/Redo';
+
 type NodeButtonProps = {
   onClick: () => void;
   src: string;
@@ -16,18 +20,33 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
   src,
   selected = false,
 }) => {
-  const size = '2em';
+  const size = '1.5em';
   const icons: any = {
     plus: (
       <Plus
-        color={selected ? 'white' : 'black'}
+        color={!selected ? 'white' : 'white'}
         onClick={onClick}
         size={size}
       />
     ),
     draw: (
       <Pencil
-        color={selected ? 'white' : 'black'}
+        color={!selected ? 'white' : 'white'}
+        onClick={onClick}
+        size={size}
+      />
+    ),
+    node: <Cube color={'blue'} size={size} onClick={onClick} />,
+    undo: (
+      <Undo
+        color={!selected ? 'white' : 'white'}
+        onClick={onClick}
+        size={size}
+      />
+    ),
+    redo: (
+      <Redo
+        color={!selected ? 'white' : 'white'}
         onClick={onClick}
         size={size}
       />
@@ -38,7 +57,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
       <Circle
         children={<IconButton onClick={onClick} src={icons[src]} />}
         diameter={50}
-        backgroundClass={selected ? 'bg-connection' : 'bg-node'}
+        backgroundClass={selected ? 'bg-base_black' : 'bg-connection'}
       />
     </div>
   );

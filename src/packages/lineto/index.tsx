@@ -10,7 +10,7 @@ import React, {
 // import Line from './index.jsx';
 const defaultAnchor = { x: 0.5, y: 0.5 };
 const defaultBorderStyle = 'solid';
-const defaultBorderWidth = 3;
+const defaultBorderWidth = 2;
 
 type LineToPropTypes = {
   from: string;

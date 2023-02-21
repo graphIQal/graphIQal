@@ -1,6 +1,7 @@
 import { createContext, MutableRefObject } from 'react';
 import { GraphViewElement } from '../../gql/graphql';
 import { LineRefs } from './graphTypes';
+import { Action } from './hooks/useHistoryState';
 
 export type GraphContextInterface = {
   hideSourceOnDrag: boolean;
@@ -22,6 +23,7 @@ export type GraphContextInterface = {
   createNode: (val: any) => any;
   startNode: MutableRefObject<string>;
   endNode: MutableRefObject<string>;
+  addAction: (val: Action) => void;
 };
 
 const GraphContext = createContext<GraphContextInterface | null>(null);

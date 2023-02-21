@@ -1,0 +1,91 @@
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { GraphViewElement } from '../../../gql/graphql';
+import GraphContext, { GraphContextInterface } from '../GraphContext';
+
+export type Action = {
+  undo: {
+    type: string;
+    id: string | number;
+    value: any;
+  };
+  redo: {
+    type: string;
+    id: string | number;
+    value: any;
+  };
+};
+export const useHistoryState = (
+  nodes: { [key: string]: GraphViewElement },
+  setNodes: (val: any) => void
+) => {
+  const history = useRef<Action[]>([]);
+  const pointer = useRef<number>(-1);
+  const addAction = (action: Action) => {
+    console.log('action ' + JSON.stringify(action));
+    history.current = [
+      ...history.current.slice(0, pointer.current + 1),
+      action,
+    ];
+    pointer.current += 1;
+  };
+
+  const undo = () => {
+    console.log('pointer ' + JSON.stringify(pointer));
+    console.log('history ' + JSON.stringify(history));
+    if (pointer.current == -1) {
+      return;
+    }
+    const { id, value, type } = history.current[pointer.current].undo;
+    let newNodes = { ...nodes };
+    switch (type) {
+      case 'SIZE':
+        if (
+          newNodes[id].graphNode !== null &&
+          newNodes[id].graphNode !== undefined
+        ) {
+          (newNodes[id].graphNode as any).size = value;
+        }
+
+        break;
+      case 'ADD':
+        delete newNodes[id];
+        setNodes((oldNodes: { [key: string]: GraphViewElement }) => {
+          newNodes = { ...oldNodes };
+          delete newNodes[id];
+          return newNodes;
+        });
+    }
+    // setNodes(newNodes);
+    pointer.current -= 1;
+  };
+
+  const redo = () => {
+    console.log('redoing ' + pointer.current + JSON.stringify(history));
+    if (pointer.current + 1 >= history.current.length) {
+      return;
+    }
+    const { id, value, type } = history.current[pointer.current + 1].redo;
+    let newNodes = { ...nodes };
+    switch (type) {
+      case 'SIZE':
+        if (
+          newNodes[id].graphNode !== null &&
+          newNodes[id].graphNode !== undefined
+        ) {
+          (newNodes[id].graphNode as any).size = value;
+        }
+
+        break;
+      case 'ADD':
+        newNodes[id] = value;
+        setNodes((oldNodes: { [key: string]: GraphViewElement }) => {
+          newNodes = { ...oldNodes };
+          newNodes[id] = value;
+          return newNodes;
+        });
+    }
+    pointer.current += 1;
+  };
+
+  return { undo, redo, addAction };
+};

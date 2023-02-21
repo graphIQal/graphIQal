@@ -174,8 +174,6 @@ const Line: React.FC<LineProps> = (props) => {
     }
 
     return () => {
-      console.log('REMOVING');
-      console.log('el ' + el.current);
       if (el.current) document.body.removeChild(el.current);
     };
   }, []);

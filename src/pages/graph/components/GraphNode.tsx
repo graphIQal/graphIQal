@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import Handle from '../../../components/atoms/Handle';
 import NodeCircle from '../../../components/molecules/NodeCircle';
 import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode';
 import EditorComponent from '../../../packages/editor/EditorComponent';
@@ -21,11 +22,18 @@ export interface NodeProps {
   top: number;
   size: number[];
   children: ReactNode;
+  updateStartPos: (val: { left: number; top: number }) => void;
 }
-export const GraphNode: FC<NodeProps> = ({ id, left, top, size, children }) => {
-  const { drawingMode, canDrag, setCanDrag, hideSourceOnDrag } = useContext(
-    GraphContext
-  ) as GraphContextInterface;
+export const GraphNode: FC<NodeProps> = ({
+  id,
+  left,
+  top,
+  size,
+  children,
+  updateStartPos,
+}) => {
+  const { drawingMode, canDrag, setCanDrag, hideSourceOnDrag, addAction } =
+    useContext(GraphContext) as GraphContextInterface;
 
   //refs for the circles we're drawing with
   const circleRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
@@ -50,10 +58,6 @@ export const GraphNode: FC<NodeProps> = ({ id, left, top, size, children }) => {
     canDrag
   );
 
-  // useEffect(() => {
-  //   preview(getEmptyImage(), { captureDraggingState: true });
-  // }, []);
-
   if (isDragging && hideSourceOnDrag) {
     return (
       <div
@@ -69,16 +73,19 @@ export const GraphNode: FC<NodeProps> = ({ id, left, top, size, children }) => {
   return (
     <div>
       <div
-        className='absolute cursor-move'
+        className='absolute'
         style={{
           left,
           top,
           width: size[0],
           height: size[1],
         }}
-        ref={drag}
+        ref={preview}
         id={id}
       >
+        <div onMouseDown={() => updateStartPos({ left, top })} ref={drag}>
+          <Handle />
+        </div>
         <ResizableBox
           classes='p-sm overflow-hidden h-full w-full'
           style={{

@@ -85,6 +85,7 @@ export const GraphContainer: React.FC = () => {
   );
 
   //Handling drop event
+  const startPos = useRef<{ left: number; top: number }>();
   const [, drop] = useDrop(
     () => ({
       accept: 'node',
@@ -94,7 +95,10 @@ export const GraphContainer: React.FC = () => {
         let top = Math.round(item.top + delta.y);
         [left, top] = snapToGrid(left, top);
         moveNode(item.id, left, top, nodes, setNodes);
-
+        addAction({
+          undo: { id: item.id, type: 'DRAG', value: startPos.current },
+          redo: { id: item.id, type: 'DRAG', value: { left, top } },
+        });
         return undefined;
       },
     }),
@@ -201,6 +205,7 @@ export const GraphContainer: React.FC = () => {
                   ? [100, 100]
                   : node.graphNode.size
               }
+              updateStartPos={(val) => (startPos.current = val)}
             >
               <GraphEditor />
             </GraphNode>

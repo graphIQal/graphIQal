@@ -65,6 +65,14 @@ export const useHistoryState = (
           return [...newLines];
         });
         break;
+      case 'DRAG':
+        setNodes((oldNodes: { [key: string]: GraphViewElement }) => {
+          newNodes = { ...oldNodes };
+          (newNodes[id].graphNode as any).x = value.left;
+          (newNodes[id].graphNode as any).y = value.top;
+          return newNodes;
+        });
+        break;
     }
     // setNodes(newNodes);
     pointer.current -= 1;
@@ -97,6 +105,14 @@ export const useHistoryState = (
         break;
       case 'LINE':
         setLines((oldLines: LineRefs[]) => [...oldLines, value]);
+        break;
+      case 'DRAG':
+        setNodes((oldNodes: { [key: string]: GraphViewElement }) => {
+          newNodes = { ...oldNodes };
+          (newNodes[id].graphNode as any).x = value.left;
+          (newNodes[id].graphNode as any).y = value.top;
+          return newNodes;
+        });
         break;
     }
     pointer.current += 1;

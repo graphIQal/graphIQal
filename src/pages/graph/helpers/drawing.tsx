@@ -35,6 +35,7 @@ export const handleEndPoint = (
 ) => {
   setPoints([]);
   endNode.current = id;
+
   setIsDrawing(false);
   setDrawingMode(false);
 };

@@ -62,7 +62,7 @@ const Graph: React.FC = () => {
   //History
   const [history, setHistory] = useState<Action[]>([]);
   const [pointer, setPointer] = useState<number>(-1);
-  const { addAction, undo, redo } = useHistoryState(nodes, setNodes);
+  const { addAction, undo, redo } = useHistoryState(nodes, setNodes, setLines);
 
   useEffect(() => {
     const listenerFunc = (evt: any) => {
@@ -70,7 +70,9 @@ const Graph: React.FC = () => {
       if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
         redo();
       } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+        console.log('lines ' + JSON.stringify(lines));
         undo();
+        console.log('lines ' + JSON.stringify(lines));
       }
     };
     document.addEventListener('keydown', (event) => listenerFunc(event));

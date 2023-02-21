@@ -126,8 +126,20 @@ export const GraphContainer: React.FC = () => {
     }
     if (startNode.current !== '' && endNode.current !== '') {
       setLines([...lines, { start: startNode.current, end: endNode.current }]);
+      addAction({
+        undo: { id: '', value: null, type: 'LINE' },
+        redo: {
+          id: '',
+          value: { start: startNode.current, end: endNode.current },
+          type: 'LINE',
+        },
+      });
     }
   }, [endNode.current]);
+
+  useEffect(() => {
+    console.log('lines updating ' + JSON.stringify(lines));
+  }, [lines]);
 
   return (
     <div
@@ -145,6 +157,8 @@ export const GraphContainer: React.FC = () => {
         <IconCircleButton src='redo' onClick={() => {}} selected={false} />
       </div>
       {lines.map(function (line, i) {
+        console.log('mapping line ' + JSON.stringify(line));
+        console.log();
         return <LineTo key={i} from={line.start} to={line.end} />;
       })}
       {Object.values(nodes).map((node) => {

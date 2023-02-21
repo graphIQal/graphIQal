@@ -172,6 +172,12 @@ const Line: React.FC<LineProps> = (props) => {
     if (el.current != null) {
       document.body.appendChild(el.current);
     }
+
+    return () => {
+      console.log('REMOVING');
+      console.log('el ' + el.current);
+      if (el.current) document.body.removeChild(el.current);
+    };
   }, []);
   const { x0, y0, x1, y1 } = props;
 

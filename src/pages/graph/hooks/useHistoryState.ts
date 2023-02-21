@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { GraphViewElement } from '../../../gql/graphql';
 import GraphContext, { GraphContextInterface } from '../GraphContext';
+import { LineRefs } from '../graphTypes';
 
 export type Action = {
   undo: {
@@ -16,7 +17,8 @@ export type Action = {
 };
 export const useHistoryState = (
   nodes: { [key: string]: GraphViewElement },
-  setNodes: (val: any) => void
+  setNodes: (val: any) => void,
+  setLines: (val: any) => void
 ) => {
   const history = useRef<Action[]>([]);
   const pointer = useRef<number>(-1);
@@ -48,12 +50,21 @@ export const useHistoryState = (
 
         break;
       case 'ADD':
-        delete newNodes[id];
         setNodes((oldNodes: { [key: string]: GraphViewElement }) => {
           newNodes = { ...oldNodes };
           delete newNodes[id];
           return newNodes;
         });
+        break;
+      case 'LINE':
+        setLines((oldLines: LineRefs[]) => {
+          const newLines = [...oldLines];
+
+          newLines.pop();
+          console.log('lines ' + JSON.stringify(newLines));
+          return [...newLines];
+        });
+        break;
     }
     // setNodes(newNodes);
     pointer.current -= 1;
@@ -83,6 +94,10 @@ export const useHistoryState = (
           newNodes[id] = value;
           return newNodes;
         });
+        break;
+      case 'LINE':
+        setLines((oldLines: LineRefs[]) => [...oldLines, value]);
+        break;
     }
     pointer.current += 1;
   };

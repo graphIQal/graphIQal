@@ -2,13 +2,18 @@ import { MutableRefObject, useContext } from 'react';
 import GraphContext from '../GraphContext';
 import { Action } from '../hooks/useHistoryState';
 
+//for border room for drawing
+export const OFFSET = 50;
+
 //drawing functions
 export const handleStartPoint = (
   event: any,
   id: string,
   startNode: MutableRefObject<string>,
-  setIsDrawing: (val: boolean) => void
+  setIsDrawing: (val: boolean) => void,
+  drawingMode: boolean
 ) => {
+  console.log('starting');
   startNode.current = id;
   setIsDrawing(true);
 };
@@ -37,7 +42,6 @@ export const handleEndPoint = (
   endNode.current = id;
 
   setIsDrawing(false);
-  setDrawingMode(false);
 };
 
 export const isCircle = (coords: Coord[]) => {
@@ -67,8 +71,37 @@ export const isCircle = (coords: Coord[]) => {
       countWithin = countWithin + 1;
     }
   }
+  let startPoint = coords[0];
+  let endPoint = coords[coords.length - 1];
+  // const m1 = (startPoint.y * -1 - yAvg) / (startPoint.x - xAvg);
+  // const m2 = (endPoint.y * -1 - yAvg) / (endPoint.x - xAvg);
+  console.log('startPoint ' + JSON.stringify(startPoint));
+  console.log('endPoint ' + JSON.stringify(endPoint));
+  console.log('center x:' + xAvg + ' y:' + yAvg);
+  // console.log('slope from startpoint ' + m1);
+  // console.log('slope from endpoint ' + m2);
+
+  // console.log('angle ' + m1 + ' ' + m2);
+  // const angle = Math.atan(m2 - m1 / (1 + m1 * m2));
+  // console.log('angle ' + angle * (180 / Math.PI));
+
+  const dotProduct =
+    (startPoint.x - xAvg) * (endPoint.x - xAvg) +
+    (yAvg - startPoint.y) * (yAvg - endPoint.y);
+  let len1 = Math.sqrt(
+    Math.pow(startPoint.x - xAvg, 2) + Math.pow(startPoint.y - yAvg, 2)
+  );
+  let len2 = Math.sqrt(
+    Math.pow(endPoint.x - xAvg, 2) + Math.pow(endPoint.y - yAvg, 2)
+  );
+  console.log('length 1 ' + len1);
+  console.log('length 2 ' + len2);
+  console.log('dot ' + dotProduct);
+  const angle = Math.acos(dotProduct / (len1 * len2));
+  console.log('angle ' + angle * (180 / Math.PI));
   return {
-    circle: countWithin / coords.length >= 0.5,
+    // circle: countWithin / coords.length >= 0.5,
+    circle: Math.abs(angle) < Math.PI / 2,
     center: [xAvg, yAvg],
     size: avgDist,
   };
@@ -107,8 +140,6 @@ export const handleCircleDrawing = (
     'r',
   ];
   if (circle) {
-    setDrawingMode(false);
-
     let newNodes = { ...nodes };
     let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
     let id = ids[Object.keys(nodes).length + 1];

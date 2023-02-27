@@ -37,14 +37,10 @@ const Graph: React.FC = () => {
 
   //Drawing/dragging states
   const containerRef = useRef(null);
-  const [drawingMode, setDrawingMode] = useState(false);
+  const [drawingMode, setDrawingMode] = useState(true);
+  const [illegalStart, setIllegalStart] = useState(false);
 
   const [canDrag, setCanDrag] = useState(false);
-  useEffect(() => {
-    if (drawingMode && canDrag) {
-      setCanDrag(false);
-    }
-  }, [nodes, setNodes]);
 
   //Resize function called by components
   const updateSize = useCallback(

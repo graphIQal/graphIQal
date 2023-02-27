@@ -68,8 +68,13 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
   };
 
   const calcAnchor = (a: Element, b: Element) => {
-    const box0 = a.getBoundingClientRect();
-    const box1 = b.getBoundingClientRect();
+    // const first = a.querySelector('.resizable');
+    // const second = b.querySelector('.resizable');
+    const first = a;
+    const second = b;
+    if (!first || !second) return;
+    const box0 = first.getBoundingClientRect();
+    const box1 = second.getBoundingClientRect();
 
     let fromAnchor = '';
     let toAnchor = '';
@@ -121,9 +126,12 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
 
   const detect = () => {
     const { from, to } = props;
-    const a = findElement(from);
-    const b = findElement(to);
 
+    const a = findElement(from)?.nextElementSibling;
+    const b = findElement(to)?.nextElementSibling;
+    // const a = findElement(from);
+    // const b = findElement(to);
+    console.log('start ' + a + b);
     if (!a || !b) {
       return false;
     }
@@ -133,6 +141,7 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
 
     if (!anchor0 || !anchor1) {
       const anchors = calcAnchor(a, b);
+      if (!anchors) return;
       anchor0 = parseAnchor(anchors.fromAnchor);
       anchor1 = parseAnchor(anchors.toAnchor);
     }

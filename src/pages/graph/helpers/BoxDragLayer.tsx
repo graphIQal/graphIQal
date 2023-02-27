@@ -1,6 +1,8 @@
 import { CSSProperties, FC, MutableRefObject, useRef } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDragLayer } from 'react-dnd';
+import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode';
+import { GraphNode } from '../components/GraphNode';
 import { snapToGrid } from './snapping';
 
 const layerStyles: CSSProperties = {
@@ -52,13 +54,25 @@ export const BoxDragLayer: FC<CustomDragLayerProps> = ({ parentRef }) => {
       isDragging: monitor.isDragging(),
     }));
   function renderItem() {
-    // switch (itemType) {
-    //   case ItemTypes.BOX:
-    //     return <BoxDragPreview title={item.title} />
-    //   default:
-    //     return null
-    // }
-    return <div></div>;
+    console.log('item ' + JSON.stringify(item));
+    switch (itemType) {
+      case 'node':
+      // return (
+      //   <GraphNode
+      //     id={item.id}
+      //     left={0}
+      //     top={0}
+      //     size={[item.width, item.height]}
+      //     updateStartPos={() => {
+      //       return null;
+      //     }}
+      //   >
+      //     hello
+      //   </GraphNode>
+      // );
+      default:
+        return null;
+    }
   }
   const infiniteBoard = () => {
     if (!currentOffset || !initialOffset) {

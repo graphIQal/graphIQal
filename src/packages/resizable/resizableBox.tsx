@@ -10,7 +10,7 @@ const ResizableBox: React.FC<{
   style?: object;
   id: string | number;
 }> = ({ children, classes, style, id }) => {
-  const { setCanDrag, updateSize, nodes, drawingMode } = useContext(
+  const { setCanDrag, updateSize, nodes, setDrawingMode, canDrag } = useContext(
     GraphContext
   ) as GraphContextInterface;
   const ref = useRef(null);
@@ -21,6 +21,9 @@ const ResizableBox: React.FC<{
   const refBottomRight = useRef(null);
   const startResizeRef = useRef<any>({});
 
+  useEffect(() => {
+    console.log('can drag ' + canDrag);
+  }, [canDrag]);
   useEffect(() => {
     const resizeableEle = ref.current as any;
     if (!resizeableEle) {
@@ -58,11 +61,11 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
-      setCanDrag(drawingMode ? false : true);
+      // setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
     };
     const onMouseDownBottomRightResize = (event: any) => {
-      setCanDrag(false);
+      // setCanDrag(false);
       x = event.clientX;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.left = styles.left;
@@ -228,7 +231,15 @@ const ResizableBox: React.FC<{
   }, [nodes]);
 
   return (
-    <div ref={ref} style={style} className={'resizable ' + classes}>
+    <div
+      ref={ref}
+      style={style}
+      className={'resizable ' + classes}
+      onClick={() => console.log('clicked')}
+      onMouseDown={() => {
+        setDrawingMode(false);
+      }}
+    >
       <div ref={refLeft} className='resizer resizer-l'></div>
       <div ref={refTop} className='resizer resizer-t'></div>
       <div ref={refRight} className='resizer resizer-r'></div>

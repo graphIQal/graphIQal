@@ -95,6 +95,8 @@ export const GraphContainer: React.FC = () => {
         let top = Math.round(item.top + delta.y);
         [left, top] = snapToGrid(left, top);
         moveNode(item.id, left, top, nodes, setNodes);
+        setDrawingMode(true);
+        setIsDrawing(false);
         addAction({
           undo: { id: item.id, type: 'DRAG', value: startPos.current },
           redo: { id: item.id, type: 'DRAG', value: { left, top } },
@@ -107,6 +109,10 @@ export const GraphContainer: React.FC = () => {
 
   //drawing stuff
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  useEffect(() => {
+    console.log('is drawing ' + isDrawing);
+  }, [isDrawing]);
+
   const canvas = useRef<any>();
   const { canvasRef, canvasWidth, canvasHeight, points, setPoints } =
     useCanvas();
@@ -161,11 +167,14 @@ export const GraphContainer: React.FC = () => {
         <IconCircleButton src='redo' onClick={() => {}} selected={false} />
       </div>
       {lines.map(function (line, i) {
-        console.log('mapping line ' + JSON.stringify(line));
-        console.log();
         return <LineTo key={i} from={line.start} to={line.end} />;
       })}
       {Object.values(nodes).map((node) => {
+        const width = node.graphNode ? node.graphNode.size[0] : 100;
+        const height = node.graphNode ? node.graphNode.size[1] : 100;
+        const x = node.graphNode?.x == undefined ? 0 : node.graphNode?.x;
+        const y = node.graphNode?.y == undefined ? 0 : node.graphNode?.y;
+
         return (
           <div
             className={node.id}
@@ -173,13 +182,28 @@ export const GraphContainer: React.FC = () => {
             onMouseDown={
               drawingMode
                 ? (event: any) =>
-                    handleStartPoint(event, node.id, startNode, setIsDrawing)
+                    handleStartPoint(
+                      event,
+                      node.id,
+                      startNode,
+                      setIsDrawing,
+                      drawingMode
+                    )
+                : () => {
+                    return null;
+                  }
+            }
+            onMouseMove={
+              isDrawing && drawingMode
+                ? (event: any) => {
+                    handleDrawing(event, points, setPoints);
+                  }
                 : () => {
                     return null;
                   }
             }
             onMouseUp={
-              isDrawing
+              isDrawing && drawingMode
                 ? (event: any) =>
                     handleEndPoint(
                       event,
@@ -197,14 +221,10 @@ export const GraphContainer: React.FC = () => {
           >
             <GraphNode
               key={node.id}
-              left={node.graphNode?.x == undefined ? 0 : node.graphNode?.x}
-              top={node.graphNode?.y == undefined ? 0 : node.graphNode?.y}
+              left={x}
+              top={y}
               id={node.id}
-              size={
-                node.graphNode?.size == undefined
-                  ? [100, 100]
-                  : node.graphNode.size
-              }
+              size={[width, height]}
               updateStartPos={(val) => (startPos.current = val)}
             >
               <GraphEditor />
@@ -216,14 +236,20 @@ export const GraphContainer: React.FC = () => {
         onMouseDown={
           drawingMode
             ? (event: any) => {
-                handleStartPoint(event, '', startNode, setIsDrawing);
+                handleStartPoint(
+                  event,
+                  '',
+                  startNode,
+                  setIsDrawing,
+                  drawingMode
+                );
               }
             : () => {
                 return null;
               }
         }
         onMouseMove={
-          isDrawing
+          isDrawing && drawingMode
             ? (event: any) => {
                 handleDrawing(event, points, setPoints);
               }
@@ -232,7 +258,7 @@ export const GraphContainer: React.FC = () => {
               }
         }
         onMouseUp={
-          isDrawing
+          isDrawing && drawingMode
             ? (event: any) => {
                 handleCircleDrawing(
                   event,
@@ -246,7 +272,7 @@ export const GraphContainer: React.FC = () => {
                 );
               }
             : () => {
-                return null;
+                if (!drawingMode) setDrawingMode(true);
               }
         }
       >

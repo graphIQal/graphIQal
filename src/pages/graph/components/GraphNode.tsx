@@ -14,7 +14,10 @@ import EditorComponent from '../../../packages/editor/EditorComponent';
 import ResizableBox from '../../../packages/resizable/resizableBox';
 import '../graph.css';
 import GraphContext, { GraphContextInterface } from '../GraphContext';
+import { OFFSET } from '../helpers/drawing';
 import { useDragNode } from '../hooks/useDrag';
+import { Cube } from '@styled-icons/boxicons-solid/Cube';
+import { DragHandle } from '../../../packages/dnd-editor/components/Draggable';
 
 export interface NodeProps {
   id: any;
@@ -32,15 +35,19 @@ export const GraphNode: FC<NodeProps> = ({
   children,
   updateStartPos,
 }) => {
-  const { drawingMode, canDrag, setCanDrag, hideSourceOnDrag, addAction } =
-    useContext(GraphContext) as GraphContextInterface;
-
-  //refs for the circles we're drawing with
-  const circleRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  const {
+    drawingMode,
+    setDrawingMode,
+    canDrag,
+    setCanDrag,
+    hideSourceOnDrag,
+    addAction,
+  } = useContext(GraphContext) as GraphContextInterface;
 
   //attach listeners to circles for release if drawing
 
   useEffect(() => {
+    console.log('drawing mode ' + drawingMode);
     if (drawingMode) {
       setCanDrag(false);
     } else {
@@ -73,34 +80,48 @@ export const GraphNode: FC<NodeProps> = ({
   return (
     <div>
       <div
-        className='absolute'
+        className=' h-[30px] w-[30px] absolute z-10'
+        style={{ left: left - OFFSET / 2, top: top - OFFSET / 2 }}
+        onMouseDown={() => {
+          updateStartPos({ left, top });
+          setDrawingMode(false);
+        }}
+        ref={drag}
+      >
+        <DragHandle />
+      </div>
+      {/* This div and the resizable box must remain siblings for the line drawing */}
+      <div
+        className='absolute flex flex-row justify-center align-middle items-center hover:bg-selected_white pointer-pencil rounded-md'
         style={{
-          left,
-          top,
-          width: size[0],
-          height: size[1],
+          left: left - OFFSET / 2,
+          top: top - OFFSET / 2,
+          width: size[0] + OFFSET,
+          height: size[1] + OFFSET,
         }}
         ref={preview}
         id={id}
+      ></div>
+      <ResizableBox
+        classes='p-sm overflow-hidden h-full w-full'
+        style={{
+          width: size[0],
+          height: size[1],
+          left,
+          top,
+        }}
+        id={id}
       >
-        <div onMouseDown={() => updateStartPos({ left, top })} ref={drag}>
-          <Handle />
-        </div>
-        <ResizableBox
-          classes='p-sm overflow-hidden h-full w-full'
-          style={{
-            width: size[0],
-            height: size[1],
-          }}
-          id={id}
-        >
-          {size[0] > 205 || size[1] > 80 ? (
+        {size[0] > 205 || size[1] > 80 ? (
+          <div>
             <EditorComponent />
-          ) : (
-            <CollapsedGraphNode />
-          )}
-        </ResizableBox>
-        {/* <div
+            <Cube className='absolute right-sm top-sm' size={'1.5em'} />
+          </div>
+        ) : (
+          <CollapsedGraphNode />
+        )}
+      </ResizableBox>
+      {/* <div
           style={{ left: size[0] / 2 }}
           className='draw-circle draw-circle-t'
           onMouseDown={handleMouseDownCircle}
@@ -132,7 +153,6 @@ export const GraphNode: FC<NodeProps> = ({
         >
           <Circle diameter={10} backgroundClass='bg-node' />
         </div> */}
-      </div>
     </div>
   );
 };

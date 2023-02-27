@@ -37,3 +37,7 @@
   width: 10px;
   height: 10px;
 }
+
+.pointer-pencil {
+  cursor: url('../../theme/pencil_icon.png') 20 20, auto;
+}

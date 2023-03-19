@@ -11,13 +11,13 @@ import { useDrop } from 'react-dnd';
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import { GraphViewElement } from '../../../gql/graphql';
 import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
-import LineTo from '../../../packages/lineto';
+import LineTo, { isArrowOnLine } from '../../../packages/lineto';
 import GraphContext, { GraphContextInterface } from '../GraphContext';
 import { DragItemGraph, LineRefs } from '../graphTypes';
 import { moveNodeCallback } from '../helpers/dragging';
 import {
   Coord,
-  handleCircleDrawing,
+  handleDrawingEnd,
   handleDrawing,
   handleEndPoint,
   handleStartPoint,
@@ -147,6 +147,10 @@ export const GraphContainer: React.FC = () => {
     }
   }, [endNode.current]);
 
+  // const attachArrowToLine = (point: any) => {
+  //   isArrowOnLine(point, )
+  // }
+
   useEffect(() => {
     console.log('lines updating ' + JSON.stringify(lines));
   }, [lines]);
@@ -260,7 +264,7 @@ export const GraphContainer: React.FC = () => {
         onMouseUp={
           isDrawing && drawingMode
             ? (event: any) => {
-                handleCircleDrawing(
+                handleDrawingEnd(
                   event,
                   setIsDrawing,
                   points,

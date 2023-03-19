@@ -85,29 +85,59 @@ export const isCircle = (coords: Coord[]) => {
   // const angle = Math.atan(m2 - m1 / (1 + m1 * m2));
   // console.log('angle ' + angle * (180 / Math.PI));
 
-  const dotProduct =
-    (startPoint.x - xAvg) * (endPoint.x - xAvg) +
-    (yAvg - startPoint.y) * (yAvg - endPoint.y);
-  let len1 = Math.sqrt(
-    Math.pow(startPoint.x - xAvg, 2) + Math.pow(startPoint.y - yAvg, 2)
-  );
-  let len2 = Math.sqrt(
-    Math.pow(endPoint.x - xAvg, 2) + Math.pow(endPoint.y - yAvg, 2)
-  );
-  console.log('length 1 ' + len1);
-  console.log('length 2 ' + len2);
-  console.log('dot ' + dotProduct);
-  const angle = Math.acos(dotProduct / (len1 * len2));
-  console.log('angle ' + angle * (180 / Math.PI));
+  const angle = calculateAngle(startPoint, { x: xAvg, y: yAvg }, endPoint);
   return {
     // circle: countWithin / coords.length >= 0.5,
-    circle: Math.abs(angle) < Math.PI / 2,
+    circle: Math.abs(angle) < 90,
     center: [xAvg, yAvg],
     size: avgDist,
   };
 };
 
-export const handleCircleDrawing = (
+export const calculateAngle = (
+  startPoint: Coord,
+  middlePoint: Coord,
+  endPoint: Coord
+) => {
+  const dotProduct =
+    (startPoint.x - middlePoint.x) * (endPoint.x - middlePoint.x) +
+    (middlePoint.y - startPoint.y) * (middlePoint.y - endPoint.y);
+  let len1 = Math.sqrt(
+    Math.pow(startPoint.x - middlePoint.x, 2) +
+      Math.pow(startPoint.y - middlePoint.y, 2)
+  );
+  let len2 = Math.sqrt(
+    Math.pow(endPoint.x - middlePoint.x, 2) +
+      Math.pow(endPoint.y - middlePoint.y, 2)
+  );
+
+  const angle = Math.acos(dotProduct / (len1 * len2));
+  return (angle * 180) / Math.PI;
+};
+
+export const isArrow = (coords: Coord[]) => {
+  const startPoint = coords[0];
+  const endPoint = coords[coords.length - 1];
+  const middlePoint = coords[Math.floor(coords.length / 2)];
+  console.log('coordinates of triangle: ');
+  console.log('start ' + JSON.stringify(startPoint));
+  console.log('middle ' + JSON.stringify(middlePoint));
+  console.log('end ' + JSON.stringify(endPoint));
+  const angle = calculateAngle(startPoint, middlePoint, endPoint);
+  console.log('angle ' + angle);
+  if (angle > 160) {
+    return false;
+  }
+  const angle1 = calculateAngle(middlePoint, startPoint, endPoint);
+  const angle2 = calculateAngle(middlePoint, endPoint, startPoint);
+
+  if (angle1 < 90 && angle2 < 90) {
+    console.log('Arrow!');
+    return true;
+  }
+};
+
+export const handleDrawingEnd = (
   event: any,
   setIsDrawing: (val: any) => void,
   points: Coord[],
@@ -119,6 +149,7 @@ export const handleCircleDrawing = (
 ) => {
   setIsDrawing(false);
   const { circle, center, size } = isCircle(points);
+  console.log('is circle ' + circle);
   const ids = [
     'a',
     'b',
@@ -158,6 +189,8 @@ export const handleCircleDrawing = (
       undo: { id: id, value: null, type: 'ADD' },
       redo: { id: id, value: newNodes[id], type: 'ADD' },
     });
+  } else {
+    isArrow(points);
   }
   setPoints([]);
 };

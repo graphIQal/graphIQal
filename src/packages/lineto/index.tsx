@@ -131,7 +131,6 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
     const b = findElement(to)?.nextElementSibling;
     // const a = findElement(from);
     // const b = findElement(to);
-    console.log('start ' + a + b);
     if (!a || !b) {
       return false;
     }
@@ -151,15 +150,16 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
     let offsetX = window.pageXOffset;
     let offsetY = window.pageYOffset;
 
-    const x0 = box0.left + box0.width * anchor0.x + offsetX;
-    const x1 = box1.left + box1.width * anchor1.x + offsetX;
-    const y0 = box0.top + box0.height * anchor0.y + offsetY;
-    const y1 = box1.top + box1.height * anchor1.y + offsetY;
+    const x0 = box0.left + box0.width * anchor0.x;
+    const x1 = box1.left + box1.width * anchor1.x;
+    const y0 = box0.top + box0.height * anchor0.y;
+    const y1 = box1.top + box1.height * anchor1.y;
 
     return { x0, y0, x1, y1 };
   };
   let points = detect();
-  return <Line {...points} {...props} />;
+  // return <Line {...points} {...props} />;
+  return <Arrow {...points} />;
 };
 export default LineTo;
 
@@ -215,5 +215,276 @@ const Line: React.FC<LineProps> = (props) => {
     <div className='react-lineto-placeholder'>
       <div ref={el} style={positionStyle} {...elProps} />
     </div>
+  );
+};
+
+type Point = {
+  x: number;
+  y: number;
+};
+
+// type ArrowProps = {
+//   startPoint: Point;
+//   endPoint: Point;
+// };
+type ArrowProps = {
+  x0?: any;
+  y0?: any;
+  x1?: any;
+  y1?: any;
+  borderColor?: string | undefined;
+  borderStyle?: string | undefined;
+  borderWidth?: number | undefined;
+  className?: string | undefined;
+  zIndex?: number | undefined;
+};
+
+const calculateDeltas = (
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number
+): {
+  dx: number;
+  dy: number;
+  absDx: number;
+  absDy: number;
+} => {
+  const dx = x1 - x0;
+  const dy = y1 - y0;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  return { dx, dy, absDx, absDy };
+};
+
+const calculateControlPoints = ({
+  absDx,
+  absDy,
+  dx,
+  dy,
+}: {
+  absDx: number;
+  absDy: number;
+  dx: number;
+  dy: number;
+}): { p1: Point; p2: Point; p3: Point; p4: Point } => {
+  let startPointX = 0;
+  let startPointY = 0;
+  let endPointX = absDx;
+  let endPointY = absDy;
+  if (dx < 0) [startPointX, endPointX] = [endPointX, startPointX];
+  if (dy < 0) [startPointY, endPointY] = [endPointY, startPointY];
+
+  const fixedLineInflectionConstsant = 40;
+
+  const p1 = {
+    x: startPointX,
+    y: startPointY,
+  };
+  const p2 = {
+    x: startPointX + fixedLineInflectionConstsant,
+    y: startPointY,
+  };
+  const p3 = {
+    x: endPointX - fixedLineInflectionConstsant,
+    y: endPointY,
+  };
+  const p4 = {
+    x: endPointX,
+    y: endPointY,
+  };
+
+  return { p1, p2, p3, p4 };
+};
+
+const calculateControlPointsWithBuffer = ({
+  boundingBoxElementsBuffer,
+  absDx,
+  absDy,
+  dx,
+  dy,
+}: {
+  boundingBoxElementsBuffer: number;
+  absDx: number;
+  absDy: number;
+  dx: number;
+  dy: number;
+}): {
+  p1: Point;
+  p2: Point;
+  p3: Point;
+  p4: Point;
+  boundingBoxBuffer: {
+    vertical: number;
+    horizontal: number;
+  };
+} => {
+  const { p1, p2, p3, p4 } = calculateControlPoints({
+    absDx,
+    absDy,
+    dx,
+    dy,
+  });
+
+  const topBorder = Math.min(p1.y, p2.y, p3.y, p4.y);
+  const bottomBorder = Math.max(p1.y, p2.y, p3.y, p4.y);
+  const leftBorder = Math.min(p1.x, p2.x, p3.x, p4.x);
+  const rightBorder = Math.max(p1.x, p2.x, p3.x, p4.x);
+
+  const verticalBuffer =
+    (bottomBorder - topBorder - absDy) / 2 + boundingBoxElementsBuffer;
+  const horizontalBuffer =
+    (rightBorder - leftBorder - absDx) / 2 + boundingBoxElementsBuffer;
+
+  const boundingBoxBuffer = {
+    vertical: verticalBuffer,
+    horizontal: horizontalBuffer,
+  };
+
+  return {
+    p1: {
+      x: p1.x + horizontalBuffer,
+      y: p1.y + verticalBuffer,
+    },
+    p2: {
+      x: p2.x + horizontalBuffer,
+      y: p2.y + verticalBuffer,
+    },
+    p3: {
+      x: p3.x + horizontalBuffer,
+      y: p3.y + verticalBuffer,
+    },
+    p4: {
+      x: p4.x + horizontalBuffer,
+      y: p4.y + verticalBuffer,
+    },
+    boundingBoxBuffer,
+  };
+};
+
+const calculateCanvasDimensions = ({
+  absDx,
+  absDy,
+  boundingBoxBuffer,
+}: {
+  absDx: number;
+  absDy: number;
+  boundingBoxBuffer: { vertical: number; horizontal: number };
+}): {
+  canvasWidth: number;
+  canvasHeight: number;
+} => {
+  const canvasWidth = absDx + 2 * boundingBoxBuffer.horizontal;
+  const canvasHeight = absDy + 2 * boundingBoxBuffer.vertical;
+
+  return { canvasWidth, canvasHeight };
+};
+
+const calculateAngle = ({
+  p3,
+  p4,
+}: {
+  p3: Point;
+  p4: Point;
+}): {
+  angle: number;
+} => {
+  const dy = p4.y - p3.y;
+  const dx = p4.x - p3.x;
+
+  return { angle: Math.atan(dy / dx) };
+};
+
+export const isArrowOnLine = (
+  point: Point,
+  setArrow: (val: boolean) => void,
+  canvasStartPoint: Point,
+  canvasEndPoint: Point,
+  canvasWidth: number,
+  canvasHeight: number
+) => {
+  if (
+    point.x > canvasStartPoint.x &&
+    point.x < canvasStartPoint.x + canvasWidth &&
+    point.y > canvasStartPoint.y &&
+    point.y < canvasStartPoint.y + canvasHeight
+  ) {
+    setArrow(true);
+  }
+};
+
+export const Arrow = ({ x0, y0, x1, y1 }: ArrowProps) => {
+  console.log('start point ' + x0 + ' ' + y0);
+  console.log('end point ' + x1 + ' ' + y1);
+
+  const strokeWidth = 1;
+  const arrowHeadEndingSize = 10;
+
+  const boundingBoxElementsBuffer = strokeWidth + arrowHeadEndingSize;
+  // Getting info about SVG canvas
+  const canvasStartPoint = {
+    x: Math.min(x0, x1),
+    y: Math.min(y0, y1),
+  };
+
+  const { absDx, absDy, dx, dy } = calculateDeltas(x0, y0, x1, y1);
+
+  const { p1, p2, p3, p4, boundingBoxBuffer } =
+    calculateControlPointsWithBuffer({
+      boundingBoxElementsBuffer,
+      dx,
+      dy,
+      absDx,
+      absDy,
+    });
+
+  const { canvasWidth, canvasHeight } = calculateCanvasDimensions({
+    absDx,
+    absDy,
+    boundingBoxBuffer,
+  });
+
+  const canvasXOffset = Math.min(x0, x1) - boundingBoxBuffer.horizontal;
+  const canvasYOffset = Math.min(y0, y1) - boundingBoxBuffer.vertical;
+
+  const { angle } = calculateAngle({ p3, p4 });
+
+  return (
+    <svg
+      width={canvasWidth}
+      height={canvasHeight}
+      style={{
+        background: '#eee',
+        transform: `translate(${canvasXOffset}px, ${canvasYOffset}px)`,
+      }}
+    >
+      <path
+        stroke='black'
+        strokeWidth={strokeWidth}
+        fill='none'
+        d={`
+      M 
+        ${p1.x}, ${p1.y} 
+      C 
+        ${p2.x}, ${p2.y} 
+        ${p3.x}, ${p3.y} 
+        ${p4.x}, ${p4.y} 
+      `}
+      />
+      <path
+        d={`
+      M ${(arrowHeadEndingSize / 5) * 2} 0
+      L ${arrowHeadEndingSize} ${arrowHeadEndingSize / 2}
+      L ${(arrowHeadEndingSize / 5) * 2} ${arrowHeadEndingSize}`}
+        fill='none'
+        stroke='black'
+        style={{
+          transform: `translate(${p4.x - arrowHeadEndingSize}px, ${
+            p4.y - arrowHeadEndingSize / 2
+          }px) rotate(${angle}deg)`,
+        }}
+      />
+    </svg>
   );
 };

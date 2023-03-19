@@ -84,7 +84,6 @@ const Graph: React.FC = () => {
           handleDrawingHotkey(event, drawingMode, setDrawingMode)
         }
         tabIndex={-1}
-        className='w-screen h-screen overflow-scroll'
         ref={containerRef}
       >
         <GraphContext.Provider

@@ -147,10 +147,6 @@ export const GraphContainer: React.FC = () => {
     }
   }, [endNode.current]);
 
-  // const attachArrowToLine = (point: any) => {
-  //   isArrowOnLine(point, )
-  // }
-
   useEffect(() => {
     console.log('lines updating ' + JSON.stringify(lines));
   }, [lines]);
@@ -158,7 +154,7 @@ export const GraphContainer: React.FC = () => {
   return (
     <div
       // onPointerDown={(event:PointerEvent) => onPointDown(event, pointersDown, setPointersDown)}
-      className='w-screen h-screen relative'
+      className='relative'
       ref={drop}
     >
       <div className=' absolute  flex-row w-10'>

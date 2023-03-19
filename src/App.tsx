@@ -15,7 +15,7 @@ function App() {
   return (
     <Provider value={client}>
       <BrowserRouter>
-        <div className='container'>
+        <div>
           <Window>
             <View>
               <Routes>

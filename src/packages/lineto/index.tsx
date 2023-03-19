@@ -15,6 +15,7 @@ const defaultBorderWidth = 2;
 type LineToPropTypes = {
   from: string;
   to: string;
+  arrow?: boolean;
   fromAnchor?: any;
   toAnchor?: any;
   delay?: any;
@@ -155,7 +156,7 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
     const y0 = box0.top + box0.height * anchor0.y;
     const y1 = box1.top + box1.height * anchor1.y;
 
-    return { x0, y0, x1, y1 };
+    return { x0, y0, x1, y1, anchor0, anchor1 };
   };
   let points = detect();
   // return <Line {...points} {...props} />;
@@ -232,6 +233,8 @@ type ArrowProps = {
   y0?: any;
   x1?: any;
   y1?: any;
+  anchor0?: any;
+  anchor1?: any;
   borderColor?: string | undefined;
   borderStyle?: string | undefined;
   borderWidth?: number | undefined;
@@ -263,11 +266,15 @@ const calculateControlPoints = ({
   absDy,
   dx,
   dy,
+  anchor0,
+  anchor1,
 }: {
   absDx: number;
   absDy: number;
   dx: number;
   dy: number;
+  anchor0: any;
+  anchor1: any;
 }): { p1: Point; p2: Point; p3: Point; p4: Point } => {
   let startPointX = 0;
   let startPointY = 0;
@@ -275,6 +282,14 @@ const calculateControlPoints = ({
   let endPointY = absDy;
   if (dx < 0) [startPointX, endPointX] = [endPointX, startPointX];
   if (dy < 0) [startPointY, endPointY] = [endPointY, startPointY];
+  if (anchor0 == undefined) {
+    return {
+      p1: { x: 0, y: 0 },
+      p2: { x: 0, y: 0 },
+      p3: { x: 0, y: 0 },
+      p4: { x: 0, y: 0 },
+    };
+  }
 
   const fixedLineInflectionConstsant = 40;
 
@@ -283,17 +298,35 @@ const calculateControlPoints = ({
     y: startPointY,
   };
   const p2 = {
-    x: startPointX + fixedLineInflectionConstsant,
+    x: startPointX,
     y: startPointY,
   };
   const p3 = {
-    x: endPointX - fixedLineInflectionConstsant,
+    x: endPointX,
     y: endPointY,
   };
   const p4 = {
     x: endPointX,
     y: endPointY,
   };
+
+  const offsetY = anchor0.y == 0.5 ? 0 : fixedLineInflectionConstsant;
+  const offsetX = anchor0.y == 0.5 ? fixedLineInflectionConstsant : 0;
+  if (dy >= 0) {
+    p2.y += offsetY;
+    p3.y -= offsetY;
+  } else {
+    p2.y -= offsetY;
+    p3.y += offsetY;
+  }
+
+  if (dx >= 0) {
+    p2.x += offsetX;
+    p3.x -= offsetX;
+  } else {
+    p2.x -= offsetX;
+    p3.x += offsetX;
+  }
 
   return { p1, p2, p3, p4 };
 };
@@ -304,12 +337,16 @@ const calculateControlPointsWithBuffer = ({
   absDy,
   dx,
   dy,
+  anchor0,
+  anchor1,
 }: {
   boundingBoxElementsBuffer: number;
   absDx: number;
   absDy: number;
   dx: number;
   dy: number;
+  anchor0: any;
+  anchor1: any;
 }): {
   p1: Point;
   p2: Point;
@@ -325,6 +362,8 @@ const calculateControlPointsWithBuffer = ({
     absDy,
     dx,
     dy,
+    anchor0,
+    anchor1,
   });
 
   const topBorder = Math.min(p1.y, p2.y, p3.y, p4.y);
@@ -392,8 +431,12 @@ const calculateAngle = ({
 } => {
   const dy = p4.y - p3.y;
   const dx = p4.x - p3.x;
+  console.log('p3 ' + p3.x + ' ' + p3.y);
+  console.log('p4 ' + p4.x + ' ' + p4.y);
 
-  return { angle: Math.atan(dy / dx) };
+  console.log('dy ' + dy);
+  console.log('dx ' + dx);
+  return { angle: (Math.atan(dy / dx) * 180) / Math.PI };
 };
 
 export const isArrowOnLine = (
@@ -414,9 +457,9 @@ export const isArrowOnLine = (
   }
 };
 
-export const Arrow = ({ x0, y0, x1, y1 }: ArrowProps) => {
-  console.log('start point ' + x0 + ' ' + y0);
-  console.log('end point ' + x1 + ' ' + y1);
+export const Arrow = ({ x0, y0, x1, y1, anchor0, anchor1 }: ArrowProps) => {
+  console.log('anchor ' + JSON.stringify(anchor0));
+  console.log('anchor ' + JSON.stringify(anchor1));
 
   const strokeWidth = 1;
   const arrowHeadEndingSize = 10;
@@ -437,6 +480,8 @@ export const Arrow = ({ x0, y0, x1, y1 }: ArrowProps) => {
       dy,
       absDx,
       absDy,
+      anchor0,
+      anchor1,
     });
 
   const { canvasWidth, canvasHeight } = calculateCanvasDimensions({
@@ -457,6 +502,8 @@ export const Arrow = ({ x0, y0, x1, y1 }: ArrowProps) => {
       style={{
         background: '#eee',
         transform: `translate(${canvasXOffset}px, ${canvasYOffset}px)`,
+        position: 'absolute',
+        zIndex: -1,
       }}
     >
       <path
@@ -480,7 +527,7 @@ export const Arrow = ({ x0, y0, x1, y1 }: ArrowProps) => {
         fill='none'
         stroke='black'
         style={{
-          transform: `translate(${p4.x - arrowHeadEndingSize}px, ${
+          transform: `translate(${p4.x + arrowHeadEndingSize / 2}px, ${
             p4.y - arrowHeadEndingSize / 2
           }px) rotate(${angle}deg)`,
         }}

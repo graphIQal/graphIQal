@@ -12,4 +12,5 @@ export interface DragItemGraph {
 export type LineRefs = {
   start: string;
   end: string;
+  arrowStart: string | null;
 };

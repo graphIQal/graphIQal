@@ -24,6 +24,19 @@ export type GraphContextInterface = {
   startNode: MutableRefObject<string>;
   endNode: MutableRefObject<string>;
   addAction: (val: Action) => void;
+  isPointInCanvasFuncs: MutableRefObject<
+    Map<string, (point: { x: number; y: number }) => boolean>
+  >;
+  numPointsInTriangleFuncs: MutableRefObject<
+    Map<
+      string,
+      (
+        a: { x: number; y: number },
+        b: { x: number; y: number },
+        c: { x: number; y: number }
+      ) => number
+    >
+  >;
 };
 
 const GraphContext = createContext<GraphContextInterface | null>(null);

@@ -13,8 +13,9 @@ export const handleStartPoint = (
   setIsDrawing: (val: boolean) => void,
   drawingMode: boolean
 ) => {
-  console.log('starting');
   startNode.current = id;
+  // console.log('ending on 0 ' + startNode.current);
+
   setIsDrawing(true);
 };
 
@@ -40,7 +41,7 @@ export const handleEndPoint = (
 ) => {
   setPoints([]);
   endNode.current = id;
-
+  console.log('ending on ' + endNode.current);
   setIsDrawing(false);
 };
 
@@ -133,6 +134,9 @@ export const isArrow = (coords: Coord[]) => {
 
   if (angle1 < 90 && angle2 < 90) {
     console.log('Arrow!');
+    console.log(
+      'element ' + document.elementFromPoint(middlePoint.x, middlePoint.y)
+    );
     return true;
   }
 };
@@ -145,7 +149,22 @@ export const handleDrawingEnd = (
   nodes: any,
   setNodes: (val: any) => void,
   setDrawingMode: (val: boolean) => void,
-  addAction: (val: Action) => void
+  addAction: (val: Action) => void,
+  isPointInCanvasFuncs: MutableRefObject<
+    Map<string, (point: { x: number; y: number }) => boolean>
+  >,
+  numPointsInTriangleFuncs: MutableRefObject<
+    Map<
+      string,
+      (
+        a: { x: number; y: number },
+        b: { x: number; y: number },
+        c: { x: number; y: number }
+      ) => number
+    >
+  >,
+  lines: any[],
+  setLines: (val: any[]) => void
 ) => {
   setIsDrawing(false);
   const { circle, center, size } = isCircle(points);
@@ -190,7 +209,32 @@ export const handleDrawingEnd = (
       redo: { id: id, value: newNodes[id], type: 'ADD' },
     });
   } else {
-    isArrow(points);
+    if (isArrow(points)) {
+      console.log('here arrow ');
+      for (let func in isPointInCanvasFuncs.current) {
+        console.log('here arrow func ' + func);
+        const startPoint = points[0];
+        const endPoint = points[points.length - 1];
+        const middlePoint = points[Math.floor(points.length / 2)];
+        if ((isPointInCanvasFuncs.current as any)[func](middlePoint)) {
+          console.log('here arrow here inner');
+          console.log((numPointsInTriangleFuncs.current as any)[func]);
+          const result = (numPointsInTriangleFuncs.current as any)[func](
+            startPoint,
+            middlePoint,
+            endPoint
+          );
+          if (result > 0) {
+            const newLines = [...lines];
+            newLines[func as unknown as number].arrowStart =
+              newLines[func as unknown as number].start;
+            setLines(newLines);
+            console.log('lines ' + JSON.stringify(newLines));
+            break;
+          }
+        }
+      }
+    }
   }
   setPoints([]);
 };

@@ -84,6 +84,7 @@ export const GraphNode: FC<NodeProps> = ({
         style={{ left: left - OFFSET / 2, top: top - OFFSET / 2 }}
         onMouseDown={() => {
           updateStartPos({ left, top });
+          console.log('triggering off');
           setDrawingMode(false);
         }}
         ref={drag}

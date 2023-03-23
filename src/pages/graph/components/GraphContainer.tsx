@@ -11,7 +11,7 @@ import { useDrop } from 'react-dnd';
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import { GraphViewElement } from '../../../gql/graphql';
 import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
-import LineTo, { isArrowOnLine } from '../../../packages/lineto';
+import LineTo from '../../../packages/lineto';
 import GraphContext, { GraphContextInterface } from '../GraphContext';
 import { DragItemGraph, LineRefs } from '../graphTypes';
 import { moveNodeCallback } from '../helpers/dragging';
@@ -41,6 +41,8 @@ export const GraphContainer: React.FC = () => {
     startNode,
     endNode,
     addAction,
+    isPointInCanvasFuncs,
+    numPointsInTriangleFuncs,
   } = useContext(GraphContext) as GraphContextInterface;
 
   useEffect(() => {
@@ -126,16 +128,28 @@ export const GraphContainer: React.FC = () => {
   });
 
   useEffect(() => {
+    console.log(
+      'drawing from ' + startNode.current + ' drawing to ' + endNode.current
+    );
     if (
       !startNode ||
       !endNode ||
       startNode.current == '' ||
       endNode.current == ''
     ) {
+      console.log('drawing from return');
       return;
     }
-    if (startNode.current !== '' && endNode.current !== '') {
-      setLines([...lines, { start: startNode.current, end: endNode.current }]);
+
+    if (
+      startNode.current !== '' &&
+      endNode.current !== '' &&
+      startNode.current != endNode.current
+    ) {
+      setLines([
+        ...lines,
+        { start: startNode.current, end: endNode.current, arrowStart: null },
+      ]);
       addAction({
         undo: { id: '', value: null, type: 'LINE' },
         redo: {
@@ -167,7 +181,15 @@ export const GraphContainer: React.FC = () => {
         <IconCircleButton src='redo' onClick={() => {}} selected={false} />
       </div>
       {lines.map(function (line, i) {
-        return <LineTo key={i} from={line.start} to={line.end} />;
+        return (
+          <LineTo
+            key={i}
+            from={line.start}
+            to={line.end}
+            id={i}
+            arrow={line.arrowStart}
+          />
+        );
       })}
       {Object.values(nodes).map((node) => {
         const width = node.graphNode ? node.graphNode.size[0] : 100;
@@ -268,7 +290,11 @@ export const GraphContainer: React.FC = () => {
                   nodes,
                   setNodes,
                   setDrawingMode,
-                  addAction
+                  addAction,
+                  isPointInCanvasFuncs,
+                  numPointsInTriangleFuncs,
+                  lines,
+                  setLines
                 );
               }
             : () => {

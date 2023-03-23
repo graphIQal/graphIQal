@@ -3,19 +3,25 @@ import PropTypes from 'prop-types';
 import React, {
   Component,
   PureComponent,
+  useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
 } from 'react';
+import GraphContext, {
+  GraphContextInterface,
+} from '../../pages/graph/GraphContext';
 // import Line from './index.jsx';
 const defaultAnchor = { x: 0.5, y: 0.5 };
 const defaultBorderStyle = 'solid';
 const defaultBorderWidth = 2;
 
 type LineToPropTypes = {
+  id: any;
   from: string;
   to: string;
-  arrow?: boolean;
+  arrow: string | null;
   fromAnchor?: any;
   toAnchor?: any;
   delay?: any;
@@ -28,7 +34,7 @@ type LineToPropTypes = {
 export const LineTo: React.FC<LineToPropTypes> = (props) => {
   const [fromAnchor, setFromAnchor] = useState<any>();
   const [toAnchor, setToAnchor] = useState<any>();
-
+  console.log('funcs line' + props.id);
   useEffect(() => {
     setFromAnchor(parseAnchor(props.fromAnchor));
     setToAnchor(parseAnchor(props.toAnchor));
@@ -160,7 +166,7 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
   };
   let points = detect();
   // return <Line {...points} {...props} />;
-  return <Arrow {...points} />;
+  return <Arrow id={props.id} arrow={props.arrow} {...points} />;
 };
 export default LineTo;
 
@@ -229,10 +235,12 @@ type Point = {
 //   endPoint: Point;
 // };
 type ArrowProps = {
+  id: any;
   x0?: any;
   y0?: any;
   x1?: any;
   y1?: any;
+  arrow: string | null;
   anchor0?: any;
   anchor1?: any;
   borderColor?: string | undefined;
@@ -439,28 +447,72 @@ const calculateAngle = ({
   return { angle: (Math.atan(dy / dx) * 180) / Math.PI };
 };
 
-export const isArrowOnLine = (
+export const isPointInCanvas = (
   point: Point,
-  setArrow: (val: boolean) => void,
   canvasStartPoint: Point,
-  canvasEndPoint: Point,
   canvasWidth: number,
   canvasHeight: number
 ) => {
+  console.log('here arrow entering func');
   if (
     point.x > canvasStartPoint.x &&
     point.x < canvasStartPoint.x + canvasWidth &&
     point.y > canvasStartPoint.y &&
     point.y < canvasStartPoint.y + canvasHeight
   ) {
-    setArrow(true);
+    console.log('here arrow found');
+    return true;
   }
 };
 
-export const Arrow = ({ x0, y0, x1, y1, anchor0, anchor1 }: ArrowProps) => {
+export const numPointsInTriangle = (
+  a: Point,
+  b: Point,
+  c: Point,
+  points: Point[]
+) => {
+  console.log('A ' + JSON.stringify(a));
+  console.log('B ' + JSON.stringify(b));
+  console.log('C ' + JSON.stringify(c));
+  const AB = { x: b.x - a.x, y: b.y - a.y };
+  const AC = { x: c.x - a.x, y: c.y - a.y };
+  const BC = { x: c.x - b.x, y: c.y - b.y };
+  let numPoints = 0;
+  for (let p in points) {
+    let point = points[p];
+    console.log('Point ' + point.x + ' ' + point.y);
+    const AP = { x: point.x - a.x, y: point.y - a.y };
+    const thirdTermABxAPisPositive = AB.x * AP.y - AB.y * AP.x > 0;
+    const thirdTermACxAPisPositive = AC.x * AP.y - AC.y * AP.x > 0;
+
+    if (thirdTermACxAPisPositive == thirdTermABxAPisPositive) continue;
+
+    const BP = { x: point.x - b.x, y: point.y - b.y };
+    const thirdTermBCxBPisPositive = BC.x * BP.y - BC.y * BP.x > 0;
+
+    if (thirdTermBCxBPisPositive != thirdTermABxAPisPositive) continue;
+
+    ++numPoints;
+  }
+  console.log('num points ' + numPoints);
+  return numPoints;
+};
+
+export const Arrow = ({
+  x0,
+  y0,
+  x1,
+  y1,
+  anchor0,
+  anchor1,
+  id,
+  arrow,
+}: ArrowProps) => {
+  const { isPointInCanvasFuncs, numPointsInTriangleFuncs } = useContext(
+    GraphContext
+  ) as GraphContextInterface;
   console.log('anchor ' + JSON.stringify(anchor0));
   console.log('anchor ' + JSON.stringify(anchor1));
-
   const strokeWidth = 1;
   const arrowHeadEndingSize = 10;
 
@@ -495,18 +547,48 @@ export const Arrow = ({ x0, y0, x1, y1, anchor0, anchor1 }: ArrowProps) => {
 
   const { angle } = calculateAngle({ p3, p4 });
 
+  const isPointInCanvasCallback = useCallback(
+    (point: Point) =>
+      isPointInCanvas(point, canvasStartPoint, canvasWidth, canvasHeight),
+    [canvasStartPoint, canvasWidth, canvasHeight]
+  );
+
+  (isPointInCanvasFuncs.current as any)[id] = isPointInCanvasCallback;
+  let points: Point[] = [];
+  let numPointsInTriangleCallback = useCallback(
+    (a: Point, b: Point, c: Point) => numPointsInTriangle(a, b, c, points),
+    [points]
+  );
+
+  useEffect(() => {
+    var path = document.getElementById('line') as HTMLElement & SVGPathElement;
+    var pathLength = Math.floor(path.getTotalLength());
+    if (points.length > 0) {
+      return;
+    }
+    for (let i = 0; i < 100; ++i) {
+      let percent = (i * pathLength) / 100;
+      let pt = path.getPointAtLength(percent);
+      pt.x += canvasStartPoint.x;
+      pt.y += canvasStartPoint.y;
+      points.push(pt);
+    }
+    (numPointsInTriangleFuncs.current as any)[id] = numPointsInTriangleCallback;
+  }, []);
+
   return (
     <svg
       width={canvasWidth}
       height={canvasHeight}
       style={{
-        background: '#eee',
+        background: arrow != null ? '#eee' : '',
         transform: `translate(${canvasXOffset}px, ${canvasYOffset}px)`,
         position: 'absolute',
         zIndex: -1,
       }}
     >
       <path
+        id='line'
         stroke='black'
         strokeWidth={strokeWidth}
         fill='none'
@@ -519,19 +601,21 @@ export const Arrow = ({ x0, y0, x1, y1, anchor0, anchor1 }: ArrowProps) => {
         ${p4.x}, ${p4.y} 
       `}
       />
-      <path
-        d={`
+      {arrow != null && (
+        <path
+          d={`
       M ${(arrowHeadEndingSize / 5) * 2} 0
       L ${arrowHeadEndingSize} ${arrowHeadEndingSize / 2}
       L ${(arrowHeadEndingSize / 5) * 2} ${arrowHeadEndingSize}`}
-        fill='none'
-        stroke='black'
-        style={{
-          transform: `translate(${p4.x + arrowHeadEndingSize / 2}px, ${
-            p4.y - arrowHeadEndingSize / 2
-          }px) rotate(${angle}deg)`,
-        }}
-      />
+          fill='none'
+          stroke='black'
+          style={{
+            transform: `translate(${p4.x + arrowHeadEndingSize / 2}px, ${
+              p4.y - arrowHeadEndingSize / 2
+            }px) rotate(${angle}deg)`,
+          }}
+        />
+      )}
     </svg>
   );
 };

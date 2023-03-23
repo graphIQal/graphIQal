@@ -60,6 +60,10 @@ const Graph: React.FC = () => {
   const [pointer, setPointer] = useState<number>(-1);
   const { addAction, undo, redo } = useHistoryState(nodes, setNodes, setLines);
 
+  //Line functions
+  let isPointInCanvasFuncs = useRef<any>({});
+  let numPointsInTriangleFuncs = useRef<any>({});
+
   useEffect(() => {
     const listenerFunc = (evt: any) => {
       evt.stopImmediatePropagation();
@@ -103,6 +107,8 @@ const Graph: React.FC = () => {
             startNode: startNode,
             endNode: endNode,
             addAction: addAction,
+            isPointInCanvasFuncs: isPointInCanvasFuncs,
+            numPointsInTriangleFuncs: numPointsInTriangleFuncs,
           }}
         >
           <GraphContainer />

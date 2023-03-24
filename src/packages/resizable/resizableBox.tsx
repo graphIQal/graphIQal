@@ -235,7 +235,6 @@ const ResizableBox: React.FC<{
       ref={ref}
       style={style}
       className={'resizable ' + classes}
-      onClick={() => console.log('clicked')}
       onMouseDown={() => {
         console.log('triggering off');
         setDrawingMode(false);

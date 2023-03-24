@@ -45,7 +45,6 @@ const Graph: React.FC = () => {
   //Resize function called by components
   const updateSize = useCallback(
     (id: number | string, width: number, height: number, tag?: string) => {
-      console.log('nodes on resize ' + JSON.stringify(nodes));
       updateSizeCallback(id, width, height, nodes, setNodes, addAction, tag);
     },
     [nodes, setNodes]
@@ -70,9 +69,7 @@ const Graph: React.FC = () => {
       if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
         redo();
       } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
-        console.log('lines ' + JSON.stringify(lines));
         undo();
-        console.log('lines ' + JSON.stringify(lines));
       }
     };
     document.addEventListener('keydown', (event) => listenerFunc(event));

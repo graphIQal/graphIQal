@@ -41,7 +41,6 @@ export const handleEndPoint = (
 ) => {
   setPoints([]);
   endNode.current = id;
-  console.log('ending on ' + endNode.current);
   setIsDrawing(false);
 };
 
@@ -76,9 +75,7 @@ export const isCircle = (coords: Coord[]) => {
   let endPoint = coords[coords.length - 1];
   // const m1 = (startPoint.y * -1 - yAvg) / (startPoint.x - xAvg);
   // const m2 = (endPoint.y * -1 - yAvg) / (endPoint.x - xAvg);
-  console.log('startPoint ' + JSON.stringify(startPoint));
-  console.log('endPoint ' + JSON.stringify(endPoint));
-  console.log('center x:' + xAvg + ' y:' + yAvg);
+
   // console.log('slope from startpoint ' + m1);
   // console.log('slope from endpoint ' + m2);
 
@@ -125,7 +122,6 @@ export const isArrow = (coords: Coord[]) => {
   console.log('middle ' + JSON.stringify(middlePoint));
   console.log('end ' + JSON.stringify(endPoint));
   const angle = calculateAngle(startPoint, middlePoint, endPoint);
-  console.log('angle ' + angle);
   if (angle > 160) {
     return false;
   }
@@ -134,9 +130,7 @@ export const isArrow = (coords: Coord[]) => {
 
   if (angle1 < 90 && angle2 < 90) {
     console.log('Arrow!');
-    console.log(
-      'element ' + document.elementFromPoint(middlePoint.x, middlePoint.y)
-    );
+
     return true;
   }
 };
@@ -168,7 +162,6 @@ export const handleDrawingEnd = (
 ) => {
   setIsDrawing(false);
   const { circle, center, size } = isCircle(points);
-  console.log('is circle ' + circle);
   const ids = [
     'a',
     'b',
@@ -218,7 +211,6 @@ export const handleDrawingEnd = (
         const middlePoint = points[Math.floor(points.length / 2)];
         if ((isPointInCanvasFuncs.current as any)[func](middlePoint)) {
           console.log('here arrow here inner');
-          console.log((numPointsInTriangleFuncs.current as any)[func]);
           const result = (numPointsInTriangleFuncs.current as any)[func](
             startPoint,
             middlePoint,
@@ -229,7 +221,6 @@ export const handleDrawingEnd = (
             newLines[func as unknown as number].arrowStart =
               newLines[func as unknown as number].start;
             setLines(newLines);
-            console.log('lines ' + JSON.stringify(newLines));
             break;
           }
         }

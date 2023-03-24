@@ -34,7 +34,6 @@ type LineToPropTypes = {
 export const LineTo: React.FC<LineToPropTypes> = (props) => {
   const [fromAnchor, setFromAnchor] = useState<any>();
   const [toAnchor, setToAnchor] = useState<any>();
-  console.log('funcs line' + props.id);
   useEffect(() => {
     setFromAnchor(parseAnchor(props.fromAnchor));
     setToAnchor(parseAnchor(props.toAnchor));
@@ -439,11 +438,7 @@ const calculateAngle = ({
 } => {
   const dy = p4.y - p3.y;
   const dx = p4.x - p3.x;
-  console.log('p3 ' + p3.x + ' ' + p3.y);
-  console.log('p4 ' + p4.x + ' ' + p4.y);
 
-  console.log('dy ' + dy);
-  console.log('dx ' + dx);
   return { angle: (Math.atan(dy / dx) * 180) / Math.PI };
 };
 
@@ -511,8 +506,7 @@ export const Arrow = ({
   const { isPointInCanvasFuncs, numPointsInTriangleFuncs } = useContext(
     GraphContext
   ) as GraphContextInterface;
-  console.log('anchor ' + JSON.stringify(anchor0));
-  console.log('anchor ' + JSON.stringify(anchor1));
+
   const strokeWidth = 1;
   const arrowHeadEndingSize = 10;
 
@@ -561,38 +555,47 @@ export const Arrow = ({
   );
 
   useEffect(() => {
-    var path = document.getElementById('line') as HTMLElement & SVGPathElement;
+    var path = document.getElementById('line' + id) as HTMLElement &
+      SVGPathElement;
     var pathLength = Math.floor(path.getTotalLength());
-    if (points.length > 0) {
-      return;
-    }
+    points = [];
+
     for (let i = 0; i < 100; ++i) {
       let percent = (i * pathLength) / 100;
       let pt = path.getPointAtLength(percent);
-      pt.x += canvasStartPoint.x;
-      pt.y += canvasStartPoint.y;
+      pt.x += canvasXOffset;
+      pt.y += canvasYOffset;
+      // const pointDiv = document.createElement('div');
+      // pointDiv.style.position = 'absolute';
+      // pointDiv.className = 'w-1 h-1';
+      // pointDiv.style.backgroundColor = 'black';
+      // pointDiv.style.left = pt.x + 'px';
+      // pointDiv.style.top = pt.y + 'px';
+      // document.getElementById('container')?.appendChild(pointDiv);
       points.push(pt);
     }
     (numPointsInTriangleFuncs.current as any)[id] = numPointsInTriangleCallback;
   }, []);
 
   return (
-    <svg
-      width={canvasWidth}
-      height={canvasHeight}
-      style={{
-        background: arrow != null ? '#eee' : '',
-        transform: `translate(${canvasXOffset}px, ${canvasYOffset}px)`,
-        position: 'absolute',
-        zIndex: -1,
-      }}
-    >
-      <path
-        id='line'
-        stroke='black'
-        strokeWidth={strokeWidth}
-        fill='none'
-        d={`
+    <div id='container'>
+      <svg
+        width={canvasWidth}
+        id='svg'
+        height={canvasHeight}
+        style={{
+          background: arrow != null ? '#eee' : '',
+          transform: `translate(${canvasXOffset}px, ${canvasYOffset}px)`,
+          position: 'absolute',
+          zIndex: -1,
+        }}
+      >
+        <path
+          id={'line' + id}
+          stroke='black'
+          strokeWidth={strokeWidth}
+          fill='none'
+          d={`
       M 
         ${p1.x}, ${p1.y} 
       C 
@@ -600,22 +603,23 @@ export const Arrow = ({
         ${p3.x}, ${p3.y} 
         ${p4.x}, ${p4.y} 
       `}
-      />
-      {arrow != null && (
-        <path
-          d={`
+        />
+        {arrow != null && (
+          <path
+            d={`
       M ${(arrowHeadEndingSize / 5) * 2} 0
       L ${arrowHeadEndingSize} ${arrowHeadEndingSize / 2}
       L ${(arrowHeadEndingSize / 5) * 2} ${arrowHeadEndingSize}`}
-          fill='none'
-          stroke='black'
-          style={{
-            transform: `translate(${p4.x + arrowHeadEndingSize / 2}px, ${
-              p4.y - arrowHeadEndingSize / 2
-            }px) rotate(${angle}deg)`,
-          }}
-        />
-      )}
-    </svg>
+            fill='none'
+            stroke='black'
+            style={{
+              transform: `translate(${p4.x + arrowHeadEndingSize / 2}px, ${
+                p4.y - arrowHeadEndingSize / 2
+              }px) rotate(${angle}deg)`,
+            }}
+          />
+        )}
+      </svg>
+    </div>
   );
 };

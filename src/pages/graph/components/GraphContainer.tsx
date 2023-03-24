@@ -111,9 +111,6 @@ export const GraphContainer: React.FC = () => {
 
   //drawing stuff
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  useEffect(() => {
-    console.log('is drawing ' + isDrawing);
-  }, [isDrawing]);
 
   const canvas = useRef<any>();
   const { canvasRef, canvasWidth, canvasHeight, points, setPoints } =
@@ -128,16 +125,12 @@ export const GraphContainer: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log(
-      'drawing from ' + startNode.current + ' drawing to ' + endNode.current
-    );
     if (
       !startNode ||
       !endNode ||
       startNode.current == '' ||
       endNode.current == ''
     ) {
-      console.log('drawing from return');
       return;
     }
 
@@ -160,10 +153,6 @@ export const GraphContainer: React.FC = () => {
       });
     }
   }, [endNode.current]);
-
-  useEffect(() => {
-    console.log('lines updating ' + JSON.stringify(lines));
-  }, [lines]);
 
   return (
     <div

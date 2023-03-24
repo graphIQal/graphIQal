@@ -218,8 +218,15 @@ export const handleDrawingEnd = (
           );
           if (result > 0) {
             const newLines = [...lines];
-            newLines[func as unknown as number].arrowStart =
-              newLines[func as unknown as number].start;
+            const arrowStart = calcArrowStart(
+              startPoint,
+              middlePoint,
+              endPoint,
+              nodes[newLines[func as unknown as number].start],
+              nodes[newLines[func as unknown as number].end]
+            );
+
+            newLines[func as unknown as number].arrowStart = arrowStart;
             setLines(newLines);
             break;
           }
@@ -228,6 +235,69 @@ export const handleDrawingEnd = (
     }
   }
   setPoints([]);
+};
+
+export const calcArrowStart = (
+  startPoint: Coord,
+  middlePoint: Coord,
+  endPoint: Coord,
+  startNode: any,
+  endNode: any
+) => {
+  const x1 = startNode.graphNode.x;
+  const y1 = startNode.graphNode.y;
+  const x2 = endNode.graphNode.x;
+  const y2 = endNode.graphNode.y;
+
+  if (startPoint.x < middlePoint.x && middlePoint.x < endPoint.x) {
+    if (middlePoint.y < startPoint.y || middlePoint.y < endPoint.y) {
+      //up arrow
+      if (y1 < y2) {
+        console.log('starting from ' + JSON.stringify(startNode));
+
+        return startNode;
+      } else {
+        console.log('starting from ' + JSON.stringify(endNode));
+
+        return endNode;
+      }
+    } else {
+      //down arrow
+
+      if (y1 < y2) {
+        console.log('starting from ' + JSON.stringify(endNode));
+
+        return endNode;
+      } else {
+        console.log('starting from ' + JSON.stringify(startNode));
+
+        return startNode;
+      }
+    }
+  } else {
+    if (middlePoint.x < startPoint.x || middlePoint.x < endPoint.x) {
+      //left arrow
+      if (x1 < x2) {
+        console.log('starting from ' + JSON.stringify(endNode));
+        return endNode;
+      } else {
+        console.log('starting from ' + JSON.stringify(startNode));
+
+        return startNode;
+      }
+    } else {
+      //right arrow
+      if (x1 < x2) {
+        console.log('starting from ' + JSON.stringify(startNode));
+
+        return startNode;
+      } else {
+        console.log('starting from ' + JSON.stringify(endNode));
+
+        return endNode;
+      }
+    }
+  }
 };
 
 export const handleDrawingHotkey = (

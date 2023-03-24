@@ -613,8 +613,8 @@ export const Arrow = ({
             fill='none'
             stroke='black'
             style={{
-              transform: `translate(${p4.x + arrowHeadEndingSize / 2}px, ${
-                p4.y - arrowHeadEndingSize / 2
+              transform: `translate(${p4.x - arrowHeadEndingSize / 2}px, ${
+                p4.y + arrowHeadEndingSize
               }px) rotate(${angle}deg)`,
             }}
           />

@@ -54,7 +54,6 @@ export const BoxDragLayer: FC<CustomDragLayerProps> = ({ parentRef }) => {
       isDragging: monitor.isDragging(),
     }));
   function renderItem() {
-    console.log('item ' + JSON.stringify(item));
     switch (itemType) {
       case 'node':
       // return (

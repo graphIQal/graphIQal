@@ -427,19 +427,43 @@ const calculateCanvasDimensions = ({
   return { canvasWidth, canvasHeight };
 };
 
-const calculateAngle = ({
+const calculateTransformArrow = ({
   p3,
   p4,
+  arrowHeadEndingSize,
 }: {
   p3: Point;
   p4: Point;
+  arrowHeadEndingSize: number;
 }): {
   angle: number;
+  x: number;
+  y: number;
 } => {
   const dy = p4.y - p3.y;
   const dx = p4.x - p3.x;
 
-  return { angle: (Math.atan(dy / dx) * 180) / Math.PI };
+  let angle = (Math.atan(dy / dx) * 180) / Math.PI;
+  if (p3.x > p4.x) {
+    angle = 180;
+  }
+  let x;
+  let y;
+  if (angle == 0) {
+    x = p4.x - arrowHeadEndingSize;
+    y = p4.y - arrowHeadEndingSize / 2;
+  } else if (angle == -90) {
+    x = p4.x - arrowHeadEndingSize / 2;
+    y = p4.y + arrowHeadEndingSize;
+  } else if (angle == 180) {
+    x = p4.x + arrowHeadEndingSize;
+    y = p4.y + arrowHeadEndingSize / 2;
+  } else {
+    x = p4.x + arrowHeadEndingSize / 2;
+    y = p4.y - arrowHeadEndingSize;
+  }
+
+  return { angle: angle, x: x, y: y };
 };
 
 export const isPointInCanvas = (
@@ -507,8 +531,8 @@ export const Arrow = ({
     GraphContext
   ) as GraphContextInterface;
 
-  const strokeWidth = 1;
-  const arrowHeadEndingSize = 10;
+  const strokeWidth = 2;
+  const arrowHeadEndingSize = 15;
 
   const boundingBoxElementsBuffer = strokeWidth + arrowHeadEndingSize;
   // Getting info about SVG canvas
@@ -539,7 +563,11 @@ export const Arrow = ({
   const canvasXOffset = Math.min(x0, x1) - boundingBoxBuffer.horizontal;
   const canvasYOffset = Math.min(y0, y1) - boundingBoxBuffer.vertical;
 
-  const { angle } = calculateAngle({ p3, p4 });
+  const { angle, x, y } = calculateTransformArrow({
+    p3,
+    p4,
+    arrowHeadEndingSize,
+  });
 
   const isPointInCanvasCallback = useCallback(
     (point: Point) =>
@@ -584,7 +612,6 @@ export const Arrow = ({
         id='svg'
         height={canvasHeight}
         style={{
-          background: arrow != null ? '#eee' : '',
           transform: `translate(${canvasXOffset}px, ${canvasYOffset}px)`,
           position: 'absolute',
           zIndex: -1,
@@ -612,10 +639,9 @@ export const Arrow = ({
       L ${(arrowHeadEndingSize / 5) * 2} ${arrowHeadEndingSize}`}
             fill='none'
             stroke='black'
+            strokeWidth={strokeWidth}
             style={{
-              transform: `translate(${p4.x - arrowHeadEndingSize / 2}px, ${
-                p4.y + arrowHeadEndingSize
-              }px) rotate(${angle}deg)`,
+              transform: `translate(${x}px, ${y}px) rotate(${angle}deg)`,
             }}
           />
         )}

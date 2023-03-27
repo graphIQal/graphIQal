@@ -143,11 +143,7 @@ export const GraphContainer: React.FC = () => {
   }, [endNode.current]);
 
   return (
-    <div
-      // onPointerDown={(event:PointerEvent) => onPointDown(event, pointersDown, setPointersDown)}
-      className='relative'
-      ref={drop}
-    >
+    <div className='relative' ref={drop}>
       <div className=' absolute  flex-row w-10'>
         <IconCircleButton
           src='draw'

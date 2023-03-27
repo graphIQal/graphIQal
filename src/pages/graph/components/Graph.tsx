@@ -30,7 +30,6 @@ const Graph: React.FC = () => {
   //Drawing/dragging states
   const containerRef = useRef(null);
   const [drawingMode, setDrawingMode] = useState(true);
-  const [illegalStart, setIllegalStart] = useState(false);
 
   const [canDrag, setCanDrag] = useState(false);
 

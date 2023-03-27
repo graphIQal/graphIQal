@@ -5,9 +5,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { Coord } from '../../pages/graph/helpers/drawing';
 import GraphContext, {
   GraphContextInterface,
 } from '../../pages/graph/GraphContext';
+
 const defaultAnchor = { x: 0.5, y: 0.5 };
 const defaultBorderStyle = 'solid';
 const defaultBorderWidth = 2;
@@ -209,11 +211,6 @@ const Line: React.FC<LineProps> = (props) => {
   );
 };
 
-type Point = {
-  x: number;
-  y: number;
-};
-
 type ArrowProps = {
   id: any;
   x0?: any;
@@ -249,6 +246,7 @@ const calculateDeltas = (
   return { dx, dy, absDx, absDy };
 };
 
+//calculating control points
 const calculateControlPoints = ({
   absDx,
   absDy,
@@ -263,7 +261,7 @@ const calculateControlPoints = ({
   dy: number;
   anchor0: any;
   anchor1: any;
-}): { p1: Point; p2: Point; p3: Point; p4: Point } => {
+}): { p1: Coord; p2: Coord; p3: Coord; p4: Coord } => {
   let startPointX = 0;
   let startPointY = 0;
   let endPointX = absDx;
@@ -336,10 +334,10 @@ const calculateControlPointsWithBuffer = ({
   anchor0: any;
   anchor1: any;
 }): {
-  p1: Point;
-  p2: Point;
-  p3: Point;
-  p4: Point;
+  p1: Coord;
+  p2: Coord;
+  p3: Coord;
+  p4: Coord;
   boundingBoxBuffer: {
     vertical: number;
     horizontal: number;
@@ -408,13 +406,14 @@ const calculateCanvasDimensions = ({
   return { canvasWidth, canvasHeight };
 };
 
+//calculating translation and rotation of arrow
 const calculateTransformArrow = ({
   p3,
   p4,
   arrowHeadEndingSize,
 }: {
-  p3: Point;
-  p4: Point;
+  p3: Coord;
+  p4: Coord;
   arrowHeadEndingSize: number;
 }): {
   angle: number;
@@ -447,9 +446,10 @@ const calculateTransformArrow = ({
   return { angle: angle, x: x, y: y };
 };
 
+//detection for which line the arrow was drawn on
 export const isPointInCanvas = (
-  point: Point,
-  canvasStartPoint: Point,
+  point: Coord,
+  canvasStartPoint: Coord,
   canvasWidth: number,
   canvasHeight: number
 ) => {
@@ -464,10 +464,10 @@ export const isPointInCanvas = (
 };
 
 export const numPointsInTriangle = (
-  a: Point,
-  b: Point,
-  c: Point,
-  points: Point[]
+  a: Coord,
+  b: Coord,
+  c: Coord,
+  points: Coord[]
 ) => {
   const AB = { x: b.x - a.x, y: b.y - a.y };
   const AC = { x: c.x - a.x, y: c.y - a.y };
@@ -543,16 +543,17 @@ export const Arrow = ({
     arrowHeadEndingSize,
   });
 
+  //creates functions specific to each line to detect: if what is drawn is in the line's canvas and the number of points on the line that intersect the arrow's triangle
   const isPointInCanvasCallback = useCallback(
-    (point: Point) =>
+    (point: Coord) =>
       isPointInCanvas(point, canvasStartPoint, canvasWidth, canvasHeight),
     [canvasStartPoint, canvasWidth, canvasHeight]
   );
 
   (isPointInCanvasFuncs.current as any)[id] = isPointInCanvasCallback;
-  let points: Point[] = [];
+  let points: Coord[] = [];
   let numPointsInTriangleCallback = useCallback(
-    (a: Point, b: Point, c: Point) => numPointsInTriangle(a, b, c, points),
+    (a: Coord, b: Coord, c: Coord) => numPointsInTriangle(a, b, c, points),
     [points]
   );
 

@@ -1,6 +1,9 @@
 import { MutableRefObject } from 'react';
 import { Action } from '../hooks/useHistoryState';
-
+export type Coord = {
+  x: number;
+  y: number;
+};
 //for border room for drawing
 export const OFFSET = 50;
 
@@ -14,10 +17,6 @@ export const handleStartPoint = (
   setIsDrawing(true);
 };
 
-export type Coord = {
-  x: number;
-  y: number;
-};
 export const handleDrawing = (
   event: any,
   points: Coord[],
@@ -76,6 +75,7 @@ export const isCircle = (coords: Coord[]) => {
   };
 };
 
+//helper that calculates angle between three points
 export const calculateAngle = (
   startPoint: Coord,
   middlePoint: Coord,
@@ -113,6 +113,7 @@ export const isArrow = (coords: Coord[]) => {
   }
 };
 
+//checks if what is drawn is a circle or an arrow or neither
 export const handleDrawingEnd = (
   setIsDrawing: (val: any) => void,
   points: Coord[],
@@ -210,6 +211,7 @@ export const handleDrawingEnd = (
   setPoints([]);
 };
 
+//calculates which direction the arrow is going in
 export const calcArrowStart = (
   startPoint: Coord,
   middlePoint: Coord,

@@ -1,31 +1,19 @@
-import {
-  MutableRefObject,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDrop } from 'react-dnd';
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
-import { GraphViewElement } from '../../../gql/graphql';
-import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
 import LineTo from '../../../packages/lineto';
 import GraphContext, { GraphContextInterface } from '../GraphContext';
-import { DragItemGraph, LineRefs } from '../graphTypes';
+import { DragItemGraph } from '../graphTypes';
 import { moveNodeCallback } from '../helpers/dragging';
 import {
-  Coord,
-  handleDrawingEnd,
   handleDrawing,
+  handleDrawingEnd,
   handleEndPoint,
   handleStartPoint,
-  isCircle,
 } from '../helpers/drawing';
 import { snapToGrid } from '../helpers/snapping';
 import { useCanvas } from '../hooks/useCanvas';
-import { useHistoryState } from '../hooks/useHistoryState';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
 
@@ -193,13 +181,7 @@ export const GraphContainer: React.FC = () => {
             onMouseDown={
               drawingMode
                 ? (event: any) =>
-                    handleStartPoint(
-                      event,
-                      node.id,
-                      startNode,
-                      setIsDrawing,
-                      drawingMode
-                    )
+                    handleStartPoint(node.id, startNode, setIsDrawing)
                 : () => {
                     return null;
                   }
@@ -222,8 +204,7 @@ export const GraphContainer: React.FC = () => {
 
                       endNode,
                       setIsDrawing,
-                      setPoints,
-                      setDrawingMode
+                      setPoints
                     )
                 : () => {
                     return null;
@@ -247,13 +228,7 @@ export const GraphContainer: React.FC = () => {
         onMouseDown={
           drawingMode
             ? (event: any) => {
-                handleStartPoint(
-                  event,
-                  '',
-                  startNode,
-                  setIsDrawing,
-                  drawingMode
-                );
+                handleStartPoint('', startNode, setIsDrawing);
               }
             : () => {
                 return null;
@@ -272,13 +247,11 @@ export const GraphContainer: React.FC = () => {
           isDrawing && drawingMode
             ? (event: any) => {
                 handleDrawingEnd(
-                  event,
                   setIsDrawing,
                   points,
                   setPoints,
                   nodes,
                   setNodes,
-                  setDrawingMode,
                   addAction,
                   isPointInCanvasFuncs,
                   numPointsInTriangleFuncs,

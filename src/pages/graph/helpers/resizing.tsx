@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { Action } from '../hooks/useHistoryState';
 
 //When box is resized

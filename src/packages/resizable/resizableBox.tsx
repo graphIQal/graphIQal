@@ -22,9 +22,6 @@ const ResizableBox: React.FC<{
   const startResizeRef = useRef<any>({});
 
   useEffect(() => {
-    console.log('can drag ' + canDrag);
-  }, [canDrag]);
-  useEffect(() => {
     const resizeableEle = ref.current as any;
     if (!resizeableEle) {
       return;
@@ -236,7 +233,6 @@ const ResizableBox: React.FC<{
       style={style}
       className={'resizable ' + classes}
       onMouseDown={() => {
-        console.log('triggering off');
         setDrawingMode(false);
       }}
     >

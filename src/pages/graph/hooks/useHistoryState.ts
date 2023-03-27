@@ -23,7 +23,7 @@ export const useHistoryState = (
   const history = useRef<Action[]>([]);
   const pointer = useRef<number>(-1);
   const addAction = (action: Action) => {
-    console.log('action ' + JSON.stringify(action));
+    // console.log('action ' + JSON.stringify(action));
     history.current = [
       ...history.current.slice(0, pointer.current + 1),
       action,

@@ -1,5 +1,4 @@
-import { MutableRefObject, useContext } from 'react';
-import GraphContext from '../GraphContext';
+import { MutableRefObject } from 'react';
 import { Action } from '../hooks/useHistoryState';
 
 //for border room for drawing
@@ -7,15 +6,11 @@ export const OFFSET = 50;
 
 //drawing functions
 export const handleStartPoint = (
-  event: any,
   id: string,
   startNode: MutableRefObject<string>,
-  setIsDrawing: (val: boolean) => void,
-  drawingMode: boolean
+  setIsDrawing: (val: boolean) => void
 ) => {
   startNode.current = id;
-  // console.log('ending on 0 ' + startNode.current);
-
   setIsDrawing(true);
 };
 
@@ -36,8 +31,7 @@ export const handleEndPoint = (
   id: string,
   endNode: MutableRefObject<string>,
   setIsDrawing: (val: boolean) => void,
-  setPoints: (val: any) => void,
-  setDrawingMode: (val: boolean) => void
+  setPoints: (val: any) => void
 ) => {
   setPoints([]);
   endNode.current = id;
@@ -73,19 +67,9 @@ export const isCircle = (coords: Coord[]) => {
   }
   let startPoint = coords[0];
   let endPoint = coords[coords.length - 1];
-  // const m1 = (startPoint.y * -1 - yAvg) / (startPoint.x - xAvg);
-  // const m2 = (endPoint.y * -1 - yAvg) / (endPoint.x - xAvg);
-
-  // console.log('slope from startpoint ' + m1);
-  // console.log('slope from endpoint ' + m2);
-
-  // console.log('angle ' + m1 + ' ' + m2);
-  // const angle = Math.atan(m2 - m1 / (1 + m1 * m2));
-  // console.log('angle ' + angle * (180 / Math.PI));
 
   const angle = calculateAngle(startPoint, { x: xAvg, y: yAvg }, endPoint);
   return {
-    // circle: countWithin / coords.length >= 0.5,
     circle: Math.abs(angle) < 90,
     center: [xAvg, yAvg],
     size: avgDist,
@@ -117,10 +101,6 @@ export const isArrow = (coords: Coord[]) => {
   const startPoint = coords[0];
   const endPoint = coords[coords.length - 1];
   const middlePoint = coords[Math.floor(coords.length / 2)];
-  console.log('coordinates of triangle: ');
-  console.log('start ' + JSON.stringify(startPoint));
-  console.log('middle ' + JSON.stringify(middlePoint));
-  console.log('end ' + JSON.stringify(endPoint));
   const angle = calculateAngle(startPoint, middlePoint, endPoint);
   if (angle > 160) {
     return false;
@@ -129,20 +109,16 @@ export const isArrow = (coords: Coord[]) => {
   const angle2 = calculateAngle(middlePoint, endPoint, startPoint);
 
   if (angle1 < 90 && angle2 < 90) {
-    console.log('Arrow!');
-
     return true;
   }
 };
 
 export const handleDrawingEnd = (
-  event: any,
   setIsDrawing: (val: any) => void,
   points: Coord[],
   setPoints: (val: Coord[]) => void,
   nodes: any,
   setNodes: (val: any) => void,
-  setDrawingMode: (val: boolean) => void,
   addAction: (val: Action) => void,
   isPointInCanvasFuncs: MutableRefObject<
     Map<string, (point: { x: number; y: number }) => boolean>
@@ -203,14 +179,11 @@ export const handleDrawingEnd = (
     });
   } else {
     if (isArrow(points)) {
-      console.log('here arrow ');
       for (let func in isPointInCanvasFuncs.current) {
-        console.log('here arrow func ' + func);
         const startPoint = points[0];
         const endPoint = points[points.length - 1];
         const middlePoint = points[Math.floor(points.length / 2)];
         if ((isPointInCanvasFuncs.current as any)[func](middlePoint)) {
-          console.log('here arrow here inner');
           const result = (numPointsInTriangleFuncs.current as any)[func](
             startPoint,
             middlePoint,
@@ -253,24 +226,16 @@ export const calcArrowStart = (
     if (middlePoint.y < startPoint.y || middlePoint.y < endPoint.y) {
       //up arrow
       if (y1 < y2) {
-        console.log('starting from ' + JSON.stringify(startNode));
-
         return startNode;
       } else {
-        console.log('starting from ' + JSON.stringify(endNode));
-
         return endNode;
       }
     } else {
       //down arrow
 
       if (y1 < y2) {
-        console.log('starting from ' + JSON.stringify(endNode));
-
         return endNode;
       } else {
-        console.log('starting from ' + JSON.stringify(startNode));
-
         return startNode;
       }
     }
@@ -278,22 +243,15 @@ export const calcArrowStart = (
     if (middlePoint.x < startPoint.x || middlePoint.x < endPoint.x) {
       //left arrow
       if (x1 < x2) {
-        console.log('starting from ' + JSON.stringify(endNode));
         return endNode;
       } else {
-        console.log('starting from ' + JSON.stringify(startNode));
-
         return startNode;
       }
     } else {
       //right arrow
       if (x1 < x2) {
-        console.log('starting from ' + JSON.stringify(startNode));
-
         return startNode;
       } else {
-        console.log('starting from ' + JSON.stringify(endNode));
-
         return endNode;
       }
     }
@@ -309,97 +267,3 @@ export const handleDrawingHotkey = (
     setDrawingMode(!drawingMode);
   }
 };
-
-//When a circle is clicked
-//Circle stuff not being used at the moment
-// export const handleMouseDownCircle = (
-//   event: any,
-//   setIsDrawing: (val: boolean) => void,
-//   setCanDrag: (val: boolean) => void,
-//   lines: any[],
-//   setLineAll: (lines: any[]) => void
-// ) => {
-//   setIsDrawing(true);
-//   setCanDrag(false);
-//   const currentCoord = { x: event.clientX, y: event.clientY };
-//   setLineAll([...lines, { start: currentCoord, end: currentCoord }]);
-// };
-
-// //When mouse is released not on any circle
-// const handleWrongEndpoint = (
-//   setCanDrag: (val: boolean) => void,
-//   lines: any[],
-//   setLineAll: (lines: any[]) => void,
-//   circleRefs: any[]
-// ) => {
-//   console.log('wrong endpoint!');
-//   setLineAll(lines.pop());
-//   document.removeEventListener('mousemove', (event) =>
-//     handleDrawing(event, lines, setLineAll)
-//   );
-//   document.removeEventListener('mouseup', (event) =>
-//     handleEndPoint(event, setCanDrag, lines, setLineAll, circleRefs)
-//   );
-//   setCanDrag(true);
-// };
-
-// //On mouse move to draw the line (not doing anything rn)
-// export const handleDrawing = (
-//   event: any,
-//   lines: any[],
-//   setLineAll: (lines: any[]) => void
-// ) => {
-//   console.log('drawing');
-//   const currentCoord = { x: event.clientX, y: event.clientY };
-//   if (lines.length == 0) {
-//     return;
-//   }
-//   const nextLines = lines.map((e: any, i: number) => {
-//     if (i === lines.length - 1) {
-//       return { start: e.start, end: currentCoord };
-//     } else {
-//       return e;
-//     }
-//   });
-
-//   setLineAll(nextLines);
-// };
-
-// //When mouse is released on another circle
-// export const handleEndPoint = (
-//   event: any,
-//   setCanDrag: (val: boolean) => void,
-//   lines: any[],
-//   setLineAll: (lines: any[]) => void,
-//   circleRefs: any[]
-// ) => {
-//   console.log('correct target!');
-//   // const currentCoord = { x: event.clientX, y: event.clientY };
-//   const currentCoord = { x: event.clientX, y: event.clientY };
-//   if (lines.length == 0) {
-//     return;
-//   }
-//   const nextLines = lines.map((e: any, i: number) => {
-//     if (i === lines.length - 1) {
-//       return { start: e.start, end: currentCoord };
-//       // return { start: circleRefs[0], end: circleRefs[1] };
-//     } else {
-//       return e;
-//     }
-//   });
-
-//   setLineAll(nextLines);
-//   document.removeEventListener('mousemove', (event) =>
-//     handleDrawing(event, lines, setLineAll)
-//   );
-//   document.removeEventListener('mouseup', (event) =>
-//     handleWrongEndpoint(setCanDrag, lines, setLineAll, circleRefs)
-//   );
-//   setCanDrag(true);
-//   for (const ref in circleRefs) {
-//     (circleRefs[ref].current as any).removeEventListener(
-//       'mouseup',
-//       handleEndPoint
-//     );
-//   }
-// };

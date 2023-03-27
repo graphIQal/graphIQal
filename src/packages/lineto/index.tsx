@@ -1,8 +1,4 @@
-import { Position } from 'postcss';
-import PropTypes from 'prop-types';
 import React, {
-  Component,
-  PureComponent,
   useCallback,
   useContext,
   useEffect,
@@ -12,7 +8,6 @@ import React, {
 import GraphContext, {
   GraphContextInterface,
 } from '../../pages/graph/GraphContext';
-// import Line from './index.jsx';
 const defaultAnchor = { x: 0.5, y: 0.5 };
 const defaultBorderStyle = 'solid';
 const defaultBorderWidth = 2;
@@ -37,13 +32,6 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
   useEffect(() => {
     setFromAnchor(parseAnchor(props.fromAnchor));
     setToAnchor(parseAnchor(props.toAnchor));
-
-    // return () => {
-    //     if (this.t) {
-    //         clearTimeout(this.t);
-    //         this.t = null;
-    //       }
-    // }
   }, []);
 
   const parseAnchorPercent = (value: string) => {
@@ -135,8 +123,6 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
 
     const a = findElement(from)?.nextElementSibling;
     const b = findElement(to)?.nextElementSibling;
-    // const a = findElement(from);
-    // const b = findElement(to);
     if (!a || !b) {
       return false;
     }
@@ -164,7 +150,6 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
     return { x0, y0, x1, y1, anchor0, anchor1 };
   };
   let points = detect();
-  // return <Line {...points} {...props} />;
   return <Arrow id={props.id} arrow={props.arrow} {...points} />;
 };
 export default LineTo;
@@ -229,10 +214,6 @@ type Point = {
   y: number;
 };
 
-// type ArrowProps = {
-//   startPoint: Point;
-//   endPoint: Point;
-// };
 type ArrowProps = {
   id: any;
   x0?: any;
@@ -472,14 +453,12 @@ export const isPointInCanvas = (
   canvasWidth: number,
   canvasHeight: number
 ) => {
-  console.log('here arrow entering func');
   if (
     point.x > canvasStartPoint.x &&
     point.x < canvasStartPoint.x + canvasWidth &&
     point.y > canvasStartPoint.y &&
     point.y < canvasStartPoint.y + canvasHeight
   ) {
-    console.log('here arrow found');
     return true;
   }
 };
@@ -490,16 +469,12 @@ export const numPointsInTriangle = (
   c: Point,
   points: Point[]
 ) => {
-  console.log('A ' + JSON.stringify(a));
-  console.log('B ' + JSON.stringify(b));
-  console.log('C ' + JSON.stringify(c));
   const AB = { x: b.x - a.x, y: b.y - a.y };
   const AC = { x: c.x - a.x, y: c.y - a.y };
   const BC = { x: c.x - b.x, y: c.y - b.y };
   let numPoints = 0;
   for (let p in points) {
     let point = points[p];
-    console.log('Point ' + point.x + ' ' + point.y);
     const AP = { x: point.x - a.x, y: point.y - a.y };
     const thirdTermABxAPisPositive = AB.x * AP.y - AB.y * AP.x > 0;
     const thirdTermACxAPisPositive = AC.x * AP.y - AC.y * AP.x > 0;
@@ -513,7 +488,6 @@ export const numPointsInTriangle = (
 
     ++numPoints;
   }
-  console.log('num points ' + numPoints);
   return numPoints;
 };
 
@@ -593,13 +567,6 @@ export const Arrow = ({
       let pt = path.getPointAtLength(percent);
       pt.x += canvasXOffset;
       pt.y += canvasYOffset;
-      // const pointDiv = document.createElement('div');
-      // pointDiv.style.position = 'absolute';
-      // pointDiv.className = 'w-1 h-1';
-      // pointDiv.style.backgroundColor = 'black';
-      // pointDiv.style.left = pt.x + 'px';
-      // pointDiv.style.top = pt.y + 'px';
-      // document.getElementById('container')?.appendChild(pointDiv);
       points.push(pt);
     }
     (numPointsInTriangleFuncs.current as any)[id] = numPointsInTriangleCallback;

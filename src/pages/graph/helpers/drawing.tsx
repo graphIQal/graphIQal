@@ -1,5 +1,6 @@
 import { MutableRefObject } from 'react';
 import { Action } from '../hooks/useHistoryState';
+import { snapToGrid } from './snapping';
 export type Coord = {
   x: number;
   y: number;
@@ -163,12 +164,16 @@ export const handleDrawingEnd = (
     let newNodes = { ...nodes };
     let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
     let id = ids[Object.keys(nodes).length + 1];
+    const [snappedX, snappedY] = snapToGrid(
+      center[0] - 200 / 2,
+      center[1] - 75 / 2
+    );
     newNodes[id] = {
       id: id,
       graphNode: {
         index: 0,
-        x: center[0] - 200 / 2,
-        y: center[1] - 75 / 2,
+        x: snappedX,
+        y: snappedY,
         // size: [dimension, dimension],
         size: [200, 75],
       },

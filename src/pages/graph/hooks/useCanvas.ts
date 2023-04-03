@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, MutableRefObject } from 'react';
+import { GRID_X_SIZE, GRID_Y_SIZE } from '../helpers/snapping';
 
 // Scaling Constants for Canvas
 const SCALE = 0.1;
@@ -63,6 +64,42 @@ export function useCanvas() {
         (points[i + 1] as any).y
       );
     }
+
+    //draw dots
+    function drawGrid() {
+      var cellW = 10,
+        cellH = 10;
+
+      // vertical lines
+      for (var x = 0; x <= canvasWidth; x += cellW) {
+        ctx.moveTo(x, 0); // x, y
+        ctx.lineTo(x, canvasHeight);
+      }
+
+      // horizontal lines
+      for (var y = 0; y <= canvasHeight; y += cellH) {
+        ctx.moveTo(0, y); // x, y
+        ctx.lineTo(canvasWidth, y);
+      }
+
+      ctx.strokeStyle = '#cccccc';
+      ctx.stroke();
+    }
+
+    // dots
+    function drawDots() {
+      var r = 1,
+        cw = GRID_X_SIZE,
+        ch = GRID_Y_SIZE;
+
+      for (var x = 0; x < canvasWidth; x += cw) {
+        for (var y = 0; y < canvasHeight; y += ch) {
+          ctx.fillStyle = `rgb(36, 36, 37, 0.7)`;
+          ctx.fillRect(x - r / 2, y - r / 2, r, r);
+        }
+      }
+    }
+    drawDots();
   }, [points, setPoints]);
 
   return {

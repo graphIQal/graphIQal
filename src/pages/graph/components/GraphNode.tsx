@@ -112,7 +112,7 @@ export const GraphNode: FC<NodeProps> = ({
         id={id}
       >
         {size[0] > 205 || size[1] > 80 ? (
-          <div>
+          <div className='bg-base_white h-full'>
             <EditorComponent />
             <Cube className='absolute right-sm top-sm' size={'1.5em'} />
           </div>

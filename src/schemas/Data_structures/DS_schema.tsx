@@ -142,7 +142,7 @@ export const nodesData: { [key: string]: Node } = {
   },
 };
 
-export const graphNodes: { [key: string]: VisualData } = {
+export let graphNodes: { [key: string]: VisualData } = {
   arraylist: {
     x: calculateSizeX(2),
     y: calculateSizeY(2),

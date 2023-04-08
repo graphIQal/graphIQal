@@ -3,11 +3,22 @@ import {
   graphNodes,
   nodesData,
   resources,
+  VisualData,
 } from '../../schemas/Data_structures/DS_schema';
 
 //get list of nodes to display as ConnectionData objects
 export const getNodesToDisplay = (nodeInView: string) => {
   return nodesData[nodeInView].connections;
+};
+//get list of nodes to display as GraphView objects
+export const getNodesToDisplayGraph = (nodeInView: string) => {
+  let nodes = getNodesToDisplay(nodeInView);
+  let graphNodeVals: { [key: string]: VisualData } = {};
+  for (let node in nodes) {
+    graphNodeVals[node] = graphNodes[node];
+  }
+
+  return graphNodeVals;
 };
 
 //gets connection information from nodeInView -> currNode

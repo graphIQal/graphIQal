@@ -78,12 +78,8 @@ export const GraphContainer: React.FC = () => {
   //DND stuff
 
   //When box is dragged
-  const moveNode = useCallback(
-    moveNodeCallback,
-
-    [nodes, setNodes]
-  );
-
+  const moveNode = useCallback(moveNodeCallback, [nodes, setNodes]);
+  const context = useContext(GraphContext);
   //Handling drop event
   const startPos = useRef<{ left: number; top: number }>();
   const [, drop] = useDrop(
@@ -94,7 +90,7 @@ export const GraphContainer: React.FC = () => {
         let left = Math.round(item.left + delta.x);
         let top = Math.round(item.top + delta.y);
         [left, top] = snapToGrid(left, top);
-        moveNode(item.id, left, top, nodes, setNodes);
+        moveNode(item.id, left, top, context);
         setDrawingMode(true);
         setIsDrawing(false);
         addAction({
@@ -215,13 +211,13 @@ export const GraphContainer: React.FC = () => {
           dropdownItems={getDropdownItemsY()}
         />
       </div>
-      {/* <GraphMindMapView
+      <GraphMindMapView
         isDrawing={isDrawing}
         setIsDrawing={setIsDrawing}
         points={points}
         setPoints={setPoints}
         startPos={startPos}
-      /> */}
+      />
       {/* <div className=' absolute  flex-row w-10'>
         <IconCircleButton
           src='draw'
@@ -272,7 +268,7 @@ export const GraphContainer: React.FC = () => {
               }
         }
       >
-        <GraphAxisView xCategory={xCategory} yCategory={yCategory} />
+        {/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
         <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
       </div>
     </div>

@@ -1,8 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GraphViewElement } from '../../../gql/graphql';
-import { getNodesToDisplay } from '../../../helpers/backend/dataHelpers';
+import {
+  getNodesToDisplay,
+  getNodesToDisplayGraph,
+} from '../../../helpers/backend/dataHelpers';
 import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
 import GraphContext from '../GraphContext';
 import { LineRefs } from '../graphTypes';
@@ -15,13 +24,18 @@ import { GraphContainer } from './GraphContainer';
 const Graph: React.FC = () => {
   //Graph in view of one node
   const [nodeInView, setNodeInView] = useState('arraylist');
-  //get connections of current node in view
+  //Data of nodes to display
   const [nodesDisplayed, setNodesDisplayed] = useState(
     getNodesToDisplay(nodeInView)
+  );
+  //Visual attributes of nodes to display
+  const [nodesVisual, setNodesVisual] = useState(
+    getNodesToDisplayGraph(nodeInView)
   );
 
   useEffect(() => {
     setNodesDisplayed(getNodesToDisplay(nodeInView));
+    setNodesVisual(getNodesToDisplayGraph(nodeInView));
   }, [nodeInView]);
 
   //Mock node data
@@ -45,12 +59,13 @@ const Graph: React.FC = () => {
 
   const [canDrag, setCanDrag] = useState(false);
 
+  const context = useContext(GraphContext);
   //Resize function called by components
   const updateSize = useCallback(
     (id: number | string, width: number, height: number, tag?: string) => {
-      updateSizeCallback(id, width, height, nodes, setNodes, addAction, tag);
+      updateSizeCallback(id, width, height, context, tag);
     },
-    [nodes, setNodes]
+    [nodesVisual, setNodesVisual]
   );
 
   //Drawing line data
@@ -123,6 +138,8 @@ const Graph: React.FC = () => {
             setNodeInView: setNodeInView,
             nodesDisplayed: nodesDisplayed,
             setNodesDisplayed: setNodesDisplayed,
+            nodesVisual: nodesVisual,
+            setNodesVisual: setNodesVisual,
             modalNode: modalNode,
             setModalNode: setModalNode,
           }}

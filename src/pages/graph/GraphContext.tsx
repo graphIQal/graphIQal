@@ -1,6 +1,9 @@
 import { createContext, MutableRefObject } from 'react';
 import { GraphViewElement } from '../../gql/graphql';
-import { ConnectionData } from '../../schemas/Data_structures/DS_schema';
+import {
+  ConnectionData,
+  VisualData,
+} from '../../schemas/Data_structures/DS_schema';
 import { LineRefs } from './graphTypes';
 import { Action } from './hooks/useHistoryState';
 
@@ -42,6 +45,8 @@ export type GraphContextInterface = {
   setNodeInView: (val: string) => void;
   nodesDisplayed: { [key: string]: ConnectionData };
   setNodesDisplayed: (val: { [key: string]: ConnectionData }) => void;
+  nodesVisual: { [key: string]: VisualData };
+  setNodesVisual: (val: { [key: string]: VisualData }) => void;
   modalNode: string;
   setModalNode: (val: string) => void;
 };

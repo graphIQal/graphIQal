@@ -27,9 +27,14 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
   setPoints,
   startPos,
 }) => {
-  const { drawingMode, lines, startNode, endNode, nodesDisplayed } = useContext(
-    GraphContext
-  ) as GraphContextInterface;
+  const {
+    drawingMode,
+    lines,
+    startNode,
+    endNode,
+    nodesDisplayed,
+    nodesVisual,
+  } = useContext(GraphContext) as GraphContextInterface;
   return (
     <div>
       {lines.map(function (line, i) {
@@ -46,7 +51,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
       {Object.keys(nodesDisplayed).map((node) => {
         const id = node;
         const title = nodesData[node].title;
-        const { x, y, size } = graphNodes[node];
+        const { x, y, size } = nodesVisual[node];
         const [width, height] = size;
         // const width = node. ? node.graphNode.size[0] : 100;
         // const height = node.graphNode ? node.graphNode.size[1] : 100;

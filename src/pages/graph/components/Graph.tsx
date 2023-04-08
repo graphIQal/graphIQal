@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GraphViewElement } from '../../../gql/graphql';
+import { getNodesToDisplay } from '../../../helpers/backend/dataHelpers';
 import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
 import GraphContext from '../GraphContext';
 import { LineRefs } from '../graphTypes';
@@ -12,6 +13,17 @@ import { Action, useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
 
 const Graph: React.FC = () => {
+  //Graph in view of one node
+  const [nodeInView, setNodeInView] = useState('arraylist');
+  //get connections of current node in view
+  const [nodesDisplayed, setNodesDisplayed] = useState(
+    getNodesToDisplay(nodeInView)
+  );
+
+  useEffect(() => {
+    setNodesDisplayed(getNodesToDisplay(nodeInView));
+  }, [nodeInView]);
+
   //Mock node data
   const [nodes, setNodes] = useState<{ [key: string]: GraphViewElement }>({
     // a: { id: 'a', graphNode: { index: 0, x: 80, y: 20, size: [100, 100] } },
@@ -54,6 +66,12 @@ const Graph: React.FC = () => {
   let isPointInCanvasFuncs = useRef<any>({});
   let numPointsInTriangleFuncs = useRef<any>({});
 
+  //Modal to show node details and connection details
+  const [modalNode, setModalNode] = useState('');
+
+  const [showModalConnection, setShowModalConnection] = useState(false);
+  const [currConnection, setCurrConnection] = useState(lines[0]);
+
   useEffect(() => {
     const listenerFunc = (evt: any) => {
       evt.stopImmediatePropagation();
@@ -68,6 +86,10 @@ const Graph: React.FC = () => {
       listenerFunc(event)
     );
   }, []);
+
+  useEffect(() => {
+    console.log('nodes ' + JSON.stringify(nodesDisplayed));
+  }, [nodesDisplayed]);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -97,6 +119,12 @@ const Graph: React.FC = () => {
             addAction: addAction,
             isPointInCanvasFuncs: isPointInCanvasFuncs,
             numPointsInTriangleFuncs: numPointsInTriangleFuncs,
+            nodeInView: nodeInView,
+            setNodeInView: setNodeInView,
+            nodesDisplayed: nodesDisplayed,
+            setNodesDisplayed: setNodesDisplayed,
+            modalNode: modalNode,
+            setModalNode: setModalNode,
           }}
         >
           <GraphContainer />

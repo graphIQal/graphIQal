@@ -25,6 +25,7 @@ export interface NodeProps {
   top: number;
   size: number[];
   children: ReactNode;
+  title: string;
   updateStartPos: (val: { left: number; top: number }) => void;
 }
 export const GraphNode: FC<NodeProps> = ({
@@ -32,9 +33,11 @@ export const GraphNode: FC<NodeProps> = ({
   left,
   top,
   size,
+  title,
   children,
   updateStartPos,
 }) => {
+  console.log('size ' + size);
   const {
     drawingMode,
     setDrawingMode,
@@ -111,14 +114,14 @@ export const GraphNode: FC<NodeProps> = ({
         }}
         id={id}
       >
-        {size[0] > 205 || size[1] > 80 ? (
+        {/* {size[0] > 205 || size[1] > 80 ? (
           <div className='bg-base_white h-full'>
             <EditorComponent />
             <Cube className='absolute right-sm top-sm' size={'1.5em'} />
           </div>
-        ) : (
-          <CollapsedGraphNode />
-        )}
+        ) : ( */}
+        <CollapsedGraphNode title={title} />
+        {/* )} */}
       </ResizableBox>
       {/* <div
           style={{ left: size[0] / 2 }}

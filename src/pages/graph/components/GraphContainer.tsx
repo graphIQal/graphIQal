@@ -17,6 +17,7 @@ import {
   handleEndPoint,
   handleStartPoint,
 } from '../helpers/drawing';
+import { updateSizeCallback } from '../helpers/resizing';
 import { snapToGrid } from '../helpers/snapping';
 import { useCanvas } from '../hooks/useCanvas';
 import { GraphAxisView } from './GraphAxisView';
@@ -28,24 +29,26 @@ export const GraphContainer: React.FC = () => {
   const {
     drawingMode,
     setDrawingMode,
-    nodes,
-    setNodes,
+
     lines,
     setLines,
     createNode,
     startNode,
     endNode,
-    addAction,
+    // addAction,
     isPointInCanvasFuncs,
     numPointsInTriangleFuncs,
     nodesDisplayed,
+    setNodesDisplayed,
+    nodesVisual,
+    setNodesVisual,
     nodeInView,
     setNodeInView,
   } = useContext(GraphContext) as GraphContextInterface;
 
   useEffect(() => {
     setLines([...lines]);
-  }, [nodes]);
+  }, [nodesDisplayed]);
 
   //Zoom stuff
 
@@ -78,7 +81,7 @@ export const GraphContainer: React.FC = () => {
   //DND stuff
 
   //When box is dragged
-  const moveNode = useCallback(moveNodeCallback, [nodes, setNodes]);
+  const moveNode = useCallback(moveNodeCallback, [nodesVisual, setNodesVisual]);
   const context = useContext(GraphContext);
   //Handling drop event
   const startPos = useRef<{ left: number; top: number }>();
@@ -93,14 +96,14 @@ export const GraphContainer: React.FC = () => {
         moveNode(item.id, left, top, context);
         setDrawingMode(true);
         setIsDrawing(false);
-        addAction({
-          undo: { id: item.id, type: 'DRAG', value: startPos.current },
-          redo: { id: item.id, type: 'DRAG', value: { left, top } },
-        });
+        // addAction({
+        //   undo: { id: item.id, type: 'DRAG', value: startPos.current },
+        //   redo: { id: item.id, type: 'DRAG', value: { left, top } },
+        // });
         return undefined;
       },
     }),
-    [moveNode, nodes, setNodes]
+    [moveNode, nodesVisual, setNodesVisual]
   );
 
   //drawing stuff
@@ -109,6 +112,14 @@ export const GraphContainer: React.FC = () => {
   const canvas = useRef<any>();
   const { canvasRef, canvasWidth, canvasHeight, points, setPoints } =
     useCanvas();
+
+  //When box is resized
+  let updateSize = useCallback(
+    (id: number | string, width: number, height: number, tag?: string) => {
+      updateSizeCallback(id, width, height, context, tag);
+    },
+    [nodesVisual, setNodesVisual]
+  );
 
   useEffect(() => {
     const canvasEle = canvas.current;
@@ -137,14 +148,14 @@ export const GraphContainer: React.FC = () => {
         ...lines,
         { start: startNode.current, end: endNode.current, arrowStart: null },
       ]);
-      addAction({
-        undo: { id: '', value: null, type: 'LINE' },
-        redo: {
-          id: '',
-          value: { start: startNode.current, end: endNode.current },
-          type: 'LINE',
-        },
-      });
+      // addAction({
+      //   undo: { id: '', value: null, type: 'LINE' },
+      //   redo: {
+      //     id: '',
+      //     value: { start: startNode.current, end: endNode.current },
+      //     type: 'LINE',
+      //   },
+      // });
     }
   }, [endNode.current]);
 
@@ -217,6 +228,7 @@ export const GraphContainer: React.FC = () => {
         points={points}
         setPoints={setPoints}
         startPos={startPos}
+        updateSize={updateSize}
       />
       {/* <div className=' absolute  flex-row w-10'>
         <IconCircleButton
@@ -254,9 +266,9 @@ export const GraphContainer: React.FC = () => {
                   setIsDrawing,
                   points,
                   setPoints,
-                  nodes,
-                  setNodes,
-                  addAction,
+                  nodesVisual,
+                  setNodesVisual,
+                  // addAction,
                   isPointInCanvasFuncs,
                   numPointsInTriangleFuncs,
                   lines,

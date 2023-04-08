@@ -27,6 +27,12 @@ export interface NodeProps {
   children: ReactNode;
   title: string;
   updateStartPos: (val: { left: number; top: number }) => void;
+  updateSize: (
+    id: string | number,
+    width: number,
+    height: number,
+    tag?: string | undefined
+  ) => void;
 }
 export const GraphNode: FC<NodeProps> = ({
   id,
@@ -36,15 +42,15 @@ export const GraphNode: FC<NodeProps> = ({
   title,
   children,
   updateStartPos,
+  updateSize,
 }) => {
-  console.log('size ' + size);
   const {
     drawingMode,
     setDrawingMode,
     canDrag,
     setCanDrag,
     hideSourceOnDrag,
-    addAction,
+    // addAction,
   } = useContext(GraphContext) as GraphContextInterface;
 
   //attach listeners to circles for release if drawing
@@ -113,6 +119,7 @@ export const GraphNode: FC<NodeProps> = ({
           top,
         }}
         id={id}
+        updateSize={updateSize}
       >
         {/* {size[0] > 205 || size[1] > 80 ? (
           <div className='bg-base_white h-full'>

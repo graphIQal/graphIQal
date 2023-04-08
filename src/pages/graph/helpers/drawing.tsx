@@ -1,4 +1,5 @@
 import { MutableRefObject } from 'react';
+import { VisualData } from '../../../schemas/Data_structures/DS_schema';
 import { Action } from '../hooks/useHistoryState';
 import { snapToGrid } from './snapping';
 export type Coord = {
@@ -119,9 +120,9 @@ export const handleDrawingEnd = (
   setIsDrawing: (val: any) => void,
   points: Coord[],
   setPoints: (val: Coord[]) => void,
-  nodes: any,
-  setNodes: (val: any) => void,
-  addAction: (val: Action) => void,
+  nodes: { [key: string]: VisualData },
+  setNodes: (val: { [key: string]: VisualData }) => void,
+  // addAction: (val: Action) => void,
   isPointInCanvasFuncs: MutableRefObject<
     Map<string, (point: { x: number; y: number }) => boolean>
   >,
@@ -168,7 +169,7 @@ export const handleDrawingEnd = (
       center[0] - 200 / 2,
       center[1] - 75 / 2
     );
-    newNodes[id] = {
+    (newNodes as any)[id] = {
       id: id,
       graphNode: {
         index: 0,
@@ -179,10 +180,10 @@ export const handleDrawingEnd = (
       },
     };
     setNodes(newNodes);
-    addAction({
-      undo: { id: id, value: null, type: 'ADD' },
-      redo: { id: id, value: newNodes[id], type: 'ADD' },
-    });
+    // addAction({
+    //   undo: { id: id, value: null, type: 'ADD' },
+    //   redo: { id: id, value: (newNodes)[id], type: 'ADD' },
+    // });
   } else {
     if (isArrow(points)) {
       for (let func in isPointInCanvasFuncs.current) {

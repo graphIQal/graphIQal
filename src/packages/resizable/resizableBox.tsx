@@ -9,8 +9,14 @@ const ResizableBox: React.FC<{
   classes?: string;
   style?: object;
   id: string | number;
-}> = ({ children, classes, style, id }) => {
-  const { setCanDrag, updateSize, nodes, setDrawingMode, canDrag } = useContext(
+  updateSize: (
+    id: string | number,
+    width: number,
+    height: number,
+    tag?: string | undefined
+  ) => void;
+}> = ({ children, classes, style, id, updateSize }) => {
+  const { setCanDrag, setDrawingMode, canDrag, nodesVisual } = useContext(
     GraphContext
   ) as GraphContextInterface;
   const ref = useRef(null);
@@ -107,11 +113,11 @@ const ResizableBox: React.FC<{
     const onMouseMoveTopResize = (event: any) => {
       const e = event as any;
       const dy = y - e.clientY;
-      if (height + dy < MIN_Y) {
-        height = MIN_Y;
-      } else {
-        height = height + dy;
-      }
+      // if (height + dy < MIN_Y) {
+      //   height = MIN_Y;
+      // } else {
+      height = height + dy;
+      // }
 
       y = e.clientY;
       //   resizeableEle.style.top -= dy;
@@ -167,11 +173,11 @@ const ResizableBox: React.FC<{
       const e = event as any;
       const dx = e.clientX - x;
       x = e.clientX;
-      if (width + dx < MIN_X) {
-        width = MIN_X;
-      } else {
-        width = width - dx;
-      }
+      // if (width + dx < MIN_X) {
+      // width = MIN_X;
+      // } else {
+      width = width - dx;
+      // }
 
       resizeableEle.style.width = width + 'px';
       updateSize(id, width, resizeableEle.style.height, 'left');
@@ -225,7 +231,7 @@ const ResizableBox: React.FC<{
         onMouseDownBottomRightResize
       );
     };
-  }, [nodes]);
+  }, [nodesVisual]);
 
   return (
     <div

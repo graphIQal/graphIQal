@@ -19,6 +19,12 @@ type MindMapProps = {
   points: any;
   setPoints: (val: any) => void;
   startPos: any;
+  updateSize: (
+    id: string | number,
+    width: number,
+    height: number,
+    tag?: string | undefined
+  ) => void;
 };
 export const GraphMindMapView: React.FC<MindMapProps> = ({
   isDrawing,
@@ -26,6 +32,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
   points,
   setPoints,
   startPos,
+  updateSize,
 }) => {
   const {
     drawingMode,
@@ -103,6 +110,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
               id={node}
               size={[width, height]}
               updateStartPos={(val) => (startPos.current = val)}
+              updateSize={updateSize}
             >
               <GraphEditor />
             </GraphNode>

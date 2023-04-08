@@ -10,7 +10,6 @@ export const updateSizeCallback = (
   context: GraphContextInterface | null,
   tag?: string
 ) => {
-  console.log('here');
   // const newSize = [width, height];
   // let newNodes: any = {};
   // for (const node in nodes) {

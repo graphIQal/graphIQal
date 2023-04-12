@@ -13,11 +13,14 @@ import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import ResizableBox from '../../../packages/resizable/resizableBox';
 import '../graph.css';
-import GraphContext, { GraphContextInterface } from '../GraphContext';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../GraphActionContext';
 import { OFFSET } from '../helpers/drawing';
 import { useDragNode } from '../hooks/useDrag';
 import { Cube } from '@styled-icons/boxicons-solid/Cube';
 import { DragHandle } from '../../../packages/dnd-editor/components/Draggable';
+import DrawingContext, { DrawingContextInterface } from '../DrawingContext';
 
 export interface NodeProps {
   id: any;
@@ -45,13 +48,15 @@ export const GraphNode: FC<NodeProps> = ({
   updateSize,
 }) => {
   const {
-    drawingMode,
-    setDrawingMode,
     canDrag,
     setCanDrag,
     hideSourceOnDrag,
     // addAction,
-  } = useContext(GraphContext) as GraphContextInterface;
+  } = useContext(GraphActionContext) as GraphActionContextInterface;
+
+  const { drawingMode, setDrawingMode } = useContext(
+    DrawingContext
+  ) as DrawingContextInterface;
 
   //attach listeners to circles for release if drawing
 

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { List } from '@styled-icons/feather/List';
-import GraphContext, {
-  GraphContextInterface,
-} from '../../pages/graph/GraphContext';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../../pages/graph/GraphActionContext';
 import { AngleDown } from '@styled-icons/fa-solid/AngleDown';
 import BlockMenu from '../organisms/BlockMenu';
 import HoveringToolbar from '../organisms/HoveringToolbar';

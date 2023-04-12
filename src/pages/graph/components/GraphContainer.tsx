@@ -8,8 +8,14 @@ import {
   graphNodes,
   nodesData,
 } from '../../../schemas/Data_structures/DS_schema';
-import GraphContext, { GraphContextInterface } from '../GraphContext';
+import DrawingContext, { DrawingContextInterface } from '../DrawingContext';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../GraphActionContext';
 import { DragItemGraph } from '../graphTypes';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../GraphViewContext';
 import { moveNodeCallback } from '../helpers/dragging';
 import {
   handleDrawing,
@@ -27,24 +33,29 @@ import { GraphNode } from './GraphNode';
 
 export const GraphContainer: React.FC = () => {
   const {
-    drawingMode,
-    setDrawingMode,
+    // addAction,
+  } = useContext(GraphActionContext) as GraphActionContextInterface;
 
-    lines,
-    setLines,
+  const {
     createNode,
     startNode,
     endNode,
-    // addAction,
     isPointInCanvasFuncs,
     numPointsInTriangleFuncs,
+    drawingMode,
+    setDrawingMode,
+  } = useContext(DrawingContext) as DrawingContextInterface;
+
+  const {
+    lines,
+    setLines,
     nodesDisplayed,
     setNodesDisplayed,
     nodesVisual,
     setNodesVisual,
     nodeInView,
     setNodeInView,
-  } = useContext(GraphContext) as GraphContextInterface;
+  } = useContext(GraphViewContext) as GraphViewContextInterface;
 
   useEffect(() => {
     setLines([...lines]);
@@ -82,7 +93,7 @@ export const GraphContainer: React.FC = () => {
 
   //When box is dragged
   const moveNode = useCallback(moveNodeCallback, [nodesVisual, setNodesVisual]);
-  const context = useContext(GraphContext);
+  const context = useContext(GraphViewContext);
   //Handling drop event
   const startPos = useRef<{ left: number; top: number }>();
   const [, drop] = useDrop(
@@ -180,6 +191,7 @@ export const GraphContainer: React.FC = () => {
   const getDropdownItemsX = () => {
     let items = [];
     for (let node in nodesData) {
+      if (!nodesData[node].categorical) continue;
       items.push({
         text: node,
         onPress: () => {
@@ -192,6 +204,7 @@ export const GraphContainer: React.FC = () => {
   const getDropdownItemsY = () => {
     let items = [];
     for (let node in nodesData) {
+      if (!nodesData[node].categorical) continue;
       items.push({
         text: node,
         onPress: () => {
@@ -205,7 +218,7 @@ export const GraphContainer: React.FC = () => {
   return (
     <div className='relative h-full w-full' ref={drop}>
       {/* <div className='absolute'>{nodeInView}</div> */}
-      <div className='ml-3 mt-3 flex flex-row gap-x-3 mb-3'>
+      <div className=' absolute ml-3 mt-3 flex flex-row gap-x-3 mb-3'>
         <PillMenu
           label='In View: '
           value={nodeInView}
@@ -272,7 +285,8 @@ export const GraphContainer: React.FC = () => {
                   isPointInCanvasFuncs,
                   numPointsInTriangleFuncs,
                   lines,
-                  setLines
+                  setLines,
+                  context
                 );
               }
             : () => {

@@ -6,9 +6,12 @@ import React, {
   useState,
 } from 'react';
 import { Coord } from '../../pages/graph/helpers/drawing';
-import GraphContext, {
-  GraphContextInterface,
-} from '../../pages/graph/GraphContext';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../../pages/graph/GraphActionContext';
+import DrawingContext, {
+  DrawingContextInterface,
+} from '../../pages/graph/DrawingContext';
 
 const defaultAnchor = { x: 0.5, y: 0.5 };
 const defaultBorderStyle = 'solid';
@@ -502,8 +505,8 @@ export const Arrow = ({
   arrow,
 }: ArrowProps) => {
   const { isPointInCanvasFuncs, numPointsInTriangleFuncs } = useContext(
-    GraphContext
-  ) as GraphContextInterface;
+    DrawingContext
+  ) as DrawingContextInterface;
 
   const strokeWidth = 2;
   const arrowHeadEndingSize = 15;

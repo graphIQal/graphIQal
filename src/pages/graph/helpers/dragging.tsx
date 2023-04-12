@@ -1,12 +1,13 @@
-import { GraphContextInterface } from '../GraphContext';
-import { updateNode } from './updateNodeHelper';
+import { GraphActionContextInterface } from '../GraphActionContext';
+import { GraphViewContextInterface } from '../GraphViewContext';
+import { updateNode } from './nodeHelpers';
 
 //called when the node is dropped in a new place to update x and y values
 export const moveNodeCallback = (
   id: string,
   x: number,
   y: number,
-  context: GraphContextInterface | null
+  context: GraphViewContextInterface | null
 ) => {
   // let newNodes: any = {};
   // for (const node in nodes) {

@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import GraphContext, {
-  GraphContextInterface,
-} from '../../pages/graph/GraphContext';
+import DrawingContext, {
+  DrawingContextInterface,
+} from '../../pages/graph/DrawingContext';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../../pages/graph/GraphActionContext';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../../pages/graph/GraphViewContext';
 import './resizable.css';
 
 const ResizableBox: React.FC<{
@@ -16,9 +22,18 @@ const ResizableBox: React.FC<{
     tag?: string | undefined
   ) => void;
 }> = ({ children, classes, style, id, updateSize }) => {
-  const { setCanDrag, setDrawingMode, canDrag, nodesVisual } = useContext(
-    GraphContext
-  ) as GraphContextInterface;
+  const { setCanDrag, canDrag } = useContext(
+    GraphActionContext
+  ) as GraphActionContextInterface;
+
+  const { nodesVisual } = useContext(
+    GraphViewContext
+  ) as GraphViewContextInterface;
+
+  const { setDrawingMode } = useContext(
+    DrawingContext
+  ) as DrawingContextInterface;
+
   const ref = useRef(null);
   const refLeft = useRef(null);
   const refTop = useRef(null);

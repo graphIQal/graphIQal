@@ -4,7 +4,13 @@ import {
   graphNodes,
   nodesData,
 } from '../../../schemas/Data_structures/DS_schema';
-import GraphContext, { GraphContextInterface } from '../GraphContext';
+import DrawingContext, { DrawingContextInterface } from '../DrawingContext';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../GraphActionContext';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../GraphViewContext';
 import {
   handleDrawing,
   handleEndPoint,
@@ -35,13 +41,16 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
   updateSize,
 }) => {
   const {
-    drawingMode,
     lines,
-    startNode,
-    endNode,
+
     nodesDisplayed,
     nodesVisual,
-  } = useContext(GraphContext) as GraphContextInterface;
+  } = useContext(GraphViewContext) as GraphViewContextInterface;
+
+  const { startNode, endNode, drawingMode } = useContext(
+    DrawingContext
+  ) as DrawingContextInterface;
+
   return (
     <div>
       {lines.map(function (line, i) {

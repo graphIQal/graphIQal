@@ -1,6 +1,11 @@
 import { MutableRefObject } from 'react';
 import { VisualData } from '../../../schemas/Data_structures/DS_schema';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../GraphActionContext';
+import { GraphViewContextInterface } from '../GraphViewContext';
 import { Action } from '../hooks/useHistoryState';
+import { addNode } from './nodeHelpers';
 import { snapToGrid } from './snapping';
 export type Coord = {
   x: number;
@@ -122,6 +127,7 @@ export const handleDrawingEnd = (
   setPoints: (val: Coord[]) => void,
   nodes: { [key: string]: VisualData },
   setNodes: (val: { [key: string]: VisualData }) => void,
+
   // addAction: (val: Action) => void,
   isPointInCanvasFuncs: MutableRefObject<
     Map<string, (point: { x: number; y: number }) => boolean>
@@ -137,49 +143,20 @@ export const handleDrawingEnd = (
     >
   >,
   lines: any[],
-  setLines: (val: any[]) => void
+  setLines: (val: any[]) => void,
+  context: GraphViewContextInterface | null
 ) => {
   setIsDrawing(false);
   const { circle, center, size } = isCircle(points);
-  const ids = [
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-    'f',
-    'g',
-    'h',
-    'i',
-    'j',
-    'k',
-    'l',
-    'm',
-    'n',
-    'o',
-    'p',
-    'q',
-    'r',
-  ];
+
   if (circle) {
-    let newNodes = { ...nodes };
     let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
-    let id = ids[Object.keys(nodes).length + 1];
     const [snappedX, snappedY] = snapToGrid(
       center[0] - 200 / 2,
       center[1] - 75 / 2
     );
-    (newNodes as any)[id] = {
-      id: id,
-      graphNode: {
-        index: 0,
-        x: snappedX,
-        y: snappedY,
-        // size: [dimension, dimension],
-        size: [200, 75],
-      },
-    };
-    setNodes(newNodes);
+    const newSize = [dimension, dimension];
+    addNode(context, newSize, snappedX, snappedY);
     // addAction({
     //   undo: { id: id, value: null, type: 'ADD' },
     //   redo: { id: id, value: (newNodes)[id], type: 'ADD' },

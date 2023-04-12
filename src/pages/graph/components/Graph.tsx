@@ -13,8 +13,10 @@ import {
   getNodesToDisplayGraph,
 } from '../../../helpers/backend/dataHelpers';
 import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
-import GraphContext from '../GraphContext';
+import DrawingContext from '../DrawingContext';
+import GraphActionContext from '../GraphActionContext';
 import { LineRefs } from '../graphTypes';
+import GraphViewContext from '../GraphViewContext';
 import { BoxDragLayer } from '../helpers/BoxDragLayer';
 import { handleDrawingHotkey } from '../helpers/drawing';
 import { Action, useHistoryState } from '../hooks/useHistoryState';
@@ -95,35 +97,47 @@ const Graph: React.FC = () => {
         tabIndex={-1}
         ref={containerRef}
       >
-        <GraphContext.Provider
+        <DrawingContext.Provider
           value={{
-            hideSourceOnDrag: true,
-            drawingMode: drawingMode,
-            setDrawingMode: setDrawingMode,
-            canDrag: canDrag,
-            setCanDrag: setCanDrag,
-            parentRef: containerRef,
-            lines,
-            setLines,
             createNode,
             startNode: startNode,
             endNode: endNode,
-            // addAction: addAction,
             isPointInCanvasFuncs: isPointInCanvasFuncs,
             numPointsInTriangleFuncs: numPointsInTriangleFuncs,
-            nodeInView: nodeInView,
-            setNodeInView: setNodeInView,
-            nodesDisplayed: nodesDisplayed,
-            setNodesDisplayed: setNodesDisplayed,
-            nodesVisual: nodesVisual,
-            setNodesVisual: setNodesVisual,
-            modalNode: modalNode,
-            setModalNode: setModalNode,
+            drawingMode: drawingMode,
+            setDrawingMode: setDrawingMode,
           }}
         >
-          <GraphContainer />
-          <BoxDragLayer parentRef={containerRef} />
-        </GraphContext.Provider>
+          <GraphActionContext.Provider
+            value={{
+              hideSourceOnDrag: true,
+
+              canDrag: canDrag,
+              setCanDrag: setCanDrag,
+              parentRef: containerRef,
+
+              // addAction: addAction,
+            }}
+          >
+            <GraphViewContext.Provider
+              value={{
+                lines,
+                setLines,
+                setNodeInView: setNodeInView,
+                nodesDisplayed: nodesDisplayed,
+                setNodesDisplayed: setNodesDisplayed,
+                nodesVisual: nodesVisual,
+                setNodesVisual: setNodesVisual,
+                modalNode: modalNode,
+                setModalNode: setModalNode,
+                nodeInView: nodeInView,
+              }}
+            >
+              <GraphContainer />
+              <BoxDragLayer parentRef={containerRef} />
+            </GraphViewContext.Provider>
+          </GraphActionContext.Provider>
+        </DrawingContext.Provider>
       </div>
     </DndProvider>
   );

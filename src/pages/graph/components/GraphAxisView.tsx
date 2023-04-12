@@ -18,38 +18,53 @@ export const GraphAxisView: React.FC<{
       : document.body;
     const cellWidth = (grid as any).clientWidth / numCellsX;
     const cellHeight = (grid as any).clientHeight / numCellsY;
-    console.log(
-      'document body ' + document.getElementById('graphview')?.clientHeight
-    );
+
+    const propX = 100 / numCellsX;
+    const propY = 100 / numCellsY;
+
     return (
       <>
         {Object.keys(nodesX).map((row, i) => {
           return (
             <div
               key={i}
-              style={{ height: cellHeight }}
-              className='flex flex-row'
+              className='flex flex-row w-full '
+              style={{ height: cellHeight * 0.85 }}
             >
-              <div className='w-16'>{row}</div>
-              {Object.keys(nodesY).map((col, j) => {
-                return (
-                  <div className='flex flex-col'>
+              <div className=' w-16 flex flex-row justify-center items-center'>
+                <span className='-rotate-90'>{row}</span>
+              </div>
+              <div className='flex flex-row w-full'>
+                {Object.keys(nodesY).map((col, j) => {
+                  return (
                     <div
+                      className={'flex flex-col'}
                       style={{
-                        width: cellWidth,
-                        maxWidth: cellWidth,
-                        minWidth: cellWidth,
-                        height: cellHeight,
+                        width: cellWidth * 0.95,
                       }}
-                      className=' border-2 m-2 overflow-hidden'
-                      key={j}
                     >
-                      {getConnectionInfo(row, col)}
+                      <div
+                        style={
+                          {
+                            // width: cellWidth,
+                            // maxWidth: cellWidth,
+                            // minWidth: cellWidth,
+                          }
+                        }
+                        className={'border-2 m-1 overflow-hidden h-full p-3'}
+                        key={j}
+                      >
+                        <span className=''>{getConnectionInfo(row, col)}</span>
+                      </div>
+                      {i == Object.values(nodesX).length - 1 && (
+                        <div className='h-16 flex flex-row justify-center items-center'>
+                          {col}
+                        </div>
+                      )}
                     </div>
-                    {i == Object.values(nodesX).length - 1 && <div>{col}</div>}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           );
         })}

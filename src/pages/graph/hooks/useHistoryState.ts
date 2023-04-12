@@ -1,6 +1,8 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { GraphViewElement } from '../../../gql/graphql';
-import GraphContext, { GraphContextInterface } from '../GraphContext';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../GraphActionContext';
 import { LineRefs } from '../graphTypes';
 
 export type Action = {

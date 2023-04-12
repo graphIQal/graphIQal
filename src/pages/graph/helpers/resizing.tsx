@@ -1,13 +1,14 @@
-import { GraphContextInterface } from '../GraphContext';
+import { GraphActionContextInterface } from '../GraphActionContext';
+import { GraphViewContextInterface } from '../GraphViewContext';
 import { Action } from '../hooks/useHistoryState';
-import { updateNode } from './updateNodeHelper';
+import { updateNode } from './nodeHelpers';
 
 //When box is resized
 export const updateSizeCallback = (
   id: number | string,
   width: number,
   height: number,
-  context: GraphContextInterface | null,
+  context: GraphViewContextInterface | null,
   tag?: string
 ) => {
   // const newSize = [width, height];

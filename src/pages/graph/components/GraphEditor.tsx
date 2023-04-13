@@ -1,3 +1,6 @@
+/**
+ * Expanded node view in graph that reveals text
+ */
 import React from 'react';
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import { Cube } from '@styled-icons/boxicons-solid/Cube';

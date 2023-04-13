@@ -1,4 +1,6 @@
-import { PointerEventHandler, useState } from 'react';
+/**
+ * Helpers for zooming (unimplemented)
+ */
 
 const theta = 0.1;
 let prevDiff = -1;

@@ -1,3 +1,7 @@
+/**
+ * Hooks for zooming (unimplemented)
+ */
+
 import { useState } from 'react';
 
 export const useZoom = () => {

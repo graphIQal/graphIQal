@@ -1,19 +1,25 @@
-import React, { useContext, useState } from 'react';
-import { getConnectionInfo } from '../../../helpers/backend/dataHelpers';
-import { nodesData } from '../../../schemas/Data_structures/DS_schema';
-import GraphViewContext from '../GraphViewContext';
+/**
+ * 2D information viewing: a set of grouped nodes (categories) on the X-axis and the Y-axis and each cell shows the connection information of them
+ */
+import React, { useContext } from 'react';
+import {
+  getConnectionInfo,
+  getNodeConnections,
+} from '../../../helpers/backend/getHelpers';
+
+import GraphViewContext from '../context/GraphViewContext';
 
 export const GraphAxisView: React.FC<{
   xCategory: string;
   yCategory: string;
 }> = ({ xCategory, yCategory }) => {
   const context = useContext(GraphViewContext);
-  let nodesX = context?.allNodes[xCategory].connections;
-  let nodesY = context?.allNodes[yCategory].connections;
+  let nodesX = getNodeConnections(context, xCategory);
+  let nodesY = getNodeConnections(context, yCategory);
 
   if (!nodesX || !nodesY) return <div></div>;
-  let numCellsX = Object.keys(nodesX).length;
-  let numCellsY = Object.keys(nodesY).length;
+  let numCellsX = nodesX.length;
+  let numCellsY = nodesX.length;
 
   const drawGrid = () => {
     const grid = document.getElementById('graphview')
@@ -22,12 +28,9 @@ export const GraphAxisView: React.FC<{
     const cellWidth = (grid as any).clientWidth / numCellsX;
     const cellHeight = (grid as any).clientHeight / numCellsY;
 
-    const propX = 100 / numCellsX;
-    const propY = 100 / numCellsY;
-
     return (
       <>
-        {Object.keys(nodesX as any).map((row, i) => {
+        {nodesX.map((row, i) => {
           return (
             <div
               key={i}
@@ -38,7 +41,7 @@ export const GraphAxisView: React.FC<{
                 <span className='-rotate-90'>{row}</span>
               </div>
               <div className='flex flex-row w-full'>
-                {Object.keys(nodesY as any).map((col, j) => {
+                {nodesY.map((col, j) => {
                   return (
                     <div
                       className={'flex flex-col'}
@@ -61,7 +64,7 @@ export const GraphAxisView: React.FC<{
                           {getConnectionInfo(row, col, context)}
                         </span>
                       </div>
-                      {i == Object.values(nodesX as any).length - 1 && (
+                      {i == nodesX.length - 1 && (
                         <div className='h-16 flex flex-row justify-center items-center'>
                           {col}
                         </div>

@@ -1,7 +1,21 @@
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../GraphViewContext';
-import { snapToGrid } from './snapping';
+import { GraphViewContextInterface } from '../../pages/graph/context/GraphViewContext';
+
+export const addLine = (
+  node1: string,
+  node2: string,
+  startNode: string | null,
+  viewContext: GraphViewContextInterface | null
+) => {
+  if (!viewContext) return;
+  viewContext.setLines([
+    ...viewContext.lines,
+    {
+      start: node1,
+      end: node2,
+      arrowStart: startNode,
+    },
+  ]);
+};
 
 export type NodeUpdate = 'resize' | 'drag';
 
@@ -40,13 +54,6 @@ export const updateNode = (
       break;
   }
 };
-
-export const addLine = (
-  context: GraphViewContextInterface | null,
-  startNode: string,
-  endNode: string,
-  arrowStart: string
-) => {};
 
 type LineUpdate = 'arrowAdd';
 
@@ -121,24 +128,4 @@ export const addNode = (
   context.setNodesDisplayed(newData);
   context.setNodesVisual(newNodes);
   context.setAllNodes(newAllNodes);
-};
-
-export const getLineDataEndpoints = (
-  context: GraphViewContextInterface | null,
-  lineID: string
-) => {
-  const node1 = context?.lines[lineID as any].start;
-  const data1 = context?.nodesVisual[node1 as any];
-
-  const node2 = context?.lines[lineID as any].end;
-  const data2 = context?.nodesVisual[node2 as any];
-
-  return {
-    x1: data1?.x,
-    x2: data2?.x,
-    y1: data1?.y,
-    y2: data2?.y,
-    node1: node1,
-    node2: node2,
-  };
 };

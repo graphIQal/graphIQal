@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { List } from '@styled-icons/feather/List';
 import GraphActionContext, {
   GraphActionContextInterface,
-} from '../../pages/graph/GraphActionContext';
+} from '../../pages/graph/context/GraphActionContext';
 import { AngleDown } from '@styled-icons/fa-solid/AngleDown';
 import BlockMenu from '../organisms/BlockMenu';
 import HoveringToolbar from '../organisms/HoveringToolbar';

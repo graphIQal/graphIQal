@@ -9,8 +9,15 @@ export type GraphActionContextInterface = {
 
   canDrag: boolean; //whether dragging can be done by the user, disabled on draw and on resize
   setCanDrag: (val: boolean) => void;
-  parentRef: MutableRefObject<HTMLDivElement | null>; //Ref of scrollable div for spanning purposes (unimplemented)
   // addAction: (val: Action) => void; //Function that adds a given action to the history stack for undo/redo
+  updateSize:
+    | ((
+        id: string | number,
+        width: number,
+        height: number,
+        tag?: string | undefined
+      ) => void)
+    | undefined;
 };
 
 const GraphActionContext = createContext<GraphActionContextInterface | null>(

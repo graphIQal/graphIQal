@@ -1,3 +1,6 @@
+/**
+ * Hooks for dragging and dropping nodes: useDragNode and useDropNode
+ */
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { DragItemGraph } from '../graphTypes';
 import { useCallback, useContext } from 'react';
@@ -5,8 +8,10 @@ import { moveNodeCallback } from '../helpers/dragging';
 import { snapToGrid } from '../helpers/snapping';
 import GraphViewContext, {
   GraphViewContextInterface,
-} from '../GraphViewContext';
-import DrawingContext, { DrawingContextInterface } from '../DrawingContext';
+} from '../context/GraphViewContext';
+import DrawingContext, {
+  DrawingContextInterface,
+} from '../context/GraphDrawingContext';
 
 //use drag hook for graph node
 export const useDragNode = (

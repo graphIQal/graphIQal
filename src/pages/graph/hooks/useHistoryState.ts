@@ -1,8 +1,9 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+/**
+ * Hook for controlling history actions
+ */
+
+import { useRef } from 'react';
 import { GraphViewElement } from '../../../gql/graphql';
-import GraphActionContext, {
-  GraphActionContextInterface,
-} from '../GraphActionContext';
 import { LineRefs } from '../graphTypes';
 
 export type Action = {
@@ -25,7 +26,6 @@ export const useHistoryState = (
   const history = useRef<Action[]>([]);
   const pointer = useRef<number>(-1);
   const addAction = (action: Action) => {
-    // console.log('action ' + JSON.stringify(action));
     history.current = [
       ...history.current.slice(0, pointer.current + 1),
       action,
@@ -34,8 +34,6 @@ export const useHistoryState = (
   };
 
   const undo = () => {
-    console.log('pointer ' + JSON.stringify(pointer));
-    console.log('history ' + JSON.stringify(history));
     if (pointer.current == -1) {
       return;
     }
@@ -81,7 +79,6 @@ export const useHistoryState = (
   };
 
   const redo = () => {
-    console.log('redoing ' + pointer.current + JSON.stringify(history));
     if (pointer.current + 1 >= history.current.length) {
       return;
     }

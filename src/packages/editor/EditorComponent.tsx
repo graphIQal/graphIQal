@@ -2,11 +2,9 @@ import {
   createComboboxPlugin,
   createNodeIdPlugin,
   ELEMENT_H1,
-  KEYS_HEADING,
   Plate,
 } from '@udecode/plate';
-import React, { useEffect, useMemo, useState } from 'react';
-import { GetCurrentUser } from '../../helpers/backend/userHelpers';
+import React, { useMemo, useState } from 'react';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
@@ -19,10 +17,9 @@ import {
 } from './plateTypes';
 import { BlockPlugins } from './Plugins/BlockPlugins';
 import { CommandPlugins } from './Plugins/CommandPlugins';
+import { FormatPlugins } from './Plugins/FormatPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
-import { useQuery } from 'urql';
-import { FormatPlugins } from './Plugins/FormatPlugins';
 
 const EditorComponent: React.FC = () => {
   const [value, setValue] = useState([

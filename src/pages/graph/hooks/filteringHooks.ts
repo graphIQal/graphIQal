@@ -4,10 +4,11 @@
  */
 
 import { useContext, useState } from 'react';
+import { isNodeCategorical } from '../../../helpers/backend/getHelpers';
 import { nodesData } from '../../../schemas/Data_structures/DS_schema';
 import GraphViewContext, {
   GraphViewContextInterface,
-} from '../GraphViewContext';
+} from '../context/GraphViewContext';
 
 export const useFiltering = () => {
   const [xCategory, setXCategory] = useState('study_categories');
@@ -33,7 +34,7 @@ export const useFiltering = () => {
   const getDropdownItemsX = () => {
     let items = [];
     for (let node in allNodes) {
-      if (!allNodes[node].categorical) continue;
+      if (!isNodeCategorical(allNodes, node)) continue;
       items.push({
         text: node,
         onPress: () => {
@@ -46,7 +47,7 @@ export const useFiltering = () => {
   const getDropdownItemsY = () => {
     let items = [];
     for (let node in allNodes) {
-      if (!allNodes[node].categorical) continue;
+      if (!isNodeCategorical(allNodes, node)) continue;
       items.push({
         text: node,
         onPress: () => {

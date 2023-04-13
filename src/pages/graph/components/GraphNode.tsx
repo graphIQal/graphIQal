@@ -1,26 +1,20 @@
-import {
-  FC,
-  MutableRefObject,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import Handle from '../../../components/atoms/Handle';
-import NodeCircle from '../../../components/molecules/NodeCircle';
+/**
+ * Container for node on graph.
+ */
+
+import { FC, ReactNode, useContext, useEffect } from 'react';
 import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode';
-import EditorComponent from '../../../packages/editor/EditorComponent';
+import { DragHandle } from '../../../packages/dnd-editor/components/Draggable';
 import ResizableBox from '../../../packages/resizable/resizableBox';
+import DrawingContext, {
+  DrawingContextInterface,
+} from '../context/GraphDrawingContext';
 import '../graph.css';
 import GraphActionContext, {
   GraphActionContextInterface,
-} from '../GraphActionContext';
-import { OFFSET } from '../helpers/drawing';
+} from '../context/GraphActionContext';
+import { OFFSET } from '../hooks/drawingHooks';
 import { useDragNode } from '../hooks/draggingHooks';
-import { Cube } from '@styled-icons/boxicons-solid/Cube';
-import { DragHandle } from '../../../packages/dnd-editor/components/Draggable';
-import DrawingContext, { DrawingContextInterface } from '../DrawingContext';
 
 export interface NodeProps {
   id: any;
@@ -30,12 +24,6 @@ export interface NodeProps {
   children: ReactNode;
   title: string;
   updateStartPos: (val: { left: number; top: number }) => void;
-  updateSize: (
-    id: string | number,
-    width: number,
-    height: number,
-    tag?: string | undefined
-  ) => void;
 }
 export const GraphNode: FC<NodeProps> = ({
   id,
@@ -45,7 +33,6 @@ export const GraphNode: FC<NodeProps> = ({
   title,
   children,
   updateStartPos,
-  updateSize,
 }) => {
   const {
     canDrag,
@@ -58,8 +45,7 @@ export const GraphNode: FC<NodeProps> = ({
     DrawingContext
   ) as DrawingContextInterface;
 
-  //attach listeners to circles for release if drawing
-
+  //disables dragging if we're drawing
   useEffect(() => {
     if (drawingMode) {
       setCanDrag(false);
@@ -124,7 +110,6 @@ export const GraphNode: FC<NodeProps> = ({
           top,
         }}
         id={id}
-        updateSize={updateSize}
       >
         {/* {size[0] > 205 || size[1] > 80 ? (
           <div className='bg-base_white h-full'>
@@ -135,38 +120,6 @@ export const GraphNode: FC<NodeProps> = ({
         <CollapsedGraphNode title={title} />
         {/* )} */}
       </ResizableBox>
-      {/* <div
-          style={{ left: size[0] / 2 }}
-          className='draw-circle draw-circle-t'
-          onMouseDown={handleMouseDownCircle}
-          ref={circleRefs[3]}
-        >
-          <Circle diameter={10} backgroundClass='bg-node' />
-        </div>
-        <div
-          style={{ left: size[0] / 2, bottom: 0 }}
-          className='draw-circle draw-circle-b'
-          onMouseDown={handleMouseDownCircle}
-          ref={circleRefs[2]}
-        >
-          <Circle diameter={10} backgroundClass='bg-node' />
-        </div>
-        <div
-          style={{ top: size[1] / 2, left: 0 }}
-          className='draw-circle draw-circle-l'
-          onMouseDown={handleMouseDownCircle}
-          ref={circleRefs[1]}
-        >
-          <Circle diameter={10} backgroundClass='bg-node' />
-        </div>
-        <div
-          style={{ top: size[1] / 2, right: 0 }}
-          className='draw-circle draw-circle-r'
-          onMouseDown={handleMouseDownCircle}
-          ref={circleRefs[0]}
-        >
-          <Circle diameter={10} backgroundClass='bg-node' />
-        </div> */}
     </div>
   );
 };

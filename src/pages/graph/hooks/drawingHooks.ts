@@ -1,13 +1,14 @@
-import { useCallback, useContext } from 'react';
-import DrawingContext, { DrawingContextInterface } from '../DrawingContext';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../GraphViewContext';
-import {
-  addNode,
-  getLineDataEndpoints,
-  updateLine,
-} from '../helpers/nodeHelpers';
+/**
+ * Hooks and helper for drawing event handling.
+ */
+
+import { MutableRefObject, useCallback, useContext } from 'react';
+import { addNode, updateLine } from '../../../helpers/backend/mutateHelpers';
+import DrawingContext, {
+  DrawingContextInterface,
+} from '../context/GraphDrawingContext';
+import GraphViewContext from '../context/GraphViewContext';
+import { calcArrowStart, isArrow, isCircle } from '../helpers/drawingEvents';
 import { snapToGrid } from '../helpers/snapping';
 
 export type Coord = {
@@ -15,6 +16,10 @@ export type Coord = {
   y: number;
 };
 
+//for border room for drawing
+export const OFFSET = 50;
+
+//When user starts drawing
 export const useDrawingStart = () => {
   const { startNode, setIsDrawing } = useContext(
     DrawingContext
@@ -25,6 +30,7 @@ export const useDrawingStart = () => {
   }, []);
 };
 
+//As user draws on the canvas
 export const useDrawingCanvas = () => {
   return useCallback(
     (event: any, points: Coord[], setPoints: (val: Coord[]) => void) => {
@@ -34,6 +40,7 @@ export const useDrawingCanvas = () => {
   );
 };
 
+//When user stops drawing at any point in the canvas except for when completing a line
 export const useDrawingEnd = () => {
   const context = useContext(GraphViewContext);
   const { setIsDrawing, isPointInCanvasFuncs, numPointsInTriangleFuncs } =
@@ -92,130 +99,26 @@ export const useDrawingEnd = () => {
   );
 };
 
-export const isCircle = (coords: Coord[]) => {
-  let xAvg = 0;
-  let yAvg = 0;
-  for (const coord in coords) {
-    xAvg += coords[coord].x;
-    yAvg += coords[coord].y;
-  }
-  xAvg = xAvg / coords.length;
-  yAvg = yAvg / coords.length;
-  let avgDist = 0;
-  for (const coord in coords) {
-    let dx = coords[coord].x - xAvg;
-    let dy = coords[coord].y - yAvg;
-    avgDist += Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-  }
-  avgDist = avgDist / coords.length;
-  const min = avgDist * 0.8;
-  const max = avgDist * 1.2;
-  let countWithin = 0;
-  for (const coord in coords) {
-    let dx = coords[coord].x - xAvg;
-    let dy = coords[coord].y - yAvg;
-    let distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-    if (distance >= min && distance <= max) {
-      countWithin = countWithin + 1;
-    }
-  }
-  let startPoint = coords[0];
-  let endPoint = coords[coords.length - 1];
-
-  const angle = calculateAngle(startPoint, { x: xAvg, y: yAvg }, endPoint);
-  return {
-    circle: Math.abs(angle) < 90,
-    center: [xAvg, yAvg],
-    size: avgDist,
-  };
-};
-
-//helper that calculates angle between three points
-export const calculateAngle = (
-  startPoint: Coord,
-  middlePoint: Coord,
-  endPoint: Coord
+//When user stops drawing on another node, it draws a line
+export const handleEndPoint = (
+  event: any,
+  id: string,
+  endNode: MutableRefObject<string>,
+  setIsDrawing: (val: boolean) => void,
+  setPoints: (val: any) => void
 ) => {
-  const dotProduct =
-    (startPoint.x - middlePoint.x) * (endPoint.x - middlePoint.x) +
-    (middlePoint.y - startPoint.y) * (middlePoint.y - endPoint.y);
-  let len1 = Math.sqrt(
-    Math.pow(startPoint.x - middlePoint.x, 2) +
-      Math.pow(startPoint.y - middlePoint.y, 2)
-  );
-  let len2 = Math.sqrt(
-    Math.pow(endPoint.x - middlePoint.x, 2) +
-      Math.pow(endPoint.y - middlePoint.y, 2)
-  );
-
-  const angle = Math.acos(dotProduct / (len1 * len2));
-  return (angle * 180) / Math.PI;
+  setPoints([]);
+  endNode.current = id;
+  setIsDrawing(false);
 };
 
-export const isArrow = (coords: Coord[]) => {
-  const startPoint = coords[0];
-  const endPoint = coords[coords.length - 1];
-  const middlePoint = coords[Math.floor(coords.length / 2)];
-  const angle = calculateAngle(startPoint, middlePoint, endPoint);
-  if (angle > 160) {
-    return false;
-  }
-  const angle1 = calculateAngle(middlePoint, startPoint, endPoint);
-  const angle2 = calculateAngle(middlePoint, endPoint, startPoint);
-
-  if (angle1 < 90 && angle2 < 90) {
-    return true;
-  }
-};
-
-//calculates which direction the arrow is going in
-export const calcArrowStart = (
-  startPoint: Coord,
-  middlePoint: Coord,
-  endPoint: Coord,
-  lineID: string,
-  context: GraphViewContextInterface | null
+//Setting drawing mode on and off
+export const handleDrawingHotkey = (
+  event: any,
+  drawingMode: boolean,
+  setDrawingMode: (val: boolean) => void
 ) => {
-  //get visual information for start and end node
-  const { x1, x2, y1, y2, node1, node2 } = getLineDataEndpoints(
-    context,
-    lineID
-  );
-
-  if (!y1 || !y2 || !x1 || !x2 || !node1 || !node2) return;
-
-  if (startPoint.x < middlePoint.x && middlePoint.x < endPoint.x) {
-    if (middlePoint.y < startPoint.y || middlePoint.y < endPoint.y) {
-      //up arrow
-      if (y1 < y2) {
-        return node1;
-      } else {
-        return node2;
-      }
-    } else {
-      //down arrow
-
-      if (y1 < y2) {
-        return node2;
-      } else {
-        return node1;
-      }
-    }
-  } else {
-    if (middlePoint.x < startPoint.x || middlePoint.x < endPoint.x) {
-      //left arrow
-      if (x1 < x2) {
-        return node2;
-      } else {
-        return node1;
-      }
-    } else {
-      //right arrow
-      if (x1 < x2) {
-        return node1;
-      } else {
-        return node2;
-      }
-    }
+  if (event.code == 'KeyD') {
+    setDrawingMode(!drawingMode);
   }
 };

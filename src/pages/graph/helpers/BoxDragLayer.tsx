@@ -1,8 +1,9 @@
-import { CSSProperties, FC, MutableRefObject, useRef } from 'react';
+/**
+ * Custom Drag Layer
+ */
+import { CSSProperties, FC, MutableRefObject } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDragLayer } from 'react-dnd';
-import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode';
-import { GraphNode } from '../components/GraphNode';
 import { snapToGrid } from './snapping';
 
 const layerStyles: CSSProperties = {
@@ -73,6 +74,8 @@ export const BoxDragLayer: FC<CustomDragLayerProps> = ({ parentRef }) => {
         return null;
     }
   }
+
+  // For dragging out of bounds (unimplemented)
   const infiniteBoard = () => {
     if (!currentOffset || !initialOffset) {
       return;
@@ -94,6 +97,7 @@ export const BoxDragLayer: FC<CustomDragLayerProps> = ({ parentRef }) => {
       parentRef.current.scrollBy(0, currentOffset.y - initialOffset.y);
     }
   };
+
   if (isDragging) {
     // console.log('offset ' + JSON.stringify(item));
     // console.log('offset initial ' + JSON.stringify(initialOffset));
@@ -103,6 +107,7 @@ export const BoxDragLayer: FC<CustomDragLayerProps> = ({ parentRef }) => {
   if (!isDragging) {
     return null;
   }
+
   return (
     <div style={layerStyles}>
       <div style={getItemStyles(initialOffset, currentOffset)}>

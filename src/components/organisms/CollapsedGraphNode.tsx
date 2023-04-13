@@ -1,4 +1,5 @@
-import IconButton from '../atoms/IconButton';
+//Node with just its title
+
 import { Cube } from '@styled-icons/boxicons-solid/Cube';
 
 const CollapsedGraphNode: React.FC<{ title: string }> = ({ title }) => {

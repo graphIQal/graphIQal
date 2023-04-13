@@ -1,56 +1,45 @@
+/**
+ * Display of nodes and lines connecting them in "mind map" style
+ */
 import React, { useContext } from 'react';
-import LineTo from '../../../packages/lineto';
-import {
-  graphNodes,
-  nodesData,
-} from '../../../schemas/Data_structures/DS_schema';
-import DrawingContext, { DrawingContextInterface } from '../DrawingContext';
+import LineTo from '../../../packages/lineto/LineTo';
+import DrawingContext, {
+  DrawingContextInterface,
+} from '../context/GraphDrawingContext';
 import GraphActionContext, {
   GraphActionContextInterface,
-} from '../GraphActionContext';
+} from '../context/GraphActionContext';
 import GraphViewContext, {
   GraphViewContextInterface,
-} from '../GraphViewContext';
+} from '../context/GraphViewContext';
 import {
-  handleDrawing,
   handleEndPoint,
-  handleStartPoint,
-} from '../helpers/drawing';
+  useDrawingCanvas,
+  useDrawingStart,
+} from '../hooks/drawingHooks';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
 
 type MindMapProps = {
-  isDrawing: boolean;
-  setIsDrawing: (val: boolean) => void;
   points: any;
   setPoints: (val: any) => void;
   startPos: any;
-  updateSize: (
-    id: string | number,
-    width: number,
-    height: number,
-    tag?: string | undefined
-  ) => void;
 };
 export const GraphMindMapView: React.FC<MindMapProps> = ({
-  isDrawing,
-  setIsDrawing,
   points,
   setPoints,
   startPos,
-  updateSize,
 }) => {
-  const {
-    lines,
+  const handleDrawing = useDrawingCanvas();
+  const handleStartPoint = useDrawingStart();
 
-    nodesDisplayed,
-    nodesVisual,
-    allNodes,
-  } = useContext(GraphViewContext) as GraphViewContextInterface;
+  //   handleStartPoint,
+  const { lines, nodesDisplayed, nodesVisual, allNodes } = useContext(
+    GraphViewContext
+  ) as GraphViewContextInterface;
 
-  const { startNode, endNode, drawingMode } = useContext(
-    DrawingContext
-  ) as DrawingContextInterface;
+  const { startNode, endNode, drawingMode, isDrawing, setIsDrawing } =
+    useContext(DrawingContext) as DrawingContextInterface;
 
   return (
     <div>
@@ -69,10 +58,6 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         const title = allNodes[node].title;
         const { x, y, size } = nodesVisual[node];
         const [width, height] = size;
-        // const width = node. ? node.graphNode.size[0] : 100;
-        // const height = node.graphNode ? node.graphNode.size[1] : 100;
-        // const x = node.graphNode?.x == undefined ? 0 : node.graphNode?.x;
-        // const y = node.graphNode?.y == undefined ? 0 : node.graphNode?.y;
 
         return (
           <div
@@ -80,8 +65,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
             key={node}
             onMouseDown={
               drawingMode
-                ? (event: any) =>
-                    handleStartPoint(node, startNode, setIsDrawing)
+                ? (event: any) => handleStartPoint(node)
                 : () => {
                     return null;
                   }
@@ -119,7 +103,6 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
               id={node}
               size={[width, height]}
               updateStartPos={(val) => (startPos.current = val)}
-              updateSize={updateSize}
             >
               <GraphEditor />
             </GraphNode>

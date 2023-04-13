@@ -1,10 +1,14 @@
+/**
+ * Pill menu for filtering the nodes that are "in view"
+ */
+
 import React, { useContext } from 'react';
 import { PillMenu } from '../../../components/molecules/PillMenu';
 import { ItemProps } from '../../../components/organisms/Dropdown';
 import { nodesData } from '../../../schemas/Data_structures/helpers';
 import GraphViewContext, {
   GraphViewContextInterface,
-} from '../GraphViewContext';
+} from '../context/GraphViewContext';
 
 type FilteringProps = {
   xCategory: string;

@@ -1,34 +1,31 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+/**
+ * Main Graph component
+ * Creates and sets all the global props that go into Context wrappers
+ */
+
+import React, { useEffect, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { GraphViewElement } from '../../../gql/graphql';
+
+import DrawingContext from '../context/GraphDrawingContext';
+import { LineRefs } from '../graphTypes';
+import GraphViewContext from '../context/GraphViewContext';
+import { BoxDragLayer } from '../helpers/BoxDragLayer';
+import { handleDrawingHotkey } from '../hooks/drawingHooks';
+import { GraphContainer } from './GraphContainer';
 import {
+  getAllNodes,
+  getLines,
   getNodesToDisplay,
   getNodesToDisplayGraph,
-} from '../../../helpers/backend/dataHelpers';
-import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
-import { nodesData } from '../../../schemas/Data_structures/DS_schema';
-import DrawingContext from '../DrawingContext';
-import GraphActionContext from '../GraphActionContext';
-import { LineRefs } from '../graphTypes';
-import GraphViewContext from '../GraphViewContext';
-import { BoxDragLayer } from '../helpers/BoxDragLayer';
-import { handleDrawingHotkey } from '../helpers/drawing';
-import { Action, useHistoryState } from '../hooks/useHistoryState';
-import { GraphContainer } from './GraphContainer';
+} from '../../../helpers/backend/getHelpers';
 
 const Graph: React.FC = () => {
-  const context = useContext(GraphViewContext);
-  const [allNodes, setAllNodes] = useState(nodesData);
+  //Data of all nodes
+  const [allNodes, setAllNodes] = useState(getAllNodes());
   //Graph in view of one node
   const [nodeInView, setNodeInView] = useState('arraylist');
-  //Data of nodes to display
+  //Data of nodes to display (comes from Connection information between each node and the node in view)
   const [nodesDisplayed, setNodesDisplayed] = useState(
     getNodesToDisplay(nodeInView, allNodes)
   );
@@ -42,27 +39,19 @@ const Graph: React.FC = () => {
     setNodesVisual(getNodesToDisplayGraph(nodeInView, allNodes));
   }, [nodeInView]);
 
-  //Mock line data
-  const [lines, setLines] = useState<LineRefs[]>([
-    // { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
-  ]);
+  //Line data
+  const [lines, setLines] = useState<LineRefs[]>(getLines());
 
-  //Drawing/dragging states
+  //Drawing states
   const containerRef = useRef(null);
   const [drawingMode, setDrawingMode] = useState(true);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const [canDrag, setCanDrag] = useState(false);
 
   //Drawing line data
   const startNode = useRef<string>('');
   const endNode = useRef<string>('');
 
-  //History
-  const [history, setHistory] = useState<Action[]>([]);
-  const [pointer, setPointer] = useState<number>(-1);
-  // const { addAction, undo, redo } = useHistoryState(nodes, setNodes, setLines);
-
-  //Line functions
+  //Line functions for detecting arrows
   let isPointInCanvasFuncs = useRef<any>({});
   let numPointsInTriangleFuncs = useRef<any>({});
 
@@ -72,6 +61,7 @@ const Graph: React.FC = () => {
   const [showModalConnection, setShowModalConnection] = useState(false);
   const [currConnection, setCurrConnection] = useState(lines[0]);
 
+  // Hot key for undo/redo
   useEffect(() => {
     const listenerFunc = (evt: any) => {
       evt.stopImmediatePropagation();
@@ -108,37 +98,25 @@ const Graph: React.FC = () => {
             setIsDrawing: setIsDrawing,
           }}
         >
-          <GraphActionContext.Provider
+          <GraphViewContext.Provider
             value={{
-              hideSourceOnDrag: true,
-
-              canDrag: canDrag,
-              setCanDrag: setCanDrag,
-              parentRef: containerRef,
-
-              // addAction: addAction,
+              lines,
+              setLines,
+              setNodeInView: setNodeInView,
+              nodesDisplayed: nodesDisplayed,
+              setNodesDisplayed: setNodesDisplayed,
+              nodesVisual: nodesVisual,
+              setNodesVisual: setNodesVisual,
+              modalNode: modalNode,
+              setModalNode: setModalNode,
+              nodeInView: nodeInView,
+              allNodes: allNodes,
+              setAllNodes: setAllNodes,
             }}
           >
-            <GraphViewContext.Provider
-              value={{
-                lines,
-                setLines,
-                setNodeInView: setNodeInView,
-                nodesDisplayed: nodesDisplayed,
-                setNodesDisplayed: setNodesDisplayed,
-                nodesVisual: nodesVisual,
-                setNodesVisual: setNodesVisual,
-                modalNode: modalNode,
-                setModalNode: setModalNode,
-                nodeInView: nodeInView,
-                allNodes: allNodes,
-                setAllNodes: setAllNodes,
-              }}
-            >
-              <GraphContainer />
-              <BoxDragLayer parentRef={containerRef} />
-            </GraphViewContext.Provider>
-          </GraphActionContext.Provider>
+            <GraphContainer />
+            <BoxDragLayer parentRef={containerRef} />
+          </GraphViewContext.Provider>
         </DrawingContext.Provider>
       </div>
     </DndProvider>

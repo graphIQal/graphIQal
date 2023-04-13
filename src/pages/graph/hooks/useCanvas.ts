@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef, MutableRefObject } from 'react';
+/**
+ * Hook that draws on canvas and draws dot grid
+ */
+
+import { useEffect, useRef, useState } from 'react';
 import { GRID_X_SIZE, GRID_Y_SIZE } from '../helpers/snapping';
 
-// Scaling Constants for Canvas
-const SCALE = 0.1;
-const OFFSET = 80;
 export const canvasWidth = window.innerWidth;
 export const canvasHeight = window.innerHeight;
 

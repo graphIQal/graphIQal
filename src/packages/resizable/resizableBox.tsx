@@ -1,13 +1,17 @@
+/**
+ * Box used for the nodes on the graph. Can be resized along its edges and its bottom right corner
+ */
+
 import React, { useContext, useEffect, useRef } from 'react';
 import DrawingContext, {
   DrawingContextInterface,
-} from '../../pages/graph/DrawingContext';
+} from '../../pages/graph/context/GraphDrawingContext';
 import GraphActionContext, {
   GraphActionContextInterface,
-} from '../../pages/graph/GraphActionContext';
+} from '../../pages/graph/context/GraphActionContext';
 import GraphViewContext, {
   GraphViewContextInterface,
-} from '../../pages/graph/GraphViewContext';
+} from '../../pages/graph/context/GraphViewContext';
 import './resizable.css';
 
 const ResizableBox: React.FC<{
@@ -15,17 +19,7 @@ const ResizableBox: React.FC<{
   classes?: string;
   style?: object;
   id: string | number;
-  updateSize: (
-    id: string | number,
-    width: number,
-    height: number,
-    tag?: string | undefined
-  ) => void;
-}> = ({ children, classes, style, id, updateSize }) => {
-  const { setCanDrag, canDrag } = useContext(
-    GraphActionContext
-  ) as GraphActionContextInterface;
-
+}> = ({ children, classes, style, id }) => {
   const { nodesVisual } = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
@@ -34,13 +28,16 @@ const ResizableBox: React.FC<{
     DrawingContext
   ) as DrawingContextInterface;
 
+  const { updateSize } = useContext(
+    GraphActionContext
+  ) as GraphActionContextInterface as any;
+
   const ref = useRef(null);
   const refLeft = useRef(null);
   const refTop = useRef(null);
   const refRight = useRef(null);
   const refBottom = useRef(null);
   const refBottomRight = useRef(null);
-  const startResizeRef = useRef<any>({});
 
   useEffect(() => {
     const resizeableEle = ref.current as any;
@@ -79,11 +76,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
-      // setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
     };
     const onMouseDownBottomRightResize = (event: any) => {
-      // setCanDrag(false);
       x = event.clientX;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.left = styles.left;
@@ -112,11 +107,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpRightResize = (event: Event) => {
-      //setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveRightResize);
     };
     const onMouseDownRightResize = (event: any) => {
-      //setCanDrag(false);
       x = event.clientX;
       resizeableEle.style.left = styles.left;
       resizeableEle.style.right = null;
@@ -141,11 +134,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpTopResize = (event: Event) => {
-      //setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveTopResize);
     };
     const onMouseDownTopResize = (event: any) => {
-      //setCanDrag(false);
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.bottom = styles.bottom;
@@ -170,11 +161,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpBottomResize = (event: Event) => {
-      //setCanDrag(drawingMode ? false : true);
       document.removeEventListener('mousemove', onMouseMoveBottomResize);
     };
     const onMouseDownBottomResize = (event: any) => {
-      //setCanDrag(false);
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.top = styles.top;
@@ -199,12 +188,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpLeftResize = (event: Event) => {
-      //setCanDrag(drawingMode ? false : true);
-
       document.removeEventListener('mousemove', onMouseMoveLeftResize);
     };
     const onMouseDownLeftResize = (event: any) => {
-      //setCanDrag(false);
       x = event.clientX;
       resizeableEle.style.right = styles.right;
       resizeableEle.style.left = null;

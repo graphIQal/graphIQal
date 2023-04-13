@@ -7,8 +7,8 @@ import {
   ConnectionData,
   Node,
   VisualData,
-} from '../../schemas/Data_structures/DS_schema';
-import { LineRefs } from './graphTypes';
+} from '../../../schemas/Data_structures/DS_schema';
+import { LineRefs } from '../graphTypes';
 
 export type GraphViewContextInterface = {
   lines: LineRefs[]; //lines displayed in graph

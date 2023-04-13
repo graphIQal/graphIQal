@@ -1,13 +1,8 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDrop } from 'react-dnd';
-import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import { PillMenu } from '../../../components/molecules/PillMenu';
-import LineTo from '../../../packages/lineto';
-import {
-  graphNodes,
-  nodesData,
-} from '../../../schemas/Data_structures/DS_schema';
+import { nodesData } from '../../../schemas/Data_structures/DS_schema';
 import DrawingContext, { DrawingContextInterface } from '../DrawingContext';
 import GraphActionContext, {
   GraphActionContextInterface,
@@ -20,16 +15,21 @@ import { moveNodeCallback } from '../helpers/dragging';
 import {
   handleDrawing,
   handleDrawingEnd,
-  handleEndPoint,
   handleStartPoint,
 } from '../helpers/drawing';
-import { updateSizeCallback } from '../helpers/resizing';
+import { useResize } from '../helpers/resizing';
 import { snapToGrid } from '../helpers/snapping';
 import { useCanvas } from '../hooks/useCanvas';
-import { GraphAxisView } from './GraphAxisView';
-import GraphEditor from './GraphEditor';
+import { useDropNode } from '../hooks/draggingHooks';
 import { GraphMindMapView } from './GraphMindMapView';
-import { GraphNode } from './GraphNode';
+import { useFiltering } from '../hooks/filteringHooks';
+import { GraphAxisView } from './GraphAxisView';
+import { Filtering } from './Filtering';
+import {
+  useDrawingCanvas,
+  useDrawingEnd,
+  useDrawingStart,
+} from '../hooks/drawingHooks';
 
 export const GraphContainer: React.FC = () => {
   const {
@@ -37,13 +37,14 @@ export const GraphContainer: React.FC = () => {
   } = useContext(GraphActionContext) as GraphActionContextInterface;
 
   const {
-    createNode,
     startNode,
     endNode,
     isPointInCanvasFuncs,
     numPointsInTriangleFuncs,
     drawingMode,
     setDrawingMode,
+    setIsDrawing,
+    isDrawing,
   } = useContext(DrawingContext) as DrawingContextInterface;
 
   const {
@@ -61,76 +62,16 @@ export const GraphContainer: React.FC = () => {
     setLines([...lines]);
   }, [nodesDisplayed]);
 
-  //Zoom stuff
-
-  // useEffect(() => {
-  //   document.addEventListener('pointerdown', (event: PointerEvent) =>
-  //     onPointDown(event)
-  //   );
-  //   document.addEventListener('pointermove', (event: PointerEvent) =>
-  //     onPointMove(event)
-  //   );
-  //   document.addEventListener('pointerup', (event: PointerEvent) =>
-  //     pointerUp(event)
-  //   );
-  //   document.addEventListener('pointercancel', (event: PointerEvent) =>
-  //     pointerUp(event)
-  //   );
-  //   document.addEventListener('pointerout', (event: PointerEvent) =>
-  //     pointerUp(event)
-  //   );
-  //   document.addEventListener('pointerleave', (event: PointerEvent) =>
-  //     pointerUp(event)
-  //   );
-  // }, []);
-
-  const [zoomFactor, setZoomFactor] = useState(1);
-  const theta = 0.1;
-  const [lastZoomCenter, setLastZoomCenter] = useState(null);
-  const [pointersDown, setPointersDown] = useState<PointerEvent[]>([]);
-
-  //DND stuff
-
-  //When box is dragged
-  const moveNode = useCallback(moveNodeCallback, [nodesVisual, setNodesVisual]);
-  const context = useContext(GraphViewContext);
   //Handling drop event
   const startPos = useRef<{ left: number; top: number }>();
-  const [, drop] = useDrop(
-    () => ({
-      accept: 'node',
-      drop(item: DragItemGraph, monitor) {
-        const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
-        let left = Math.round(item.left + delta.x);
-        let top = Math.round(item.top + delta.y);
-        [left, top] = snapToGrid(left, top);
-        moveNode(item.id, left, top, context);
-        setDrawingMode(true);
-        setIsDrawing(false);
-        // addAction({
-        //   undo: { id: item.id, type: 'DRAG', value: startPos.current },
-        //   redo: { id: item.id, type: 'DRAG', value: { left, top } },
-        // });
-        return undefined;
-      },
-    }),
-    [moveNode, nodesVisual, setNodesVisual]
-  );
-
-  //drawing stuff
-  const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  const [, drop] = useDropNode(setIsDrawing);
 
   const canvas = useRef<any>();
   const { canvasRef, canvasWidth, canvasHeight, points, setPoints } =
     useCanvas();
-
+  const context = useContext(GraphViewContext);
   //When box is resized
-  let updateSize = useCallback(
-    (id: number | string, width: number, height: number, tag?: string) => {
-      updateSizeCallback(id, width, height, context, tag);
-    },
-    [nodesVisual, setNodesVisual]
-  );
+  const updateSize = useResize();
 
   useEffect(() => {
     const canvasEle = canvas.current;
@@ -171,70 +112,27 @@ export const GraphContainer: React.FC = () => {
   }, [endNode.current]);
 
   //Pill menu information for centered node
-  const getDropdownItems = () => {
-    let items = [];
-    for (let node in nodesData) {
-      items.push({
-        text: node,
-        onPress: () => {
-          setNodeInView(node);
-        },
-      });
-    }
-    return items;
-  };
+  const {
+    xCategory,
+    yCategory,
+    getDropdownItemsX,
+    getDropdownItemsY,
+    getDropdownItems,
+  } = useFiltering();
 
-  //Pill menu information for x-axis node
-  const [xCategory, setXCategory] = useState('study_categories');
-  const [yCategory, setYCategory] = useState('data_structures');
-
-  const getDropdownItemsX = () => {
-    let items = [];
-    for (let node in nodesData) {
-      if (!nodesData[node].categorical) continue;
-      items.push({
-        text: node,
-        onPress: () => {
-          setXCategory(node);
-        },
-      });
-    }
-    return items;
-  };
-  const getDropdownItemsY = () => {
-    let items = [];
-    for (let node in nodesData) {
-      if (!nodesData[node].categorical) continue;
-      items.push({
-        text: node,
-        onPress: () => {
-          setYCategory(node);
-        },
-      });
-    }
-    return items;
-  };
+  const handleStartPoint = useDrawingStart();
+  const handleDrawing = useDrawingCanvas();
+  const handleDrawingEnd = useDrawingEnd();
 
   return (
     <div className='relative h-full w-full' ref={drop}>
-      {/* <div className='absolute'>{nodeInView}</div> */}
-      <div className=' absolute ml-3 mt-3 flex flex-row gap-x-3 mb-3'>
-        <PillMenu
-          label='In View: '
-          value={nodeInView}
-          dropdownItems={getDropdownItems()}
-        />
-        <PillMenu
-          label='X-Axis: '
-          value={xCategory}
-          dropdownItems={getDropdownItemsX()}
-        />
-        <PillMenu
-          label='Y-Axis: '
-          value={yCategory}
-          dropdownItems={getDropdownItemsY()}
-        />
-      </div>
+      <Filtering
+        xCategory={xCategory}
+        yCategory={yCategory}
+        getDropdownItems={getDropdownItems}
+        getDropdownItemsX={getDropdownItemsX}
+        getDropdownItemsY={getDropdownItemsY}
+      />
       <GraphMindMapView
         isDrawing={isDrawing}
         setIsDrawing={setIsDrawing}
@@ -243,6 +141,7 @@ export const GraphContainer: React.FC = () => {
         startPos={startPos}
         updateSize={updateSize}
       />
+      {/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
       {/* <div className=' absolute  flex-row w-10'>
         <IconCircleButton
           src='draw'
@@ -257,7 +156,7 @@ export const GraphContainer: React.FC = () => {
         onMouseDown={
           drawingMode
             ? (event: any) => {
-                handleStartPoint('', startNode, setIsDrawing);
+                handleStartPoint('');
               }
             : () => {
                 return null;
@@ -275,26 +174,13 @@ export const GraphContainer: React.FC = () => {
         onMouseUp={
           isDrawing && drawingMode
             ? (event: any) => {
-                handleDrawingEnd(
-                  setIsDrawing,
-                  points,
-                  setPoints,
-                  nodesVisual,
-                  setNodesVisual,
-                  // addAction,
-                  isPointInCanvasFuncs,
-                  numPointsInTriangleFuncs,
-                  lines,
-                  setLines,
-                  context
-                );
+                handleDrawingEnd(points, setPoints);
               }
             : () => {
                 if (!drawingMode) setDrawingMode(true);
               }
         }
       >
-        {/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
         <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
       </div>
     </div>

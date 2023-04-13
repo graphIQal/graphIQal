@@ -1,20 +1,18 @@
-import {
-  ConnectionData,
-  graphNodes,
-  nodesData,
-} from '../../../schemas/Data_structures/DS_schema';
-import { GraphActionContextInterface } from '../GraphActionContext';
-import { GraphViewContextInterface } from '../GraphViewContext';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../GraphViewContext';
 import { snapToGrid } from './snapping';
 
-export type Update = 'resize' | 'drag';
+export type NodeUpdate = 'resize' | 'drag';
 
 export const updateNode = (
-  type: Update,
+  type: NodeUpdate,
   newVal: any,
   nodeID: string | number,
   context: GraphViewContextInterface | null
 ) => {
+  let graphNodes = context?.nodesVisual;
+  if (!graphNodes) return;
   switch (type) {
     case 'drag':
       graphNodes[nodeID].x = newVal.x;
@@ -40,6 +38,30 @@ export const updateNode = (
 
       context?.setNodesVisual({ ...graphNodes });
       break;
+  }
+};
+
+export const addLine = (
+  context: GraphViewContextInterface | null,
+  startNode: string,
+  endNode: string,
+  arrowStart: string
+) => {};
+
+type LineUpdate = 'arrowAdd';
+
+export const updateLine = (
+  context: GraphViewContextInterface | null,
+  type: LineUpdate,
+  lineID: string | number,
+  newVal: any
+) => {
+  const { lines, setLines } = context as GraphViewContextInterface;
+  switch (type) {
+    case 'arrowAdd':
+      const newLines = [...lines];
+      newLines[lineID as number].arrowStart = newVal.arrowStart;
+      setLines(newLines);
   }
 };
 
@@ -73,7 +95,7 @@ export const addNode = (
     return;
   }
   let newNodes = { ...context.nodesVisual };
-  let id = ids[Object.keys(context.nodesDisplayed).length + 1];
+  let id = ids[Object.keys(context.allNodes).length + 1];
 
   newNodes[id] = {
     x: x,
@@ -87,6 +109,36 @@ export const addNode = (
     content: [],
     type: '',
   };
+
+  let newAllNodes = { ...context.allNodes };
+  newAllNodes[id] = {
+    id: id,
+    title: 'New Node',
+    connections: {},
+    blocks: [],
+  };
+
   context.setNodesDisplayed(newData);
   context.setNodesVisual(newNodes);
+  context.setAllNodes(newAllNodes);
+};
+
+export const getLineDataEndpoints = (
+  context: GraphViewContextInterface | null,
+  lineID: string
+) => {
+  const node1 = context?.lines[lineID as any].start;
+  const data1 = context?.nodesVisual[node1 as any];
+
+  const node2 = context?.lines[lineID as any].end;
+  const data2 = context?.nodesVisual[node2 as any];
+
+  return {
+    x1: data1?.x,
+    x2: data2?.x,
+    y1: data1?.y,
+    y2: data2?.y,
+    node1: node1,
+    node2: node2,
+  };
 };

@@ -1,18 +1,26 @@
+import { GraphViewContextInterface } from '../../pages/graph/GraphViewContext';
 import {
   ConnectionData,
   graphNodes,
+  Node,
   nodesData,
   resources,
   VisualData,
 } from '../../schemas/Data_structures/DS_schema';
 
 //get list of nodes to display as ConnectionData objects
-export const getNodesToDisplay = (nodeInView: string) => {
-  return nodesData[nodeInView].connections;
+export const getNodesToDisplay = (
+  nodeInView: string,
+  allNodes: { [key: string]: Node }
+) => {
+  return allNodes[nodeInView].connections;
 };
 //get list of nodes to display as GraphView objects
-export const getNodesToDisplayGraph = (nodeInView: string) => {
-  let nodes = getNodesToDisplay(nodeInView);
+export const getNodesToDisplayGraph = (
+  nodeInView: string,
+  allNodes: { [key: string]: Node }
+) => {
+  let nodes = getNodesToDisplay(nodeInView, allNodes);
   let graphNodeVals: { [key: string]: VisualData } = {};
   for (let node in nodes) {
     graphNodeVals[node] = graphNodes[node];
@@ -22,12 +30,17 @@ export const getNodesToDisplayGraph = (nodeInView: string) => {
 };
 
 //gets connection information from nodeInView -> currNode
-export const getConnectionInfo = (nodeInView: string, currNode: string) => {
+export const getConnectionInfo = (
+  nodeInView: string,
+  currNode: string,
+  context: GraphViewContextInterface | null
+) => {
   let content = '';
-  let queryNodes = nodesData[nodeInView].connections;
+  let queryNodes = context?.allNodes[nodeInView].connections;
+  if (!queryNodes) return;
   if (queryNodes[currNode] == undefined) return '';
   let nodeContentToShow = queryNodes[currNode].content;
-  let nodeData = nodesData[currNode];
+  let nodeData = context?.allNodes[currNode];
   //who does the content belong to?
   //It's stored in arraylist, but homework is trying to render it
   for (let item in nodeContentToShow) {
@@ -40,9 +53,11 @@ export const getConnectionInfo = (nodeInView: string, currNode: string) => {
 export const updateNodeAttribute = (
   nodeID: string,
   attribute: string,
-  value: any
+  value: any,
+  context: GraphViewContextInterface | null
 ) => {
-  nodesData[attribute] = value;
+  if (!context) return;
+  context.allNodes[attribute] = value;
 };
 
 // export const updateNodeViewData = (

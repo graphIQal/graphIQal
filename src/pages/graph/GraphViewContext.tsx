@@ -5,6 +5,7 @@
 import { createContext } from 'react';
 import {
   ConnectionData,
+  Node,
   VisualData,
 } from '../../schemas/Data_structures/DS_schema';
 import { LineRefs } from './graphTypes';
@@ -20,6 +21,8 @@ export type GraphViewContextInterface = {
   setNodesVisual: (val: { [key: string]: VisualData }) => void;
   modalNode: string; //The node that will show in the popup modal
   setModalNode: (val: string) => void;
+  allNodes: { [key: string]: Node };
+  setAllNodes: (val: { [key: string]: Node }) => void;
 };
 
 const GraphViewContext = createContext<GraphViewContextInterface | null>(null);

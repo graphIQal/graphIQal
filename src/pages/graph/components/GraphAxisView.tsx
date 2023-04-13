@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { getConnectionInfo } from '../../../helpers/backend/dataHelpers';
 import { nodesData } from '../../../schemas/Data_structures/DS_schema';
+import GraphViewContext from '../GraphViewContext';
 
 export const GraphAxisView: React.FC<{
   xCategory: string;
   yCategory: string;
 }> = ({ xCategory, yCategory }) => {
-  let nodesX = (nodesData as any)[xCategory].connections;
-  let nodesY = (nodesData as any)[yCategory].connections;
+  const context = useContext(GraphViewContext);
+  let nodesX = context?.allNodes[xCategory].connections;
+  let nodesY = context?.allNodes[yCategory].connections;
 
+  if (!nodesX || !nodesY) return <div></div>;
   let numCellsX = Object.keys(nodesX).length;
   let numCellsY = Object.keys(nodesY).length;
 
@@ -24,7 +27,7 @@ export const GraphAxisView: React.FC<{
 
     return (
       <>
-        {Object.keys(nodesX).map((row, i) => {
+        {Object.keys(nodesX as any).map((row, i) => {
           return (
             <div
               key={i}
@@ -35,7 +38,7 @@ export const GraphAxisView: React.FC<{
                 <span className='-rotate-90'>{row}</span>
               </div>
               <div className='flex flex-row w-full'>
-                {Object.keys(nodesY).map((col, j) => {
+                {Object.keys(nodesY as any).map((col, j) => {
                   return (
                     <div
                       className={'flex flex-col'}
@@ -54,9 +57,11 @@ export const GraphAxisView: React.FC<{
                         className={'border-2 m-1 overflow-hidden h-full p-3'}
                         key={j}
                       >
-                        <span className=''>{getConnectionInfo(row, col)}</span>
+                        <span className=''>
+                          {getConnectionInfo(row, col, context)}
+                        </span>
                       </div>
-                      {i == Object.values(nodesX).length - 1 && (
+                      {i == Object.values(nodesX as any).length - 1 && (
                         <div className='h-16 flex flex-row justify-center items-center'>
                           {col}
                         </div>

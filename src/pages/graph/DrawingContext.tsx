@@ -5,7 +5,6 @@ Context used for drawing functionalities including nodes (circles), lines, and a
 import { createContext, MutableRefObject } from 'react';
 
 export type DrawingContextInterface = {
-  createNode: (val: any) => any; //method that adds a new node when drawn
   startNode: MutableRefObject<string>; //Ref of node that line is drawn from
   endNode: MutableRefObject<string>; //Ref of node that line is drawn to
   isPointInCanvasFuncs: MutableRefObject<
@@ -24,6 +23,8 @@ export type DrawingContextInterface = {
 
   drawingMode: boolean; //Whether user can draw on the canvas, disabled on drag/resize, etc.
   setDrawingMode: (val: boolean) => void;
+  isDrawing: boolean;
+  setIsDrawing: (val: boolean) => void; //whether user is currently drawing
 };
 
 const DrawingContext = createContext<DrawingContextInterface | null>(null);

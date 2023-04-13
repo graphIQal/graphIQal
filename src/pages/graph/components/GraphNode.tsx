@@ -17,7 +17,7 @@ import GraphActionContext, {
   GraphActionContextInterface,
 } from '../GraphActionContext';
 import { OFFSET } from '../helpers/drawing';
-import { useDragNode } from '../hooks/useDrag';
+import { useDragNode } from '../hooks/draggingHooks';
 import { Cube } from '@styled-icons/boxicons-solid/Cube';
 import { DragHandle } from '../../../packages/dnd-editor/components/Draggable';
 import DrawingContext, { DrawingContextInterface } from '../DrawingContext';

@@ -13,6 +13,7 @@ import {
   getNodesToDisplayGraph,
 } from '../../../helpers/backend/dataHelpers';
 import { CreateNode, GetNodes } from '../../../helpers/backend/nodeHelpers';
+import { nodesData } from '../../../schemas/Data_structures/DS_schema';
 import DrawingContext from '../DrawingContext';
 import GraphActionContext from '../GraphActionContext';
 import { LineRefs } from '../graphTypes';
@@ -23,20 +24,22 @@ import { Action, useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
 
 const Graph: React.FC = () => {
+  const context = useContext(GraphViewContext);
+  const [allNodes, setAllNodes] = useState(nodesData);
   //Graph in view of one node
   const [nodeInView, setNodeInView] = useState('arraylist');
   //Data of nodes to display
   const [nodesDisplayed, setNodesDisplayed] = useState(
-    getNodesToDisplay(nodeInView)
+    getNodesToDisplay(nodeInView, allNodes)
   );
   //Visual attributes of nodes to display
   const [nodesVisual, setNodesVisual] = useState(
-    getNodesToDisplayGraph(nodeInView)
+    getNodesToDisplayGraph(nodeInView, allNodes)
   );
 
   useEffect(() => {
-    setNodesDisplayed(getNodesToDisplay(nodeInView));
-    setNodesVisual(getNodesToDisplayGraph(nodeInView));
+    setNodesDisplayed(getNodesToDisplay(nodeInView, allNodes));
+    setNodesVisual(getNodesToDisplayGraph(nodeInView, allNodes));
   }, [nodeInView]);
 
   //Mock line data
@@ -44,14 +47,10 @@ const Graph: React.FC = () => {
     // { start: Object.values(nodes)[0].id, end: Object.values(nodes)[1].id },
   ]);
 
-  //DB stuff
-  const createNode = CreateNode();
-  const [nodesList, setNodesList] = useState(GetNodes(true).data?.nodeData);
-
   //Drawing/dragging states
   const containerRef = useRef(null);
   const [drawingMode, setDrawingMode] = useState(true);
-
+  const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [canDrag, setCanDrag] = useState(false);
 
   //Drawing line data
@@ -99,13 +98,14 @@ const Graph: React.FC = () => {
       >
         <DrawingContext.Provider
           value={{
-            createNode,
             startNode: startNode,
             endNode: endNode,
             isPointInCanvasFuncs: isPointInCanvasFuncs,
             numPointsInTriangleFuncs: numPointsInTriangleFuncs,
             drawingMode: drawingMode,
             setDrawingMode: setDrawingMode,
+            isDrawing: isDrawing,
+            setIsDrawing: setIsDrawing,
           }}
         >
           <GraphActionContext.Provider
@@ -131,6 +131,8 @@ const Graph: React.FC = () => {
                 modalNode: modalNode,
                 setModalNode: setModalNode,
                 nodeInView: nodeInView,
+                allNodes: allNodes,
+                setAllNodes: setAllNodes,
               }}
             >
               <GraphContainer />

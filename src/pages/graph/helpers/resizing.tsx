@@ -1,16 +1,13 @@
+import { useCallback, useContext } from 'react';
 import { GraphActionContextInterface } from '../GraphActionContext';
-import { GraphViewContextInterface } from '../GraphViewContext';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../GraphViewContext';
 import { Action } from '../hooks/useHistoryState';
 import { updateNode } from './nodeHelpers';
 
 //When box is resized
-export const updateSizeCallback = (
-  id: number | string,
-  width: number,
-  height: number,
-  context: GraphViewContextInterface | null,
-  tag?: string
-) => {
+export const useResize = () => {
   // const newSize = [width, height];
   // let newNodes: any = {};
   // for (const node in nodes) {
@@ -31,5 +28,20 @@ export const updateSizeCallback = (
   // newNodes[id].graphNode.size = newSize;
 
   // setNodes(newNodes);
-  updateNode('resize', { width: width, height: height, tag: tag }, id, context);
+  const context = useContext(GraphViewContext);
+  const { nodesVisual, setNodesVisual } = context as GraphViewContextInterface;
+
+  let updateSize = useCallback(
+    (id: number | string, width: number, height: number, tag?: string) => {
+      updateNode(
+        'resize',
+        { width: width, height: height, tag: tag },
+        id,
+        context
+      );
+    },
+    [nodesVisual, setNodesVisual]
+  );
+
+  return updateSize;
 };

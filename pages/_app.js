@@ -10,11 +10,13 @@ import '../src/App.css';
 import '../src/components/molecules/molecules.css';
 import '../src/components/organisms/split-pane/pane.css';
 import '../src/packages/editor/editor.css';
+import React from 'react';
 
 import View from '../src/components/layouts/View';
 import Window from '../src/components/layouts/Window';
 import HomeNode from '../src/pages/HomeNode';
 import Document from '../src/pages/document/Document.tsx';
+import SplitPaneWrapper from './SplitPaneWrapper';
 
 export default function MyApp({ Component, pageProps }) {
 	return (
@@ -26,11 +28,13 @@ export default function MyApp({ Component, pageProps }) {
 					content='width=device-width, initial-scale=1'
 				/>
 			</Head>
-			<Window>
-				<View>
-					<HomeNode />
-				</View>
-			</Window>
+			<main>
+				<Window>
+					<View>
+						<Component {...pageProps} />
+					</View>
+				</Window>
+			</main>
 		</>
 	);
 }

@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "watch": true,
     "allowJs": true,
     "skipLibCheck": true,
@@ -15,7 +19,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "preserve",
+    "incremental": true
   },
   "include": [
     "src",
@@ -24,5 +29,8 @@
     "postcss.config.js",
     "tailwind.config.js",
     "codegen.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

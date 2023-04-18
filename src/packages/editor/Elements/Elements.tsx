@@ -10,7 +10,6 @@ import { useDrag } from 'react-dnd';
 import Handle from '../../../components/atoms/Handle';
 import { DropLineDirection, ItemTypes } from '../../dnd-editor/types';
 import { useMyEditorRef } from '../plateTypes';
-import '../editor.css';
 import { Draggable } from '../../dnd-editor/components/Draggable';
 
 // ELEMENTS

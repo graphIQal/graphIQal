@@ -1,7 +1,7 @@
 import './App.css';
 import { createClient, Provider } from 'urql';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import SplitPaneDocument from './pages/document/SplitPaneDocument';
+import SplitPaneDocument from '../pages/SplitPaneWrapper';
 import View from './components/layouts/View';
 import Window from './components/layouts/Window';
 import HomeNode from './pages/HomeNode';

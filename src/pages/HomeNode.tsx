@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 import IconCircleButton from '../components/molecules/IconCircleButton';
 import NodeCircle from '../components/molecules/NodeCircle';
@@ -7,6 +8,7 @@ const HomeNode: React.FC = () => {
 	return (
 		<div>
 			<p>hello</p>
+			<Link href='/splitpanewrapper'>Home Node</Link>
 			{/* <p>{'Hello ' + user?.users[0].metadata?.name}</p>
 		<div className='flex flex-row justify-items-stretch w-xxl h-xxl'>
 			<h1>My Nodes</h1>

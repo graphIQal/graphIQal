@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useLocation, useParams } from 'react-router-dom';
 import SplitPane, {
 	Divider,
 	SplitPaneBottom,
 	SplitPaneLeft,
 	SplitPaneRight,
 	SplitPaneTop,
-} from '../../components/organisms/split-pane/SplitPane';
-import ShelfEditor from '../../packages/shelf-editor/ShelfEditor';
-import Document from './Document';
+} from '../src/components/organisms/split-pane/SplitPane';
+import ShelfEditor from '../src/packages/shelf-editor/ShelfEditor';
+import Document from '../src/pages/document/Document';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
 	// const { state } = useLocation();

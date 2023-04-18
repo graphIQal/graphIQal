@@ -16,7 +16,6 @@ import View from '../src/components/layouts/View';
 import Window from '../src/components/layouts/Window';
 import HomeNode from '../src/pages/HomeNode';
 import Document from '../src/pages/document/Document.tsx';
-import SplitPaneWrapper from './SplitPaneWrapper';
 
 export default function MyApp({ Component, pageProps }) {
 	return (

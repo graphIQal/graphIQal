@@ -7,17 +7,17 @@ import SplitPane, {
 	SplitPaneLeft,
 	SplitPaneRight,
 	SplitPaneTop,
-} from '../src/components/organisms/split-pane/SplitPane';
-import ShelfEditor from '../src/packages/shelf-editor/ShelfEditor';
-import Document from '../src/pages/document/Document';
+} from '../../src/components/organisms/split-pane/SplitPane';
+import ShelfEditor from '../../src/packages/shelf-editor/ShelfEditor';
+import Document from '../../src/pages/document/Document';
+
+import { useRouter } from 'next/router';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
-	// const { state } = useLocation();
-
-	// const currNode = GetNodeDocumentView(state.document.id).data?.nodeData[0]
-	// 	.document;
-
-	// console.log('In document of node: ' + JSON.stringify(currNode));
+	const router = useRouter();
+	const { username } = router.query;
+	console.log(router);
+	console.log(username);
 
 	return (
 		<DndProvider backend={HTML5Backend}>

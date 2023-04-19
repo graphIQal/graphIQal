@@ -7,20 +7,20 @@ require('dotenv').config();
 // 	neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 // );
 
-let driver;
+// let driver;
 
-export async function initDriver(uri, username, password) {
-	// TODO: Create an instance of the driver here
-	driver = neo4j.driver(
-		process.env.NEO4J_URI,
-		neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
-	);
+// export async function initDriver(uri, username, password) {
+// 	// TODO: Create an instance of the driver here
+// 	driver = neo4j.driver(
+// 		process.env.NEO4J_URI,
+// 		neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
+// 	);
 
-	await driver.verifyConnectivity();
+// 	await driver.verifyConnectivity();
 
-	return driver;
-}
+// 	return driver;
+// }
 
-export function getDriver() {
-	return driver;
-}
+// export function getDriver() {
+// 	return driver;
+// }

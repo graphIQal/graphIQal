@@ -15,6 +15,7 @@ const TEXT_SCALE_RATIO = 1.2;
 module.exports = {
 	content: [
 		'./src/**/*.{js,jsx,ts,tsx}',
+		'./pages/**/*.{js,jsx,ts,tsx}',
 		'./node_modules/tw-elements/dist/js/**/*.js',
 	],
 	plugins: [],
@@ -47,7 +48,8 @@ module.exports = {
 			colors: {
 				base_black: '#424245',
 				base_white: 'rgba(255,255,255,0.9)',
-				linign: '242425',
+				action: '#92D1FF',
+				lining: '242425',
 				node: '#8DD39C',
 				selected_white: '#FFF9E9',
 				connection: '#4362B1',

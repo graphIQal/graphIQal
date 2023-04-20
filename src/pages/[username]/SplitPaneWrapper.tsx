@@ -12,14 +12,14 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { useRouter } from 'next/router';
 import ShelfEditor from '../../packages/shelf-editor/ShelfEditor';
-import {
-	SplitPane,
+import SplitPane, {
 	Divider,
 	SplitPaneBottom,
 	SplitPaneLeft,
 	SplitPaneRight,
 	SplitPaneTop,
 } from '../../components/organisms/split-pane/SplitPane';
+import EditorComponent from '../../packages/editor/EditorComponent';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
 	const router = useRouter();
@@ -30,7 +30,9 @@ const SplitPaneWrapper: React.FC<{}> = () => {
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<SplitPane className='split-pane-row'>
-				<SplitPaneLeft>{/* <Document></Document> */}</SplitPaneLeft>
+				<SplitPaneLeft>
+					<EditorComponent />
+				</SplitPaneLeft>
 				<Divider className='separator-col' />
 				<SplitPaneRight
 					children={

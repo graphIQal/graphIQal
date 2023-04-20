@@ -6,16 +6,16 @@
 // impoet global styles and layout (you can move global styles to /styles/ directory if you like)
 
 import Head from 'next/head';
-import '../src/App.css';
-import '../src/components/molecules/molecules.css';
-import '../src/components/organisms/split-pane/pane.css';
-import '../src/packages/editor/editor.css';
 import React from 'react';
 
-import View from '../src/components/layouts/View';
-import Window from '../src/components/layouts/Window';
-import HomeNode from '../src/pages/HomeNode';
-import Document from '../src/pages/document/Document.tsx';
+import '../App.css';
+import '../index.css';
+import '../components/molecules/molecules.css';
+import '../components/organisms/split-pane/pane.css';
+import '../packages/editor/editor.css';
+
+import View from '../components/layouts/View';
+import Window from '../components/layouts/Window';
 
 export default function MyApp({ Component, pageProps }) {
 	return (

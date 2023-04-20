@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { useState } from 'react';
-import TextButton from '../src/components/molecules/TextButton';
-import { login, register } from '../src/backend/functions/authentication';
+// import TextButton from '../src/components/molecules/TextButton';
+// import { login, register } from '../src/backend/functions/authentication';
+import { login, register } from '../backend/functions/authentication';
+import TextButton from '../components/molecules/TextButton';
 
 export default function Home() {
 	const [email, setemail] = useState('icejes8@gmail.com');
@@ -42,6 +44,11 @@ export default function Home() {
 				<TextButton
 					text={'Create Account'}
 					onClick={() => register(email, username, password)}
+				/>
+				<div>care</div>
+				<TextButton
+					text={'Delete ALL NODES'}
+					// onClick={() => ()}
 				/>
 			</div>
 		</ul>

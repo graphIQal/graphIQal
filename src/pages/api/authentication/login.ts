@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { read } from '../../../src/backend/driver/helpers';
+import { read } from '../../../backend/driver/helpers';
+// import { read } from '../../../src/backend/driver/helpers';
 
 export default async function handler(
 	req: NextApiRequest,

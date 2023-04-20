@@ -7,7 +7,7 @@ type NodeButtonProps = {
 //filled circle button with plus icon button inside
 const TextButton: React.FC<NodeButtonProps> = ({ onClick, text }) => {
 	return (
-		<div className='bg-action' onClick={onClick}>
+		<div className='bg-action text-base-blue' onClick={onClick}>
 			<div>{text}</div>
 		</div>
 	);

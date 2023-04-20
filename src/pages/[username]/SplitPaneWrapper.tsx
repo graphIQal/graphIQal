@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import SplitPane, {
+// import SplitPane, {
+// 	Divider,
+// 	SplitPaneBottom,
+// 	SplitPaneLeft,
+// 	SplitPaneRight,
+// 	SplitPaneTop,
+// } from '../../src/components/organisms/split-pane/SplitPane';
+// import Document from '../../src/pages/document/Document';
+
+import { useRouter } from 'next/router';
+import ShelfEditor from '../../packages/shelf-editor/ShelfEditor';
+import {
+	SplitPane,
 	Divider,
 	SplitPaneBottom,
 	SplitPaneLeft,
 	SplitPaneRight,
 	SplitPaneTop,
-} from '../../src/components/organisms/split-pane/SplitPane';
-import ShelfEditor from '../../src/packages/shelf-editor/ShelfEditor';
-import Document from '../../src/pages/document/Document';
-
-import { useRouter } from 'next/router';
+} from '../../components/organisms/split-pane/SplitPane';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
 	const router = useRouter();
@@ -22,9 +30,7 @@ const SplitPaneWrapper: React.FC<{}> = () => {
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<SplitPane className='split-pane-row'>
-				<SplitPaneLeft>
-					<Document></Document>
-				</SplitPaneLeft>
+				<SplitPaneLeft>{/* <Document></Document> */}</SplitPaneLeft>
 				<Divider className='separator-col' />
 				<SplitPaneRight
 					children={

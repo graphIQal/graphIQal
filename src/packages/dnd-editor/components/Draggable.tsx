@@ -60,30 +60,17 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 
 	return (
 		<div
-			// style={stylxes.root.css}
-			// className={styles.root.className}
 			className={'group relative flex-row flex ' + elementId}
 			ref={multiRootRef}
 		>
 			<div
-				// style={[
-				// 	...(styles.blockAndGutter?.css ?? []),
-				// 	...(styles.gutterLeft?.css ?? []),
-				// ]}
-				// className={styles.gutterLeft.className}
 				className={
 					'flex h-full opacity-0 pointer-events-none cursor-text mr-1 group-hover:opacity-70 '
 				}
 				contentEditable={false}
 			>
-				<div
-					// style={styles.blockToolbarWrapper?.css}
-					// className={styles.blockToolbarWrapper?.className}
-					className='flex height[1.5em]'
-				>
+				<div className='flex height[1.5em]'>
 					<div
-						// style={styles.blockToolbar?.css}
-						// className={styles.blockToolbar?.className}
 						className=' mr-1 pointer-events-auto'
 						ref={multiDragRef}
 						onMouseDown={(e: any) => {
@@ -93,8 +80,6 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 						}}
 					>
 						<DragHandle
-							// element={element}
-							// className={styles.dragHandle?.className}
 							className='p-0 bg-transparent bg-no-repeat cursor-pointer overflow-hidden outline-none border-none minWidth[18px] height[18px]'
 							onMouseDown={(e: any) => {
 								e.stopPropagation();
@@ -104,15 +89,7 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 				</div>
 			</div>
 
-			<div
-				ref={blockRef}
-				// style={[
-				// 	...(styles.blockAndGutter?.css ?? []),
-				// 	...(styles.block?.css ?? []),
-				// ]}
-				// Add div
-				className='w-full relative'
-			>
+			<div ref={blockRef} className='w-full relative'>
 				{children}
 
 				{!!dropLine && (

@@ -10,7 +10,10 @@ export const register = async (
 	fetch(
 		`/api/authentication/register?username=${username}&password=${password}&email=${email}`
 	)
-		.then((res) => res.json())
+		.then((res) => {
+			console.log('res ', res);
+			return res.json();
+		})
 		.then((json) => {
 			console.log('json: ', json);
 			return json;
@@ -19,4 +22,16 @@ export const register = async (
 
 export const login = (username: string, password: string, email: string) => {
 	console.log('login attempted ');
+
+	fetch(
+		`/api/authentication/login?username=${username}&password=${password}&email=${email}`
+	)
+		.then((res) => {
+			console.log('res ', res);
+			return res.json();
+		})
+		.then((json) => {
+			console.log('json: ', json);
+			return json;
+		});
 };

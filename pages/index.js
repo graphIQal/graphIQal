@@ -4,9 +4,9 @@ import TextButton from '../src/components/molecules/TextButton';
 import { login, register } from '../src/backend/functions/authentication';
 
 export default function Home() {
-	const [username, setusername] = useState('');
-	const [password, setpassword] = useState('');
-	const [email, setemail] = useState('');
+	const [email, setemail] = useState('icejes8@gmail.com');
+	const [username, setusername] = useState('jesseliii');
+	const [password, setpassword] = useState('password');
 
 	return (
 		<ul>

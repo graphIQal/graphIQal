@@ -1,13 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { read } from '../../../src/backend/driver/helpers';
 
-type Data = {
-	name: string;
-};
-
-export default function handler(
+export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse<Data>
+	res: NextApiResponse
 ) {
-	const { pid } = req.query;
-	res.status(200).json({ name: 'John Doe' });
+	const params = req.query;
+
+	const cypher = `MATCH (u:User)
+	RETURN u;
+	`;
+
+	const result: any = await read(cypher as string);
+
+	res.status(200).json({ ...result });
 }

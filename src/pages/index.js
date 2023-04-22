@@ -4,6 +4,13 @@ import { useState } from 'react';
 // import { login, register } from '../src/backend/functions/authentication';
 import { login, register } from '../backend/functions/authentication';
 import TextButton from '../components/molecules/TextButton';
+import { deleteAll } from '../backend/functions/writing';
+import {
+	GenerateCypher,
+	addBlockOnNodeCreation,
+	cypherGenerator,
+	returnCypher,
+} from '../backend/cypher-generation/cypherGenerators';
 
 export default function Home() {
 	const [email, setemail] = useState('icejes8@gmail.com');
@@ -45,10 +52,21 @@ export default function Home() {
 					text={'Create Account'}
 					onClick={() => register(email, username, password)}
 				/>
+				<TextButton
+					text={'Test Button'}
+					onClick={() => {
+						console.log(
+							GenerateCypher([
+								addBlockOnNodeCreation,
+								returnCypher,
+							])
+						);
+					}}
+				/>
 				<div>care</div>
 				<TextButton
 					text={'Delete ALL NODES'}
-					// onClick={() => ()}
+					onClick={() => deleteAll()}
 				/>
 			</div>
 		</ul>

@@ -8,7 +8,8 @@ export default async function handler(
 ) {
 	const params = req.query;
 
-	const cypher = `MATCH (u:User)
+	const cypher = `
+	MATCH (u:User)
 	RETURN u;
 	`;
 

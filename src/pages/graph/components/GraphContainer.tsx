@@ -2,7 +2,6 @@
  * Container for Graph; renders either "Mind map" view or "Axis" view
  * Sets information for Context wrapper that deals with actions like dragging, undo/redo, resize
  */
-
 import { useContext, useEffect, useRef, useState } from 'react';
 import { addLine } from '../../../helpers/backend/mutateHelpers';
 import DrawingContext, {
@@ -60,7 +59,6 @@ export const GraphContainer: React.FC = () => {
   const canvas = useRef<any>();
   const { canvasRef, canvasWidth, canvasHeight, points, setPoints } =
     useCanvas();
-
   useEffect(() => {
     const canvasEle = canvas.current;
     if (canvasEle) {
@@ -123,7 +121,7 @@ export const GraphContainer: React.FC = () => {
         // addAction: addAction,
       }}
     >
-      <div className='relative h-full w-full' ref={drop}>
+      <div className='h-full w-full' id='parent' ref={drop}>
         <Filtering
           xCategory={xCategory}
           yCategory={yCategory}

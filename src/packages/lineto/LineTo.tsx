@@ -4,6 +4,7 @@
  *                  Arrow -> handles rendering of the lines as well as arrow drawing/rendering
  */
 
+import { shift } from '@floating-ui/core';
 import React, {
   useCallback,
   useContext,
@@ -15,6 +16,7 @@ import DrawingContext, {
   DrawingContextInterface,
 } from '../../pages/graph/context/GraphDrawingContext';
 import { Coord } from '../../pages/graph/hooks/drawingHooks';
+import { getDy } from '../../pages/graph/hooks/useCanvas';
 import {
   calculateControlPointsWithBuffer,
   calculateDeltas,
@@ -78,10 +80,14 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
     const y0 = box0.top + box0.height * anchor0.y;
     const y1 = box1.top + box1.height * anchor1.y;
 
-    return { x0, y0, x1, y1, anchor0, anchor1 };
+    return { x0, y0: y0 + getDy(), x1, y1: y1 + getDy(), anchor0, anchor1 };
   };
 
   let points = detect();
+  if (!points) {
+    return <div></div>;
+  }
+
   return <Arrow id={props.id} arrow={props.arrow} {...points} />;
 };
 export default LineTo;
@@ -145,8 +151,8 @@ export const Arrow = ({
   canvasWidth = Number.isFinite(canvasWidth) ? canvasWidth : 0;
   canvasHeight = Number.isFinite(canvasHeight) ? canvasHeight : 0;
 
-  const canvasXOffset = Math.min(x0, x1) - boundingBoxBuffer.horizontal;
-  const canvasYOffset = Math.min(y0, y1) - boundingBoxBuffer.vertical;
+  let canvasXOffset = Math.min(x0, x1) - boundingBoxBuffer.horizontal;
+  let canvasYOffset = Math.min(y0, y1) - boundingBoxBuffer.vertical;
 
   const { angle, x, y } = calculateTransformArrow({
     p3,
@@ -185,7 +191,7 @@ export const Arrow = ({
   }, []);
 
   return (
-    <div id='container'>
+    <div id='container' className='relative'>
       <svg
         width={canvasWidth}
         id='svg'

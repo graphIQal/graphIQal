@@ -1,7 +1,7 @@
 /**
  * Display of nodes and lines connecting them in "mind map" style
  */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import LineTo from '../../../packages/lineto/LineTo';
 import DrawingContext, {
   DrawingContextInterface,
@@ -42,7 +42,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
     useContext(DrawingContext) as DrawingContextInterface;
 
   return (
-    <div>
+    <div className='relative' id='container'>
       {lines.map(function (line, i) {
         return (
           <LineTo

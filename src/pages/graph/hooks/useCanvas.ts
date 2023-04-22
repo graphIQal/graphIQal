@@ -5,8 +5,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { GRID_X_SIZE, GRID_Y_SIZE } from '../helpers/snapping';
 
-export const canvasWidth = window.innerWidth;
-export const canvasHeight = window.innerHeight;
+export const canvasWidth = window.outerWidth;
+export const canvasHeight = window.outerHeight;
 
 export function drawLine(
   ctx: any,
@@ -44,14 +44,7 @@ export function useCanvas() {
     const ctx = canvasObj.getContext('2d');
     // clear the canvas area before rendering the coordinates held in state
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    // drawLine(
-    //   ctx,
-    //   startCoordinate.x,
-    //   startCoordinate.y,
-    //   endCoordinate.x,
-    //   endCoordinate.y
-    // );
+    console.log('get ' + getDy());
     if (points == null) {
       return;
     }
@@ -60,9 +53,9 @@ export function useCanvas() {
       drawLine(
         ctx,
         (points[i] as any).x,
-        (points[i] as any).y,
+        (points[i] as any).y + getDy(),
         (points[i + 1] as any).x,
-        (points[i + 1] as any).y
+        (points[i + 1] as any).y + getDy()
       );
     }
 
@@ -111,3 +104,10 @@ export function useCanvas() {
     setPoints,
   };
 }
+
+//gets vertical offset of canvas
+export const getDy = () => {
+  const element = document.getElementById('container');
+  if (!element) return 0;
+  return (element.offsetTop - element.scrollTop + element.clientTop) * -1;
+};

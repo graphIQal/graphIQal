@@ -24,7 +24,7 @@ const Graph: React.FC = () => {
   //Data of all nodes
   const [allNodes, setAllNodes] = useState(getAllNodes());
   //Graph in view of one node
-  const [nodeInView, setNodeInView] = useState('arraylist');
+  const [nodeInView, setNodeInView] = useState('homenode');
   //Data of nodes to display (comes from Connection information between each node and the node in view)
   const [nodesDisplayed, setNodesDisplayed] = useState(
     getNodesToDisplay(nodeInView, allNodes)

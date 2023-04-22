@@ -5,7 +5,7 @@
 
 import { useContext, useState } from 'react';
 import { isNodeCategorical } from '../../../helpers/backend/getHelpers';
-import { nodesData } from '../../../schemas/Data_structures/DS_schema';
+import { nodesData, titles } from '../../../schemas/Data_structures/DS_schema';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
@@ -22,7 +22,7 @@ export const useFiltering = () => {
     let items = [];
     for (let node in allNodes) {
       items.push({
-        text: node,
+        text: titles[node],
         onPress: () => {
           setNodeInView(node);
         },
@@ -36,7 +36,7 @@ export const useFiltering = () => {
     for (let node in allNodes) {
       if (!isNodeCategorical(allNodes, node)) continue;
       items.push({
-        text: node,
+        text: titles[node],
         onPress: () => {
           setXCategory(node);
         },
@@ -49,7 +49,7 @@ export const useFiltering = () => {
     for (let node in allNodes) {
       if (!isNodeCategorical(allNodes, node)) continue;
       items.push({
-        text: node,
+        text: titles[node],
         onPress: () => {
           setYCategory(node);
         },

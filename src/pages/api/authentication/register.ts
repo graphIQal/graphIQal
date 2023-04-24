@@ -22,12 +22,10 @@ export default async function handler(
 	ON CREATE SET n.nodeId = randomUuid()
 	MERGE (u)-[r:HOMENODE]->(n)
 	
-	MERGE (b:BLOCK_ELEMENT {type: "block"})
-	ON CREATE SET b.id = randomUuid()
+	MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
 	MERGE (n)-[:NEXT_BLOCK]->(b)
 
-	MERGE (p:BLOCK_INLINE {type: "p", children: ["{text: ''}"]})
-	ON CREATE SET p.id = randomUuid()
+	MERGE (p:BLOCK_INLINE {type: "p", id: randomUuid(), children: ["{text: ''}"]})
 	MERGE (b)-[:BLOCK_CHILD]->(p)
 	RETURN u, n, b
 	`;

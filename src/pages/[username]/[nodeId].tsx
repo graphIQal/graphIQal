@@ -26,15 +26,11 @@ const SplitPaneWrapper: React.FC<{}> = () => {
 	const router = useRouter();
 	const { username, nodeId } = router.query;
 
-	// console.log(router);
-	console.log(username, nodeId);
-
 	useEffect(() => {
+		if (!router.isReady) return;
 		// get Node
-		console.log(router.query);
-		console.log(username, nodeId);
 		getDocument(nodeId as string, username as string);
-	}, []);
+	}, [router.isReady]);
 
 	return (
 		<DndProvider backend={HTML5Backend}>

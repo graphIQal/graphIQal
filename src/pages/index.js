@@ -11,11 +11,14 @@ import {
 	cypherGenerator,
 	returnCypher,
 } from '../backend/cypher-generation/cypherGenerators';
+import { useRouter } from 'next/router';
 
 export default function Home() {
 	const [email, setemail] = useState('icejes8@gmail.com');
 	const [username, setusername] = useState('jesseliii');
 	const [password, setpassword] = useState('password');
+
+	const router = useRouter();
 
 	return (
 		<ul>
@@ -46,7 +49,13 @@ export default function Home() {
 				/>
 				<TextButton
 					text={'Login'}
-					onClick={() => login(email, username, password)}
+					onClick={async () => {
+						const res = await login(email, username, password);
+						console.log('result', res);
+						router.push(
+							'/' + username + '/' + res.n.properties.nodeId
+						);
+					}}
 				/>
 				<TextButton
 					text={'Create Account'}

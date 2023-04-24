@@ -20,12 +20,21 @@ import SplitPane, {
 	SplitPaneTop,
 } from '../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../../packages/editor/EditorComponent';
+import { getDocument } from '../../backend/functions/getDocument';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
 	const router = useRouter();
-	const { username } = router.query;
-	console.log(router);
-	console.log(username);
+	const { username, nodeId } = router.query;
+
+	// console.log(router);
+	console.log(username, nodeId);
+
+	useEffect(() => {
+		// get Node
+		console.log(router.query);
+		console.log(username, nodeId);
+		getDocument(nodeId as string, username as string);
+	}, []);
 
 	return (
 		<DndProvider backend={HTML5Backend}>

@@ -11,16 +11,16 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // import Document from '../../src/pages/document/Document';
 
 import { useRouter } from 'next/router';
-import ShelfEditor from '../../packages/shelf-editor/ShelfEditor';
+import ShelfEditor from '../../../packages/shelf-editor/ShelfEditor';
 import SplitPane, {
 	Divider,
 	SplitPaneBottom,
 	SplitPaneLeft,
 	SplitPaneRight,
 	SplitPaneTop,
-} from '../../components/organisms/split-pane/SplitPane';
-import EditorComponent from '../../packages/editor/EditorComponent';
-import { getDocument } from '../../backend/functions/getDocument';
+} from '../../../components/organisms/split-pane/SplitPane';
+import EditorComponent from '../../../packages/editor/EditorComponent';
+import { getDocument } from '../../../backend/functions/getDocument';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
 	const router = useRouter();

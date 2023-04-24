@@ -10,7 +10,7 @@
     @apply h-3;
     @apply inline-block;
     @apply mr-1;
-    cursor: 'move';
+    @apply cursor-move;
   }
 
   .icon_button {

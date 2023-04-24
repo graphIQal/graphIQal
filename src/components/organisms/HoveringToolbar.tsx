@@ -5,12 +5,12 @@ import './organisms.css';
 type ToolbarButtonProps = {
   buttonText: String;
   icon?: string;
-  onPress(params: any): void;
+  onPress: (params: any) => void;
 };
 
 type HoveringToolbarProps = {
   items: ToolbarButtonProps[];
-  onRender: (ref: React.MutableRefObject<any>) => void;
+  onRender?: (ref: React.MutableRefObject<any>) => void;
 };
 
 //shows up on top of current selection of text
@@ -21,7 +21,7 @@ const HoveringToolbar = React.forwardRef<
   const ref2 = useRef<any>();
   const { items, onRender } = props;
   useEffect(() => {
-    onRender(ref2);
+    if (onRender) onRender(ref2);
   });
   const renderButtons = () => {
     return items.map((item, i) => {

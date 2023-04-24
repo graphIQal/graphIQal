@@ -18,6 +18,7 @@
     "dotenv": "^16.0.3",
     "electron": "^21.3.0",
     "graphql": "^16.6.0",
+    "immutability-helper": "^3.1.1",
     "install": "^0.13.0",
     "neo4j-driver": "^5.7.0",
     "next": "^13.3.0",

@@ -7,7 +7,7 @@ import { DraggableProps, DragHandleProps } from './Draggable.types';
 import { getMyEditor, MyValue, useMyEditorRef } from '../../editor/plateTypes';
 import { deselect } from '@udecode/plate';
 
-const DragHandle = ({ styles, ...props }: DragHandleProps) => {
+export const DragHandle = ({ styles, ...props }: DragHandleProps) => {
 	return (
 		<button type='button'>
 			<svg

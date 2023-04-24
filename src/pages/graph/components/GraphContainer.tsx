@@ -23,6 +23,8 @@ import { useCanvas } from '../hooks/useCanvas';
 import { Action } from '../hooks/useHistoryState';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
+import { usePanAndZoom } from '../hooks/zoomingHooks';
+// import { usePinch, useZoomEvents } from '../hooks/zoomingHooks';
 
 export const GraphContainer: React.FC = () => {
   //History
@@ -50,6 +52,24 @@ export const GraphContainer: React.FC = () => {
     setLines([...lines]);
   }, [nodesDisplayed]);
 
+  //Pan and zoom
+  const ref = useRef(null);
+  const { onMouseDown, onWheel, translateX, translateY, scale } =
+    usePanAndZoom(ref);
+
+  useEffect(() => {
+    console.log('translateX ' + translateX);
+  }, [translateX]);
+
+  useEffect(() => {
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('mousedown', onMouseDown);
+    return () => {
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('mousedown', onMouseDown);
+    };
+  });
+
   //DND
   const startPos = useRef<{ left: number; top: number }>();
   const [, drop] = useDropNode(setIsDrawing);
@@ -57,8 +77,12 @@ export const GraphContainer: React.FC = () => {
 
   //Drawing
   const canvas = useRef<any>();
-  const { canvasRef, canvasWidth, canvasHeight, points, setPoints } =
-    useCanvas();
+  const { canvasWidth, canvasHeight, points, setPoints } = useCanvas(
+    translateX,
+    translateY,
+    scale,
+    ref
+  );
   useEffect(() => {
     const canvasEle = canvas.current;
     if (canvasEle) {
@@ -99,6 +123,9 @@ export const GraphContainer: React.FC = () => {
   const handleDrawing = useDrawingCanvas();
   const handleDrawingEnd = useDrawingEnd();
 
+  //Pinching hook
+  // const handlePinch = usePinch();
+
   //Pill menu information for centered node
   const {
     xCategory,
@@ -133,6 +160,9 @@ export const GraphContainer: React.FC = () => {
           points={points}
           setPoints={setPoints}
           startPos={startPos}
+          translateX={translateX}
+          translateY={translateY}
+          scale={scale}
         />
         {/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
         {/* <div className=' absolute  flex-row w-10'>
@@ -174,7 +204,13 @@ export const GraphContainer: React.FC = () => {
                 }
           }
         >
-          <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
+          <canvas
+            ref={ref}
+            width={canvasWidth}
+            height={canvasHeight}
+            id='canvas'
+            className='overflow-auto'
+          />
         </div>
       </div>
     </GraphActionContext.Provider>

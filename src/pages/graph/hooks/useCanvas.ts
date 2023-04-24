@@ -2,8 +2,9 @@
  * Hook that draws on canvas and draws dot grid
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { GRID_X_SIZE, GRID_Y_SIZE } from '../helpers/snapping';
+import { usePanAndZoom, useZoomEvents } from './zoomingHooks';
 
 export const canvasWidth = window.outerWidth;
 export const canvasHeight = window.outerHeight;
@@ -25,9 +26,12 @@ export function drawLine(
   ctx.stroke();
 }
 
-export function useCanvas() {
-  const canvasRef = useRef<any>(null);
-
+export const useCanvas = (
+  translateX: number,
+  translateY: number,
+  scale: number,
+  canvasRef: MutableRefObject<any>
+) => {
   const [points, setPoints] = useState<Coord[]>([]);
 
   type Coord = {
@@ -44,7 +48,7 @@ export function useCanvas() {
     const ctx = canvasObj.getContext('2d');
     // clear the canvas area before rendering the coordinates held in state
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    console.log('get ' + getDy());
+
     if (points == null) {
       return;
     }
@@ -59,55 +63,35 @@ export function useCanvas() {
       );
     }
 
-    //draw dots
-    function drawGrid() {
-      var cellW = 10,
-        cellH = 10;
-
-      // vertical lines
-      for (var x = 0; x <= canvasWidth; x += cellW) {
-        ctx.moveTo(x, 0); // x, y
-        ctx.lineTo(x, canvasHeight);
-      }
-
-      // horizontal lines
-      for (var y = 0; y <= canvasHeight; y += cellH) {
-        ctx.moveTo(0, y); // x, y
-        ctx.lineTo(canvasWidth, y);
-      }
-
-      ctx.strokeStyle = '#cccccc';
-      ctx.stroke();
-    }
-
     // dots
     function drawDots() {
       var r = 1,
         cw = GRID_X_SIZE,
         ch = GRID_Y_SIZE;
 
-      for (var x = 0; x < canvasWidth; x += cw) {
-        for (var y = 0; y < canvasHeight; y += ch) {
+      for (var x = 0; x < canvasWidth; x += cw * scale) {
+        for (var y = 0; y < canvasHeight; y += ch * scale) {
           ctx.fillStyle = `rgb(36, 36, 37, 0.7)`;
           ctx.fillRect(x - r / 2, y - r / 2, r, r);
         }
       }
     }
     drawDots();
-  }, [points, setPoints]);
+  }, [points, setPoints, scale]);
 
   return {
-    canvasRef: canvasRef,
     canvasWidth: canvasWidth,
     canvasHeight: canvasHeight,
     points,
     setPoints,
   };
-}
+};
 
 //gets vertical offset of canvas
 export const getDy = () => {
   const element = document.getElementById('container');
   if (!element) return 0;
-  return (element.offsetTop - element.scrollTop + element.clientTop) * -1;
+  const offsetDifference =
+    (element.offsetTop - element.scrollTop + element.clientTop) * -1;
+  return offsetDifference;
 };

@@ -1,7 +1,7 @@
 /**
  * Display of nodes and lines connecting them in "mind map" style
  */
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import LineTo from '../../../packages/lineto/LineTo';
 import DrawingContext, {
   DrawingContextInterface,
@@ -19,28 +19,37 @@ import {
 } from '../hooks/drawingHooks';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
+import { usePanAndZoom } from '../hooks/zoomingHooks';
 
 type MindMapProps = {
   points: any;
   setPoints: (val: any) => void;
   startPos: any;
+  translateX: number;
+  translateY: number;
+  scale: number;
 };
 export const GraphMindMapView: React.FC<MindMapProps> = ({
   points,
   setPoints,
   startPos,
+  translateX,
+  translateY,
+  scale,
 }) => {
   const handleDrawing = useDrawingCanvas();
   const handleStartPoint = useDrawingStart();
 
-  //   handleStartPoint,
-  const { lines, nodesDisplayed, nodesVisual, allNodes } = useContext(
+  const { lines, nodesDisplayed, nodesVisual, allNodes, setLines } = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
 
+  useEffect(() => {
+    setLines([...lines]);
+  }, [translateX]);
+
   const { startNode, endNode, drawingMode, isDrawing, setIsDrawing } =
     useContext(DrawingContext) as DrawingContextInterface;
-
   return (
     <div className='relative' id='container'>
       {lines.map(function (line, i) {
@@ -51,6 +60,8 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
             to={line.end}
             id={i}
             arrow={line.arrowStart}
+            translateX={translateX ? translateX : 0}
+            translateY={translateY ? translateX : 0}
           />
         );
       })}
@@ -85,7 +96,6 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
                     handleEndPoint(
                       event,
                       node,
-
                       endNode,
                       setIsDrawing,
                       setPoints
@@ -98,10 +108,10 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
             <GraphNode
               title={title}
               key={node}
-              left={x}
-              top={y}
+              left={(x - translateX) * scale}
+              top={(y - translateY) * scale}
               id={node}
-              size={[width, height]}
+              size={[width * scale, height * scale]}
               updateStartPos={(val) => (startPos.current = val)}
             >
               <GraphEditor />

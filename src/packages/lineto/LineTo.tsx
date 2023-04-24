@@ -36,6 +36,8 @@ type LineToPropTypes = {
   from: string;
   to: string;
   arrow: string | null;
+  translateX: number;
+  translateY: number;
   fromAnchor?: any;
   toAnchor?: any;
   delay?: any;
@@ -79,8 +81,14 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
     const x1 = box1.left + box1.width * anchor1.x;
     const y0 = box0.top + box0.height * anchor0.y;
     const y1 = box1.top + box1.height * anchor1.y;
-
-    return { x0, y0: y0 + getDy(), x1, y1: y1 + getDy(), anchor0, anchor1 };
+    return {
+      x0: x0,
+      y0: y0 + getDy(),
+      x1: x1,
+      y1: y1 + getDy(),
+      anchor0,
+      anchor1,
+    };
   };
 
   let points = detect();

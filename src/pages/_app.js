@@ -9,6 +9,8 @@ import Head from 'next/head';
 import React from 'react';
 
 import '../App.css';
+import '../packages/resizable/resizable.css';
+import '../packages/graph/graph.css';
 import '../index.css';
 import '../components/molecules/molecules.css';
 import '../components/organisms/split-pane/pane.css';

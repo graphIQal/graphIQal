@@ -5,7 +5,6 @@ export const calculateSizeX = (
   window: Window,
   document: Document
 ) => {
-  console.log('cell ' + cell);
   return convertRemToPixels(
     (GRID_SIZE_X + SPACING_X) * (cell - 0.95),
     document

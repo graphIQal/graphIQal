@@ -75,7 +75,6 @@ export const usePanAndZoom = (containerRef: MutableRefObject<any>) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const onMouseMoveInWindow = (event: Event) => {
-    console.log('here 2');
     // event.preventDefault();
     dispatch(pan(event));
   };
@@ -102,7 +101,6 @@ export const usePanAndZoom = (containerRef: MutableRefObject<any>) => {
         //pan event
         dispatch(pan(event));
       }
-      console.log('event ' + event.deltaY + ' ' + event.deltaX);
       // dispatch(startPan(event));
 
       // dispatch(zoom(event, containerRect));

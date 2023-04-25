@@ -44,7 +44,6 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
   const [nodesVisual, setNodesVisual] = useState(
     getNodesToDisplayGraph(nodeInView, allNodes, window, document)
   );
-  console.log('nodes ' + JSON.stringify(nodesVisual));
 
   //fetching all data
   //   useEffect(() => {

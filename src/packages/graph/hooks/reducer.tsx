@@ -49,16 +49,20 @@ export const reducer = (state: typeof initialState, action: any) => {
         mousePositionOnScreen,
         action.zoomFactor
       );
-      console.log('scaled ' + JSON.stringify(scaledTranslate.x + zoomOffset.x));
-      console.log('position ' + JSON.stringify(mousePositionOnScreen));
-      console.log('offset ' + JSON.stringify(zoomOffset));
-      state.translateX = scaledTranslate.x + zoomOffset.x;
-      state.translateY = scaledTranslate.y + zoomOffset.y;
+
+      // state.translateX = scaledTranslate.x + zoomOffset.x;
+      // state.translateY = scaledTranslate.y + zoomOffset.y;
+
+      state.currDeltaX -= action.deltaX;
+      state.currDeltaY -= action.deltaY;
+
       return {
         ...state,
         scale: state.scale,
-        translateX: state.translateX,
-        translateY: state.translateY,
+        translateX: state.currDeltaX,
+        translateY: state.currDeltaY,
+        prevMouseX: action.clientX,
+        prevMouseY: action.clientY,
       };
     default:
       return state;

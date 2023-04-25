@@ -1,5 +1,5 @@
-import { GraphViewContextInterface } from '../../pages/graph/context/GraphViewContext';
-import { LineRefs } from '../../pages/graph/graphTypes';
+import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
+import { LineRefs } from '../../packages/graph/graphTypes';
 import {
   adts,
   algorithms,
@@ -62,12 +62,26 @@ export const getNodesToDisplay = (
 //get list of nodes to display as GraphView objects
 export const getNodesToDisplayGraph = (
   nodeInView: string,
-  allNodes: { [key: string]: Node }
+  allNodes: { [key: string]: Node },
+  window: Window,
+  document: Document
 ) => {
   let nodes = getNodesToDisplay(nodeInView, allNodes);
   let graphNodeVals: { [key: string]: VisualData } = {};
   for (let node in nodes) {
+    if (!graphNodes[node]) console.log('undefined ' + node);
     graphNodeVals[node] = graphNodes[node];
+    graphNodeVals[node].x = calculateSizeX(
+      graphNodeVals[node].xCell,
+      window,
+      document
+    );
+
+    graphNodeVals[node].y = calculateSizeY(
+      graphNodeVals[node].yCell,
+      window,
+      document
+    );
     graphNodeVals[node].size = [150, 50];
   }
 

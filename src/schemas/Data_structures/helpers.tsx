@@ -1,23 +1,40 @@
-const GRID_SIZE_X = 16;
-const SPACING_X = 4;
-const X_CELLS = window.innerWidth / convertRemToPixels(GRID_SIZE_X + SPACING_X);
-
-function convertRemToPixels(rem: number) {
-	return (
-		rem * parseFloat(getComputedStyle(document.documentElement).fontSize)
-	);
-}
-export const calculateSizeX = (cell: number) => {
-	return convertRemToPixels((GRID_SIZE_X + SPACING_X) * (cell - 0.95));
+export const GRID_SIZE_X = 16;
+export const SPACING_X = 4;
+export const calculateSizeX = (
+  cell: number,
+  window: Window,
+  document: Document
+) => {
+  console.log('cell ' + cell);
+  return convertRemToPixels(
+    (GRID_SIZE_X + SPACING_X) * (cell - 0.95),
+    document
+  );
 };
 
-const GRID_SIZE_Y = 8;
-const SPACING_Y = 0;
-const Y_CELLS =
-	window.innerHeight / convertRemToPixels(GRID_SIZE_Y + SPACING_Y);
+const getXCells = (window: Window, document: Document) => {
+  return (
+    window.innerWidth / convertRemToPixels(GRID_SIZE_X + SPACING_X, document)
+  );
+};
 
-export const calculateSizeY = (cell: number) => {
-	return convertRemToPixels((GRID_SIZE_Y + SPACING_Y) * (cell - 0.9));
+export function convertRemToPixels(rem: number, document: Document) {
+  return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+}
+
+export const GRID_SIZE_Y = 8;
+export const SPACING_Y = 0;
+export const calculateSizeY = (
+  cell: number,
+  window: Window,
+  document: Document
+) => {
+  return convertRemToPixels((GRID_SIZE_Y + SPACING_Y) * (cell - 0.9), document);
+};
+const getYCells = (window: Window, document: Document) => {
+  return (
+    window.innerHeight / convertRemToPixels(GRID_SIZE_Y + SPACING_Y, document)
+  );
 };
 
 // export const sortChronologically = () => {

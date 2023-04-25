@@ -6,8 +6,8 @@ import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { GRID_X_SIZE, GRID_Y_SIZE } from '../helpers/snapping';
 import { usePanAndZoom, useZoomEvents } from './zoomingHooks';
 
-export const canvasWidth = window.outerWidth;
-export const canvasHeight = window.outerHeight;
+export let canvasWidth: number;
+export let canvasHeight: number;
 
 export function drawLine(
   ctx: any,
@@ -44,6 +44,8 @@ export const useCanvas = (
   };
 
   useEffect(() => {
+    canvasWidth = window.outerWidth;
+    canvasHeight = window.outerHeight;
     const canvasObj = canvasRef.current;
     const ctx = canvasObj.getContext('2d');
     // clear the canvas area before rendering the coordinates held in state

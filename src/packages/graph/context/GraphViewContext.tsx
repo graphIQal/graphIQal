@@ -2,7 +2,7 @@
  * Context for everything that is displayed in the Graph.
  */
 
-import { createContext } from 'react';
+import { createContext, MutableRefObject } from 'react';
 import {
   ConnectionData,
   Node,
@@ -23,8 +23,7 @@ export type GraphViewContextInterface = {
   setModalNode: (val: string) => void;
   allNodes: { [key: string]: Node };
   setAllNodes: (val: { [key: string]: Node }) => void;
-  translateX: number;
-  setTranslateX: (val: number) => void;
+  // canvasRef: MutableRefObject<any>;
 };
 
 const GraphViewContext = createContext<GraphViewContextInterface | null>(null);

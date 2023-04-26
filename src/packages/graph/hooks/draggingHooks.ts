@@ -37,8 +37,10 @@ export const useDragNode = (
 export const useDropNode = (
   setIsDrawing: (val: boolean) => void,
   translateX: number,
-  translateY: number
+  translateY: number,
+  scale: number
 ) => {
+  console.log('translate ' + translateY);
   const { nodesVisual, setNodesVisual } = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
@@ -56,11 +58,13 @@ export const useDropNode = (
 
         let left = Math.round(item.left + delta.x);
         let top = Math.round(item.top + delta.y);
-        [left, top] = snapToGrid(left, top);
+        [left, top] = snapToGrid(
+          (left + translateX) * scale,
+          (top + translateY) * scale
+        );
         moveNode(item.id, left, top, context);
         setDrawingMode(true);
         setIsDrawing(false);
-        console.log('dropping' + left + ' ' + top);
         // addAction({
         //   undo: { id: item.id, type: 'DRAG', value: startPos.current },
         //   redo: { id: item.id, type: 'DRAG', value: { left, top } },

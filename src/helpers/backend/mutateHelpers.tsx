@@ -33,9 +33,9 @@ export const updateNode = (
   if (!graphNodes) return;
   switch (type) {
     case 'drag':
-      console.log('node to display' + JSON.stringify(newVal));
       graphNodes[nodeID].xCell = calculateCellFromPixelX(newVal.x, document);
       graphNodes[nodeID].yCell = calculateCellFromPixelY(newVal.y, document);
+
       context?.setNodesVisual({ ...graphNodes });
 
       break;
@@ -46,17 +46,17 @@ export const updateNode = (
         const val =
           graphNodes[nodeID].y + graphNodes[nodeID].size[1] - newSize[1];
         if (Number.isFinite(val)) {
-          graphNodes[nodeID].y = calculateCellFromPixelY(val, document);
+          graphNodes[nodeID].yCell = calculateCellFromPixelY(val, document);
         }
       }
       if (newVal.tag === 'left') {
         const val =
           graphNodes[nodeID].x + graphNodes[nodeID].size[0] - newSize[0];
         if (Number.isFinite(val))
-          graphNodes[nodeID].x = calculateCellFromPixelX(val, document);
+          graphNodes[nodeID].xCell = calculateCellFromPixelX(val, document);
       }
       graphNodes[nodeID].size = newSize;
-
+      console.log('new graphnode' + JSON.stringify(graphNodes[nodeID]));
       context?.setNodesVisual({ ...graphNodes });
       break;
   }

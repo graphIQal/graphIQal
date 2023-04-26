@@ -38,10 +38,6 @@ export const useCanvas = (
     x: number;
     y: number;
   };
-  type Line = {
-    start: Coord;
-    end: Coord;
-  };
 
   useEffect(() => {
     canvasWidth = window.outerWidth;

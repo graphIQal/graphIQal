@@ -65,6 +65,8 @@ export const getNodesToDisplayGraph = (
   allNodes: { [key: string]: Node },
   window: Window,
   document: Document
+  // translateX: number,
+  // translateY: number
 ) => {
   let nodes = getNodesToDisplay(nodeInView, allNodes);
   let graphNodeVals: { [key: string]: VisualData } = {};
@@ -81,7 +83,6 @@ export const getNodesToDisplayGraph = (
       window,
       document
     );
-    graphNodeVals[node].size = [150, 50];
   }
 
   return graphNodeVals;

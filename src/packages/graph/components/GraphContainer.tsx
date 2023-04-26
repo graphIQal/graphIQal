@@ -2,7 +2,13 @@
  * Container for Graph; renders either "Mind map" view or "Axis" view
  * Sets information for Context wrapper that deals with actions like dragging, undo/redo, resize
  */
-import { useContext, useEffect, useRef, useState } from 'react';
+import {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { addLine } from '../../../helpers/backend/mutateHelpers';
 import DrawingContext, {
   DrawingContextInterface,
@@ -26,7 +32,11 @@ import { GraphMindMapView } from './GraphMindMapView';
 import { usePanAndZoom } from '../hooks/zoomingHooks';
 // import { usePinch, useZoomEvents } from '../hooks/zoomingHooks';
 
-export const GraphContainer: React.FC = () => {
+export const GraphContainer: React.FC<{
+  // translateX: number;
+  // translateY: number;
+  // scale: number;
+}> = () => {
   //History
   const [history, setHistory] = useState<Action[]>([]);
   const [pointer, setPointer] = useState<number>(-1);
@@ -43,24 +53,22 @@ export const GraphContainer: React.FC = () => {
     isDrawing,
   } = drawingContext;
 
-  //Lines and nodes to show
-
-  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
-  const { lines, setLines, nodesDisplayed, nodesVisual } = viewContext;
-
-  useEffect(() => {
-    setLines([...lines]);
-  }, [nodesDisplayed]);
-
   //Pan and zoom
   const ref = useRef(null);
   let { onMouseDown, onWheel, translateX, translateY, scale } =
     usePanAndZoom(ref);
 
+  if (!Number.isFinite(translateX)) {
+    translateX = 0;
+  }
+
+  if (!Number.isFinite(translateY)) {
+    translateY = 0;
+  }
+
   useEffect(() => {
     console.log('translateX ' + translateX);
   }, [translateX]);
-
   useEffect(() => {
     window.addEventListener('wheel', onWheel, { passive: false });
     window.addEventListener('mousedown', onMouseDown);
@@ -70,9 +78,18 @@ export const GraphContainer: React.FC = () => {
     };
   });
 
+  //Lines and nodes to show
+
+  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
+  const { lines, setLines, nodesDisplayed, nodesVisual } = viewContext;
+
+  useEffect(() => {
+    setLines([...lines]);
+  }, [nodesDisplayed]);
+
   //DND
   const startPos = useRef<{ left: number; top: number }>();
-  const [, drop] = useDropNode(setIsDrawing, translateX, translateY);
+  const [, drop] = useDropNode(setIsDrawing, translateX, translateY, scale);
   const [canDrag, setCanDrag] = useState(false);
 
   //Drawing

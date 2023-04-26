@@ -26,6 +26,7 @@ import {
   SPACING_X,
   SPACING_Y,
 } from '../../../schemas/Data_structures/helpers';
+import { usePanAndZoom } from '../../../packages/graph/hooks/zoomingHooks';
 
 const Graph: React.FC<{ window: Window; document: Document }> = ({
   window,
@@ -40,9 +41,19 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
   const [nodesDisplayed, setNodesDisplayed] = useState(
     getNodesToDisplay(nodeInView, allNodes)
   );
+
+  //zooming + panning
+
   //Visual attributes of nodes to display
   const [nodesVisual, setNodesVisual] = useState(
-    getNodesToDisplayGraph(nodeInView, allNodes, window, document)
+    getNodesToDisplayGraph(
+      nodeInView,
+      allNodes,
+      window,
+      document
+      // translateX,
+      // translateY
+    )
   );
 
   //fetching all data
@@ -55,7 +66,14 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
   useEffect(() => {
     setNodesDisplayed(getNodesToDisplay(nodeInView, allNodes));
     setNodesVisual(
-      getNodesToDisplayGraph(nodeInView, allNodes, window, document)
+      getNodesToDisplayGraph(
+        nodeInView,
+        allNodes,
+        window,
+        document
+        // translateX,
+        // translateY
+      )
     );
   }, [nodeInView]);
 
@@ -80,9 +98,6 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 
   const [showModalConnection, setShowModalConnection] = useState(false);
   const [currConnection, setCurrConnection] = useState(lines[0]);
-
-  //zooming + panning
-  const [translateX, setTranslateX] = useState(0);
 
   // Hot key for undo/redo
   useEffect(() => {
@@ -135,11 +150,14 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
               nodeInView: nodeInView,
               allNodes: allNodes,
               setAllNodes: setAllNodes,
-              translateX: translateX,
-              setTranslateX: setTranslateX,
+              // canvasRef: ref,
             }}
           >
-            <GraphContainer />
+            <GraphContainer
+            // translateX={translateX}
+            // translateY={translateY}
+            // scale={scale}
+            />
             <BoxDragLayer parentRef={containerRef} />
           </GraphViewContext.Provider>
         </DrawingContext.Provider>

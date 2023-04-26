@@ -15,8 +15,7 @@ export const calculateCellFromPixelX = (pos: number, document: Document) => {
   return (
     pos /
       (parseFloat(getComputedStyle(document.documentElement).fontSize) *
-        GRID_SIZE_X *
-        SPACING_X) +
+        (GRID_SIZE_X + SPACING_X)) +
     0.95
   );
 };
@@ -45,14 +44,12 @@ export const calculateCellFromPixelY = (pos: number, document: Document) => {
   console.log(
     'returning ' +
       parseFloat(getComputedStyle(document.documentElement).fontSize) *
-        GRID_SIZE_Y *
-        SPACING_Y
+        (GRID_SIZE_Y + SPACING_Y)
   );
   return (
     pos /
       (parseFloat(getComputedStyle(document.documentElement).fontSize) *
-        GRID_SIZE_Y *
-        SPACING_Y) +
+        (GRID_SIZE_Y + SPACING_Y)) +
     0.9
   );
 };

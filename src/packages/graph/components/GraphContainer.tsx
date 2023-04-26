@@ -46,7 +46,7 @@ export const GraphContainer: React.FC = () => {
   //Lines and nodes to show
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
-  const { lines, setLines, nodesDisplayed } = viewContext;
+  const { lines, setLines, nodesDisplayed, nodesVisual } = viewContext;
 
   useEffect(() => {
     setLines([...lines]);
@@ -54,7 +54,7 @@ export const GraphContainer: React.FC = () => {
 
   //Pan and zoom
   const ref = useRef(null);
-  const { onMouseDown, onWheel, translateX, translateY, scale } =
+  let { onMouseDown, onWheel, translateX, translateY, scale } =
     usePanAndZoom(ref);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export const GraphContainer: React.FC = () => {
 
   //DND
   const startPos = useRef<{ left: number; top: number }>();
-  const [, drop] = useDropNode(setIsDrawing);
+  const [, drop] = useDropNode(setIsDrawing, translateX, translateY);
   const [canDrag, setCanDrag] = useState(false);
 
   //Drawing

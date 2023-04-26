@@ -29,6 +29,7 @@ export const zoom = (event: any, containerRect: any) => {
     clientX: event.clientX,
     clientY: event.clientY,
     containerRect: containerRect,
+    deltaX: event.deltaX,
     deltaY: event.deltaY,
   };
 };

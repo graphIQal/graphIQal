@@ -13,6 +13,12 @@ export const initialState = {
 };
 
 export const reducer = (state: typeof initialState, action: any) => {
+  if (!Number.isFinite(state.currDeltaX)) {
+    state.currDeltaX = 0;
+  }
+  if (!Number.isFinite(state.currDeltaY)) {
+    state.currDeltaY = 0;
+  }
   switch (action.type) {
     case types.PAN_START:
       return {
@@ -21,14 +27,6 @@ export const reducer = (state: typeof initialState, action: any) => {
         prevMouseY: action.clientY,
       };
     case types.PAN:
-      const deltaMouseX = action.clientX - state.prevMouseX;
-      const deltaMouseY = action.clientY - state.prevMouseY;
-      if (!Number.isFinite(state.currDeltaX)) {
-        state.currDeltaX = 0;
-      }
-      if (!Number.isFinite(state.currDeltaY)) {
-        state.currDeltaY = 0;
-      }
       state.currDeltaX += action.deltaX;
       state.currDeltaY += action.deltaY;
       return {
@@ -50,9 +48,8 @@ export const reducer = (state: typeof initialState, action: any) => {
         action.zoomFactor
       );
 
-      // state.translateX = scaledTranslate.x + zoomOffset.x;
-      // state.translateY = scaledTranslate.y + zoomOffset.y;
-
+      console.log('state ' + state.prevMouseX);
+      console.log('state2 ' + action.deltaX);
       state.currDeltaX -= action.deltaX;
       state.currDeltaY -= action.deltaY;
 

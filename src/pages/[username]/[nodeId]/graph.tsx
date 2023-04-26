@@ -81,6 +81,9 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
   const [showModalConnection, setShowModalConnection] = useState(false);
   const [currConnection, setCurrConnection] = useState(lines[0]);
 
+  //zooming + panning
+  const [translateX, setTranslateX] = useState(0);
+
   // Hot key for undo/redo
   useEffect(() => {
     const listenerFunc = (evt: any) => {
@@ -132,6 +135,8 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
               nodeInView: nodeInView,
               allNodes: allNodes,
               setAllNodes: setAllNodes,
+              translateX: translateX,
+              setTranslateX: setTranslateX,
             }}
           >
             <GraphContainer />

@@ -69,7 +69,6 @@ export const getNodesToDisplayGraph = (
   let nodes = getNodesToDisplay(nodeInView, allNodes);
   let graphNodeVals: { [key: string]: VisualData } = {};
   for (let node in nodes) {
-    if (!graphNodes[node]) console.log('undefined ' + node);
     graphNodeVals[node] = graphNodes[node];
     graphNodeVals[node].x = calculateSizeX(
       graphNodeVals[node].xCell,

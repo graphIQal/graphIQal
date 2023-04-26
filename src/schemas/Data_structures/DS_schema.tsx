@@ -190,7 +190,7 @@ export const titles: { [keyCell: string]: string } = {
   dequeue: 'Dequeue',
 
   //data structures
-  arrayCell: 'Array',
+  array: 'Array',
   arraylist: 'ArrayList',
   linkedlist: 'LinkedList',
   singlylinkedlist: 'SinglyLinkedList',
@@ -299,7 +299,7 @@ export const dependencies: { [keyCell: string]: string[] } = {
   queue: ['doublylinkedlist', 'array'],
   dequeue: ['doublylinkedlist', 'array'],
   map: [],
-  arrayCell: [],
+  array: [],
   arraylist: ['array', 'list'],
   linkedlist: ['list'],
   singlylinkedlist: ['linkedlist'],

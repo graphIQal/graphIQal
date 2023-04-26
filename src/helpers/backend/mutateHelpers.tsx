@@ -1,4 +1,8 @@
-import { GraphViewContextInterface } from '../../pages/graph/context/GraphViewContext';
+import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
+import {
+  calculateCellFromPixelX,
+  calculateCellFromPixelY,
+} from '../../schemas/Data_structures/helpers';
 
 export const addLine = (
   node1: string,
@@ -29,24 +33,27 @@ export const updateNode = (
   if (!graphNodes) return;
   switch (type) {
     case 'drag':
-      graphNodes[nodeID].x = newVal.x;
-      graphNodes[nodeID].y = newVal.y;
+      console.log('node to display' + JSON.stringify(newVal));
+      graphNodes[nodeID].xCell = calculateCellFromPixelX(newVal.x, document);
+      graphNodes[nodeID].yCell = calculateCellFromPixelY(newVal.y, document);
       context?.setNodesVisual({ ...graphNodes });
 
       break;
     case 'resize':
+      if (!graphNodes[nodeID].y || !graphNodes[nodeID].x) return;
       const newSize = [newVal.width, newVal.height];
       if (newVal.tag === 'top') {
         const val =
           graphNodes[nodeID].y + graphNodes[nodeID].size[1] - newSize[1];
         if (Number.isFinite(val)) {
-          graphNodes[nodeID].y = val;
+          graphNodes[nodeID].y = calculateCellFromPixelY(val, document);
         }
       }
       if (newVal.tag === 'left') {
         const val =
           graphNodes[nodeID].x + graphNodes[nodeID].size[0] - newSize[0];
-        if (Number.isFinite(val)) graphNodes[nodeID].x = val;
+        if (Number.isFinite(val))
+          graphNodes[nodeID].x = calculateCellFromPixelX(val, document);
       }
       graphNodes[nodeID].size = newSize;
 
@@ -109,6 +116,8 @@ export const addNode = (
     y: y,
     size: size,
     collapsed: true,
+    xCell: 0,
+    yCell: 0,
   };
 
   let newData = { ...context.nodesDisplayed };

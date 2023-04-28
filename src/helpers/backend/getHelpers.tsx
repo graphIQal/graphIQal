@@ -65,8 +65,6 @@ export const getNodesToDisplayGraph = (
   allNodes: { [key: string]: Node },
   window: Window,
   document: Document
-  // translateX: number,
-  // translateY: number
 ) => {
   let nodes = getNodesToDisplay(nodeInView, allNodes);
   let graphNodeVals: { [key: string]: VisualData } = {};

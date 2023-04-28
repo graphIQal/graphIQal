@@ -48,8 +48,6 @@ export const reducer = (state: typeof initialState, action: any) => {
         action.zoomFactor
       );
 
-      console.log('state ' + state.prevMouseX);
-      console.log('state2 ' + action.deltaX);
       state.currDeltaX -= action.deltaX;
       state.currDeltaY -= action.deltaY;
 

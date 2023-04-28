@@ -23,7 +23,6 @@ export type GraphViewContextInterface = {
   setModalNode: (val: string) => void;
   allNodes: { [key: string]: Node };
   setAllNodes: (val: { [key: string]: Node }) => void;
-  // canvasRef: MutableRefObject<any>;
 };
 
 const GraphViewContext = createContext<GraphViewContextInterface | null>(null);

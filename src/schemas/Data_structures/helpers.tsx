@@ -41,11 +41,6 @@ export const calculateSizeY = (
 };
 
 export const calculateCellFromPixelY = (pos: number, document: Document) => {
-  console.log(
-    'returning ' +
-      parseFloat(getComputedStyle(document.documentElement).fontSize) *
-        (GRID_SIZE_Y + SPACING_Y)
-  );
   return (
     pos /
       (parseFloat(getComputedStyle(document.documentElement).fontSize) *

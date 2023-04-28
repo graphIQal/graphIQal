@@ -10,7 +10,6 @@ export const onPointDown: any = (
   pointersDown: any[],
   setPointersDown: (pointers: any[]) => void
 ) => {
-  console.log('here');
   setPointersDown([...pointersDown, event]);
 };
 

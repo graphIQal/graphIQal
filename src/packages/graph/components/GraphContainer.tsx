@@ -30,13 +30,11 @@ import { Action } from '../hooks/useHistoryState';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
 import { usePanAndZoom } from '../hooks/zoomingHooks';
-// import { usePinch, useZoomEvents } from '../hooks/zoomingHooks';
 
 export const GraphContainer: React.FC<{
-  // translateX: number;
-  // translateY: number;
-  // scale: number;
-}> = () => {
+  window: Window;
+  document: Document;
+}> = ({ window, document }) => {
   //History
   const [history, setHistory] = useState<Action[]>([]);
   const [pointer, setPointer] = useState<number>(-1);
@@ -55,8 +53,7 @@ export const GraphContainer: React.FC<{
 
   //Pan and zoom
   const ref = useRef(null);
-  let { onMouseDown, onWheel, translateX, translateY, scale } =
-    usePanAndZoom(ref);
+  let { onWheel, translateX, translateY, scale } = usePanAndZoom(ref);
 
   if (!Number.isFinite(translateX)) {
     translateX = 0;
@@ -67,21 +64,17 @@ export const GraphContainer: React.FC<{
   }
 
   useEffect(() => {
-    console.log('translateX ' + translateX);
-  }, [translateX]);
-  useEffect(() => {
     window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('mousedown', onMouseDown);
     return () => {
       window.removeEventListener('wheel', onWheel);
-      window.removeEventListener('mousedown', onMouseDown);
     };
   });
 
   //Lines and nodes to show
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
-  const { lines, setLines, nodesDisplayed, nodesVisual } = viewContext;
+  const { lines, setLines, nodesDisplayed, nodesVisual, setNodesVisual } =
+    viewContext;
 
   useEffect(() => {
     setLines([...lines]);
@@ -98,8 +91,10 @@ export const GraphContainer: React.FC<{
     translateX,
     translateY,
     scale,
-    ref
+    ref,
+    window
   );
+
   useEffect(() => {
     const canvasEle = canvas.current;
     if (canvasEle) {

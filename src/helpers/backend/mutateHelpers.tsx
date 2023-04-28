@@ -56,7 +56,6 @@ export const updateNode = (
           graphNodes[nodeID].xCell = calculateCellFromPixelX(val, document);
       }
       graphNodes[nodeID].size = newSize;
-      console.log('new graphnode' + JSON.stringify(graphNodes[nodeID]));
       context?.setNodesVisual({ ...graphNodes });
       break;
   }

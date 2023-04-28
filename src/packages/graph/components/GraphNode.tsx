@@ -40,10 +40,6 @@ export const GraphNode: FC<NodeProps> = ({
     // addAction,
   } = useContext(GraphActionContext) as GraphActionContextInterface;
 
-  if (id == 'array') {
-    console.log('left ' + left);
-  }
-
   const { drawingMode, setDrawingMode } = useContext(
     DrawingContext
   ) as DrawingContextInterface;

@@ -6,9 +6,6 @@ import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { GRID_X_SIZE, GRID_Y_SIZE } from '../helpers/snapping';
 import { usePanAndZoom, useZoomEvents } from './zoomingHooks';
 
-export let canvasWidth: number;
-export let canvasHeight: number;
-
 export function drawLine(
   ctx: any,
   x1: number,
@@ -30,8 +27,11 @@ export const useCanvas = (
   translateX: number,
   translateY: number,
   scale: number,
-  canvasRef: MutableRefObject<any>
+  canvasRef: MutableRefObject<any>,
+  window: Window
 ) => {
+  let canvasWidth = window.innerWidth;
+  let canvasHeight = window.innerHeight;
   const [points, setPoints] = useState<Coord[]>([]);
 
   type Coord = {
@@ -40,10 +40,9 @@ export const useCanvas = (
   };
 
   useEffect(() => {
-    canvasWidth = window.outerWidth;
-    canvasHeight = window.outerHeight;
     const canvasObj = canvasRef.current;
     const ctx = canvasObj.getContext('2d');
+
     // clear the canvas area before rendering the coordinates held in state
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -63,6 +62,7 @@ export const useCanvas = (
 
     // dots
     function drawDots() {
+      console.log('in drawing func');
       var r = 1,
         cw = GRID_X_SIZE,
         ch = GRID_Y_SIZE;

@@ -40,7 +40,6 @@ export const useDropNode = (
   translateY: number,
   scale: number
 ) => {
-  console.log('translate ' + translateY);
   const { nodesVisual, setNodesVisual } = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;

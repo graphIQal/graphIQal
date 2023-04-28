@@ -19,14 +19,6 @@ import {
   getNodesToDisplay,
   getNodesToDisplayGraph,
 } from '../../../helpers/backend/getHelpers';
-import {
-  convertRemToPixels,
-  GRID_SIZE_X,
-  GRID_SIZE_Y,
-  SPACING_X,
-  SPACING_Y,
-} from '../../../schemas/Data_structures/helpers';
-import { usePanAndZoom } from '../../../packages/graph/hooks/zoomingHooks';
 
 const Graph: React.FC<{ window: Window; document: Document }> = ({
   window,
@@ -42,38 +34,15 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
     getNodesToDisplay(nodeInView, allNodes)
   );
 
-  //zooming + panning
-
   //Visual attributes of nodes to display
   const [nodesVisual, setNodesVisual] = useState(
-    getNodesToDisplayGraph(
-      nodeInView,
-      allNodes,
-      window,
-      document
-      // translateX,
-      // translateY
-    )
+    getNodesToDisplayGraph(nodeInView, allNodes, window, document)
   );
-
-  //fetching all data
-  //   useEffect(() => {
-  //     setNodesVisual(
-  //       getNodesToDisplayGraph(nodeInView, allNodes, window, document)
-  //     );
-  //   });
 
   useEffect(() => {
     setNodesDisplayed(getNodesToDisplay(nodeInView, allNodes));
     setNodesVisual(
-      getNodesToDisplayGraph(
-        nodeInView,
-        allNodes,
-        window,
-        document
-        // translateX,
-        // translateY
-      )
+      getNodesToDisplayGraph(nodeInView, allNodes, window, document)
     );
   }, [nodeInView]);
 
@@ -150,14 +119,9 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
               nodeInView: nodeInView,
               allNodes: allNodes,
               setAllNodes: setAllNodes,
-              // canvasRef: ref,
             }}
           >
-            <GraphContainer
-            // translateX={translateX}
-            // translateY={translateY}
-            // scale={scale}
-            />
+            <GraphContainer window={window} document={document} />
             <BoxDragLayer parentRef={containerRef} />
           </GraphViewContext.Provider>
         </DrawingContext.Provider>

@@ -6,11 +6,14 @@ import { Pencil } from '@styled-icons/bootstrap/Pencil';
 import { Cube } from '@styled-icons/boxicons-solid/Cube';
 import { Undo } from '@styled-icons/icomoon/Undo';
 import { Redo } from '@styled-icons/icomoon/Redo';
-
+import { Flashlight } from '@styled-icons/fluentui-system-filled/Flashlight';
+import { Navigation } from '@styled-icons/boxicons-regular/Navigation';
+import { ArrowsAngleExpand } from '@styled-icons/bootstrap/ArrowsAngleExpand';
 type NodeButtonProps = {
   onClick: () => void;
   src: string;
   selected?: boolean;
+  size?: number;
 };
 
 //filled circle button with plus icon button inside
@@ -19,45 +22,67 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
   onClick,
   src,
   selected = false,
+  size = 30,
 }) => {
-  const size = '1.5em';
+  const iconSize = size * 0.5;
   const icons: any = {
     plus: (
       <Plus
-        color={!selected ? 'white' : 'white'}
+        color={!selected ? 'black' : 'white'}
         onClick={onClick}
-        size={size}
+        size={iconSize}
       />
     ),
     draw: (
       <Pencil
-        color={!selected ? 'white' : 'white'}
+        color={!selected ? 'black' : 'white'}
         onClick={onClick}
-        size={size}
+        size={iconSize}
       />
     ),
     node: <Cube color={'blue'} size={size} onClick={onClick} />,
     undo: (
       <Undo
-        color={!selected ? 'white' : 'white'}
+        color={!selected ? 'black' : 'white'}
         onClick={onClick}
-        size={size}
+        size={iconSize}
       />
     ),
     redo: (
       <Redo
-        color={!selected ? 'white' : 'white'}
+        color={!selected ? 'black' : 'white'}
         onClick={onClick}
-        size={size}
+        size={iconSize}
+      />
+    ),
+    spotlight: (
+      <Flashlight
+        color={!selected ? 'black' : 'white'}
+        onClick={onClick}
+        size={iconSize}
+      />
+    ),
+    navigation: (
+      <Navigation
+        color={!selected ? 'black' : 'white'}
+        onClick={onClick}
+        size={iconSize}
+      />
+    ),
+    expand: (
+      <ArrowsAngleExpand
+        color={!selected ? 'black' : 'white'}
+        onClick={onClick}
+        size={iconSize}
       />
     ),
   };
   return (
     <div className='hover:cursor-pointer hover:opacity-80'>
       <Circle
+        diameter={size}
         children={<IconButton onClick={onClick} src={icons[src]} />}
-        diameter={50}
-        backgroundClass={selected ? 'bg-base_black' : 'bg-connection'}
+        backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
       />
     </div>
   );

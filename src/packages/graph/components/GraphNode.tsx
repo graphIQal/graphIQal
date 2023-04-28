@@ -117,7 +117,7 @@ export const GraphNode: FC<NodeProps> = ({
             <Cube className='absolute right-sm top-sm' size={'1.5em'} />
           </div>
         ) : ( */}
-        <CollapsedGraphNode title={title} />
+        <CollapsedGraphNode title={title} id={id} />
         {/* )} */}
       </ResizableBox>
     </div>

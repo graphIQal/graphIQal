@@ -1,5 +1,4 @@
 import React from 'react';
-import './atoms.css';
 
 type IconButtonProps = {
   src: any;

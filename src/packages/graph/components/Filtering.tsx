@@ -6,10 +6,10 @@ import React, { useContext } from 'react';
 import { PillMenu } from '../../../components/molecules/PillMenu';
 import { ItemProps } from '../../../components/organisms/Dropdown';
 import { getNodeTags } from '../../../helpers/backend/getHelpers';
-import { nodesData } from '../../../schemas/Data_structures/helpers';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
+import { Tag } from '../../../components/molecules/Tag';
 
 type FilteringProps = {
   xCategory: string;
@@ -49,11 +49,7 @@ export const Filtering: React.FC<FilteringProps> = ({
       />
       <div className='flex flex-row justify-items-stretch gap-x-2'>
         {Object.keys(tags).map((tag: string, i: number) => {
-          return (
-            <div className=' bg-blue-100 rounded-sm p-2' key={i}>
-              {tag}
-            </div>
-          );
+          return <Tag tag={tag} id={i} />;
         })}
       </div>
     </div>

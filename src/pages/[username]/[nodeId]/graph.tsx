@@ -4,8 +4,8 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import Graph from '../../../packages/graph/components/Graph';
 
-import Graph from '../../../packages/graph/components/graph';
 const Graph2: React.FC = () => {
   const [windowVar, setWindow] = useState<Window>();
   const [documentVar, setDocument] = useState<Document>();

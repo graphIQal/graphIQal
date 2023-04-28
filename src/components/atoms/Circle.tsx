@@ -1,7 +1,7 @@
 import React from 'react';
 
 type CircleProps = {
-  diameter: number;
+  diameter: number | string;
   children?: any;
   backgroundClass: string;
   onClick?: () => void;
@@ -33,7 +33,7 @@ const Circle: React.FC<CircleProps> = ({
     ' ' +
     backgroundClass +
     ' ' +
-    'rounded-full flex items-center justify-center m-2';
+    'rounded-full flex items-center justify-center mx-1 shadow-md';
   return (
     <div
       style={{

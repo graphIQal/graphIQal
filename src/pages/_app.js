@@ -15,27 +15,25 @@ import '../index.css';
 import '../components/molecules/molecules.css';
 import '../components/organisms/split-pane/pane.css';
 import '../packages/editor/editor.css';
+import '../components/atoms/atoms.css';
 
 import View from '../components/layouts/View';
 import Window from '../components/layouts/Window';
 
 export default function MyApp({ Component, pageProps }) {
-	return (
-		<>
-			<Head>
-				<title>graphIQal</title>
-				<meta
-					name='viewport'
-					content='width=device-width, initial-scale=1'
-				/>
-			</Head>
-			<main>
-				<Window>
-					<View>
-						<Component {...pageProps} />
-					</View>
-				</Window>
-			</main>
-		</>
-	);
+  return (
+    <>
+      <Head>
+        <title>graphIQal</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
+      </Head>
+      <main>
+        <Window>
+          <View>
+            <Component {...pageProps} />
+          </View>
+        </Window>
+      </main>
+    </>
+  );
 }

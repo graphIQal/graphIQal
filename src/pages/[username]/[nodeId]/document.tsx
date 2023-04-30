@@ -59,7 +59,7 @@ const SplitPaneWrapper: React.FC<{}> = () => {
 					children={
 						<SplitPane className='split-pane-col'>
 							{data
-								? data.map((record, index: number) => (
+								? data.map((record: any, index: number) => (
 										<TextButton
 											key={index}
 											text={record.g.properties.title}

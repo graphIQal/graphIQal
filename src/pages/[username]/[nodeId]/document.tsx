@@ -21,16 +21,32 @@ import SplitPane, {
 } from '../../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import { getDocument } from '../../../backend/functions/getDocument';
+import TextButton from '../../../components/molecules/TextButton';
+import useSWR from 'swr';
+import { fetcher } from '../../../backend/driver/fetcher';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
 	const router = useRouter();
 	const { username, nodeId } = router.query;
+	const [nodeData, setnodeData] = useState();
 
-	useEffect(() => {
-		if (!router.isReady) return;
-		// get Node
-		getDocument(nodeId as string, username as string);
-	}, [router.isReady]);
+	// const { data, error } = useSWR(id ? `/api/user/${id}` : null, fetcher)
+	const { data, error, isLoading } = useSWR(
+		nodeId ? `/api/${username}/${nodeId}` : null,
+		fetcher
+	);
+
+	console.log(isLoading);
+
+	if (!isLoading) {
+		console.log(data);
+	}
+
+	// useEffect(() => {
+	// 	if (!router.isReady) return;
+	// 	// get Node
+	// 	getDocument(nodeId as string, username as string);
+	// }, [router.isReady]);
 
 	return (
 		<DndProvider backend={HTML5Backend}>
@@ -42,6 +58,10 @@ const SplitPaneWrapper: React.FC<{}> = () => {
 				<SplitPaneRight
 					children={
 						<SplitPane className='split-pane-col'>
+							<TextButton
+								text={'Go to graph view'}
+								// onClick={}
+							></TextButton>
 							<SplitPaneTop
 								title={'Shelf'}
 								children={<ShelfEditor></ShelfEditor>}

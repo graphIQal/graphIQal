@@ -7,17 +7,18 @@ export default async function handler(
 ) {
 	const params = req.query;
 
-	const cypher: string = `
-	MATCH (n:Node {id: $nodeId})
-	MATCH (n)-[r:NEXT_BLOCK*0..]->(b:BLOCK_ELEMENT)
-	MATCH (b)-[children:BLOCK_CHILD*0..]->(text:BLOCK_INLINE)
-	RETURN n, r, b, children, text
-	`;
-
 	// const cypher: string = `
-	// MATCH (n)-[r:NEXT_BLOCK|BLOCK_CHILD*0..]->(b:BLOCK_ELEMENT|BLOCK_INLINE)
-	// RETURN r, b
+	// MATCH (n:Node {id: $nodeId})
+	// MATCH (n)-[r:NEXT_BLOCK*0..]->(b:BLOCK_ELEMENT)
+	// MATCH (b)-[children:BLOCK_CHILD*0..]->(text:BLOCK_INLINE)
+	// RETURN n, r, b, children, text
 	// `;
+
+	const cypher: string = `
+	MATCH (n:Node {id: $nodeId})-[r:NEXT_BLOCK|BLOCK_CHILD*0..]->(b:BLOCK_ELEMENT|BLOCK_INLINE)
+	RETURN r, b 
+	`;
+	// RETURN r, b { .*, parentNodeId: $nodeId}
 
 	const result = await read(cypher, params);
 

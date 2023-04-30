@@ -56,7 +56,7 @@ export default function Home() {
 							'/' +
 								username +
 								'/' +
-								res.n.properties.nodeId +
+								res.n.properties.id +
 								'/document'
 						);
 					}}

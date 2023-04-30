@@ -14,7 +14,7 @@ export default async function handler(
 		password: $password,
 		email: $email
 	})
-	MATCH (u)-[r:HOMENODE]->(n)
+	MATCH (u)-[r:IN]->(n)
 	RETURN u,r,n;
 	`;
 

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { write } from '../../../backend/driver/helpers';
-// import { write } from '../../../src/backend/driver/helpers';
+
+import { int } from 'neo4j-driver';
+import { write } from '../../../../backend/driver/helpers';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -8,28 +9,18 @@ export default async function handler(
 ) {
 	const params = req.query;
 
-	params.hometitle = params.username + "'s Home Node";
-
 	// Add Hash for password
 	const cypher = `
-	MERGE (u:User {
-	  email: $email,
-	  password: $password,
-	  username: $username
-	})
-	ON CREATE SET u.id = randomUuid()
-	MERGE (n:Node {title: $hometitle})
+	MATCH (n:Node {id: $currentNodeId})
+	MERGE (n:Node {title: $nodeTitle})
 	ON CREATE SET n.id = randomUuid()
-	MERGE (u)-[r:IN]->(n)
+	MERGE (u)-[r:HOMENODE]->(n)
 	
 	MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
 	MERGE (n)-[:NEXT_BLOCK]->(b)
 
 	MERGE (p:BLOCK_INLINE {type: "p", id: randomUuid(), children: ["{text: ''}"]})
 	MERGE (b)-[:BLOCK_CHILD]->(p)
-
-	MERGE (g:GRAPH_VIEW {title: "Graph View"})<-[:VIEW]-(n)
-	ON CREATE SET g.id = randomUuid()
 	RETURN u, n, b
 	`;
 

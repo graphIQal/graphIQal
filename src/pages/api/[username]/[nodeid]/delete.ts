@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { int } from 'neo4j-driver';
-import { read } from '../../../../src/backend/driver/helpers';
 
 export default async function handler(
 	req: NextApiRequest,

@@ -8,7 +8,7 @@ export default async function handler(
 	const params = req.query;
 
 	const cypher: string = `
-	MATCH (n:Node {nodeId: $nodeId})
+	MATCH (n:Node {id: $nodeId})
 	MATCH (n)-[r:NEXT_BLOCK*0..]->(b:BLOCK_ELEMENT)
 	MATCH (b)-[children:BLOCK_CHILD*0..]->(text:BLOCK_INLINE)
 	RETURN n, r, b, children, text

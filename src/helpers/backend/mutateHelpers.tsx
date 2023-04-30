@@ -7,6 +7,7 @@ import {
   calculateCellFromPixelX,
   calculateCellFromPixelY,
 } from '../../schemas/Data_structures/helpers';
+import { getLines } from './getHelpers';
 
 export const addLine = (
   node1: string,
@@ -172,4 +173,16 @@ export const changeConnectionType = (
       console.log('node ' + JSON.stringify(viewContext.allNodes[node]));
     }
   }
+};
+
+export const deleteConnection = (
+  start: string,
+  end: string,
+  viewContext: GraphViewContextInterface
+) => {
+  let newNodes = { ...viewContext.allNodes };
+  delete newNodes[start].connections[end];
+  delete newNodes[end].connections[start];
+
+  viewContext.setAllNodes(newNodes);
 };

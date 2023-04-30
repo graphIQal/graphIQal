@@ -58,10 +58,23 @@ const SplitPaneWrapper: React.FC<{}> = () => {
 				<SplitPaneRight
 					children={
 						<SplitPane className='split-pane-col'>
-							<TextButton
-								text={'Go to graph view'}
-								// onClick={}
-							></TextButton>
+							{data
+								? data.map((record) => (
+										<TextButton
+											text={record.g.properties.title}
+											onClick={() => {
+												router.push(
+													'/' +
+														username +
+														'/' +
+														nodeId +
+														'/graph/' +
+														record.g.properties.id
+												);
+											}}
+										></TextButton>
+								  ))
+								: null}
 							<SplitPaneTop
 								title={'Shelf'}
 								children={<ShelfEditor></ShelfEditor>}

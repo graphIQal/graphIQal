@@ -42,6 +42,7 @@ export const ConnectionTypes = {
 
 export const ids = [
   'homenode',
+  'course_topics',
   'data_structures',
   'adts',
   'concepts',
@@ -171,7 +172,8 @@ export const topicIDs = [
 
 // hardcoding titles
 export const titles: { [keyCell: string]: string } = {
-  homenode: 'Course Topics',
+  homenode: 'Homenode',
+  course_topics: 'Course Topics',
   data_structures: 'Data Structures',
   adts: 'ADTs',
   concepts: 'Concepts',
@@ -493,7 +495,7 @@ export const further_reading = [];
 
 // have an array of data structure nodes, ADT nodes, homework nodes, etc.
 //render connections for each of these combinations
-export const nodesData: { [keyCell: string]: Node } = {
+export const nodesData: { [key: string]: Node } = {
   homenode: {
     title: 'Home',
     id: 'homenode',
@@ -512,6 +514,12 @@ export const nodesData: { [keyCell: string]: Node } = {
         content: [],
       },
     },
+  },
+  course_topics: {
+    title: 'Home',
+    id: 'homenode',
+    blocks: [],
+    connections: {},
   },
   arraylist: {
     title: 'ArrayList',
@@ -603,6 +611,12 @@ export const nodesData: { [keyCell: string]: Node } = {
 
 export let graphNodes: { [keyCell: string]: VisualData } = {
   //
+  course_topics: {
+    xCell: 0,
+    yCell: 0,
+    size: [150, 50],
+    collapsed: true,
+  },
   data_structures: {
     xCell: 0,
     yCell: 0,

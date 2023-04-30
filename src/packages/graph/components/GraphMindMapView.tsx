@@ -21,6 +21,9 @@ import { usePanAndZoom } from '../hooks/zoomingHooks';
 import DrawingContext, {
   DrawingContextInterface,
 } from '../context/GraphDrawingContext';
+import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
+import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
+import { changeConnectionType } from '../../../helpers/backend/mutateHelpers';
 
 type MindMapProps = {
   points: any;
@@ -41,13 +44,26 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
   const handleDrawing = useDrawingCanvas();
   const handleStartPoint = useDrawingStart();
 
-  const { lines, nodesDisplayed, nodesVisual, allNodes, setLines } = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
+
+  const { lines, nodesDisplayed, nodesVisual, allNodes, setLines } =
+    viewContext;
 
   useEffect(() => {
     setLines([...lines]);
   }, [translateX]);
+
+  const getDropdownItems = (from: string, to: string) => {
+    const items: ItemProps[] = [];
+    Object.keys(ConnectionTypes).map((connection: string, i: number) => {
+      items.push({
+        text: (ConnectionTypes as any)[connection],
+        onPress: () => changeConnectionType(from, to, connection, viewContext),
+      });
+    });
+
+    return items;
+  };
 
   const { startNode, endNode, drawingMode, isDrawing, setIsDrawing } =
     useContext(DrawingContext) as DrawingContextInterface;
@@ -55,15 +71,18 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
     <div className='relative' id='container'>
       {lines.map(function (line, i) {
         return (
-          <LineTo
-            key={i}
-            from={line.start}
-            to={line.end}
-            id={i}
-            arrow={line.arrowStart}
-            translateX={translateX ? translateX : 0}
-            translateY={translateY ? translateX : 0}
-          />
+          <div>
+            <LineTo
+              key={i}
+              from={line.start}
+              to={line.end}
+              id={i}
+              arrow={line.arrowStart}
+              translateX={translateX ? translateX : 0}
+              translateY={translateY ? translateX : 0}
+              getDropDownItems={getDropdownItems}
+            />
+          </div>
         );
       })}
       {Object.keys(nodesDisplayed).map((node) => {

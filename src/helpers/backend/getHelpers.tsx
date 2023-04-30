@@ -297,8 +297,7 @@ export const getLines = () => {
     }
   }
 
-  // return lines;
-  return [];
+  return lines;
 };
 
 export const isNodeCategorical = (

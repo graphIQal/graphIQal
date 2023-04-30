@@ -62,7 +62,6 @@ export const useCanvas = (
 
     // dots
     function drawDots() {
-      console.log('in drawing func');
       var r = 1,
         cw = GRID_X_SIZE,
         ch = GRID_Y_SIZE;

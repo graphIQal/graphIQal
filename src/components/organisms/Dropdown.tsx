@@ -8,7 +8,7 @@ export type ItemProps = {
 
 export const Dropdown: React.FC<{ items: ItemProps[] }> = ({ items }) => {
   return (
-    <div className='absolute w-full shadow-md bg-white z-20'>
+    <div className='absolute w-max shadow-md bg-white z-20'>
       {' '}
       {items.map((item, i) => {
         return (

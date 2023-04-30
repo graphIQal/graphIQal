@@ -2,7 +2,8 @@
  * Helper functions for the "canvas" on which each arrow is drawn
  */
 
-import { Coord } from '../../pages/graph/hooks/drawingHooks';
+import { Coord } from '../graph/hooks/drawingHooks';
+import { getDy } from '../graph/hooks/useCanvas';
 
 //Calculates dimensions based on the deltas and box buffers
 export const calculateCanvasDimensions = ({

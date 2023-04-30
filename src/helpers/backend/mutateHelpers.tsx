@@ -1,5 +1,9 @@
 import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
 import {
+  ConnectionData,
+  GraphView,
+} from '../../schemas/Data_structures/DS_schema';
+import {
   calculateCellFromPixelX,
   calculateCellFromPixelY,
 } from '../../schemas/Data_structures/helpers';
@@ -11,6 +15,7 @@ export const addLine = (
   viewContext: GraphViewContextInterface | null
 ) => {
   if (!viewContext) return;
+
   viewContext.setLines([
     ...viewContext.lines,
     {
@@ -19,6 +24,17 @@ export const addLine = (
       arrowStart: startNode,
     },
   ]);
+
+  let newAllNodes = { ...viewContext.allNodes };
+  newAllNodes[node1].connections[node2] = {
+    content: [],
+    type: 'includes',
+  };
+  newAllNodes[node2].connections[node1] = {
+    content: [],
+    type: 'included',
+  };
+  viewContext.setAllNodes(newAllNodes);
 };
 
 export type NodeUpdate = 'resize' | 'drag';
@@ -136,4 +152,24 @@ export const addNode = (
   context.setNodesDisplayed(newData);
   context.setNodesVisual(newNodes);
   context.setAllNodes(newAllNodes);
+};
+
+export const changeConnectionType = (
+  start: string,
+  end: string,
+  type: string,
+  viewContext: GraphViewContextInterface
+) => {
+  const newNodes = { ...viewContext.allNodes };
+  if (newNodes[start].connections[end].type == type) return;
+  newNodes[start].connections[end].type = type;
+  newNodes[end].connections[start].type = type;
+
+  viewContext.setAllNodes(newNodes);
+
+  for (let node in viewContext.allNodes) {
+    if (Object.keys(viewContext.nodesDisplayed).includes(node)) {
+      console.log('node ' + JSON.stringify(viewContext.allNodes[node]));
+    }
+  }
 };

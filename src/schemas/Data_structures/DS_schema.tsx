@@ -1,6 +1,3 @@
-import { ReactComponentElement } from 'react';
-import { calculateSizeX, calculateSizeY } from './helpers';
-
 //DATA
 export type Block = {
   id: string;
@@ -37,15 +34,21 @@ export type VisualData = {
   z?: number;
 };
 
+export const ConnectionTypes = {
+  includes: 'Includes',
+  dependency: 'Dependency',
+  chronology: 'Chronology',
+};
+
 export const ids = [
   'homenode',
   'data_structures',
   'adts',
   'concepts',
   'algorithms',
+
   'study_categories',
   'homework',
-
   'content_learning',
   'exam_prep',
   'recitation',

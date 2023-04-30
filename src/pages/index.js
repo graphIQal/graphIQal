@@ -53,7 +53,11 @@ export default function Home() {
 						const res = await login(email, username, password);
 						console.log('result', res);
 						router.push(
-							'/' + username + '/' + res.n.properties.nodeId
+							'/' +
+								username +
+								'/' +
+								res.n.properties.nodeId +
+								'/document'
 						);
 					}}
 				/>

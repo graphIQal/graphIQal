@@ -14,6 +14,11 @@ export default async function handler(
 	RETURN n, r, b, children, text
 	`;
 
+	// const cypher: string = `
+	// MATCH (n)-[r:NEXT_BLOCK|BLOCK_CHILD*0..]->(b:BLOCK_ELEMENT|BLOCK_INLINE)
+	// RETURN r, b
+	// `;
+
 	const result = await read(cypher, params);
 
 	// if (result.length === 0) {

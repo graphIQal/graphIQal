@@ -150,6 +150,8 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 							nodeInView: nodeInView,
 							allNodes: allNodes,
 							setAllNodes: setAllNodes,
+							graphViewId: graphViewId,
+							username: username,
 						}}
 					>
 						<GraphContainer window={window} document={document} />

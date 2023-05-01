@@ -5,7 +5,14 @@
 
 import React, { useEffect, useState } from 'react';
 import Graph from '../../../../packages/graph/components/Graph';
-import SplitPane from '../../../../components/organisms/split-pane/SplitPane';
+import SplitPane, {
+  Divider,
+  SplitPaneLeft,
+  SplitPaneRight,
+} from '../../../../components/organisms/split-pane/SplitPane';
+import EditorComponent from '../../../../packages/editor/EditorComponent';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const Graph2: React.FC = () => {
   const [windowVar, setWindow] = useState<Window>();
@@ -14,7 +21,19 @@ const Graph2: React.FC = () => {
     setWindow(window);
     setDocument(document);
   });
-  return <Graph window={windowVar} document={documentVar} />;
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <SplitPane className='split-pane-row'>
+        <SplitPaneLeft>
+          <Graph window={windowVar} document={documentVar} />
+        </SplitPaneLeft>
+        <Divider className='separator-col' />
+        <SplitPaneRight>
+          <EditorComponent />
+        </SplitPaneRight>
+      </SplitPane>
+    </DndProvider>
+  );
 };
 
 export default Graph2;

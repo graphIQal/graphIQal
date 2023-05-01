@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { int } from 'neo4j-driver';
-import { write } from '../../../../../backend/driver/helpers';
+import { write } from '../../../../../../backend/driver/helpers';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -25,7 +25,7 @@ export default async function handler(
 	RETURN n, g
 	`;
 
-	const result: any = await write(cypher as string, params);
+	// const result: any = await write(cypher as string, params);
 
-	res.status(200).json({ ...result, ...params });
+	res.status(200).json({ ...params });
 }

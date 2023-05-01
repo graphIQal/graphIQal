@@ -19,12 +19,30 @@ import {
 	getNodesToDisplay,
 	getNodesToDisplayGraph,
 } from '../../../helpers/backend/getHelpers';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
+import { fetcher } from '../../../backend/driver/fetcher';
 
 const Graph: React.FC<{ window: Window; document: Document }> = ({
 	window,
 	document,
 }) => {
 	if (!document || !window) return <div></div>;
+
+	const router = useRouter();
+	const { username, nodeId, graphViewId } = router.query;
+
+	const { data, error, isLoading } = useSWR(
+		nodeId ? `/api/${username}/${nodeId}/graph/${graphViewId}` : null,
+		fetcher
+	);
+
+	console.log(isLoading);
+
+	if (!isLoading) {
+		console.log(data);
+	}
+
 	//Data of all nodes
 	const [allNodes, setAllNodes] = useState(getAllNodes());
 	//Graph in view of one node
@@ -41,6 +59,8 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 
 	console.log('allNodes');
 	console.log(allNodes);
+	console.log('nodesVisual');
+	console.log(nodesVisual);
 	console.log('nodeInView');
 	console.log(nodeInView);
 	console.log('nodesDisplayed');

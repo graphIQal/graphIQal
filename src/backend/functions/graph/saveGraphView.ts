@@ -3,27 +3,23 @@ type createNodeInput = {
 	currentNodeId: string;
 	nodeTitle: string;
 	graphViewId: string;
-	x_cell: number;
-	y_cell: number;
-	x_size: number;
-	y_size: number;
+	nodes: Array<NodesInGraphData>;
 };
+
+// Move this into graph
+type NodesInGraphData = {};
 
 export const createNode = async ({
 	userId,
 	currentNodeId,
-	nodeTitle,
 	graphViewId,
-	x_cell,
-	y_cell,
-	x_size,
-	y_size,
+	nodes,
 }: createNodeInput) => {
 	console.log('login attempted ');
 
 	const res = await fetch(
-		// `/api/${userId}/${currentNodeId}/create?nodeTitle=${nodeTitle}&x_cell=${x_cell}&y_cell=${y_cell}&x_size=${x_size}&y_size=${y_size}`
-		`/api/${userId}/${currentNodeId}/graph/${graphViewId}/create`
+		`/api/${userId}/${currentNodeId}/graph/${graphViewId}/save`,
+		{}
 	)
 		.then((res) => {
 			console.log('res ', res);

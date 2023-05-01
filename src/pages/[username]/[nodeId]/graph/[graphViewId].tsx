@@ -5,15 +5,16 @@
 
 import React, { useEffect, useState } from 'react';
 import Graph from '../../../../packages/graph/components/Graph';
+import SplitPane from '../../../../components/organisms/split-pane/SplitPane';
 
 const Graph2: React.FC = () => {
-	const [windowVar, setWindow] = useState<Window>();
-	const [documentVar, setDocument] = useState<Document>();
-	useEffect(() => {
-		setWindow(window);
-		setDocument(document);
-	});
-	return <Graph window={windowVar} document={documentVar} />;
+  const [windowVar, setWindow] = useState<Window>();
+  const [documentVar, setDocument] = useState<Document>();
+  useEffect(() => {
+    setWindow(window);
+    setDocument(document);
+  });
+  return <Graph window={windowVar} document={documentVar} />;
 };
 
 export default Graph2;

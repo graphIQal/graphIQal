@@ -149,6 +149,10 @@ export const getAllNodes = (): { [key: string]: Node } => {
         content: [],
         type: 'dependency',
       };
+      nodesData[connections[connection]].connections[dependency] = {
+        content: [],
+        type: 'dependency',
+      };
     }
   }
 
@@ -276,17 +280,15 @@ export const getAllNodes = (): { [key: string]: Node } => {
   return nodesData;
 };
 
-export const getLines = () => {
+export const getLines = (
+  nodesToDisplay: { [key: string]: ConnectionData },
+  nodesData: { [key: string]: Node }
+) => {
   let lines: LineRefs[] = [];
-  const nodes = getAllNodes();
-  for (const node in nodes) {
-    if (node == 'homenode') continue;
-    const connections = nodes[node].connections;
-    for (let connection in connections) {
-      if (
-        connections[connection].type == 'includes' ||
-        connections[connection].type == 'dependency'
-      ) {
+  for (const node in nodesToDisplay) {
+    const connections = nodesData[node].connections;
+    for (const connection in connections) {
+      if (Object.keys(nodesToDisplay).includes(connection)) {
         lines.push({
           start: connection,
           end: node,
@@ -295,6 +297,23 @@ export const getLines = () => {
       }
     }
   }
+  // const nodes = getAllNodes();
+  // for (const node in nodes) {
+  //   if (node == 'homenode') continue;
+  //   const connections = nodes[node].connections;
+  //   for (let connection in connections) {
+  //     if (
+  //       connections[connection].type == 'includes' ||
+  //       connections[connection].type == 'dependency'
+  //     ) {
+  //       lines.push({
+  //         start: connection,
+  //         end: node,
+  //         arrowStart: connection,
+  //       });
+  //     }
+  //   }
+  // }
 
   return lines;
 };

@@ -28,6 +28,8 @@ import { Coord } from '../graph/hooks/drawingHooks';
 import { getDy } from '../graph/hooks/useCanvas';
 import { Dropdown, ItemProps } from '../../components/organisms/Dropdown';
 import { ConnectionTypes } from '../../schemas/Data_structures/DS_schema';
+import IconCircleButton from '../../components/molecules/IconCircleButton';
+import { deleteConnection } from '../../helpers/backend/mutateHelpers';
 
 // Default styling stuff
 const defaultAnchor = { x: 0.5, y: 0.5 };
@@ -42,6 +44,7 @@ type LineToPropTypes = {
   translateX: number;
   translateY: number;
   getDropDownItems: (from: string, to: string) => ItemProps[];
+  deleteConnection: (from: string, to: string) => void;
   fromAnchor?: any;
   toAnchor?: any;
   delay?: any;
@@ -106,6 +109,7 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
       arrow={props.arrow}
       {...points}
       getDropdownItems={() => props.getDropDownItems(props.from, props.to)}
+      deleteConnection={() => props.deleteConnection(props.from, props.to)}
       translateY={props.translateY}
       translateX={props.translateX}
     />
@@ -121,6 +125,7 @@ type ArrowProps = {
   y1?: any;
   arrow: string | null;
   getDropdownItems: () => ItemProps[];
+  deleteConnection: () => void;
   anchor0?: any;
   anchor1?: any;
   borderColor?: string | undefined;
@@ -142,6 +147,7 @@ export const Arrow = ({
   id,
   arrow,
   getDropdownItems,
+  deleteConnection,
   translateX,
   translateY,
 }: ArrowProps) => {
@@ -237,6 +243,7 @@ export const Arrow = ({
         style={{ left: p1.x + canvasXOffset, top: p1.y + canvasYOffset }}
       >
         <Dropdown items={getDropdownItems()} />
+        {/* <IconCircleButton onClick={deleteConnection} src='remove' /> */}
       </div>
       <svg
         width={canvasWidth}

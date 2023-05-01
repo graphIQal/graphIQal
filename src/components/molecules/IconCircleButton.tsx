@@ -9,6 +9,7 @@ import { Redo } from '@styled-icons/icomoon/Redo';
 import { Flashlight } from '@styled-icons/fluentui-system-filled/Flashlight';
 import { Navigation } from '@styled-icons/boxicons-regular/Navigation';
 import { ArrowsAngleExpand } from '@styled-icons/bootstrap/ArrowsAngleExpand';
+import { Trash } from '@styled-icons/bootstrap/Trash';
 type NodeButtonProps = {
   onClick: () => void;
   src: string;
@@ -71,6 +72,13 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
     ),
     expand: (
       <ArrowsAngleExpand
+        color={!selected ? 'black' : 'white'}
+        onClick={onClick}
+        size={iconSize}
+      />
+    ),
+    remove: (
+      <Trash
         color={!selected ? 'black' : 'white'}
         onClick={onClick}
         size={iconSize}

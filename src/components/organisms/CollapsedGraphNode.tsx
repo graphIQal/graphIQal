@@ -6,15 +6,17 @@ import { OnHoverMenu } from './OnHoverMenu';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../packages/graph/context/GraphViewContext';
+import { updateNode } from '../../helpers/backend/mutateHelpers';
 
 const CollapsedGraphNode: React.FC<{ title: string; id: string }> = ({
   title,
   id,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const { setNodeInView } = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+
+  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
+
+  const { setNodeInView } = viewContext;
   const buttonItems = [
     {
       src: 'navigation',
@@ -33,7 +35,17 @@ const CollapsedGraphNode: React.FC<{ title: string; id: string }> = ({
     >
       <div className='flex flex-row gap-x-3 items-center'>
         <Cube size={'1em'} />
-        <h4 className='text-sm'>{title}</h4>
+        <form>
+          <input
+            type='text'
+            name='name'
+            defaultValue={title}
+            onChange={(newVal: any) =>
+              updateNode('title', newVal.target.value, id, viewContext)
+            }
+          />
+        </form>
+        {/* <h4 className='text-sm'>{title}</h4> */}
       </div>
       {showMenu && <OnHoverMenu buttonItems={buttonItems} />}
     </div>

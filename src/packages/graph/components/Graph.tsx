@@ -74,7 +74,10 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 	}, [nodeInView]);
 
 	//Line data
-	const [lines, setLines] = useState<LineRefs[]>(getLines());
+	const [lines, setLines] = useState<LineRefs[]>([]);
+	useEffect(() => {
+		setLines(getLines(nodesDisplayed, allNodes));
+	}, [nodesDisplayed, allNodes]);
 
 	//Drawing states
 	const containerRef = useRef(null);
@@ -93,7 +96,7 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 	const [modalNode, setModalNode] = useState('');
 
 	const [showModalConnection, setShowModalConnection] = useState(false);
-	const [currConnection, setCurrConnection] = useState(lines[0]);
+	// const [currConnection, setCurrConnection] = useState(lines[0]);
 
 	// Hot key for undo/redo
 	useEffect(() => {

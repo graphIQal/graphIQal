@@ -23,7 +23,10 @@ import DrawingContext, {
 } from '../context/GraphDrawingContext';
 import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
 import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
-import { changeConnectionType } from '../../../helpers/backend/mutateHelpers';
+import {
+  changeConnectionType,
+  deleteConnection,
+} from '../../../helpers/backend/mutateHelpers';
 
 type MindMapProps = {
   points: any;
@@ -61,12 +64,18 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         onPress: () => changeConnectionType(from, to, connection, viewContext),
       });
     });
+    items.push({
+      text: 'Delete Connection',
+      onPress: () => deleteConnection(from, to, viewContext),
+      icon: 'remove',
+    });
 
     return items;
   };
 
   const { startNode, endNode, drawingMode, isDrawing, setIsDrawing } =
     useContext(DrawingContext) as DrawingContextInterface;
+
   return (
     <div className='relative' id='container'>
       {lines.map(function (line, i) {
@@ -81,6 +90,9 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
               translateX={translateX ? translateX : 0}
               translateY={translateY ? translateX : 0}
               getDropDownItems={getDropdownItems}
+              deleteConnection={(from: string, to: string) =>
+                deleteConnection(from, to, viewContext)
+              }
             />
           </div>
         );

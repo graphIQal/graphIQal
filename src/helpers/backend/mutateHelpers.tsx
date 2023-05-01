@@ -39,7 +39,7 @@ export const addLine = (
 	viewContext.setAllNodes(newAllNodes);
 };
 
-export type NodeUpdate = 'resize' | 'drag';
+export type NodeUpdate = 'resize' | 'drag' | 'title';
 
 export const updateNode = (
 	type: NodeUpdate,
@@ -48,7 +48,8 @@ export const updateNode = (
 	context: GraphViewContextInterface | null
 ) => {
 	let graphNodes = context?.nodesVisual;
-	if (!graphNodes) return;
+	let nodeData = context?.allNodes;
+	if (!graphNodes || !nodeData) return;
 	switch (type) {
 		case 'drag':
 			graphNodes[nodeID].xCell = calculateCellFromPixelX(
@@ -92,7 +93,13 @@ export const updateNode = (
 			graphNodes[nodeID].size = newSize;
 			context?.setNodesVisual({ ...graphNodes });
 			break;
+
+		case 'title':
+			nodeData[nodeID].title = newVal;
+			context?.setAllNodes({ ...nodeData });
 	}
+
+	console.log(nodeData['array']);
 };
 
 type LineUpdate = 'arrowAdd';
@@ -170,4 +177,16 @@ export const changeConnectionType = (
 			console.log('node ' + JSON.stringify(viewContext.allNodes[node]));
 		}
 	}
+};
+
+export const deleteConnection = (
+	start: string,
+	end: string,
+	viewContext: GraphViewContextInterface
+) => {
+	let newNodes = { ...viewContext.allNodes };
+	delete newNodes[start].connections[end];
+	delete newNodes[end].connections[start];
+
+	viewContext.setAllNodes(newNodes);
 };

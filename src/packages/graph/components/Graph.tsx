@@ -47,10 +47,8 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 		console.log('data');
 		console.log(data);
 		for (let node in data) {
-			nodeData[data[node].node.properties.id] =
-				data[node].node.properties;
-			visualData[data[node].node.properties.id] =
-				data[node].relationship.properties;
+			nodeData[data[node].node.id] = data[node].node;
+			visualData[data[node].node.id] = data[node].relationship;
 		}
 	}
 

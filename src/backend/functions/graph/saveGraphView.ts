@@ -5,6 +5,7 @@ import {
 	NodeData,
 	VisualData,
 } from '../../../schemas/Data_structures/DS_schema';
+import { jsonToCypher_graphView } from '../../driver/dataConversion';
 
 type saveGraphViewInput = {
 	username: string;
@@ -24,7 +25,7 @@ export const saveGraphView = async ({
 }: saveGraphViewInput) => {
 	console.log('Save graph view');
 
-	const body = { ...nodeData, ...graphViewData };
+	const body = jsonToCypher_graphView({ nodeData, graphViewData });
 	// const body = JSON.stringify({ ...nodeData, ...graphViewData });
 	console.log(body);
 

@@ -30,14 +30,14 @@ export const Filtering: React.FC<FilteringProps> = ({
 }) => {
 	const {
 		nodeInView,
-		nodesVisual,
-		nodesDisplayed,
+		nodeVisualData_Graph,
+		nodeData_Graph,
 		userId,
 		graphViewId,
 		nodeId,
 	} = useContext(GraphViewContext) as GraphViewContextInterface;
 
-	const tags = getNodeTags(nodeInView, nodesDisplayed);
+	const tags = getNodeTags(nodeInView, nodeData_Graph);
 
 	return (
 		<div className=' relative ml-3 mt-3 flex flex-row gap-x-3 mb-3 w-full'>
@@ -49,8 +49,8 @@ export const Filtering: React.FC<FilteringProps> = ({
 						userId,
 						graphViewId,
 						nodeId,
-						graphViewData: nodesVisual,
-						nodeData: nodesDisplayed,
+						graphViewData: nodeVisualData_Graph,
+						nodeData: nodeData_Graph,
 					});
 				}}
 			></TextButton>

@@ -8,6 +8,8 @@ type createNodeInput = {
 	x_size: number;
 	y_size: number;
 };
+import useSWR from 'swr';
+import { fetcher } from '../../driver/fetcher';
 
 export const createNode = async ({
 	userId,
@@ -19,20 +21,32 @@ export const createNode = async ({
 	x_size,
 	y_size,
 }: createNodeInput) => {
-	console.log('login attempted ');
+	console.log('create Node ');
 
-	const res = await fetch(
-		// `/api/${userId}/${currentNodeId}/create?nodeTitle=${nodeTitle}&x_cell=${x_cell}&y_cell=${y_cell}&x_size=${x_size}&y_size=${y_size}`
-		`/api/${userId}/${currentNodeId}/graph/${graphViewId}/create`
-	)
-		.then((res) => {
-			console.log('res ', res);
-			return res.json();
-		})
-		.then((json) => {
-			console.log('json: ', json);
-			return json;
-		});
+	const { data: orders } = useSWR(
+		{
+			url: `/api/${userId}/${currentNodeId}/graph/${graphViewId}/create`,
+			// args: user,
+		},
+		fetcher
+	);
 
-	return res;
+	// const res = await fetch(
+	// 	// `/api/${userId}/${currentNodeId}/create?nodeTitle=${nodeTitle}&x_cell=${x_cell}&y_cell=${y_cell}&x_size=${x_size}&y_size=${y_size}`
+	// `/api/${userId}/${currentNodeId}/graph/${graphViewId}/create`,
+	// 	{
+	// 		body: {
+	// 		}
+	// 	}
+	// )
+	// 	.then((res) => {
+	// 		console.log('res ', res);
+	// 		return res.json();
+	// 	})
+	// 	.then((json) => {
+	// 		console.log('json: ', json);
+	// 		return json;
+	// 	});
+
+	// return res;
 };

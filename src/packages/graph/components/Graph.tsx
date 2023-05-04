@@ -155,6 +155,7 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 							setAllNodes: setAllNodes,
 							graphViewId: graphViewId,
 							username: username,
+							nodeId: nodeId,
 						}}
 					>
 						<GraphContainer window={window} document={document} />

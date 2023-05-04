@@ -27,7 +27,7 @@ export const Filtering: React.FC<FilteringProps> = ({
 	getDropdownItemsX,
 	getDropdownItemsY,
 }) => {
-	const { nodeInView, allNodes } = useContext(
+	const { nodeInView, allNodes, username, graphViewId, nodeId } = useContext(
 		GraphViewContext
 	) as GraphViewContextInterface;
 
@@ -38,7 +38,7 @@ export const Filtering: React.FC<FilteringProps> = ({
 				text='Save Graph'
 				onClick={() => {
 					console.log('hmm');
-					createNode();
+					createNode;
 				}}
 			></TextButton>
 			<TextButton

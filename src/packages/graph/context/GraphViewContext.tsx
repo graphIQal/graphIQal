@@ -24,6 +24,7 @@ export type GraphViewContextInterface = {
 	allNodes: { [key: string]: Node };
 	setAllNodes: (val: { [key: string]: Node }) => void;
 	username: string | string[] | undefined;
+	nodeId: string | string[] | undefined;
 	graphViewId: string | string[] | undefined;
 };
 

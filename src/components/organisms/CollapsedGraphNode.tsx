@@ -6,7 +6,7 @@ import { OnHoverMenu } from './OnHoverMenu';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../packages/graph/context/GraphViewContext';
-import { updateNode } from '../../helpers/backend/mutateHelpers';
+import { deleteNode, updateNode } from '../../helpers/backend/mutateHelpers';
 
 const CollapsedGraphNode: React.FC<{ title: string; id: string }> = ({
   title,
@@ -25,6 +25,10 @@ const CollapsedGraphNode: React.FC<{ title: string; id: string }> = ({
     {
       src: 'expand',
       onClick: () => setNodeInView(id),
+    },
+    {
+      src: 'remove',
+      onClick: () => deleteNode(id, viewContext),
     },
   ];
   return (

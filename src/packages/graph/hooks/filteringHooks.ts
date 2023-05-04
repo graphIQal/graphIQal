@@ -14,15 +14,15 @@ export const useFiltering = () => {
   const [xCategory, setXCategory] = useState('study_categories');
   const [yCategory, setYCategory] = useState('data_structures');
 
-  const { setNodeInView, allNodes } = useContext(
+  const { setNodeInView, nodeData_Graph } = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
 
   const getDropdownItems = () => {
     let items = [];
-    for (let node in allNodes) {
+    for (let node in nodeData_Graph) {
       items.push({
-        text: titles[node],
+        text: nodeData_Graph[node].title,
         onPress: () => {
           setNodeInView(node);
         },
@@ -33,8 +33,8 @@ export const useFiltering = () => {
 
   const getDropdownItemsX = () => {
     let items = [];
-    for (let node in allNodes) {
-      if (!isNodeCategorical(allNodes, node)) continue;
+    for (let node in nodeData_Graph) {
+      // if (!isNodeCategorical(nodeData_Graph, node)) continue;
       items.push({
         text: titles[node],
         onPress: () => {
@@ -46,8 +46,8 @@ export const useFiltering = () => {
   };
   const getDropdownItemsY = () => {
     let items = [];
-    for (let node in allNodes) {
-      if (!isNodeCategorical(allNodes, node)) continue;
+    for (let node in nodeData_Graph) {
+      // if (!isNodeCategorical(allNodes, node)) continue;
       items.push({
         text: titles[node],
         onPress: () => {

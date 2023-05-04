@@ -6,6 +6,8 @@ export type Block = {
 
 export type ConnectionData = {
   content: string[]; //ids of the blocks of the node's data that are contained in this connection
+  startNode: string;
+  endNode: string;
   type: string;
 };
 
@@ -27,6 +29,7 @@ export type GraphView = {
 export type NodeData = {
   id: string;
   title: string;
+  connections: { [key: string]: ConnectionData };
 };
 export type GraphNodeData = {
   width: {

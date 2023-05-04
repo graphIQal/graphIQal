@@ -32,7 +32,7 @@ export const Filtering: React.FC<FilteringProps> = ({
 		nodeInView,
 		nodeVisualData_Graph,
 		nodeData_Graph,
-		userId,
+		username,
 		graphViewId,
 		nodeId,
 	} = useContext(GraphViewContext) as GraphViewContextInterface;
@@ -44,9 +44,8 @@ export const Filtering: React.FC<FilteringProps> = ({
 			<TextButton
 				text='Save Graph'
 				onClick={() => {
-					console.log('hmm');
 					saveGraphView({
-						userId,
+						username,
 						graphViewId,
 						nodeId,
 						graphViewData: nodeVisualData_Graph,

@@ -88,12 +88,6 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
     setnodeVisualData_Graph(visualData);
   }, [isLoading]);
 
-  //Line data
-  const [lines, setLines] = useState<LineRefs[]>([]);
-  // useEffect(() => {
-  //   setLines(getLines(nodeData_Graph, allNodes));
-  // }, [nodeData_Graph, allNodes]);
-
   //Drawing states
   const containerRef = useRef(null);
   const [drawingMode, setDrawingMode] = useState(true);
@@ -151,8 +145,6 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
       >
         <GraphViewContext.Provider
           value={{
-            lines,
-            setLines,
             setNodeInView: setNodeInView,
             nodeData_Graph: nodeData_Graph,
             setnodeData_Graph: setnodeData_Graph,

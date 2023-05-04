@@ -19,21 +19,16 @@ export const addLine = (
 ) => {
   if (!viewContext) return;
 
-  viewContext.setLines([
-    ...viewContext.lines,
-    {
-      start: node1,
-      end: node2,
-      arrowStart: startNode,
-    },
-  ]);
-
   let newnodeData_Graph = { ...viewContext.nodeData_Graph };
   newnodeData_Graph[node1].connections[node2] = {
+    startNode: node1,
+    endNode: node2,
     content: [],
     type: 'includes',
   };
   newnodeData_Graph[node2].connections[node1] = {
+    startNode: node2,
+    endNode: node1,
     content: [],
     type: 'included',
   };
@@ -138,6 +133,7 @@ export const addNode = (
   newnodeData_Graph[id] = {
     id: id,
     title: 'New Node',
+    connections: {},
   };
 
   context.setnodeVisualData_Graph(newNodes);

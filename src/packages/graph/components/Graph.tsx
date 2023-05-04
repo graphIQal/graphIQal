@@ -119,51 +119,49 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 	}, []);
 
 	return (
-		<DndProvider backend={HTML5Backend}>
-			<div
-				onKeyDown={(event) =>
-					handleDrawingHotkey(event, drawingMode, setDrawingMode)
-				}
-				tabIndex={-1}
-				ref={containerRef}
+		<div
+			onKeyDown={(event) =>
+				handleDrawingHotkey(event, drawingMode, setDrawingMode)
+			}
+			tabIndex={-1}
+			ref={containerRef}
+		>
+			<DrawingContext.Provider
+				value={{
+					startNode: startNode,
+					endNode: endNode,
+					isPointInCanvasFuncs: isPointInCanvasFuncs,
+					numPointsInTriangleFuncs: numPointsInTriangleFuncs,
+					drawingMode: drawingMode,
+					setDrawingMode: setDrawingMode,
+					isDrawing: isDrawing,
+					setIsDrawing: setIsDrawing,
+				}}
 			>
-				<DrawingContext.Provider
+				<GraphViewContext.Provider
 					value={{
-						startNode: startNode,
-						endNode: endNode,
-						isPointInCanvasFuncs: isPointInCanvasFuncs,
-						numPointsInTriangleFuncs: numPointsInTriangleFuncs,
-						drawingMode: drawingMode,
-						setDrawingMode: setDrawingMode,
-						isDrawing: isDrawing,
-						setIsDrawing: setIsDrawing,
+						lines,
+						setLines,
+						setNodeInView: setNodeInView,
+						nodesDisplayed: nodesDisplayed,
+						setNodesDisplayed: setNodesDisplayed,
+						nodesVisual: nodesVisual,
+						setNodesVisual: setNodesVisual,
+						modalNode: modalNode,
+						setModalNode: setModalNode,
+						nodeInView: nodeInView,
+						allNodes: allNodes,
+						setAllNodes: setAllNodes,
+						graphViewId: graphViewId,
+						username: username,
+						nodeId: nodeId,
 					}}
 				>
-					<GraphViewContext.Provider
-						value={{
-							lines,
-							setLines,
-							setNodeInView: setNodeInView,
-							nodesDisplayed: nodesDisplayed,
-							setNodesDisplayed: setNodesDisplayed,
-							nodesVisual: nodesVisual,
-							setNodesVisual: setNodesVisual,
-							modalNode: modalNode,
-							setModalNode: setModalNode,
-							nodeInView: nodeInView,
-							allNodes: allNodes,
-							setAllNodes: setAllNodes,
-							graphViewId: graphViewId,
-							username: username,
-							nodeId: nodeId,
-						}}
-					>
-						<GraphContainer window={window} document={document} />
-						<BoxDragLayer parentRef={containerRef} />
-					</GraphViewContext.Provider>
-				</DrawingContext.Provider>
-			</div>
-		</DndProvider>
+					<GraphContainer window={window} document={document} />
+					<BoxDragLayer parentRef={containerRef} />
+				</GraphViewContext.Provider>
+			</DrawingContext.Provider>
+		</div>
 	);
 };
 

@@ -48,7 +48,18 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
     console.log('data');
     console.log(data);
     for (let node in data) {
-      nodeData[data[node].node.id] = data[node].node;
+      let nodeConnections: { [key: string]: ConnectionData } = {};
+      for (let connection in data[node].connections) {
+        nodeConnections[data[node].connections[connection].endNode] = {
+          ...data[node].connections[connection],
+          content: [],
+        };
+      }
+      nodeData[data[node].node.id] = {
+        ...data[node].node,
+        connections: nodeConnections,
+      };
+
       visualData[data[node].node.id] = data[node].relationship;
     }
   }
@@ -75,10 +86,6 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
     setnodeData_Graph(nodeData);
     setnodeVisualData_Graph(visualData);
   }, [isLoading]);
-
-  // useEffect(() => {
-  //   setLines(getLines(nodeData_Graph, allNodes));
-  // }, [nodeData_Graph, allNodes]);
 
   //Drawing states
   const containerRef = useRef(null);

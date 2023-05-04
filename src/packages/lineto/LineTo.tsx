@@ -220,6 +220,8 @@ export const Arrow = ({
     [points]
   );
 
+  const [showDropdown, setShowDropdown] = useState(false);
+
   useEffect(() => {
     var path = document.getElementById('line' + id) as HTMLElement &
       SVGPathElement;
@@ -238,13 +240,15 @@ export const Arrow = ({
 
   return (
     <div id='container' className='relative'>
-      <div
-        className='absolute w-max'
-        style={{ left: p1.x + canvasXOffset, top: p1.y + canvasYOffset }}
-      >
-        <Dropdown items={getDropdownItems()} />
-        {/* <IconCircleButton onClick={deleteConnection} src='remove' /> */}
-      </div>
+      {showDropdown && (
+        <div
+          className='absolute w-max'
+          style={{ left: p1.x + canvasXOffset, top: p1.y + canvasYOffset }}
+        >
+          <Dropdown items={getDropdownItems()} />
+          {/* <IconCircleButton onClick={deleteConnection} src='remove' /> */}
+        </div>
+      )}
       <svg
         width={canvasWidth}
         id='svg'
@@ -258,6 +262,8 @@ export const Arrow = ({
       >
         <path
           id={'line' + id}
+          style={{ zIndex: 100 }}
+          onMouseOver={() => setShowDropdown(true)}
           stroke='black'
           strokeWidth={strokeWidth}
           fill='none'

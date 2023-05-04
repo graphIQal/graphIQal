@@ -1,12 +1,18 @@
 /**
  * Display of nodes and lines connecting them in "mind map" style
  */
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect } from 'react';
 import LineTo from '../../../packages/lineto/LineTo';
 
-import GraphActionContext, {
-  GraphActionContextInterface,
-} from '../context/GraphActionContext';
+import { ItemProps } from '../../../components/organisms/Dropdown';
+import {
+  changeConnectionType,
+  deleteConnection,
+} from '../../../helpers/backend/mutateHelpers';
+import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
+import DrawingContext, {
+  DrawingContextInterface,
+} from '../context/GraphDrawingContext';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
@@ -17,16 +23,6 @@ import {
 } from '../hooks/drawingHooks';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
-import { usePanAndZoom } from '../hooks/zoomingHooks';
-import DrawingContext, {
-  DrawingContextInterface,
-} from '../context/GraphDrawingContext';
-import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
-import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
-import {
-  changeConnectionType,
-  deleteConnection,
-} from '../../../helpers/backend/mutateHelpers';
 
 type MindMapProps = {
   points: any;
@@ -49,7 +45,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
 
-  const { lines, nodesDisplayed, nodesVisual, allNodes, setLines } =
+  const { lines, nodesDisplayed, setLines, nodesVisual, setNodesVisual } =
     viewContext;
 
   useEffect(() => {
@@ -98,10 +94,11 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         );
       })}
       {Object.keys(nodesDisplayed).map((node) => {
-        const title = allNodes[node].title;
-        const { x, y, size } = nodesVisual[node];
-        const [width, height] = size;
-
+        const title = nodesDisplayed[node].title;
+        const x = nodesVisual[node].x.low;
+        const y = nodesVisual[node].y.low;
+        const width = nodesVisual[node].width.low;
+        const height = nodesVisual[node].height.low;
         return (
           <div
             className={node}

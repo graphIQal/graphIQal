@@ -12,6 +12,7 @@ import {
   homework,
   ids,
   Node,
+  NodeData,
   nodesData,
   resources,
   study_categories,
@@ -117,7 +118,23 @@ export const getConnectionInfo = (
   return content;
 };
 
-export const getAllNodes = (): { [key: string]: Node } => {
+export const getAllNodes = (data: any): { [key: string]: Node } => {
+  console.log('data');
+  console.log(data);
+  // const nodesData: { [key: string]: Node } = {};
+  // console.log('data');
+  // console.log(data);
+  // for (let node in data) {
+  //   let nodeData = data[node].node.properties;
+  //   nodesData[nodeData.id] = {
+  //     id: nodeData.id,
+  //     title: nodeData.title,
+  //     blocks: [],
+  //     connections: {},
+  //   };
+  // }
+  // console.log('frontend data');
+  // console.log(nodesData);
   const nodesData: { [key: string]: Node } = {};
   for (let node in ids) {
     nodesData[ids[node]] = {
@@ -297,25 +314,8 @@ export const getLines = (
       }
     }
   }
-  // const nodes = getAllNodes();
-  // for (const node in nodes) {
-  //   if (node == 'homenode') continue;
-  //   const connections = nodes[node].connections;
-  //   for (let connection in connections) {
-  //     if (
-  //       connections[connection].type == 'includes' ||
-  //       connections[connection].type == 'dependency'
-  //     ) {
-  //       lines.push({
-  //         start: connection,
-  //         end: node,
-  //         arrowStart: connection,
-  //       });
-  //     }
-  //   }
-  // }
 
-  return lines;
+  return [];
 };
 
 export const isNodeCategorical = (
@@ -331,11 +331,11 @@ export const getNodeTags = (
   allNodes: { [key: string]: Node }
 ) => {
   const to_return: { [key: string]: ConnectionData } = {};
-  for (const node in allNodes[nodeInView].connections) {
-    if (allNodes[nodeInView].connections[node].type == 'included') {
-      to_return[node] = allNodes[nodeInView].connections[node];
-    }
-  }
+  // for (const node in allNodes[nodeInView].connections) {
+  //   if (allNodes[nodeInView].connections[node].type == 'included') {
+  //     to_return[node] = allNodes[nodeInView].connections[node];
+  //   }
+  // }
 
   return to_return;
 };

@@ -22,6 +22,10 @@ import {
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
+import {
+	GraphNodeData,
+	NodeData,
+} from '../../../schemas/Data_structures/DS_schema';
 
 const Graph: React.FC<{ window: Window; document: Document }> = ({
 	window,
@@ -38,37 +42,38 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 	);
 
 	console.log(isLoading);
-
+	let nodeData: { [key: string]: NodeData } = {};
+	let visualData: { [key: string]: GraphNodeData } = {};
 	if (!isLoading) {
+		console.log('data');
 		console.log(data);
+		for (let node in data) {
+			nodeData[data[node].node.properties.id] =
+				data[node].node.properties;
+			visualData[data[node].node.properties.id] =
+				data[node].relationship.properties;
+		}
 	}
 
-	//Data of all nodes
-	const [allNodes, setAllNodes] = useState(getAllNodes());
 	//Graph in view of one node
 	const [nodeInView, setNodeInView] = useState('homenode');
 	//Data of nodes to display (comes from Connection information between each node and the node in view)
 	const [nodesDisplayed, setNodesDisplayed] = useState(
-		getNodesToDisplay(nodeInView, allNodes)
+		// getNodesToDisplay(nodeInView, allNodes)
+		nodeData
 	);
-
-	//Visual attributes of nodes to display
-	const [nodesVisual, setNodesVisual] = useState(
-		getNodesToDisplayGraph(nodeInView, allNodes, window, document)
-	);
+	const [nodesVisual, setNodesVisual] = useState(visualData);
 
 	useEffect(() => {
-		setNodesDisplayed(getNodesToDisplay(nodeInView, allNodes));
-		setNodesVisual(
-			getNodesToDisplayGraph(nodeInView, allNodes, window, document)
-		);
-	}, [nodeInView]);
+		setNodesDisplayed(nodeData);
+		setNodesVisual(visualData);
+	}, [isLoading]);
 
 	//Line data
 	const [lines, setLines] = useState<LineRefs[]>([]);
-	useEffect(() => {
-		setLines(getLines(nodesDisplayed, allNodes));
-	}, [nodesDisplayed, allNodes]);
+	// useEffect(() => {
+	//   setLines(getLines(nodesDisplayed, allNodes));
+	// }, [nodesDisplayed, allNodes]);
 
 	//Drawing states
 	const containerRef = useRef(null);
@@ -141,8 +146,6 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 						modalNode: modalNode,
 						setModalNode: setModalNode,
 						nodeInView: nodeInView,
-						allNodes: allNodes,
-						setAllNodes: setAllNodes,
 						graphViewId: graphViewId,
 						username: username,
 						nodeId: nodeId,

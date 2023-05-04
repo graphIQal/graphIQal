@@ -73,8 +73,7 @@ export const GraphContainer: React.FC<{
   //Lines and nodes to show
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
-  const { lines, setLines, nodesDisplayed, nodesVisual, setNodesVisual } =
-    viewContext;
+  const { lines, setLines, nodesDisplayed } = viewContext;
 
   useEffect(() => {
     setLines([...lines]);

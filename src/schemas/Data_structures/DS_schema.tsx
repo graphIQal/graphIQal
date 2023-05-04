@@ -24,6 +24,25 @@ export type GraphView = {
   elements: { [keyCell: string]: VisualData };
 };
 
+export type NodeData = {
+  id: string;
+  title: string;
+};
+export type GraphNodeData = {
+  width: {
+    low: number;
+  };
+  height: {
+    low: number;
+  };
+  x: {
+    low: number;
+  };
+  y: {
+    low: number;
+  };
+};
+
 export type VisualData = {
   x?: number;
   y?: number;

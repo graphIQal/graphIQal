@@ -1,3 +1,3 @@
-export const cypherToJson = () => {};
+export const cypherToJson_graphView = () => {};
 
-export const jsonToCypher = () => {};
+export const jsonToCypher_graphView = () => {};

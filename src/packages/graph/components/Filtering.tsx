@@ -12,6 +12,7 @@ import GraphViewContext, {
 import { Tag } from '../../../components/molecules/Tag';
 import TextButton from '../../../components/molecules/TextButton';
 import { createNode } from '@udecode/plate';
+import { saveGraphView } from '../../../backend/functions/graph/saveGraphView';
 
 type FilteringProps = {
 	xCategory: string;
@@ -27,18 +28,30 @@ export const Filtering: React.FC<FilteringProps> = ({
 	getDropdownItemsX,
 	getDropdownItemsY,
 }) => {
-	const { nodeInView, allNodes, username, graphViewId, nodeId } = useContext(
-		GraphViewContext
-	) as GraphViewContextInterface;
+	const {
+		nodeInView,
+		nodesVisual,
+		nodesDisplayed,
+		userId,
+		graphViewId,
+		nodeId,
+	} = useContext(GraphViewContext) as GraphViewContextInterface;
 
-	const tags = getNodeTags(nodeInView, allNodes);
+	const tags = getNodeTags(nodeInView, nodesDisplayed);
+
 	return (
 		<div className=' relative ml-3 mt-3 flex flex-row gap-x-3 mb-3 w-full'>
 			<TextButton
 				text='Save Graph'
 				onClick={() => {
 					console.log('hmm');
-					createNode;
+					saveGraphView({
+						userId,
+						graphViewId,
+						nodeId,
+						graphViewData: nodesVisual,
+						nodeData: nodesDisplayed,
+					});
 				}}
 			></TextButton>
 			<TextButton

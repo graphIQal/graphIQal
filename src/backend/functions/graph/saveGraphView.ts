@@ -1,29 +1,32 @@
-type createNodeInput = {
-	userId: string;
-	currentNodeId: string;
-	nodeTitle: string;
-	graphViewId: string;
-	nodes: Array<VisualData>;
-};
-
-// Move this into graph
-type NodesInGraphData = {};
-
 import useSWR from 'swr';
 import { fetcher } from '../../driver/fetcher';
-import { VisualData } from '../../../schemas/Data_structures/DS_schema';
+import {
+	GraphNodeData,
+	NodeData,
+	VisualData,
+} from '../../../schemas/Data_structures/DS_schema';
+
+type saveGraphViewInput = {
+	userId: string;
+	nodeId: string;
+	// nodeTitle: string;
+	graphViewId: string;
+	graphViewData: { [key: string]: GraphNodeData };
+	nodeData: { [key: string]: NodeData };
+};
 
 export const saveGraphView = async ({
 	userId,
-	currentNodeId,
+	nodeId,
 	graphViewId,
-	nodes,
-}: createNodeInput) => {
+	graphViewData,
+	nodeData,
+}: saveGraphViewInput) => {
 	console.log('login attempted ');
 
 	const { data: orders } = useSWR(
 		{
-			url: `/api/${userId}/${currentNodeId}/graph/${graphViewId}/create`,
+			url: `/api/${userId}/${nodeId}/graph/${graphViewId}/create`,
 			// args: user,
 		},
 		fetcher
@@ -32,7 +35,7 @@ export const saveGraphView = async ({
 	const body = JSON.stringify(nodes);
 
 	const res = await fetch(
-		`/api/${userId}/${currentNodeId}/graph/${graphViewId}/save`,
+		`/api/${userId}/${nodeId}/graph/${graphViewId}/save`,
 		{
 			method: 'POST',
 			body: body,

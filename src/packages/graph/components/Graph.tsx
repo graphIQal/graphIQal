@@ -58,11 +58,20 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 	//Graph in view of one node
 	const [nodeInView, setNodeInView] = useState('homenode');
 	//Data of nodes to display (comes from Connection information between each node and the node in view)
+
+	// node data
 	const [nodesDisplayed, setNodesDisplayed] = useState(
 		// getNodesToDisplay(nodeInView, allNodes)
 		nodeData
 	);
+
+	// nodesVisual is
 	const [nodesVisual, setNodesVisual] = useState(visualData);
+
+	console.log('nodesDisplayed');
+	console.log(nodesDisplayed);
+	console.log('nodesVisual');
+	console.log(nodesVisual);
 
 	useEffect(() => {
 		setNodesDisplayed(nodeData);

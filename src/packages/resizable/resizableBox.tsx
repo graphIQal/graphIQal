@@ -68,10 +68,9 @@ const ResizableBox: React.FC<{
       } else {
         height = height + dy;
       }
-
+      updateSize(id, width, height);
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
-      updateSize(id, width, height);
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
@@ -101,7 +100,7 @@ const ResizableBox: React.FC<{
         width = width + dx;
       }
 
-      updateSize(id, width, resizeableEle.style.height);
+      updateSize(id, width, parseInt(resizeableEle.style.height));
       resizeableEle.style.width = width + 'px';
     };
 
@@ -129,7 +128,7 @@ const ResizableBox: React.FC<{
       y = e.clientY;
       //   resizeableEle.style.top -= dy;
       resizeableEle.style.height = height + 'px';
-      updateSize(id, resizeableEle.style.width, height, 'top');
+      updateSize(id, parseInt(resizeableEle.style.width), height, 'top');
     };
 
     const onMouseUpTopResize = (event: Event) => {
@@ -156,7 +155,7 @@ const ResizableBox: React.FC<{
 
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
-      updateSize(id, resizeableEle.style.width, height);
+      updateSize(id, parseInt(resizeableEle.style.width), height);
     };
 
     const onMouseUpBottomResize = (event: Event) => {
@@ -183,7 +182,7 @@ const ResizableBox: React.FC<{
       // }
 
       resizeableEle.style.width = width + 'px';
-      updateSize(id, width, resizeableEle.style.height, 'left');
+      updateSize(id, width, parseInt(resizeableEle.style.height), 'left');
     };
 
     const onMouseUpLeftResize = (event: Event) => {

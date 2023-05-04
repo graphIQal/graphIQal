@@ -57,15 +57,6 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 		getNodesToDisplayGraph(nodeInView, allNodes, window, document)
 	);
 
-	console.log('allNodes');
-	console.log(allNodes);
-	console.log('nodesVisual');
-	console.log(nodesVisual);
-	console.log('nodeInView');
-	console.log(nodeInView);
-	console.log('nodesDisplayed');
-	console.log(nodesDisplayed);
-
 	useEffect(() => {
 		setNodesDisplayed(getNodesToDisplay(nodeInView, allNodes));
 		setNodesVisual(

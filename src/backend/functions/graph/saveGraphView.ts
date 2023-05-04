@@ -29,9 +29,14 @@ export const saveGraphView = async ({
 		fetcher
 	);
 
+	const body = JSON.stringify(nodes);
+
 	const res = await fetch(
 		`/api/${userId}/${currentNodeId}/graph/${graphViewId}/save`,
-		{}
+		{
+			method: 'POST',
+			body: body,
+		}
 	)
 		.then((res) => {
 			console.log('res ', res);

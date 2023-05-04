@@ -40,17 +40,13 @@ export const useDropNode = (
   translateY: number,
   scale: number
 ) => {
-  const { nodesDisplayed, setNodesDisplayed } = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+  const { nodesDisplayed, setNodesDisplayed, nodesVisual, setNodesVisual } =
+    useContext(GraphViewContext) as GraphViewContextInterface;
 
   const { setDrawingMode } = useContext(
     DrawingContext
   ) as DrawingContextInterface;
-  const moveNode = useCallback(moveNodeCallback, [
-    nodesDisplayed,
-    setNodesDisplayed,
-  ]);
+  const moveNode = useCallback(moveNodeCallback, [nodesVisual, setNodesVisual]);
   const context = useContext(GraphViewContext);
   return useDrop(
     () => ({

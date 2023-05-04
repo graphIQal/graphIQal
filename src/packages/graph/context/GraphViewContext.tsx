@@ -17,11 +17,11 @@ export type GraphViewContextInterface = {
 	setLines: (val: LineRefs[]) => void;
 	nodeInView: string; //ID of "centered" node (shows only its connections and relevant data), 'homenode' if no centered node
 	setNodeInView: (val: string) => void;
-	nodesDisplayed: { [key: string]: NodeData }; //The data of the nodes that are shown on the screen
-	setNodesDisplayed: (val: { [key: string]: NodeData }) => void;
+	nodeData_Graph: { [key: string]: NodeData }; //The data of the nodes that are shown on the screen
+	setnodeData_Graph: (val: { [key: string]: NodeData }) => void;
 
-	nodesVisual: { [key: string]: GraphNodeData };
-	setNodesVisual: (val: { [key: string]: GraphNodeData }) => void;
+	nodeVisualData_Graph: { [key: string]: GraphNodeData };
+	setnodeVisualData_Graph: (val: { [key: string]: GraphNodeData }) => void;
 	modalNode: string; //The node that will show in the popup modal
 	setModalNode: (val: string) => void;
 	userId: string;

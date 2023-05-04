@@ -41,7 +41,6 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 		fetcher
 	);
 
-	console.log(isLoading);
 	let nodeData: { [key: string]: NodeData } = {};
 	let visualData: { [key: string]: GraphNodeData } = {};
 	if (!isLoading) {
@@ -60,29 +59,30 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 	//Data of nodes to display (comes from Connection information between each node and the node in view)
 
 	// node data
-	const [nodesDisplayed, setNodesDisplayed] = useState(
+	const [nodeData_Graph, setnodeData_Graph] = useState(
 		// getNodesToDisplay(nodeInView, allNodes)
 		nodeData
 	);
 
-	// nodesVisual is
-	const [nodesVisual, setNodesVisual] = useState(visualData);
+	// nodeVisualData_Graph is
+	const [nodeVisualData_Graph, setnodeVisualData_Graph] =
+		useState(visualData);
 
-	console.log('nodesDisplayed');
-	console.log(nodesDisplayed);
-	console.log('nodesVisual');
-	console.log(nodesVisual);
+	console.log('nodeData_Graph');
+	console.log(nodeData_Graph);
+	console.log('nodeVisualData_Graph');
+	console.log(nodeVisualData_Graph);
 
 	useEffect(() => {
-		setNodesDisplayed(nodeData);
-		setNodesVisual(visualData);
+		setnodeData_Graph(nodeData);
+		setnodeVisualData_Graph(visualData);
 	}, [isLoading]);
 
 	//Line data
 	const [lines, setLines] = useState<LineRefs[]>([]);
 	// useEffect(() => {
-	//   setLines(getLines(nodesDisplayed, allNodes));
-	// }, [nodesDisplayed, allNodes]);
+	//   setLines(getLines(nodeData_Graph, allNodes));
+	// }, [nodeData_Graph, allNodes]);
 
 	//Drawing states
 	const containerRef = useRef(null);
@@ -148,16 +148,16 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 						lines,
 						setLines,
 						setNodeInView: setNodeInView,
-						nodesDisplayed: nodesDisplayed,
-						setNodesDisplayed: setNodesDisplayed,
-						nodesVisual: nodesVisual,
-						setNodesVisual: setNodesVisual,
+						nodeData_Graph: nodeData_Graph,
+						setnodeData_Graph: setnodeData_Graph,
+						nodeVisualData_Graph: nodeVisualData_Graph,
+						setnodeVisualData_Graph: setnodeVisualData_Graph,
 						modalNode: modalNode,
 						setModalNode: setModalNode,
 						nodeInView: nodeInView,
-						graphViewId: graphViewId,
-						username: username,
-						nodeId: nodeId,
+						graphViewId: graphViewId as string,
+						username: username as string,
+						nodeId: nodeId as string,
 					}}
 				>
 					<GraphContainer window={window} document={document} />

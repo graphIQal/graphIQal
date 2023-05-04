@@ -54,7 +54,7 @@ export const updateNode = (
 
   switch (type) {
     case 'drag':
-      const [x, y] = snapToGrid(newVal.x, newVal.y);
+      const [x, y] = [newVal.x, newVal.y];
       graphNodes[nodeID].x.low = x;
       graphNodes[nodeID].y.low = y;
 
@@ -62,32 +62,33 @@ export const updateNode = (
 
       break;
     case 'resize':
-      const [xNew, yNew] = snapToGrid(newVal.x, newVal.y);
       if (!graphNodes[nodeID].y || !graphNodes[nodeID].x) return;
       const newSize = [newVal.width, newVal.height];
       if (newVal.tag === 'top') {
         const val =
           graphNodes[nodeID].y.low + graphNodes[nodeID].height.low - newSize[1];
         if (Number.isFinite(val)) {
-          graphNodes[nodeID].y.low = calculateCellFromPixelY(val, document);
+          graphNodes[nodeID].y.low = val;
         }
       }
       if (newVal.tag === 'left') {
         const val =
-          graphNodes[nodeID].x + graphNodes[nodeID].size[0] - newSize[0];
-        if (Number.isFinite(val))
-          graphNodes[nodeID].xCell = calculateCellFromPixelX(val, document);
+          graphNodes[nodeID].x.low + graphNodes[nodeID].width.low - newSize[0];
+        if (Number.isFinite(val)) {
+          graphNodes[nodeID].x.low = val;
+        }
       }
-      graphNodes[nodeID].size = newSize;
+      graphNodes[nodeID].width.low = newSize[0];
+      graphNodes[nodeID].height.low = newSize[1];
       context?.setNodesVisual({ ...graphNodes });
       break;
 
     case 'title':
       nodeData[nodeID].title = newVal;
-      context?.setnodesDisplayed({ ...nodeData });
+      context?.setNodesDisplayed({ ...nodeData });
   }
-
-  console.log(nodeData['array']);
+  console.log('update');
+  console.log(graphNodes);
 };
 
 type LineUpdate = 'arrowAdd';

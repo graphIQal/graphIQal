@@ -7,7 +7,7 @@ import {
 } from '../../../schemas/Data_structures/DS_schema';
 
 type saveGraphViewInput = {
-	userId: string;
+	username: string;
 	nodeId: string;
 	// nodeTitle: string;
 	graphViewId: string;
@@ -16,39 +16,33 @@ type saveGraphViewInput = {
 };
 
 export const saveGraphView = async ({
-	userId,
+	username,
 	nodeId,
 	graphViewId,
 	graphViewData,
 	nodeData,
 }: saveGraphViewInput) => {
-	console.log('login attempted ');
+	console.log('Save graph view');
 
-	const { data: orders } = useSWR(
-		{
-			url: `/api/${userId}/${nodeId}/graph/${graphViewId}/create`,
-			// args: user,
-		},
-		fetcher
-	);
+	const body = { ...nodeData, ...graphViewData };
+	// const body = JSON.stringify({ ...nodeData, ...graphViewData });
+	console.log(body);
 
-	const body = JSON.stringify(nodes);
+	// const res = await fetch(
+	// 	`/api/${username}/${nodeId}/graph/${graphViewId}/save`,
+	// 	{
+	// 		method: 'POST',
+	// 		body: body,
+	// 	}
+	// )
+	// 	.then((res) => {
+	// 		console.log('res ', res);
+	// 		return res.json();
+	// 	})
+	// 	.then((json) => {
+	// 		console.log('json: ', json);
+	// 		return json;
+	// 	});
 
-	const res = await fetch(
-		`/api/${userId}/${nodeId}/graph/${graphViewId}/save`,
-		{
-			method: 'POST',
-			body: body,
-		}
-	)
-		.then((res) => {
-			console.log('res ', res);
-			return res.json();
-		})
-		.then((json) => {
-			console.log('json: ', json);
-			return json;
-		});
-
-	return res;
+	// return res;
 };

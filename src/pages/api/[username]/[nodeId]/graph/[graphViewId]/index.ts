@@ -11,10 +11,9 @@ export default async function handler(
 
 	// Add Hash for password}
 	const cypher = `
-	MATCH (o:Node {id: $nodeId})
-	MATCH (g:GRAPH_VIEW {id: $graphViewId})-[relationship:IN]-(node)
+	MATCH (o:Node {id: $nodeId}), (g:GRAPH_VIEW {id: $graphViewId})-[relationship:IN]-(node), (node)-[r]-(d)
 
-	RETURN node, relationship
+	RETURN node, relationship, collect(r {startNode: node.id, endNode: d.id}) AS connections
 	`;
 
 	const result: any = await write(cypher as string, params);

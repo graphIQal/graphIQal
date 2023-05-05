@@ -73,7 +73,11 @@ export const GraphContainer: React.FC<{
   //Lines and nodes to show
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
-  const { nodeData_Graph } = viewContext;
+  // const { lines, setLines, nodeData_Graph } = viewContext;
+
+  // useEffect(() => {
+  //   setLines([...lines]);
+  // }, [nodeData_Graph]);
 
   //DND
   const startPos = useRef<{ left: number; top: number }>();
@@ -114,7 +118,7 @@ export const GraphContainer: React.FC<{
       endNode.current !== '' &&
       startNode.current != endNode.current
     ) {
-      addLine(startNode.current, endNode.current, null, viewContext);
+      addLine(startNode.current, endNode.current, viewContext);
       // addAction({
       //   undo: { id: '', value: null, type: 'LINE' },
       //   redo: {

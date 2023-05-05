@@ -7,7 +7,6 @@ export const addLine = (
   viewContext: GraphViewContextInterface | null
 ) => {
   if (!viewContext) return;
-
   let newnodeData_Graph = { ...viewContext.nodeData_Graph };
   newnodeData_Graph[node1].connections[node2] = {
     startNode: node1,

@@ -4,21 +4,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import DrawingContext from '../context/GraphDrawingContext';
-import { LineRefs } from '../graphTypes';
-import GraphViewContext from '../context/GraphViewContext';
-import { BoxDragLayer } from '../helpers/BoxDragLayer';
-import { handleDrawingHotkey } from '../hooks/drawingHooks';
-import { GraphContainer } from './GraphContainer';
-import {
-  getAllNodes,
-  getLines,
-  getNodesToDisplay,
-  getNodesToDisplayGraph,
-} from '../../../helpers/backend/getHelpers';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
@@ -27,6 +13,11 @@ import {
   GraphNodeData,
   NodeData,
 } from '../../../schemas/Data_structures/DS_schema';
+import DrawingContext from '../context/GraphDrawingContext';
+import GraphViewContext from '../context/GraphViewContext';
+import { BoxDragLayer } from '../helpers/BoxDragLayer';
+import { handleDrawingHotkey } from '../hooks/drawingHooks';
+import { GraphContainer } from './GraphContainer';
 
 const Graph: React.FC<{ window: Window; document: Document }> = ({
   window,

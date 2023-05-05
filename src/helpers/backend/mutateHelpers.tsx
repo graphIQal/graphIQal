@@ -1,20 +1,9 @@
-import { randomUUID } from 'crypto';
-import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
-import {
-  ConnectionData,
-  GraphView,
-} from '../../schemas/Data_structures/DS_schema';
-import {
-  calculateCellFromPixelX,
-  calculateCellFromPixelY,
-} from '../../schemas/Data_structures/helpers';
 import { v4 as uuidv4 } from 'uuid';
-import { snapToGrid } from '../../packages/graph/helpers/snapping';
+import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
 
 export const addLine = (
   node1: string,
   node2: string,
-  startNode: string | null,
   viewContext: GraphViewContextInterface | null
 ) => {
   if (!viewContext) return;
@@ -24,13 +13,13 @@ export const addLine = (
     startNode: node1,
     endNode: node2,
     content: [],
-    type: 'includes',
+    type: 'IN',
   };
   newnodeData_Graph[node2].connections[node1] = {
     startNode: node2,
     endNode: node1,
     content: [],
-    type: 'included',
+    type: 'IN',
   };
   viewContext.setnodeData_Graph(newnodeData_Graph);
 };

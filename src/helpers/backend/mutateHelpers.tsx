@@ -80,12 +80,12 @@ export const updateLine = (
   lineID: string | number,
   newVal: any
 ) => {
-  const { lines, setLines } = context as GraphViewContextInterface;
+  const { nodeData_Graph, setnodeData_Graph } = context as GraphViewContextInterface;
   switch (type) {
     case 'arrowAdd':
-      const newLines = [...lines];
-      newLines[lineID as number].arrowStart = newVal.arrowStart;
-      setLines(newLines);
+      const newData = {...nodeData_Graph};
+	  newData[newVal.arrowStart].connections[]
+      
   }
 };
 

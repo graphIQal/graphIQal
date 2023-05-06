@@ -57,15 +57,12 @@ export const useDrawingEnd = (
     (points: Coord[], setPoints: (val: Coord[]) => void) => {
       setIsDrawing(false);
       const { circle, center, size } = isCircle(points);
-
+      console.log('scale' + scale);
       if (circle) {
         let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
         const [snappedX, snappedY] = snapToGrid(
-          center[0] / scale - 200 / 2 / scale + translateX / scale,
-          center[1] / scale +
-            getDy() / scale -
-            75 / 2 / scale +
-            translateY / scale
+          center[0] / scale - 200 / 2 + translateX / scale,
+          center[1] / scale + getDy() / scale - 75 / 2 + translateY / scale
         );
         const newSize = [dimension < 200 ? 200 : dimension, dimension];
 

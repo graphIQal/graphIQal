@@ -14,12 +14,12 @@ export const addLine = (
     content: [],
     type: 'IN',
   };
-  newnodeData_Graph[node2].connections[node1] = {
-    startNode: node2,
-    endNode: node1,
-    content: [],
-    type: 'IN',
-  };
+  // newnodeData_Graph[node2].connections[node1] = {
+  //   startNode: node2,
+  //   endNode: node1,
+  //   content: [],
+  //   type: 'IN',
+  // };
   viewContext.setnodeData_Graph(newnodeData_Graph);
 };
 
@@ -80,12 +80,13 @@ export const updateLine = (
   lineID: string | number,
   newVal: any
 ) => {
-  const { nodeData_Graph, setnodeData_Graph } = context as GraphViewContextInterface;
+  console.log('updating line');
+  const { nodeData_Graph, setnodeData_Graph } =
+    context as GraphViewContextInterface;
   switch (type) {
     case 'arrowAdd':
-      const newData = {...nodeData_Graph};
-	  newData[newVal.arrowStart].connections[]
-      
+      const newData = { ...nodeData_Graph };
+      newData[newVal.arrowStart].connections;
   }
 };
 

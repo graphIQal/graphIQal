@@ -7,6 +7,7 @@
 
 import Head from 'next/head';
 import React from 'react';
+import { useState } from 'react';
 
 import '../App.css';
 import '../packages/resizable/resizable.css';
@@ -19,8 +20,30 @@ import '../components/atoms/atoms.css';
 
 import View from '../components/layouts/View';
 import Window from '../components/layouts/Window';
+import TabContext from '../components/context/TabContext';
 
 export default function MyApp({ Component, pageProps }) {
+  const [tabs, setTabs] = useState([
+    {
+      label: 'Dependencies',
+      children: '',
+    },
+    {
+      label: 'Chronological',
+      children: '',
+    },
+  ]);
+
+  const [secondaryTabs, setSecondaryTabs] = useState([
+    {
+      label: 'Connections',
+      children: '',
+    },
+    {
+      label: 'Content',
+      children: '',
+    },
+  ]);
   return (
     <>
       <Head>
@@ -30,7 +53,16 @@ export default function MyApp({ Component, pageProps }) {
       <main>
         <Window>
           <View>
-            <Component {...pageProps} />
+            <TabContext.Provider
+              value={{
+                mainViewTabs: tabs,
+                sidePanelTabs: secondaryTabs,
+                setMainViewTabs: setTabs,
+                setSidePanelTabs: setSecondaryTabs,
+              }}
+            >
+              <Component {...pageProps} />
+            </TabContext.Provider>
           </View>
         </Window>
       </main>

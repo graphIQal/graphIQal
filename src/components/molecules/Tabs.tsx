@@ -1,25 +1,20 @@
 import React, { useContext, useState } from 'react';
-import { Tab, TabProps } from '../atoms/Tab';
+import { Tab } from '../atoms/Tab';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../packages/graph/context/GraphViewContext';
+import { TabProps } from '../context/TabContext';
 
-export const Tabs: React.FC = () => {
-  //   const { graphViewId } = useContext(
-  //     GraphViewContext
-  //   ) as GraphViewContextInterface;
-  const graphViewId = '';
+export const Tabs: React.FC<{
+  tabs: TabProps[];
+  setTabs: (val: TabProps[]) => void;
+}> = ({ tabs, setTabs }) => {
   const [activeTab, setActiveTab] = useState(0);
-  const [tabs, setTabs] = useState([
-    {
-      label: 'Dependencies',
-      viewId: graphViewId,
-    },
-    {
-      label: 'Chronological',
-      viewId: graphViewId,
-    },
-  ]);
+  const [lastActiveTab, setLastActiveTab] = useState(0);
+
+  console.log('active ' + activeTab);
+  console.log('last active ' + lastActiveTab);
+
   return (
     <div className='flex flex-row bg-blue-50 w-full'>
       {tabs.map((tab, index) => {
@@ -29,8 +24,16 @@ export const Tabs: React.FC = () => {
             activeTab={activeTab}
             index={index}
             viewId={tab.viewId}
-            onClick={() => setActiveTab(index)}
-            onClose={() => setTabs(tabs.filter((tab, i) => i != index))}
+            onClick={() => {
+              setLastActiveTab(activeTab);
+              setActiveTab(index);
+            }}
+            onClose={() => {
+              if (activeTab == index) {
+                setActiveTab(lastActiveTab);
+              }
+              setTabs(tabs.filter((tab, i) => i != index));
+            }}
           />
         );
       })}

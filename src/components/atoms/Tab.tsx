@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import IconButton from './IconButton';
 import IconCircleButton from '../molecules/IconCircleButton';
 
-export type TabProps = {
+type TabProps = {
   label: string;
   viewId: string;
   onClick: () => void;
@@ -22,7 +22,6 @@ export const Tab: React.FC<TabProps> = ({
 
   return (
     <div
-      onClick={onClick}
       onMouseOver={() => setShowDel(true)}
       onMouseLeave={() => setShowDel(false)}
       className={
@@ -30,7 +29,9 @@ export const Tab: React.FC<TabProps> = ({
         (active && ' bg-base_white')
       }
     >
-      <h3>{label}</h3>
+      <div onClick={onClick}>
+        <h3>{label}</h3>
+      </div>
       {showDel && (
         <IconCircleButton src='remove' circle={false} onClick={onClose} />
       )}

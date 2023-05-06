@@ -31,6 +31,9 @@ import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
 import { usePanAndZoom } from '../hooks/zoomingHooks';
 import { Tabs } from '../../../components/molecules/Tabs';
+import TabContext, {
+  TabContextInterface,
+} from '../../../components/context/TabContext';
 
 export const GraphContainer: React.FC<{
   window: Window;
@@ -76,9 +79,10 @@ export const GraphContainer: React.FC<{
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
   // const { lines, setLines, nodeData_Graph } = viewContext;
 
-  // useEffect(() => {
-  //   setLines([...lines]);
-  // }, [nodeData_Graph]);
+  //Tabs
+  const { mainViewTabs, setMainViewTabs } = useContext(
+    TabContext
+  ) as TabContextInterface;
 
   //DND
   const startPos = useRef<{ left: number; top: number }>();
@@ -160,7 +164,7 @@ export const GraphContainer: React.FC<{
         // addAction: addAction,
       }}
     >
-      <Tabs tabs={[]} />
+      <Tabs tabs={mainViewTabs} setTabs={setMainViewTabs} />
       <div className='h-full w-full' id='parent' ref={drop}>
         <Filtering
           xCategory={xCategory}

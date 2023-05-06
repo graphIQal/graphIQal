@@ -4,7 +4,7 @@ import {
   ELEMENT_H1,
   Plate,
 } from '@udecode/plate';
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
@@ -21,6 +21,9 @@ import { FormatPlugins } from './Plugins/FormatPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 import { Tabs } from '../../components/molecules/Tabs';
+import TabContext, {
+  TabContextInterface,
+} from '../../components/context/TabContext';
 
 const EditorComponent: React.FC = () => {
   const [value, setValue] = useState([
@@ -67,10 +70,13 @@ const EditorComponent: React.FC = () => {
   // const renderElement = useCallback((props: any) => {
   // 	return <Block {...props} />;
   // }, []);
+  const { sidePanelTabs, setSidePanelTabs } = useContext(
+    TabContext
+  ) as TabContextInterface;
 
   return (
     <div>
-      <Tabs />
+      <Tabs tabs={sidePanelTabs} setTabs={setSidePanelTabs} />
       <Plate<MyValue>
         editableProps={editableProps}
         value={value}

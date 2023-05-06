@@ -80,7 +80,6 @@ export const updateLine = (
   lineID: string | number,
   newVal: any
 ) => {
-  console.log('updating line');
   const { nodeData_Graph, setnodeData_Graph } =
     context as GraphViewContextInterface;
   switch (type) {

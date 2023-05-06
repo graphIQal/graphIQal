@@ -68,6 +68,8 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
   // nodeVisualData_Graph is
   const [nodeVisualData_Graph, setnodeVisualData_Graph] = useState(visualData);
 
+  const [currGraphViewId, setCurrGraphViewId] = useState(graphViewId as string);
+
   console.log('nodeData_Graph');
   console.log(nodeData_Graph);
   console.log('nodeVisualData_Graph');
@@ -143,7 +145,8 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
             modalNode: modalNode,
             setModalNode: setModalNode,
             nodeInView: nodeInView,
-            graphViewId: graphViewId as string,
+            graphViewId: currGraphViewId as string,
+            setGraphViewId: setCurrGraphViewId,
             username: username as string,
             nodeId: nodeId as string,
           }}

@@ -15,6 +15,7 @@ type NodeButtonProps = {
   src: string;
   selected?: boolean;
   size?: number;
+  circle?: boolean;
 };
 
 //filled circle button with plus icon button inside
@@ -24,6 +25,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
   src,
   selected = false,
   size = 30,
+  circle = true,
 }) => {
   const iconSize = size * 0.5;
   const icons: any = {
@@ -87,11 +89,15 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
   };
   return (
     <div className='hover:cursor-pointer hover:opacity-80'>
-      <Circle
-        diameter={size}
-        children={<IconButton onClick={onClick} src={icons[src]} />}
-        backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
-      />
+      {circle ? (
+        <Circle
+          diameter={size}
+          children={<IconButton onClick={onClick} src={icons[src]} />}
+          backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
+        />
+      ) : (
+        <IconButton onClick={onClick} src={icons[src]} />
+      )}
     </div>
   );
 };

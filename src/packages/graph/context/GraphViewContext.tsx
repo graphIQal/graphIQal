@@ -25,6 +25,7 @@ export type GraphViewContextInterface = {
   username: string;
   nodeId: string;
   graphViewId: string;
+  setGraphViewId: (val: string) => void;
 };
 
 const GraphViewContext = createContext<GraphViewContextInterface | null>(null);

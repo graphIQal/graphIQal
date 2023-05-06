@@ -30,6 +30,7 @@ import { Action } from '../hooks/useHistoryState';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
 import { usePanAndZoom } from '../hooks/zoomingHooks';
+import { Tabs } from '../../../components/molecules/Tabs';
 
 export const GraphContainer: React.FC<{
   window: Window;
@@ -159,6 +160,7 @@ export const GraphContainer: React.FC<{
         // addAction: addAction,
       }}
     >
+      <Tabs tabs={[]} />
       <div className='h-full w-full' id='parent' ref={drop}>
         <Filtering
           xCategory={xCategory}

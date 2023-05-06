@@ -101,11 +101,10 @@ export const GraphNode: FC<NodeProps> = ({
         id={id}
       ></div>
       <ResizableBox
-        classes='p-sm overflow-hidden h-full w-full bg-base_white min-w-[10rem]  h-12 rounded-sm border-grey border-[1px] flex flex-row items-center align-middle z-10 p-3 gap-x-3 '
+        classes='p-sm overflow-hidden h-full w-full bg-base_white  h-12 rounded-sm border-grey border-[1px] flex flex-row items-center align-middle z-10 p-3 gap-x-3 '
         style={{
           width: size[0],
           height: size[1],
-
           left,
           top,
         }}

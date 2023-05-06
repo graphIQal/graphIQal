@@ -57,6 +57,7 @@ export const useDrawingEnd = () => {
           center[1] - 75 / 2
         );
         const newSize = [dimension, dimension];
+        console.log('new size' + newSize);
 
         addNode(context, newSize, snappedX, snappedY);
         // addAction({

@@ -77,16 +77,18 @@ export const useDrawingEnd = () => {
                 endPoint
               );
               if (result > 0) {
-                const arrowStart = calcArrowStart(
+                console.log('in func ' + func);
+                const { arrowStart, arrowEnd } = calcArrowStart(
                   startPoint,
                   middlePoint,
                   endPoint,
                   func,
                   context
                 );
-
+                console.log('arrow start ' + arrowStart);
                 updateLine(context, 'arrowAdd', func, {
                   arrowStart: arrowStart,
+                  arrowEnd: arrowEnd,
                 });
                 break;
               }

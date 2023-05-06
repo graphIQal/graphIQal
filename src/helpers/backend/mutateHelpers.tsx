@@ -12,7 +12,7 @@ export const addLine = (
     startNode: node1,
     endNode: node2,
     content: [],
-    type: 'IN',
+    type: 'RELATED',
   };
   // newnodeData_Graph[node2].connections[node1] = {
   //   startNode: node2,
@@ -84,8 +84,19 @@ export const updateLine = (
     context as GraphViewContextInterface;
   switch (type) {
     case 'arrowAdd':
+      console.log('val');
+      console.log(newVal);
       const newData = { ...nodeData_Graph };
-      newData[newVal.arrowStart].connections;
+      newData[newVal.arrowStart].connections[newVal.arrowEnd] = {
+        ...newData[newVal.arrowEnd].connections[newVal.arrowStart],
+        startNode: newVal.arrowStart,
+        endNode: newVal.arrowEnd,
+        type: 'IN',
+      };
+      delete newData[newVal.arrowEnd].connections[newVal.arrowStart];
+      console.log('new data');
+      console.log(newData);
+      context?.setnodeData_Graph(newData);
   }
 };
 
@@ -137,15 +148,9 @@ export const changeConnectionType = (
   const newNodes = { ...viewContext.nodeData_Graph };
   if (newNodes[start].connections[end].type == type) return;
   newNodes[start].connections[end].type = type;
-  newNodes[end].connections[start].type = type;
+  // newNodes[end].connections[start].type = type;
 
   viewContext.setnodeData_Graph(newNodes);
-
-  for (let node in viewContext.nodeData_Graph) {
-    if (Object.keys(viewContext.nodeData_Graph).includes(node)) {
-      console.log('node ' + JSON.stringify(viewContext.nodeData_Graph[node]));
-    }
-  }
 };
 
 export const deleteConnection = (

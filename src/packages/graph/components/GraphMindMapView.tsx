@@ -23,6 +23,7 @@ import {
 } from '../hooks/drawingHooks';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
+import { isLineDirectional } from '../../../helpers/backend/getHelpers';
 
 type MindMapProps = {
   points: any;
@@ -82,10 +83,12 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
                 key={i}
                 from={node}
                 to={line}
-                id={i}
-                arrow={node}
+                id={node + '_' + line}
+                arrow={isLineDirectional(
+                  nodeData_Graph[node].connections[line]
+                )}
                 translateX={translateX ? translateX : 0}
-                translateY={translateY ? translateX : 0}
+                translateY={translateY ? translateY : 0}
                 getDropDownItems={getDropdownItems}
                 deleteConnection={(from: string, to: string) =>
                   deleteConnection(from, to, viewContext)

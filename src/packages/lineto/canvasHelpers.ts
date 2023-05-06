@@ -34,8 +34,8 @@ export const isPointInCanvas = (
   if (
     point.x > canvasStartPoint.x &&
     point.x < canvasStartPoint.x + canvasWidth &&
-    point.y > canvasStartPoint.y &&
-    point.y < canvasStartPoint.y + canvasHeight
+    point.y > canvasStartPoint.y - getDy() &&
+    point.y < canvasStartPoint.y - getDy() + canvasHeight
   ) {
     return true;
   }

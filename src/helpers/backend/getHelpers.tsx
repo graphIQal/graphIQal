@@ -30,11 +30,12 @@ export const getLineDataEndpoints = (
   context: GraphViewContextInterface | null,
   lineID: string
 ) => {
-  const node1 = context?.lines[lineID as any].start;
-  const data1 = context?.nodeVisualData_Graph[node1 as any];
+  const nodes = lineID.split('_');
+  const node1 = nodes[0];
+  const data1 = context?.nodeVisualData_Graph[node1];
 
-  const node2 = context?.lines[lineID as any].end;
-  const data2 = context?.nodeVisualData_Graph[node2 as any];
+  const node2 = nodes[1];
+  const data2 = context?.nodeVisualData_Graph[node2];
 
   return {
     x1: data1?.x,
@@ -339,4 +340,12 @@ export const getNodeTags = (
 
 export const getNodeTitle = (node: string) => {
   return titles[node];
+};
+
+export const isLineDirectional = (connection: ConnectionData) => {
+  return (
+    connection.type == 'IN' ||
+    connection.type == 'DEPENDS_ON' ||
+    connection.type == 'FOLLOWS'
+  );
 };

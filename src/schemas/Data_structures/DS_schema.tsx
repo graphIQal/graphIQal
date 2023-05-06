@@ -58,9 +58,10 @@ export type VisualData = {
 };
 
 export const ConnectionTypes = {
-  includes: 'Includes',
-  dependency: 'Dependency',
-  chronology: 'Chronology',
+  IN: 'Includes',
+  DEPENDS_ON: 'Dependency',
+  FOLLOWS: 'Chronology',
+  RELATED: 'No Type',
 };
 
 export const ids = [

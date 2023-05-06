@@ -12,9 +12,6 @@ export const Tabs: React.FC<{
   const [activeTab, setActiveTab] = useState(0);
   const [lastActiveTab, setLastActiveTab] = useState(0);
 
-  console.log('active ' + activeTab);
-  console.log('last active ' + lastActiveTab);
-
   return (
     <div className='flex flex-row bg-blue-50 w-full'>
       {tabs.map((tab, index) => {

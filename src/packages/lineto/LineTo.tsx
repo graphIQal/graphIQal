@@ -40,7 +40,7 @@ type LineToPropTypes = {
   id: any;
   from: string;
   to: string;
-  arrow: string | null;
+  arrow: boolean;
   translateX: number;
   translateY: number;
   getDropDownItems: (from: string, to: string) => ItemProps[];
@@ -123,7 +123,7 @@ type ArrowProps = {
   y0?: any;
   x1?: any;
   y1?: any;
-  arrow: string | null;
+  arrow: boolean;
   getDropdownItems: () => ItemProps[];
   deleteConnection: () => void;
   anchor0?: any;
@@ -220,7 +220,7 @@ export const Arrow = ({
     [points]
   );
 
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(true);
 
   useEffect(() => {
     var path = document.getElementById('line' + id) as HTMLElement &
@@ -276,7 +276,7 @@ export const Arrow = ({
         ${p4.x}, ${p4.y} 
       `}
         />
-        {arrow != null && (
+        {arrow && (
           <path
             d={`
       M ${(arrowHeadEndingSize / 5) * 2} 0

@@ -137,7 +137,7 @@ export const GraphContainer: React.FC<{
 
   const handleStartPoint = useDrawingStart();
   const handleDrawing = useDrawingCanvas();
-  const handleDrawingEnd = useDrawingEnd();
+  const handleDrawingEnd = useDrawingEnd(translateX, translateY, scale);
 
   //Pinching hook
   // const handlePinch = usePinch();

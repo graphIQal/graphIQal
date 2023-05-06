@@ -120,8 +120,6 @@ export const getConnectionInfo = (
 };
 
 export const getAllNodes = (data: any): { [key: string]: Node } => {
-  console.log('data');
-  console.log(data);
   // const nodesData: { [key: string]: Node } = {};
   // console.log('data');
   // console.log(data);

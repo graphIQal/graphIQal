@@ -2,7 +2,7 @@
  * Helper functions for the arrow drawing
  */
 
-import { Coord } from '../../pages/graph/hooks/drawingHooks';
+import { Coord } from '../graph/hooks/drawingHooks';
 import { getDy } from '../graph/hooks/useCanvas';
 
 //Calculates delta and absolute delta between two given points
@@ -221,14 +221,13 @@ export const numPointsInTriangle = (
   let numPoints = 0;
   for (let p in points) {
     let point = points[p];
-    point.y -= getDy();
-    const AP = { x: point.x - a.x, y: point.y - a.y };
+    const AP = { x: point.x - a.x, y: point.y - getDy() - a.y };
     const thirdTermABxAPisPositive = AB.x * AP.y - AB.y * AP.x > 0;
     const thirdTermACxAPisPositive = AC.x * AP.y - AC.y * AP.x > 0;
 
     if (thirdTermACxAPisPositive == thirdTermABxAPisPositive) continue;
 
-    const BP = { x: point.x - b.x, y: point.y - b.y };
+    const BP = { x: point.x - b.x, y: point.y - getDy() - b.y };
     const thirdTermBCxBPisPositive = BC.x * BP.y - BC.y * BP.x > 0;
 
     if (thirdTermBCxBPisPositive != thirdTermABxAPisPositive) continue;

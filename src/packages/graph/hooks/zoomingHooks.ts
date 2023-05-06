@@ -24,6 +24,7 @@ export const usePanAndZoom = (containerRef: MutableRefObject<any>) => {
   };
   return {
     ...state,
+    translateXTemp: state.translateX,
     containerRef,
     onWheel,
   };

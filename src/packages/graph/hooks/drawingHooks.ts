@@ -11,6 +11,9 @@ import GraphViewContext from '../context/GraphViewContext';
 import { calcArrowStart, isArrow, isCircle } from '../helpers/drawingEvents';
 import { snapToGrid } from '../helpers/snapping';
 import { getDy } from './useCanvas';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../context/GraphActionContext';
 
 export type Coord = {
   x: number;
@@ -42,7 +45,11 @@ export const useDrawingCanvas = () => {
 };
 
 //When user stops drawing at any point in the canvas except for when completing a line
-export const useDrawingEnd = () => {
+export const useDrawingEnd = (
+  translateX: number,
+  translateY: number,
+  scale: number
+) => {
   const context = useContext(GraphViewContext);
   const { setIsDrawing, isPointInCanvasFuncs, numPointsInTriangleFuncs } =
     useContext(DrawingContext) as DrawingContextInterface;
@@ -54,8 +61,11 @@ export const useDrawingEnd = () => {
       if (circle) {
         let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
         const [snappedX, snappedY] = snapToGrid(
-          center[0] - 200 / 2,
-          center[1] - 75 / 2 + getDy()
+          center[0] / scale - 200 / 2 / scale + translateX / scale,
+          center[1] / scale +
+            getDy() / scale -
+            75 / 2 / scale +
+            translateY / scale
         );
         const newSize = [dimension < 200 ? 200 : dimension, dimension];
 
@@ -76,8 +86,8 @@ export const useDrawingEnd = () => {
                 middlePoint,
                 endPoint
               );
+
               if (result > 0) {
-                console.log('in func ' + func);
                 const { arrowStart, arrowEnd } = calcArrowStart(
                   startPoint,
                   middlePoint,
@@ -85,7 +95,7 @@ export const useDrawingEnd = () => {
                   func,
                   context
                 );
-                console.log('arrow start ' + arrowStart);
+
                 updateLine(context, 'arrowAdd', func, {
                   arrowStart: arrowStart,
                   arrowEnd: arrowEnd,
@@ -98,7 +108,7 @@ export const useDrawingEnd = () => {
       }
       setPoints([]);
     },
-    [context]
+    [context, translateX, translateY, scale]
   );
 };
 

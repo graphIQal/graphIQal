@@ -24,6 +24,9 @@ import {
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
 import { isLineDirectional } from '../../../helpers/backend/getHelpers';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../context/GraphActionContext';
 
 type MindMapProps = {
   points: any;
@@ -48,10 +51,6 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 
   const { nodeData_Graph, nodeVisualData_Graph, setnodeVisualData_Graph } =
     viewContext;
-
-  // useEffect(() => {
-  // 	setLines([...lines]);
-  // }, [translateX]);
 
   const getDropdownItems = (from: string, to: string) => {
     const items: ItemProps[] = [];

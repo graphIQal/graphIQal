@@ -152,7 +152,7 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
           }}
         >
           <GraphContainer window={window} document={document} />
-          <BoxDragLayer parentRef={containerRef} />
+          {/* <BoxDragLayer parentRef={containerRef} /> */}
         </GraphViewContext.Provider>
       </DrawingContext.Provider>
     </div>

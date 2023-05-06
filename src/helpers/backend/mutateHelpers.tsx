@@ -148,7 +148,9 @@ export const changeConnectionType = (
   const newNodes = { ...viewContext.nodeData_Graph };
   if (newNodes[start].connections[end].type == type) return;
   newNodes[start].connections[end].type = type;
-  // newNodes[end].connections[start].type = type;
+  if (newNodes[end].connections[start]) {
+    newNodes[end].connections[start].type = type;
+  }
 
   viewContext.setnodeData_Graph(newNodes);
 };

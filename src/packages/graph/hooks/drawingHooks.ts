@@ -10,6 +10,7 @@ import DrawingContext, {
 import GraphViewContext from '../context/GraphViewContext';
 import { calcArrowStart, isArrow, isCircle } from '../helpers/drawingEvents';
 import { snapToGrid } from '../helpers/snapping';
+import { getDy } from './useCanvas';
 
 export type Coord = {
   x: number;
@@ -54,10 +55,9 @@ export const useDrawingEnd = () => {
         let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
         const [snappedX, snappedY] = snapToGrid(
           center[0] - 200 / 2,
-          center[1] - 75 / 2
+          center[1] - 75 / 2 + getDy()
         );
-        const newSize = [dimension, dimension];
-        console.log('new size' + newSize);
+        const newSize = [dimension < 200 ? 200 : dimension, dimension];
 
         addNode(context, newSize, snappedX, snappedY);
         // addAction({

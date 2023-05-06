@@ -245,7 +245,7 @@ export const Arrow = ({
           className='absolute w-max'
           style={{ left: p1.x + canvasXOffset, top: p1.y + canvasYOffset }}
         >
-          <Dropdown items={getDropdownItems()} />
+          <Dropdown items={getDropdownItems()} activeIndex={0} />
           {/* <IconCircleButton onClick={deleteConnection} src='remove' /> */}
         </div>
       )}

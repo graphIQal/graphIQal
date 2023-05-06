@@ -33,7 +33,7 @@ export const PillMenu: React.FC<{
       </div>
       {showDropdown && (
         <div className='w-full relative'>
-          <Dropdown items={dropdownItems} />
+          <Dropdown items={dropdownItems} activeIndex={0} />
         </div>
       )}
     </div>

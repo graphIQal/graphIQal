@@ -43,8 +43,8 @@ const CollapsedGraphNode: React.FC<{ title: string; id: string }> = ({
           <input
             type='text'
             name='name'
+            id='collapsed_node'
             defaultValue={title}
-            className='text-sm'
             onChange={(newVal: any) =>
               updateNode('title', newVal.target.value, id, viewContext)
             }

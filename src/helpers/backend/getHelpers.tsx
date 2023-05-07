@@ -347,3 +347,11 @@ export const isLineDirectional = (connection: ConnectionData) => {
     connection.type == 'FOLLOWS'
   );
 };
+
+export const getConnectionType = (
+  from: string,
+  to: string,
+  context: GraphViewContextInterface
+) => {
+  return context.nodeData_Graph[from].connections[to].type;
+};

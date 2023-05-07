@@ -1,6 +1,5 @@
 import React, { MutableRefObject, useEffect, useRef } from 'react';
 import ToolbarButton from '../molecules/ToolbarButton';
-import './organisms.css';
 
 type ToolbarButtonProps = {
   buttonText: String;

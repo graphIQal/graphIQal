@@ -23,7 +23,11 @@ import {
 } from '../hooks/drawingHooks';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
-import { isLineDirectional } from '../../../helpers/backend/getHelpers';
+import {
+  getConnectionInfo,
+  getConnectionType,
+  isLineDirectional,
+} from '../../../helpers/backend/getHelpers';
 import GraphActionContext, {
   GraphActionContextInterface,
 } from '../context/GraphActionContext';
@@ -53,12 +57,16 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
     viewContext;
 
   const getDropdownItems = (from: string, to: string) => {
+    let activeIndex = 0;
     const items: ItemProps[] = [];
     Object.keys(ConnectionTypes).map((connection: string, i: number) => {
       items.push({
         text: (ConnectionTypes as any)[connection],
         onPress: () => changeConnectionType(from, to, connection, viewContext),
       });
+      if (getConnectionType(from, to, viewContext) == connection) {
+        activeIndex = i;
+      }
     });
     items.push({
       text: 'Delete Connection',
@@ -66,7 +74,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
       icon: 'remove',
     });
 
-    return items;
+    return { items, activeIndex };
   };
 
   const { startNode, endNode, drawingMode, isDrawing, setIsDrawing } =
@@ -86,8 +94,6 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
                 arrow={isLineDirectional(
                   nodeData_Graph[node].connections[line]
                 )}
-                translateX={translateX ? translateX : 0}
-                translateY={translateY ? translateY : 0}
                 getDropDownItems={getDropdownItems}
                 deleteConnection={(from: string, to: string) =>
                   deleteConnection(from, to, viewContext)

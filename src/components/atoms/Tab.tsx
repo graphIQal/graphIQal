@@ -25,7 +25,7 @@ export const Tab: React.FC<TabProps> = ({
       onMouseOver={() => setShowDel(true)}
       onMouseLeave={() => setShowDel(false)}
       className={
-        ' w-36 border-x-[0.5px] border-lining p-2 text-sm hover:cursor-pointer hover:bg-base_white flex flex-row align-middle items-center justify-between ' +
+        ' w-36 border-x-[0.5px] border-lining p-2 text-sm hover:cursor-pointer hover:bg-base_white flex flex-row align-middle items-center justify-between align-middle ' +
         (active && ' bg-base_white')
       }
     >
@@ -33,7 +33,7 @@ export const Tab: React.FC<TabProps> = ({
         <h3>{label}</h3>
       </div>
       {showDel && (
-        <IconCircleButton src='remove' circle={false} onClick={onClose} />
+        <IconCircleButton src='close' circle={false} onClick={onClose} />
       )}
     </div>
   );

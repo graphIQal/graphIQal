@@ -12,7 +12,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-
 import {
   calculateControlPointsWithBuffer,
   calculateDeltas,
@@ -41,9 +40,10 @@ type LineToPropTypes = {
   from: string;
   to: string;
   arrow: boolean;
-  translateX: number;
-  translateY: number;
-  getDropDownItems: (from: string, to: string) => ItemProps[];
+  getDropDownItems: (
+    from: string,
+    to: string
+  ) => { items: ItemProps[]; activeIndex: number };
   deleteConnection: (from: string, to: string) => void;
   fromAnchor?: any;
   toAnchor?: any;
@@ -56,6 +56,7 @@ type LineToPropTypes = {
 };
 
 export const LineTo: React.FC<LineToPropTypes> = (props) => {
+  if (props.from == props.to) return <div></div>;
   const [fromAnchor, setFromAnchor] = useState<any>();
   const [toAnchor, setToAnchor] = useState<any>();
   useEffect(() => {
@@ -110,8 +111,6 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
       {...points}
       getDropdownItems={() => props.getDropDownItems(props.from, props.to)}
       deleteConnection={() => props.deleteConnection(props.from, props.to)}
-      translateY={props.translateY}
-      translateX={props.translateX}
     />
   );
 };
@@ -124,7 +123,7 @@ type ArrowProps = {
   x1?: any;
   y1?: any;
   arrow: boolean;
-  getDropdownItems: () => ItemProps[];
+  getDropdownItems: () => { items: ItemProps[]; activeIndex: number };
   deleteConnection: () => void;
   anchor0?: any;
   anchor1?: any;
@@ -133,8 +132,6 @@ type ArrowProps = {
   borderWidth?: number | undefined;
   className?: string | undefined;
   zIndex?: number | undefined;
-  translateX: number;
-  translateY: number;
 };
 
 export const Arrow = ({
@@ -148,8 +145,6 @@ export const Arrow = ({
   arrow,
   getDropdownItems,
   deleteConnection,
-  translateX,
-  translateY,
 }: ArrowProps) => {
   const { isPointInCanvasFuncs, numPointsInTriangleFuncs } = useContext(
     DrawingContext
@@ -220,7 +215,7 @@ export const Arrow = ({
     [points]
   );
 
-  const [showDropdown, setShowDropdown] = useState(true);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     var path = document.getElementById('line' + id) as HTMLElement &
@@ -240,15 +235,26 @@ export const Arrow = ({
 
   return (
     <div id='container' className='relative'>
-      {showDropdown && (
-        <div
-          className='absolute w-max'
-          style={{ left: p1.x + canvasXOffset, top: p1.y + canvasYOffset }}
-        >
-          <Dropdown items={getDropdownItems()} activeIndex={0} />
-          {/* <IconCircleButton onClick={deleteConnection} src='remove' /> */}
-        </div>
-      )}
+      <div
+        className='absolute w-max z-30'
+        style={{
+          left: (p1.x + p4.x) / 2 + canvasXOffset - 15,
+          top: (p1.y + p4.y) / 2 + canvasYOffset - 15,
+        }}
+      >
+        <IconCircleButton
+          selected={showDropdown}
+          onClick={() => setShowDropdown(!showDropdown)}
+          src='connection'
+        />
+        {showDropdown && (
+          <Dropdown
+            items={getDropdownItems().items}
+            activeIndex={getDropdownItems().activeIndex}
+          />
+        )}
+      </div>
+
       <svg
         width={canvasWidth}
         id='svg'

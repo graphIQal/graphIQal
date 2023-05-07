@@ -55,6 +55,8 @@ export const reducer = (state: State, action: any) => {
       // let newScale = state.scale - action.deltaY * 0.01;
       let scaleChange = 2 ** (action.deltaY * 0.005);
       let newScale = state.scale + (1 - scaleChange);
+      if (newScale > 3) newScale = 3;
+      if (newScale < 0.3) newScale = 0.3;
       // const mousePos = clientPosToTranslatedPos(
       //   { x: action.clientX, y: action.clientY },
       //   { x: state.currDeltaX, y: state.currDeltaY },
@@ -76,8 +78,6 @@ export const reducer = (state: State, action: any) => {
         state.containerRect = action.containerRect;
       }
 
-      console.log('currtranslation');
-      console.log(state.currTranslation);
       let transformOriginX =
         state.containerRect.x + state.containerRect.width / 2;
       let transformOriginY =
@@ -89,8 +89,7 @@ export const reducer = (state: State, action: any) => {
       state.currDeltaX = state.currTranslation.x + displacementX * scaleToAdd;
       state.currDeltaY = state.currTranslation.y + displacementY * scaleToAdd;
       // state.scale -= action.deltaY * 0.01;
-      // if (state.scale > 1.5) state.scale = 1.5;
-      // if (state.scale < 0.6) state.scale = 0.6;
+
       // const scaledTranslate = getScaledTranslate(state, action);
       // const mousePositionOnScreen = { x: action.clientX, y: action.clientY };
       // const zoomOffset = getZoomOffset(

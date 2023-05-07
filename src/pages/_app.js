@@ -17,6 +17,7 @@ import '../components/molecules/molecules.css';
 import '../components/organisms/split-pane/pane.css';
 import '../packages/editor/editor.css';
 import '../components/atoms/atoms.css';
+import '../components/organisms/organisms.css';
 
 import View from '../components/layouts/View';
 import Window from '../components/layouts/Window';

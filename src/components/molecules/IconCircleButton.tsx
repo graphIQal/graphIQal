@@ -10,6 +10,9 @@ import { Flashlight } from '@styled-icons/fluentui-system-filled/Flashlight';
 import { Navigation } from '@styled-icons/boxicons-regular/Navigation';
 import { ArrowsAngleExpand } from '@styled-icons/bootstrap/ArrowsAngleExpand';
 import { Trash } from '@styled-icons/bootstrap/Trash';
+import { Connectdevelop } from '@styled-icons/fa-brands/Connectdevelop';
+import { CloseOutline } from '@styled-icons/evaicons-outline/CloseOutline';
+
 type NodeButtonProps = {
   onClick: () => void;
   src: string;
@@ -81,6 +84,20 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
     ),
     remove: (
       <Trash
+        color={!selected ? 'black' : 'white'}
+        onClick={onClick}
+        size={iconSize}
+      />
+    ),
+    connection: (
+      <Connectdevelop
+        color={!selected ? 'black' : 'white'}
+        onClick={onClick}
+        size={iconSize}
+      />
+    ),
+    close: (
+      <CloseOutline
         color={!selected ? 'black' : 'white'}
         onClick={onClick}
         size={iconSize}

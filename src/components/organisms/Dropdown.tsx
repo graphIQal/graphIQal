@@ -19,7 +19,7 @@ export const Dropdown: React.FC<{
           <div
             key={i}
             className={
-              'p-1 border hover:bg-selected_white hover:cursor-pointer ' +
+              'p-1 border hover:bg-selected_white hover:cursor-pointer text-sm ' +
               (active && 'bg-blue-50')
             }
             onClick={item.onPress}

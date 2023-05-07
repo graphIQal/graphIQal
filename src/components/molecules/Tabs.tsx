@@ -3,13 +3,28 @@ import { Tab } from '../atoms/Tab';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../packages/graph/context/GraphViewContext';
-import { TabProps } from '../context/TabContext';
+import TabContext, {
+  TabContextInterface,
+  TabProps,
+} from '../context/TabContext';
+import { Router, withRouter } from 'next/router';
 
-export const Tabs: React.FC<{
+const Tabs: React.FC<{
+  router: Router;
   tabs: TabProps[];
   setTabs: (val: TabProps[]) => void;
-}> = ({ tabs, setTabs }) => {
-  const [activeTab, setActiveTab] = useState(0);
+  currTab: number;
+  setCurrTab: (val: number) => void;
+}> = ({ tabs, setTabs, router, currTab, setCurrTab }) => {
+  const {
+    query: { activeTab },
+  } = router;
+  console.log('active ' + activeTab);
+
+  const { username, nodeId } = useContext(TabContext) as TabContextInterface;
+  // const route = '/' + username + '/' + nodeId + '/graph/' + graphViewId;
+  const route = '';
+  // const [activeTab, setActiveTab] = useState(0);
   const [lastActiveTab, setLastActiveTab] = useState(0);
 
   return (
@@ -17,18 +32,18 @@ export const Tabs: React.FC<{
       {tabs.map((tab, index) => {
         return (
           <Tab
+            pathname={route}
             label={tab.label}
-            activeTab={activeTab}
-            index={index}
+            selected={currTab == index}
+            query={index}
             viewId={tab.viewId}
             onClick={() => {
-              setLastActiveTab(activeTab);
-              setActiveTab(index);
+              setCurrTab(index);
             }}
             onClose={() => {
-              if (activeTab == index) {
-                setActiveTab(lastActiveTab);
-              }
+              // if (activeTab == index) {
+              // setActiveTab(lastActiveTab);
+              // }
               setTabs(tabs.filter((tab, i) => i != index));
             }}
           />
@@ -37,3 +52,4 @@ export const Tabs: React.FC<{
     </div>
   );
 };
+export default withRouter(Tabs);

@@ -20,7 +20,6 @@ import { CommandPlugins } from './Plugins/CommandPlugins';
 import { FormatPlugins } from './Plugins/FormatPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
-import { Tabs } from '../../components/molecules/Tabs';
 import TabContext, {
   TabContextInterface,
 } from '../../components/context/TabContext';
@@ -70,13 +69,10 @@ const EditorComponent: React.FC = () => {
   // const renderElement = useCallback((props: any) => {
   // 	return <Block {...props} />;
   // }, []);
-  const { sidePanelTabs, setSidePanelTabs } = useContext(
-    TabContext
-  ) as TabContextInterface;
 
   return (
     <div>
-      <Tabs tabs={sidePanelTabs} setTabs={setSidePanelTabs} />
+      {/* <Tabs tabs={sidePanelTabs} setTabs={setSidePanelTabs} /> */}
       <Plate<MyValue>
         editableProps={editableProps}
         value={value}

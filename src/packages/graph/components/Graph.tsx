@@ -3,7 +3,7 @@
  * Creates and sets all the global props that go into Context wrappers
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -18,21 +18,24 @@ import GraphViewContext from '../context/GraphViewContext';
 import { BoxDragLayer } from '../helpers/BoxDragLayer';
 import { handleDrawingHotkey } from '../hooks/drawingHooks';
 import { GraphContainer } from './GraphContainer';
+import TabContext, {
+  TabContextInterface,
+} from '../../../components/context/TabContext';
 
-const Graph: React.FC<{ window: Window; document: Document }> = ({
-  window,
-  document,
-}) => {
+const Graph: React.FC<{
+  window: Window;
+  document: Document;
+  viewId: string;
+}> = ({ window, document, viewId }) => {
   if (!document || !window) return <div></div>;
-
-  const router = useRouter();
-  const { username, nodeId, graphViewId } = router.query;
+  const { nodeId, username } = useContext(TabContext) as TabContextInterface;
 
   const { data, error, isLoading } = useSWR(
-    nodeId ? `/api/${username}/${nodeId}/graph/${graphViewId}` : null,
+    nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
     fetcher
   );
-
+  console.log('error ' + error);
+  console.log('username' + JSON.stringify(data));
   let nodeData: { [key: string]: NodeData } = {};
   let visualData: { [key: string]: GraphNodeData } = {};
   if (!isLoading) {
@@ -68,8 +71,8 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
   // nodeVisualData_Graph is
   const [nodeVisualData_Graph, setnodeVisualData_Graph] = useState(visualData);
 
-  const [currGraphViewId, setCurrGraphViewId] = useState(graphViewId as string);
-
+  const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
+  console.log('viewid ' + viewId);
   console.log('nodeData_Graph');
   console.log(nodeData_Graph);
   console.log('nodeVisualData_Graph');
@@ -77,6 +80,8 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 
   useEffect(() => {
     setnodeData_Graph(nodeData);
+    console.log('setting node data ');
+    console.log(nodeData);
     setnodeVisualData_Graph(visualData);
   }, [isLoading]);
 

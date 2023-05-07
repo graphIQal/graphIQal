@@ -6,14 +6,17 @@ import { createContext, MutableRefObject } from 'react';
 
 export type TabProps = {
   label: string;
-  children: any;
+  viewId: string;
+  viewType: 'document' | 'graph';
 };
 
 export type TabContextInterface = {
   mainViewTabs: TabProps[];
   setMainViewTabs: (val: TabProps[]) => void;
-  sidePanelTabs: TabProps[];
-  setSidePanelTabs: (val: TabProps[]) => void;
+  // sidePanelTabs: TabProps[];
+  // setSidePanelTabs: (val: TabProps[]) => void;
+  username: string;
+  nodeId: string;
 };
 
 const TabContext = createContext<TabContextInterface | null>(null);

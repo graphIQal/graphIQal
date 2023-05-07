@@ -14,7 +14,7 @@ import EditorComponent from '../../../../packages/editor/EditorComponent';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-const Graph2: React.FC = () => {
+const Graph2: React.FC<{ viewId: string }> = ({ viewId }) => {
   const [windowVar, setWindow] = useState<Window>();
   const [documentVar, setDocument] = useState<Document>();
   useEffect(() => {
@@ -25,7 +25,7 @@ const Graph2: React.FC = () => {
     <DndProvider backend={HTML5Backend}>
       <SplitPane className='split-pane-row'>
         <SplitPaneLeft>
-          <Graph window={windowVar} document={documentVar} />
+          <Graph window={windowVar} document={documentVar} viewId={viewId} />
         </SplitPaneLeft>
         <Divider className='separator-col' />
         <SplitPaneRight>

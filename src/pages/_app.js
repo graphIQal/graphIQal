@@ -22,29 +22,9 @@ import '../components/organisms/organisms.css';
 import View from '../components/layouts/View';
 import Window from '../components/layouts/Window';
 import TabContext from '../components/context/TabContext';
+import { useRouter } from 'next/router';
 
 export default function MyApp({ Component, pageProps }) {
-  const [tabs, setTabs] = useState([
-    {
-      label: 'Dependencies',
-      children: '',
-    },
-    {
-      label: 'Chronological',
-      children: '',
-    },
-  ]);
-
-  const [secondaryTabs, setSecondaryTabs] = useState([
-    {
-      label: 'Connections',
-      children: '',
-    },
-    {
-      label: 'Content',
-      children: '',
-    },
-  ]);
   return (
     <>
       <Head>
@@ -54,16 +34,7 @@ export default function MyApp({ Component, pageProps }) {
       <main>
         <Window>
           <View>
-            <TabContext.Provider
-              value={{
-                mainViewTabs: tabs,
-                sidePanelTabs: secondaryTabs,
-                setMainViewTabs: setTabs,
-                setSidePanelTabs: setSecondaryTabs,
-              }}
-            >
-              <Component {...pageProps} />
-            </TabContext.Provider>
+            <Component {...pageProps} />
           </View>
         </Window>
       </main>

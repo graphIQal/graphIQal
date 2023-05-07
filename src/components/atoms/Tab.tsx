@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import IconButton from './IconButton';
 import IconCircleButton from '../molecules/IconCircleButton';
+import Link from 'next/link';
 
 type TabProps = {
   label: string;
   viewId: string;
   onClick: () => void;
-  activeTab: number;
-  index: number;
+  selected: boolean;
   onClose: () => void;
+  pathname: string;
+  query: number;
 };
 export const Tab: React.FC<TabProps> = ({
   label,
   onClick,
-  activeTab,
-  index,
+  selected,
   onClose,
+  pathname,
+  query,
+  viewId,
 }) => {
-  const active = activeTab == index;
   const [showDel, setShowDel] = useState(false);
 
   return (
@@ -26,7 +29,7 @@ export const Tab: React.FC<TabProps> = ({
       onMouseLeave={() => setShowDel(false)}
       className={
         ' w-36 border-x-[0.5px] border-lining p-2 text-sm hover:cursor-pointer hover:bg-base_white flex flex-row align-middle items-center justify-between align-middle ' +
-        (active && ' bg-base_white')
+        (selected && ' bg-base_white')
       }
     >
       <div onClick={onClick}>

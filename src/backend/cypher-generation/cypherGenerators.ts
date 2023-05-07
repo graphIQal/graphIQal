@@ -25,14 +25,15 @@ export const returnCypher = (params: Object = {}) => {
 	return '\nRETURN ' + returnString;
 };
 
-export const addBlockOnNodeCreation = (
-	nodeVariable: string,
-	blockTitle: string
+export const createNewNode = (
+	title: string,
+	connectedNode: string,
+	connectionType: string
 ): CypherGenerator => {
 	const res: CypherGenerator = { cypher: '', context: '' };
 	res.cypher = `
 	MERGE (b:Block {blocks:})
-	MERGE (${nodeVariable})-[r:BLOCK_CHILD]-()
+	MERGE (${title})-[r:BLOCK_CHILD]-()
 	ON CREATE sET b.id = randomUuid()
 	MERGE (n)-[:BLOCK_CHILD]->(b)
 	`;

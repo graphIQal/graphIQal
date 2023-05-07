@@ -24,6 +24,7 @@ import { getDocument } from '../../../backend/functions/getDocument';
 import TextButton from '../../../components/molecules/TextButton';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
+import { createGraphView } from '../../../backend/functions/graph/createGraphView';
 
 const SplitPaneWrapper: React.FC<{}> = () => {
 	const router = useRouter();
@@ -58,6 +59,15 @@ const SplitPaneWrapper: React.FC<{}> = () => {
 				<SplitPaneRight
 					children={
 						<SplitPane className='split-pane-col'>
+							<TextButton
+								text={'Create Graph View'}
+								onClick={() => {
+									createGraphView(
+										username as string,
+										nodeId as string
+									);
+								}}
+							/>
 							{data
 								? data.map((record: any, index: number) => (
 										<TextButton

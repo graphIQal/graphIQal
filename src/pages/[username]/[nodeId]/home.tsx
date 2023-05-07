@@ -78,23 +78,9 @@ const Home: React.FC = () => {
         setCurrTab={setCurrTab}
       />
       {tabs[currTab].viewType == 'graph' ? (
-        <Link
-          href={{
-            pathname: '/' + username + '/' + nodeId + '/home',
-            query: { viewId: tabs[currTab].viewId },
-          }}
-        >
-          <Graph2 viewId={tabs[currTab].viewId} />
-        </Link>
+        <Graph2 viewId={tabs[currTab].viewId} />
       ) : (
-        <Link
-          href={{
-            pathname: '/' + username + '/' + nodeId + '/home',
-            query: { viewId: tabs[currTab].viewId },
-          }}
-        >
-          <SplitPaneWrapper viewId={tabs[currTab].viewId} />
-        </Link>
+        <SplitPaneWrapper viewId={tabs[currTab].viewId} />
       )}
     </TabContext.Provider>
   );

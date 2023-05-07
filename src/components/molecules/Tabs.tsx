@@ -8,6 +8,7 @@ import TabContext, {
   TabProps,
 } from '../context/TabContext';
 import { Router, withRouter } from 'next/router';
+import Link from 'next/link';
 
 const Tabs: React.FC<{
   router: Router;
@@ -16,11 +17,6 @@ const Tabs: React.FC<{
   currTab: number;
   setCurrTab: (val: number) => void;
 }> = ({ tabs, setTabs, router, currTab, setCurrTab }) => {
-  const {
-    query: { activeTab },
-  } = router;
-  console.log('active ' + activeTab);
-
   const { username, nodeId } = useContext(TabContext) as TabContextInterface;
   // const route = '/' + username + '/' + nodeId + '/graph/' + graphViewId;
   const route = '';
@@ -31,22 +27,29 @@ const Tabs: React.FC<{
     <div className='flex flex-row bg-blue-50 w-full'>
       {tabs.map((tab, index) => {
         return (
-          <Tab
-            pathname={route}
-            label={tab.label}
-            selected={currTab == index}
-            query={index}
-            viewId={tab.viewId}
-            onClick={() => {
-              setCurrTab(index);
+          <Link
+            href={{
+              pathname: '/' + username + '/' + nodeId + '/home',
+              query: { viewId: tab.viewId },
             }}
-            onClose={() => {
-              // if (activeTab == index) {
-              // setActiveTab(lastActiveTab);
-              // }
-              setTabs(tabs.filter((tab, i) => i != index));
-            }}
-          />
+          >
+            <Tab
+              pathname={route}
+              label={tab.label}
+              selected={tabs[currTab].viewId === tab.viewId}
+              query={index}
+              viewId={tab.viewId}
+              onClick={() => {
+                setCurrTab(index);
+              }}
+              onClose={() => {
+                // if (activeTab == index) {
+                // setActiveTab(lastActiveTab);
+                // }
+                setTabs(tabs.filter((tab, i) => i != index));
+              }}
+            />
+          </Link>
         );
       })}
     </div>

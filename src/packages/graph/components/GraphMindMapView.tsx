@@ -8,6 +8,7 @@ import { ItemProps } from '../../../components/organisms/Dropdown';
 import {
   changeConnectionType,
   deleteConnection,
+  updateLine,
 } from '../../../helpers/backend/mutateHelpers';
 import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
 import DrawingContext, {
@@ -68,6 +69,16 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         activeIndex = i;
       }
     });
+    if (getConnectionType(from, to, viewContext) != 'RELATED') {
+      items.push({
+        text: 'Reverse Connection',
+        onPress: () =>
+          updateLine(viewContext, 'arrowAdd', '', {
+            arrowStart: to,
+            arrowEnd: from,
+          }),
+      });
+    }
     items.push({
       text: 'Delete Connection',
       onPress: () => deleteConnection(from, to, viewContext),
@@ -83,11 +94,11 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
   return (
     <div className='relative' id='container'>
       {Object.keys(nodeData_Graph).map(function (node, i) {
-        return Object.keys(nodeData_Graph[node].connections).map((line, i) => {
+        return Object.keys(nodeData_Graph[node].connections).map((line, j) => {
           return (
-            <div>
+            <div key={i}>
               <LineTo
-                key={i}
+                key={j}
                 from={node}
                 to={line}
                 id={node + '_' + line}

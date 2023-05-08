@@ -29,6 +29,7 @@ const Graph: React.FC<{
 }> = ({ window, document, viewId }) => {
   if (!document || !window) return <div></div>;
   const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
+  console.log('rendering graph ' + nodeId);
 
   const { data, error, isLoading } = useSWR(
     nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,

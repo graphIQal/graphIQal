@@ -34,13 +34,9 @@ const Graph: React.FC<{
     nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
     fetcher
   );
-  console.log('error ' + error);
-  console.log('username' + JSON.stringify(data));
   let nodeData: { [key: string]: NodeData } = {};
   let visualData: { [key: string]: GraphNodeData } = {};
   if (!isLoading) {
-    console.log('data');
-    console.log(data);
     for (let node in data) {
       let nodeConnections: { [key: string]: ConnectionData } = {};
       for (let connection in data[node].connections) {
@@ -80,8 +76,7 @@ const Graph: React.FC<{
 
   useEffect(() => {
     setnodeData_Graph(nodeData);
-    console.log('setting node data ');
-    console.log(nodeData);
+
     setnodeVisualData_Graph(visualData);
   }, [isLoading]);
 

@@ -22,8 +22,6 @@ const Home: React.FC = () => {
     fetcher
   );
 
-  console.log(isLoading);
-
   let newTabs: MainTabProps[] = [
     {
       label: 'Home',
@@ -35,8 +33,6 @@ const Home: React.FC = () => {
   const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
   useEffect(() => {
     if (!isLoading) {
-      console.log('data ' + data);
-      console.log('in here');
       if (data) {
         let includedIDs: { [key: string]: boolean } = {};
         data.map((record: any, index: number) => {

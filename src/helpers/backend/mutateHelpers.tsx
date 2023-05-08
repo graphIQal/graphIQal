@@ -84,8 +84,6 @@ export const updateLine = (
     context as GraphViewContextInterface;
   switch (type) {
     case 'arrowAdd':
-      console.log('val');
-      console.log(newVal);
       const newData = { ...nodeData_Graph };
       newData[newVal.arrowStart].connections[newVal.arrowEnd] = {
         ...newData[newVal.arrowEnd].connections[newVal.arrowStart],
@@ -94,8 +92,7 @@ export const updateLine = (
         type: 'IN',
       };
       delete newData[newVal.arrowEnd].connections[newVal.arrowStart];
-      console.log('new data');
-      console.log(newData);
+
       context?.setnodeData_Graph(newData);
   }
 };

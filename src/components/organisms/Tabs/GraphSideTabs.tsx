@@ -14,8 +14,6 @@ const GraphSideTabs: React.FC<{
   windowVar: Window;
   documentVar: Document;
 }> = ({ windowVar, documentVar }) => {
-  console.log('window props ' + windowVar + ' ' + documentVar);
-
   const [tabs, setTabs] = useState<SideTabProps[]>([
     {
       label: 'Connections',
@@ -38,7 +36,6 @@ const GraphSideTabs: React.FC<{
 
   const [currTab, setCurrTab] = useState(0);
   const [activeTabs, setActiveTabs] = useState([0]);
-  console.log(tabs[currTab].component);
   return (
     <>
       <Tabs component={tabs[currTab]}>

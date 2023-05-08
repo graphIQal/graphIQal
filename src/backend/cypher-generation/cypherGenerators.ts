@@ -44,6 +44,7 @@ export const createNewNode = (
 export const getConnectedNodes = (nodeId: string) => {
 	return `
 	MATCH (n: Node {id: "${nodeId}"})-[r]->(c:Node)
-	RETURN n, collect([r, c]) AS connectedNodes
+	// RETURN n, collect([r, c]) AS connectedNodes
+	RETURN n, r, c
 	`;
 };

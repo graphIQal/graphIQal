@@ -39,8 +39,14 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 		fetcher
 	);
 
+	const nodeInFocusData = useSWR(
+		nodeId ? `/api/${username}/${nodeId}` : null,
+		fetcher
+	);
+
 	let nodeData: { [key: string]: NodeData } = {};
 	let visualData: { [key: string]: GraphNodeData } = {};
+
 	if (!isLoading) {
 		console.log('data');
 		console.log(data);
@@ -84,6 +90,11 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 		setnodeData_Graph(nodeData);
 		setnodeVisualData_Graph(visualData);
 	}, [isLoading]);
+
+	useEffect(() => {
+		console.log('nodeInFocusData.data');
+		console.log(nodeInFocusData.data);
+	}, [nodeInFocusData.isLoading]);
 
 	//Drawing states
 	const containerRef = useRef(null);

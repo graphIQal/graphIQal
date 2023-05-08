@@ -28,6 +28,7 @@ const MainTabs: React.FC<{
                 pathname: '/' + username + '/' + nodeId,
                 query: { view: tab.viewType, viewId: tab.viewId },
               }}
+              key={index}
             >
               <Tab
                 label={tab.label}

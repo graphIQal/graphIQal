@@ -41,17 +41,19 @@ const GraphSideTabs: React.FC<{
       <Tabs component={tabs[currTab]}>
         {tabs.map((tab, index) => {
           return (
-            <Tab
-              label={tab.label}
-              selected={index == currTab}
-              index={index}
-              currTab={currTab}
-              setCurrTab={setCurrTab}
-              tabs={tabs}
-              setTabs={setTabs}
-              activeTabs={activeTabs}
-              setActiveTabs={setActiveTabs}
-            />
+            <div key={index}>
+              <Tab
+                label={tab.label}
+                selected={index == currTab}
+                index={index}
+                currTab={currTab}
+                setCurrTab={setCurrTab}
+                tabs={tabs}
+                setTabs={setTabs}
+                activeTabs={activeTabs}
+                setActiveTabs={setActiveTabs}
+              />
+            </div>
           );
         })}
       </Tabs>

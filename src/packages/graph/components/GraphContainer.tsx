@@ -33,7 +33,7 @@ import { usePanAndZoom } from '../hooks/zoomingHooks';
 import Tabs from '../../../components/organisms/Tabs/MainTabs';
 import TabContext, {
   TabContextInterface,
-} from '../../../components/context/TabContext';
+} from '../../../components/context/ViewContext';
 
 export const GraphContainer: React.FC<{
   window: Window;

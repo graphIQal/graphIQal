@@ -4,21 +4,22 @@
 
 import { createContext, MutableRefObject } from 'react';
 
-export type TabProps = {
+export type MainTabProps = {
   label: string;
   viewId: string;
   viewType: 'document' | 'graph';
+  component: any;
 };
 
-export type TabContextInterface = {
-  mainViewTabs: TabProps[];
-  setMainViewTabs: (val: TabProps[]) => void;
+export type ViewContextInterface = {
+  mainViewTabs: MainTabProps[];
+  setMainViewTabs: (val: MainTabProps[]) => void;
   // sidePanelTabs: TabProps[];
   // setSidePanelTabs: (val: TabProps[]) => void;
   username: string;
   nodeId: string;
 };
 
-const TabContext = createContext<TabContextInterface | null>(null);
+const ViewContext = createContext<ViewContextInterface | null>(null);
 
-export default TabContext;
+export default ViewContext;

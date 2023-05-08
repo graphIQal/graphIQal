@@ -22,7 +22,7 @@ import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 import TabContext, {
   TabContextInterface,
-} from '../../components/context/TabContext';
+} from '../../components/context/ViewContext';
 
 const EditorComponent: React.FC<{ textIn: string }> = ({ textIn }) => {
   const [value, setValue] = useState([

@@ -1,49 +1,55 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
+import EditorComponent from '../../../packages/editor/EditorComponent';
+import ShelfEditor from '../../../packages/shelf-editor/ShelfEditor';
 import { Tab } from '../../atoms/Tab';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../../../packages/graph/context/GraphViewContext';
-import TabContext, {
-  TabContextInterface,
-  TabProps,
-} from '../../context/TabContext';
-import { Router, withRouter } from 'next/router';
-import Link from 'next/link';
-import { TabsContainer } from './TabsContainer';
+import { Tabs } from './Tabs';
 
 export type SideTabPropsDoc = {
   label: string;
   viewType: 'connections' | 'shelf' | 'content';
+  component: any;
 };
 
-const DocumentSideTabs: React.FC<{
-  tabs: SideTabPropsDoc[];
-  setTabs: (val: SideTabPropsDoc[]) => void;
-  currTab: number;
-  setCurrTab: (val: number) => void;
-}> = ({ tabs, setTabs, currTab, setCurrTab }) => {
-  const [lastActiveTab, setLastActiveTab] = useState(0);
+const DocumentSideTabs: React.FC = () => {
+  const [tabs, setTabs] = useState<SideTabPropsDoc[]>([
+    {
+      label: 'Connections',
+      viewType: 'connections',
+      component: <EditorComponent textIn={'connections'} />,
+    },
+    {
+      label: 'Content',
+      viewType: 'content',
+      component: <EditorComponent textIn={'content'} />,
+    },
+    {
+      label: 'Shelf',
+      viewType: 'shelf',
+      component: <ShelfEditor />,
+    },
+  ]);
+
+  const [currTab, setCurrTab] = useState(0);
+  const [activeTabs, setActiveTabs] = useState([0]);
 
   return (
-    <TabsContainer>
+    <Tabs component={tabs[currTab]}>
       {tabs.map((tab, index) => {
         return (
           <Tab
             label={tab.label}
             selected={index == currTab}
-            onClick={() => {
-              setCurrTab(index);
-            }}
-            onClose={() => {
-              // if (activeTab == index) {
-              // setActiveTab(lastActiveTab);
-              // }
-              setTabs(tabs.filter((tab, i) => i != index));
-            }}
+            index={index}
+            currTab={currTab}
+            setCurrTab={setCurrTab}
+            tabs={tabs}
+            setTabs={setTabs}
+            activeTabs={activeTabs}
+            setActiveTabs={setActiveTabs}
           />
         );
       })}
-    </TabsContainer>
+    </Tabs>
   );
 };
 export default DocumentSideTabs;

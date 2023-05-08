@@ -21,7 +21,7 @@ import '../components/organisms/organisms.css';
 
 import View from '../components/layouts/View';
 import Window from '../components/layouts/Window';
-import TabContext from '../components/context/TabContext';
+import TabContext from '../components/context/ViewContext';
 import { useRouter } from 'next/router';
 
 export default function MyApp({ Component, pageProps }) {

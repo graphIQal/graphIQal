@@ -18,9 +18,9 @@ import GraphViewContext from '../context/GraphViewContext';
 import { BoxDragLayer } from '../helpers/BoxDragLayer';
 import { handleDrawingHotkey } from '../hooks/drawingHooks';
 import { GraphContainer } from './GraphContainer';
-import TabContext, {
-  TabContextInterface,
-} from '../../../components/context/TabContext';
+import ViewContext, {
+  ViewContextInterface,
+} from '../../../components/context/ViewContext';
 
 const Graph: React.FC<{
   window: Window;
@@ -28,7 +28,7 @@ const Graph: React.FC<{
   viewId: string;
 }> = ({ window, document, viewId }) => {
   if (!document || !window) return <div></div>;
-  const { nodeId, username } = useContext(TabContext) as TabContextInterface;
+  const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
 
   const { data, error, isLoading } = useSWR(
     nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
@@ -152,8 +152,6 @@ const Graph: React.FC<{
             nodeInView: nodeInView,
             graphViewId: currGraphViewId as string,
             setGraphViewId: setCurrGraphViewId,
-            username: username as string,
-            nodeId: nodeId as string,
           }}
         >
           <GraphContainer window={window} document={document} />

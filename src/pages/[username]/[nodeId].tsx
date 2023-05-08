@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import SplitPaneWrapper from './document';
 import MainTabs from '../../components/organisms/Tabs/MainTabs';
-import TabContext, {
-  TabContextInterface,
-  TabProps,
-} from '../../components/context/TabContext';
+import ViewContext, {
+  ViewContextInterface,
+  MainTabProps,
+} from '../../components/context/ViewContext';
 import { useRouter, withRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../backend/driver/fetcher';
@@ -24,10 +24,15 @@ const Home: React.FC = () => {
 
   console.log(isLoading);
 
-  let newTabs: TabProps[] = [
-    { label: 'Home', viewId: '', viewType: 'document' },
+  let newTabs: MainTabProps[] = [
+    {
+      label: 'Home',
+      viewId: '',
+      viewType: 'document',
+      component: <SplitPaneWrapper viewId={''} />,
+    },
   ];
-  const [tabs, setTabs] = useState<TabProps[]>(newTabs);
+  const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
   useEffect(() => {
     if (!isLoading) {
       console.log('data ' + data);
@@ -42,6 +47,12 @@ const Home: React.FC = () => {
               label: record.g.properties.title,
               viewId: record.g.properties.id,
               viewType: 'graph',
+              component: (
+                <Graph2
+                  viewId={record.g.properties.id}
+                  title={record.g.properties.title}
+                />
+              ),
             });
           }
         });
@@ -53,12 +64,10 @@ const Home: React.FC = () => {
   const [currTab, setCurrTab] = useState(0);
 
   return (
-    <TabContext.Provider
+    <ViewContext.Provider
       value={{
         mainViewTabs: tabs,
-        // sidePanelTabs: secondaryTabs,
         setMainViewTabs: setTabs,
-        // setSidePanelTabs: setSecondaryTabs,
         username: username as string,
         nodeId: nodeId as string,
       }}
@@ -69,12 +78,7 @@ const Home: React.FC = () => {
         currTab={currTab}
         setCurrTab={setCurrTab}
       />
-      {tabs[currTab].viewType == 'graph' ? (
-        <Graph2 viewId={tabs[currTab].viewId} title={nodeId as string} />
-      ) : (
-        <SplitPaneWrapper viewId={tabs[currTab].viewId} />
-      )}
-    </TabContext.Provider>
+    </ViewContext.Provider>
   );
 };
 export default withRouter(Home);

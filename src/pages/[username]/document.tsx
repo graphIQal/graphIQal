@@ -33,31 +33,6 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
   const { username, nodeId } = router.query;
   const [nodeData, setnodeData] = useState();
 
-  // const { data, error } = useSWR(id ? `/api/user/${id}` : null, fetcher)
-
-  // useEffect(() => {
-  // 	if (!router.isReady) return;
-  // 	// get Node
-  // 	getDocument(nodeId as string, username as string);
-  // }, [router.isReady]);
-
-  const [sideTabs, setSideTabs] = useState<SideTabPropsDoc[]>([
-    {
-      label: 'Connections',
-      viewType: 'connections',
-    },
-    {
-      label: 'Content',
-      viewType: 'content',
-    },
-    {
-      label: 'Shelf',
-      viewType: 'shelf',
-    },
-  ]);
-
-  const [currTab, setCurrTab] = useState(0);
-
   return (
     <DndProvider backend={HTML5Backend}>
       <SplitPane className='split-pane-row'>
@@ -66,19 +41,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
         </SplitPaneLeft>
         <Divider className='separator-col' />
         <SplitPaneRight>
-          <DocumentSideTabs
-            tabs={sideTabs}
-            setTabs={setSideTabs}
-            currTab={currTab}
-            setCurrTab={setCurrTab}
-          />
-          {sideTabs[currTab].viewType == 'connections' && (
-            <EditorComponent textIn={'connections'} />
-          )}
-          {sideTabs[currTab].viewType == 'content' && (
-            <EditorComponent textIn={'content'} />
-          )}
-          {sideTabs[currTab].viewType == 'shelf' && <ShelfEditor />}
+          <DocumentSideTabs />
         </SplitPaneRight>
       </SplitPane>
     </DndProvider>

@@ -4,7 +4,7 @@ import {
   ELEMENT_H1,
   Plate,
 } from '@udecode/plate';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
@@ -24,12 +24,12 @@ import TabContext, {
   TabContextInterface,
 } from '../../components/context/TabContext';
 
-const EditorComponent: React.FC = () => {
+const EditorComponent: React.FC<{ textIn: string }> = ({ textIn }) => {
   const [value, setValue] = useState([
     {
       type: ELEMENT_H1,
       id: 'asdkj123123a',
-      children: [{ text: 'h1' }],
+      children: [{ text: textIn }],
     } as MyH1Element,
     {
       type: 'block',
@@ -72,7 +72,6 @@ const EditorComponent: React.FC = () => {
 
   return (
     <div>
-      {/* <Tabs tabs={sidePanelTabs} setTabs={setSidePanelTabs} /> */}
       <Plate<MyValue>
         editableProps={editableProps}
         value={value}

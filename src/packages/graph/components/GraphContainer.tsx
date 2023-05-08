@@ -30,7 +30,7 @@ import { Action } from '../hooks/useHistoryState';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
 import { usePanAndZoom } from '../hooks/zoomingHooks';
-import Tabs from '../../../components/molecules/Tabs';
+import Tabs from '../../../components/organisms/Tabs/MainTabs';
 import TabContext, {
   TabContextInterface,
 } from '../../../components/context/TabContext';

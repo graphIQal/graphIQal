@@ -53,7 +53,7 @@ export default function Home() {
           onClick={async () => {
             const res = await login(email, username, password);
             console.log('result', res);
-            router.push('/' + username + '/' + res.n.properties.id + '/home');
+            router.push('/' + username + '/' + res.n.properties.id);
           }}
         />
         <TextButton

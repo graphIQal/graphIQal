@@ -1,31 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import SplitPaneWrapper from './document';
-import Tabs from '../../../components/molecules/Tabs';
+import MainTabs from '../../components/organisms/Tabs/MainTabs';
 import TabContext, {
   TabContextInterface,
   TabProps,
-} from '../../../components/context/TabContext';
+} from '../../components/context/TabContext';
 import { useRouter, withRouter } from 'next/router';
 import useSWR from 'swr';
-import { fetcher } from '../../../backend/driver/fetcher';
-import TextButton from '../../../components/molecules/TextButton';
+import { fetcher } from '../../backend/driver/fetcher';
+import TextButton from '../../components/molecules/TextButton';
 import Graph2 from './graph/[graphViewId]';
 import Link from 'next/link';
 
 const Home: React.FC = () => {
-  //Tabs
-
-  const [secondaryTabs, setSecondaryTabs] = useState([
-    {
-      label: 'Connections',
-      children: '',
-    },
-    {
-      label: 'Content',
-      children: '',
-    },
-  ]);
-
   const router = useRouter();
 
   const { username, nodeId } = router.query;
@@ -43,15 +30,20 @@ const Home: React.FC = () => {
   const [tabs, setTabs] = useState<TabProps[]>(newTabs);
   useEffect(() => {
     if (!isLoading) {
-      console.log(data);
+      console.log('data ' + data);
       console.log('in here');
       if (data) {
+        let includedIDs: { [key: string]: boolean } = {};
         data.map((record: any, index: number) => {
-          newTabs.push({
-            label: record.g.properties.title,
-            viewId: record.g.properties.id,
-            viewType: 'graph',
-          });
+          if (!includedIDs[record.g.properties.id]) {
+            includedIDs[record.g.properties.id] = true;
+
+            newTabs.push({
+              label: record.g.properties.title,
+              viewId: record.g.properties.id,
+              viewType: 'graph',
+            });
+          }
         });
       }
     }
@@ -71,14 +63,14 @@ const Home: React.FC = () => {
         nodeId: nodeId as string,
       }}
     >
-      <Tabs
+      <MainTabs
         tabs={tabs}
         setTabs={setTabs}
         currTab={currTab}
         setCurrTab={setCurrTab}
       />
       {tabs[currTab].viewType == 'graph' ? (
-        <Graph2 viewId={tabs[currTab].viewId} />
+        <Graph2 viewId={tabs[currTab].viewId} title={nodeId as string} />
       ) : (
         <SplitPaneWrapper viewId={tabs[currTab].viewId} />
       )}

@@ -1,16 +1,17 @@
 import React, { useContext, useState } from 'react';
-import { Tab } from '../atoms/Tab';
+import { Tab } from '../../atoms/Tab';
 import GraphViewContext, {
   GraphViewContextInterface,
-} from '../../packages/graph/context/GraphViewContext';
+} from '../../../packages/graph/context/GraphViewContext';
 import TabContext, {
   TabContextInterface,
   TabProps,
-} from '../context/TabContext';
+} from '../../context/TabContext';
 import { Router, withRouter } from 'next/router';
 import Link from 'next/link';
+import { TabsContainer } from './TabsContainer';
 
-const Tabs: React.FC<{
+const MainTabs: React.FC<{
   router: Router;
   tabs: TabProps[];
   setTabs: (val: TabProps[]) => void;
@@ -24,21 +25,18 @@ const Tabs: React.FC<{
   const [lastActiveTab, setLastActiveTab] = useState(0);
 
   return (
-    <div className='flex flex-row bg-blue-50 w-full'>
+    <TabsContainer>
       {tabs.map((tab, index) => {
         return (
           <Link
             href={{
-              pathname: '/' + username + '/' + nodeId + '/home',
-              query: { viewId: tab.viewId },
+              pathname: '/' + username + '/' + nodeId,
+              query: { view: tab.viewType, viewId: tab.viewId },
             }}
           >
             <Tab
-              pathname={route}
               label={tab.label}
               selected={tabs[currTab].viewId === tab.viewId}
-              query={index}
-              viewId={tab.viewId}
               onClick={() => {
                 setCurrTab(index);
               }}
@@ -52,7 +50,7 @@ const Tabs: React.FC<{
           </Link>
         );
       })}
-    </div>
+    </TabsContainer>
   );
 };
-export default withRouter(Tabs);
+export default withRouter(MainTabs);

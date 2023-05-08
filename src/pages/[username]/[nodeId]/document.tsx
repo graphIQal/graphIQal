@@ -33,7 +33,7 @@ const SplitPaneWrapper: React.FC<{}> = () => {
 
 	// const { data, error } = useSWR(id ? `/api/user/${id}` : null, fetcher)
 	const { data, error, isLoading } = useSWR(
-		nodeId ? `/api/${username}/${nodeId}` : null,
+		nodeId ? `/api/${username}/${nodeId}/document` : null,
 		fetcher
 	);
 

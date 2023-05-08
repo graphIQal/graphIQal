@@ -1,7 +1,5 @@
-import { getConnectedNodes } from '../../../../backend/cypher-generation/cypherGenerators';
-import { read } from '../../../../backend/driver/helpers';
-
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { read } from '../../../../../backend/driver/helpers';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -23,10 +21,7 @@ export default async function handler(
 	`;
 	// RETURN r, b { .*, parentNodeId: $nodeId}
 
-	// Find all relevant data to the node
-	const nodeConnections: any = await read(
-		getConnectedNodes(params.nodeId as string)
-	);
+	const result = await read(cypher, params);
 
 	// if (result.length === 0) {
 	// 	res.status(404);
@@ -35,5 +30,5 @@ export default async function handler(
 	// 	// res.status(200).json(result[0].u.properties.username);
 	// }
 
-	res.status(200).json(nodeConnections);
+	res.status(200).json(result);
 }

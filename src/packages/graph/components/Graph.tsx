@@ -41,29 +41,24 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 
 	let nodeData: { [key: string]: NodeData } = {};
 	let visualData: { [key: string]: GraphNodeData } = {};
-
 	if (!isLoading) {
 		console.log('data');
 		console.log(data);
-		if (data)
-			for (let node in data.graphData) {
-				let nodeConnections: { [key: string]: ConnectionData } = {};
-				for (let connection in data.graphData[node].connections) {
-					nodeConnections[
-						data.graphData[node].connections[connection].endNode
-					] = {
-						...data.graphData[node].connections[connection],
-						content: [],
-					};
-				}
-				nodeData[data.graphData[node].node.id] = {
-					...data.graphData[node].node,
-					connections: nodeConnections,
+		for (let node in data) {
+			let nodeConnections: { [key: string]: ConnectionData } = {};
+			for (let connection in data[node].connections) {
+				nodeConnections[data[node].connections[connection].endNode] = {
+					...data[node].connections[connection],
+					content: [],
 				};
-
-				visualData[data.graphData[node].node.id] =
-					data.graphData[node].relationship;
 			}
+			nodeData[data[node].node.id] = {
+				...data[node].node,
+				connections: nodeConnections,
+			};
+
+			visualData[data[node].node.id] = data[node].relationship;
+		}
 	}
 
 	//Graph in view of one node
@@ -174,7 +169,7 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 						</SplitPaneLeft>
 						<Divider className='separator-col' />
 						<SplitPaneRight>
-							{/* Get all connections to the main node, check if they aren't displayed on graph, and add a button to add them to this graph view */}
+							{/* Get all connections to the main node, check if they aren't displayed on graph, and add a button to add them to this graph */}
 							{}
 							<EditorComponent />
 						</SplitPaneRight>

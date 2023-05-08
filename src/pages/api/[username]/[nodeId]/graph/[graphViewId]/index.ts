@@ -18,12 +18,7 @@ export default async function handler(
 	RETURN node {.*}, relationship {.*}, collect(r {startNode: startNode(r).id, endNode: endNode(r).id, type: type(r)}) AS connections
 	`;
 
-	// Find all relevant data to the node
-	const nodeConnections: any = await write(
-		getConnectedNodes(params.nodeId as string)
-	);
-
 	const result: any = await write(cypher as string, params);
 
-	res.status(200).json({ graphData: result, nodeConnections });
+	res.status(200).json(result);
 }

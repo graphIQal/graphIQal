@@ -20,11 +20,9 @@ import { CommandPlugins } from './Plugins/CommandPlugins';
 import { FormatPlugins } from './Plugins/FormatPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
-import TabContext, {
-  TabContextInterface,
-} from '../../components/context/ViewContext';
 
 const EditorComponent: React.FC<{ textIn: string }> = ({ textIn }) => {
+  console.log('in here ' + textIn);
   const [value, setValue] = useState([
     {
       type: ELEMENT_H1,

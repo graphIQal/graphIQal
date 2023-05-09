@@ -19,33 +19,46 @@ const MainTabs: React.FC<{
   const [activeTabs, setActiveTabs] = useState([0]);
 
   return (
-    <>
-      <Tabs component={tabs[currTab]}>
+    <div>
+      <Tabs>
         {tabs.map((tab, index) => {
           return (
-            <Link
-              href={{
-                pathname: '/' + username + '/' + nodeId,
-                query: { view: tab.viewType, viewId: tab.viewId },
-              }}
-              key={index}
-            >
-              <Tab
-                label={tab.label}
-                selected={tabs[currTab].viewId === tab.viewId}
-                index={index}
-                currTab={currTab}
-                setCurrTab={setCurrTab}
-                tabs={tabs}
-                setTabs={setTabs}
-                activeTabs={activeTabs}
-                setActiveTabs={setActiveTabs}
-              />
-            </Link>
+            <>
+              <Link
+                href={{
+                  pathname: '/' + username + '/' + nodeId,
+                  query: { view: tab.viewType, viewId: tab.viewId },
+                }}
+                key={index}
+              >
+                <Tab
+                  label={tab.label}
+                  selected={tabs[currTab].viewId === tab.viewId}
+                  index={index}
+                  currTab={currTab}
+                  setCurrTab={setCurrTab}
+                  tabs={tabs}
+                  setTabs={setTabs}
+                  activeTabs={activeTabs}
+                  setActiveTabs={setActiveTabs}
+                />
+              </Link>
+            </>
           );
         })}
       </Tabs>
-    </>
+      {tabs.map((tab, i) => {
+        return (
+          <div
+            style={{
+              display: tabs[currTab].viewId === tab.viewId ? 'block' : 'none',
+            }}
+          >
+            {tab.component}
+          </div>
+        );
+      })}
+    </div>
   );
 };
 export default withRouter(MainTabs);

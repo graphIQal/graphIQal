@@ -33,25 +33,38 @@ const DocumentSideTabs: React.FC = () => {
   const [activeTabs, setActiveTabs] = useState([0]);
 
   return (
-    <Tabs component={tabs[currTab]}>
-      {tabs.map((tab, index) => {
+    <>
+      <Tabs>
+        {tabs.map((tab, index) => {
+          return (
+            <div key={index}>
+              <Tab
+                label={tab.label}
+                selected={index == currTab}
+                index={index}
+                currTab={currTab}
+                setCurrTab={setCurrTab}
+                tabs={tabs}
+                setTabs={setTabs}
+                activeTabs={activeTabs}
+                setActiveTabs={setActiveTabs}
+              />
+            </div>
+          );
+        })}
+      </Tabs>
+      {tabs.map((tab, i) => {
         return (
-          <div key={index}>
-            <Tab
-              label={tab.label}
-              selected={index == currTab}
-              index={index}
-              currTab={currTab}
-              setCurrTab={setCurrTab}
-              tabs={tabs}
-              setTabs={setTabs}
-              activeTabs={activeTabs}
-              setActiveTabs={setActiveTabs}
-            />
+          <div
+            style={{
+              display: currTab == i ? 'block' : 'none',
+            }}
+          >
+            {tab.component}
           </div>
         );
       })}
-    </Tabs>
+    </>
   );
 };
 export default DocumentSideTabs;

@@ -38,7 +38,7 @@ const GraphSideTabs: React.FC<{
   const [activeTabs, setActiveTabs] = useState([0]);
   return (
     <>
-      <Tabs component={tabs[currTab]}>
+      <Tabs>
         {tabs.map((tab, index) => {
           return (
             <div key={index}>
@@ -57,6 +57,18 @@ const GraphSideTabs: React.FC<{
           );
         })}
       </Tabs>
+      {tabs.map((tab, i) => {
+        return (
+          <div
+            key={i}
+            style={{
+              display: i == currTab ? 'block' : 'none',
+            }}
+          >
+            {tab.component}
+          </div>
+        );
+      })}
     </>
   );
 };

@@ -116,6 +116,9 @@ const Graph: React.FC<{
     );
   }, []);
 
+  console.log('in graph ');
+  console.log(nodeData_Graph);
+
   return (
     <div
       onKeyDown={(event) =>

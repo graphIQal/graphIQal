@@ -120,6 +120,8 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         const y = nodeVisualData_Graph[node].y.low;
         const width = nodeVisualData_Graph[node].width.low;
         const height = nodeVisualData_Graph[node].height.low;
+        const icon = nodeData_Graph[node].icon;
+        const color = nodeData_Graph[node].color;
         return (
           <div
             className={node}
@@ -161,6 +163,8 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
               left={(x - translateX) * scale}
               top={(y - translateY) * scale}
               id={node}
+              icon={icon}
+              color={color}
               size={[width * scale, height * scale]}
               updateStartPos={(val) => (startPos.current = val)}
             >

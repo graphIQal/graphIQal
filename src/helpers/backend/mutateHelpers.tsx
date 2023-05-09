@@ -23,7 +23,7 @@ export const addLine = (
   viewContext.setnodeData_Graph(newnodeData_Graph);
 };
 
-export type NodeUpdate = 'resize' | 'drag' | 'title';
+export type NodeUpdate = 'resize' | 'drag' | 'title' | 'icon' | 'color';
 
 export const updateNode = (
   type: NodeUpdate,
@@ -68,6 +68,14 @@ export const updateNode = (
 
     case 'title':
       nodeData[nodeID].title = newVal;
+      context?.setnodeData_Graph({ ...nodeData });
+      break;
+    case 'icon':
+      nodeData[nodeID].icon = newVal;
+      context?.setnodeData_Graph({ ...nodeData });
+      break;
+    case 'color':
+      nodeData[nodeID].color = newVal;
       context?.setnodeData_Graph({ ...nodeData });
   }
 };
@@ -131,6 +139,8 @@ export const addNode = (
     id: id,
     title: 'New Node',
     connections: {},
+    icon: 'block',
+    color: 'black',
   };
 
   context.setnodeVisualData_Graph(newNodes);

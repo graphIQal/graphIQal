@@ -46,7 +46,6 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
         size={iconSize}
       />
     ),
-    node: <Cube color={'blue'} size={size} onClick={onClick} />,
     undo: (
       <Undo
         color={!selected ? 'black' : 'white'}
@@ -101,6 +100,13 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
         color={!selected ? 'black' : 'white'}
         onClick={onClick}
         size={iconSize}
+      />
+    ),
+    block: (
+      <Cube
+        size={'1em'}
+        color={!selected ? 'black' : 'white'}
+        onClick={onClick}
       />
     ),
   };

@@ -48,7 +48,9 @@ const Graph: React.FC<{
       }
       nodeData[data[node].node.id] = {
         ...data[node].node,
+        icon: 'block',
         connections: nodeConnections,
+        color: 'black',
       };
 
       visualData[data[node].node.id] = data[node].relationship;
@@ -77,7 +79,6 @@ const Graph: React.FC<{
 
   useEffect(() => {
     setnodeData_Graph(nodeData);
-
     setnodeVisualData_Graph(visualData);
   }, [isLoading]);
 
@@ -115,9 +116,6 @@ const Graph: React.FC<{
       listenerFunc(event)
     );
   }, []);
-
-  console.log('in graph ');
-  console.log(nodeData_Graph);
 
   return (
     <div

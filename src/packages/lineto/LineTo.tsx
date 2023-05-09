@@ -234,7 +234,7 @@ export const Arrow = ({
   }, []);
 
   return (
-    <div id='container' className='relative'>
+    <div className='relative'>
       <div
         className='absolute w-max z-30'
         style={{

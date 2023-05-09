@@ -4,7 +4,6 @@
 
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { GRID_X_SIZE, GRID_Y_SIZE } from '../helpers/snapping';
-import { usePanAndZoom, useZoomEvents } from './zoomingHooks';
 
 export function drawLine(
   ctx: any,

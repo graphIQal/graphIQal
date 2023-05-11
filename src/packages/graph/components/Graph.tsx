@@ -21,6 +21,7 @@ import { GraphContainer } from './GraphContainer';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
+import { getTags } from '../../../helpers/backend/getHelpers';
 
 const Graph: React.FC<{
   window: Window;
@@ -73,7 +74,7 @@ const Graph: React.FC<{
   const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
   console.log('viewid ' + viewId);
   console.log('nodeData_Graph');
-  console.log(nodeData_Graph);
+  console.log(JSON.stringify(nodeData_Graph));
   console.log('nodeVisualData_Graph');
   console.log(nodeVisualData_Graph);
 
@@ -117,6 +118,9 @@ const Graph: React.FC<{
     );
   }, []);
 
+  //graph view tags default
+  const [tags, setTags] = useState(getTags(nodeData_Graph));
+
   return (
     <div
       onKeyDown={(event) =>
@@ -149,6 +153,8 @@ const Graph: React.FC<{
             nodeInView: nodeInView,
             graphViewId: currGraphViewId as string,
             setGraphViewId: setCurrGraphViewId,
+            tags: tags,
+            setTags: setTags,
           }}
         >
           <GraphContainer window={window} document={document} />

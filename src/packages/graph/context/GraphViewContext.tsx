@@ -24,6 +24,8 @@ export type GraphViewContextInterface = {
   setModalNode: (val: string) => void;
   graphViewId: string;
   setGraphViewId: (val: string) => void;
+  tags: { [key: string]: Set<string> }[];
+  setTags: (val: { [key: string]: Set<string> }[]) => void;
 };
 
 const GraphViewContext = createContext<GraphViewContextInterface | null>(null);

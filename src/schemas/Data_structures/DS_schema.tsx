@@ -47,6 +47,7 @@ export type GraphNodeData = {
     low: number;
   };
   collapsed?: boolean;
+  categorizing_node: string; // which icon and color do we display? If its own, it will be its own ID, if any of its parents, it'll be that parent's ID
 };
 
 export type VisualData = {

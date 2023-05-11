@@ -322,16 +322,17 @@ export const isNodeCategorical = (
 };
 
 //gets nodes that current node is "included" in as tags
-export const getNodeTags = (
-  nodeInView: string,
-  allNodes: { [key: string]: Node }
-) => {
-  const to_return: { [key: string]: ConnectionData } = {};
-  // for (const node in allNodes[nodeInView].connections) {
-  //   if (allNodes[nodeInView].connections[node].type == 'included') {
-  //     to_return[node] = allNodes[nodeInView].connections[node];
-  //   }
-  // }
+export const getTags = (nodeData: { [key: string]: NodeData }) => {
+  //each entry in array is a tag, where the key represents that node's ID and the value represents all the nodes on the screen that are connected to it
+  //ordered by frequency of connection
+  const to_return: { [key: string]: Set<string> }[] = [];
+
+  // get list of connections where current node is "IN" other node, sorted by frequency
+
+  /**
+   * Does node data graph hold all connections or only the ones to nodes displayed?
+   * Do they show bi-directionally? Is connection stored in both startnode and endnode or only one
+   */
 
   return to_return;
 };

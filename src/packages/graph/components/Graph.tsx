@@ -22,6 +22,9 @@ import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
 import { getTags } from '../../../helpers/backend/getHelpers';
+import SplitPaneContext, {
+  SplitPaneContextInterface,
+} from '../../../components/organisms/split-pane/SplitPaneContext';
 
 const Graph: React.FC<{
   window: Window;
@@ -29,8 +32,8 @@ const Graph: React.FC<{
   viewId: string;
 }> = ({ window, document, viewId }) => {
   if (!document || !window) return <div></div>;
+
   const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
-  console.log('rendering graph ' + nodeId);
 
   const { data, error, isLoading } = useSWR(
     nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
@@ -72,7 +75,6 @@ const Graph: React.FC<{
   const [nodeVisualData_Graph, setnodeVisualData_Graph] = useState(visualData);
 
   const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
-  console.log('viewid ' + viewId);
   console.log('nodeData_Graph');
   console.log(JSON.stringify(nodeData_Graph));
   console.log('nodeVisualData_Graph');
@@ -84,7 +86,7 @@ const Graph: React.FC<{
   }, [isLoading]);
 
   //Drawing states
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [drawingMode, setDrawingMode] = useState(true);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 

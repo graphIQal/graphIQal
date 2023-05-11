@@ -3,7 +3,7 @@
  */
 
 import { Coord } from '../graph/hooks/drawingHooks';
-import { getDy } from '../graph/hooks/useCanvas';
+import { useVerticalOffset } from '../graph/hooks/useVerticalOffset';
 
 //Calculates dimensions based on the deltas and box buffers
 export const calculateCanvasDimensions = ({
@@ -25,7 +25,7 @@ export const calculateCanvasDimensions = ({
 };
 
 //Detects if a point intersects with the canvas of a line (used to detect which line the arrow is drawn on)
-export const isPointInCanvas = (
+export const useIsPointInCanvas = (
   point: Coord,
   canvasStartPoint: Coord,
   canvasWidth: number,
@@ -34,8 +34,8 @@ export const isPointInCanvas = (
   if (
     point.x > canvasStartPoint.x &&
     point.x < canvasStartPoint.x + canvasWidth &&
-    point.y > canvasStartPoint.y - getDy() &&
-    point.y < canvasStartPoint.y - getDy() + canvasHeight
+    point.y > canvasStartPoint.y - useVerticalOffset() &&
+    point.y < canvasStartPoint.y - useVerticalOffset() + canvasHeight
   ) {
     return true;
   }

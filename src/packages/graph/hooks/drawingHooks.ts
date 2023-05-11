@@ -10,10 +10,10 @@ import DrawingContext, {
 import GraphViewContext from '../context/GraphViewContext';
 import { calcArrowStart, isArrow, isCircle } from '../helpers/drawingEvents';
 import { snapToGrid } from '../helpers/snapping';
-import { getDy } from './useCanvas';
 import GraphActionContext, {
   GraphActionContextInterface,
 } from '../context/GraphActionContext';
+import { useVerticalOffset } from './useVerticalOffset';
 
 export type Coord = {
   x: number;
@@ -51,6 +51,7 @@ export const useDrawingEnd = (
   scale: number
 ) => {
   const context = useContext(GraphViewContext);
+  const offset = useVerticalOffset();
   const { setIsDrawing, isPointInCanvasFuncs, numPointsInTriangleFuncs } =
     useContext(DrawingContext) as DrawingContextInterface;
   return useCallback(
@@ -61,7 +62,7 @@ export const useDrawingEnd = (
         let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
         const [snappedX, snappedY] = snapToGrid(
           center[0] / scale - 200 / 2 + translateX / scale,
-          center[1] / scale + getDy() / scale - 75 / 2 + translateY / scale
+          center[1] / scale + offset / scale - 75 / 2 + translateY / scale
         );
         const newSize = [dimension < 200 ? 200 : dimension, dimension];
 

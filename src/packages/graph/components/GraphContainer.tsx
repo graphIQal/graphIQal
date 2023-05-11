@@ -2,22 +2,15 @@
  * Container for Graph; renders either "Mind map" view or "Axis" view
  * Sets information for Context wrapper that deals with actions like dragging, undo/redo, resize
  */
-import {
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { addLine } from '../../../helpers/backend/mutateHelpers';
+import GraphActionContext from '../context/GraphActionContext';
 import DrawingContext, {
   DrawingContextInterface,
 } from '../context/GraphDrawingContext';
-import GraphActionContext from '../context/GraphActionContext';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
-import { useResize } from '../hooks/useResize';
 import { useDropNode } from '../hooks/draggingHooks';
 import {
   useDrawingCanvas,
@@ -27,13 +20,10 @@ import {
 import { useFiltering } from '../hooks/filteringHooks';
 import { useCanvas } from '../hooks/useCanvas';
 import { Action } from '../hooks/useHistoryState';
+import { useResize } from '../hooks/useResize';
+import { usePanAndZoom } from '../hooks/zoomingHooks';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
-import { usePanAndZoom } from '../hooks/zoomingHooks';
-import Tabs from '../../../components/organisms/Tabs/MainTabs';
-import TabContext, {
-  TabContextInterface,
-} from '../../../components/context/ViewContext';
 
 export const GraphContainer: React.FC<{
   window: Window;

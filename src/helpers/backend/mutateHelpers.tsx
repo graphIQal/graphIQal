@@ -132,6 +132,7 @@ export const addNode = (
       low: size[1],
     },
     collapsed: true,
+    categorizing_node: id,
   };
 
   let newnodeData_Graph = { ...context.nodeData_Graph };

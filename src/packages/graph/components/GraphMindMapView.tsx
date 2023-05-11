@@ -93,7 +93,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
     useContext(DrawingContext) as DrawingContextInterface;
 
   return (
-    <div className='relative' id='container'>
+    <div className='relative' id={'container' + viewContext.graphViewId}>
       {Object.keys(nodeData_Graph).map(function (node, i) {
         return Object.keys(nodeData_Graph[node].connections).map((line, j) => {
           return (

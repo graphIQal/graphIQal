@@ -3,7 +3,7 @@
  */
 
 import { Coord } from '../graph/hooks/drawingHooks';
-import { getDy } from '../graph/hooks/useCanvas';
+import { useVerticalOffset } from '../graph/hooks/useVerticalOffset';
 
 //Calculates delta and absolute delta between two given points
 export const calculateDeltas = (
@@ -209,7 +209,7 @@ export const calculateTransformArrow = ({
 };
 
 //Calculates the number of points of the triangle formed by an arrow that intersect a line to judge whether arrow belongs to that line
-export const numPointsInTriangle = (
+export const useNumPointsInTriangle = (
   a: Coord,
   b: Coord,
   c: Coord,
@@ -221,13 +221,13 @@ export const numPointsInTriangle = (
   let numPoints = 0;
   for (let p in points) {
     let point = points[p];
-    const AP = { x: point.x - a.x, y: point.y - getDy() - a.y };
+    const AP = { x: point.x - a.x, y: point.y - useVerticalOffset() - a.y };
     const thirdTermABxAPisPositive = AB.x * AP.y - AB.y * AP.x > 0;
     const thirdTermACxAPisPositive = AC.x * AP.y - AC.y * AP.x > 0;
 
     if (thirdTermACxAPisPositive == thirdTermABxAPisPositive) continue;
 
-    const BP = { x: point.x - b.x, y: point.y - getDy() - b.y };
+    const BP = { x: point.x - b.x, y: point.y - useVerticalOffset() - b.y };
     const thirdTermBCxBPisPositive = BC.x * BP.y - BC.y * BP.x > 0;
 
     if (thirdTermBCxBPisPositive != thirdTermABxAPisPositive) continue;

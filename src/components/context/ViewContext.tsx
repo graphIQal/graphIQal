@@ -18,6 +18,8 @@ export type ViewContextInterface = {
   // setSidePanelTabs: (val: TabProps[]) => void;
   username: string;
   nodeId: string;
+  currTab: number;
+  setCurrTab: (val: number) => void;
 };
 
 const ViewContext = createContext<ViewContextInterface | null>(null);

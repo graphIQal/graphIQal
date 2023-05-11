@@ -66,14 +66,11 @@ const Home: React.FC = () => {
         setMainViewTabs: setTabs,
         username: username as string,
         nodeId: nodeId as string,
+        currTab: currTab,
+        setCurrTab: setCurrTab,
       }}
     >
-      <MainTabs
-        tabs={tabs}
-        setTabs={setTabs}
-        currTab={currTab}
-        setCurrTab={setCurrTab}
-      />
+      <MainTabs />
     </ViewContext.Provider>
   );
 };

@@ -2,8 +2,21 @@
  * Hook that draws on canvas and draws dot grid
  */
 
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
+import {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { GRID_X_SIZE, GRID_Y_SIZE } from '../helpers/snapping';
+import ViewContext, {
+  ViewContextInterface,
+} from '../../../components/context/ViewContext';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../context/GraphViewContext';
+import { useVerticalOffset } from './useVerticalOffset';
 
 export function drawLine(
   ctx: any,
@@ -38,6 +51,18 @@ export const useCanvas = (
     y: number;
   };
 
+  const { currTab } = useContext(ViewContext) as ViewContextInterface;
+  useEffect(() => {
+    if (canvasWidth == 0) {
+      canvasWidth = window.innerWidth;
+    }
+    if (canvasHeight == 0) {
+      canvasHeight = window.innerHeight;
+    }
+  }, [window, currTab]);
+
+  const offset = useVerticalOffset();
+
   useEffect(() => {
     const canvasObj = canvasRef.current;
     const ctx = canvasObj.getContext('2d');
@@ -53,9 +78,9 @@ export const useCanvas = (
       drawLine(
         ctx,
         (points[i] as any).x,
-        (points[i] as any).y + getDy(),
+        (points[i] as any).y + offset,
         (points[i + 1] as any).x,
-        (points[i + 1] as any).y + getDy()
+        (points[i + 1] as any).y + offset
       );
     }
 
@@ -81,13 +106,4 @@ export const useCanvas = (
     points,
     setPoints,
   };
-};
-
-//gets vertical offset of canvas
-export const getDy = () => {
-  const element = document.getElementById('container');
-  if (!element) return 0;
-  const offsetDifference =
-    (element.offsetTop - element.scrollTop + element.clientTop) * -1;
-  return offsetDifference;
 };

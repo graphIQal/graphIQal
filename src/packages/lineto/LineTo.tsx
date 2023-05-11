@@ -16,15 +16,15 @@ import {
   calculateControlPointsWithBuffer,
   calculateDeltas,
   calculateTransformArrow,
-  numPointsInTriangle,
+  useNumPointsInTriangle,
 } from './arrowHelpers';
-import { calculateCanvasDimensions, isPointInCanvas } from './canvasHelpers';
+import { calculateCanvasDimensions, useIsPointInCanvas } from './canvasHelpers';
 import { calcAnchor, findElement, parseAnchor } from './lineHelpers';
 import DrawingContext, {
   DrawingContextInterface,
 } from '../graph/context/GraphDrawingContext';
 import { Coord } from '../graph/hooks/drawingHooks';
-import { getDy } from '../graph/hooks/useCanvas';
+import { useVerticalOffset } from '../graph/hooks/useVerticalOffset';
 import { Dropdown, ItemProps } from '../../components/organisms/Dropdown';
 import { ConnectionTypes } from '../../schemas/Data_structures/DS_schema';
 import IconCircleButton from '../../components/molecules/IconCircleButton';
@@ -91,9 +91,9 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
     const y1 = box1.top + box1.height * anchor1.y;
     return {
       x0: x0,
-      y0: y0 + getDy(),
+      y0: y0 + useVerticalOffset(),
       x1: x1,
-      y1: y1 + getDy(),
+      y1: y1 + useVerticalOffset(),
       anchor0,
       anchor1,
     };
@@ -198,7 +198,7 @@ export const Arrow = ({
       //     'y ' + canvasStartPoint.y + ' ' + (canvasStartPoint.y + canvasHeight)
       //   );
       //   console.log(JSON.stringify(point));
-      return isPointInCanvas(
+      return useIsPointInCanvas(
         point,
         canvasStartPoint,
         canvasWidth,
@@ -211,7 +211,7 @@ export const Arrow = ({
   (isPointInCanvasFuncs.current as any)[id] = isPointInCanvasCallback;
   let points: Coord[] = [];
   let numPointsInTriangleCallback = useCallback(
-    (a: Coord, b: Coord, c: Coord) => numPointsInTriangle(a, b, c, points),
+    (a: Coord, b: Coord, c: Coord) => useNumPointsInTriangle(a, b, c, points),
     [points]
   );
 

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 
 export type ItemProps = {
   text: string;
@@ -11,7 +12,30 @@ export const Dropdown: React.FC<{
   activeIndex: number;
   list?: boolean;
   children?: any;
-}> = ({ items, activeIndex, list = true, children }) => {
+  showDropdown: boolean;
+  setShowDropdown: (val: boolean) => any;
+  windowVar: Window;
+}> = ({
+  items,
+  activeIndex,
+  list = true,
+  children,
+  showDropdown,
+  setShowDropdown,
+}) => {
+  const { windowVar } = useContext(ViewContext) as ViewContextInterface;
+
+  useEffect(() => {
+    windowVar.addEventListener('click', (e: any) => {
+      e.stopPropagation();
+      setShowDropdown(false);
+    });
+
+    return windowVar.removeEventListener('click', () => (e: any) => {
+      e.stopPropagation();
+      setShowDropdown(false);
+    });
+  }, [showDropdown]);
   return (
     <div className='absolute w-max shadow-md bg-white z-[200]'>
       {' '}

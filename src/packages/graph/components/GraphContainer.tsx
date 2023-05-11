@@ -24,11 +24,14 @@ import { useResize } from '../hooks/useResize';
 import { usePanAndZoom } from '../hooks/zoomingHooks';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
+import ViewContext, {
+  ViewContextInterface,
+} from '../../../components/context/ViewContext';
 
-export const GraphContainer: React.FC<{
-  window: Window;
-  document: Document;
-}> = ({ window, document }) => {
+export const GraphContainer: React.FC<{}> = () => {
+  const { windowVar, documentVar } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
   //History
   const [history, setHistory] = useState<Action[]>([]);
   const [pointer, setPointer] = useState<number>(-1);
@@ -58,9 +61,9 @@ export const GraphContainer: React.FC<{
   }
 
   useEffect(() => {
-    window.addEventListener('wheel', onWheel, { passive: false });
+    windowVar.addEventListener('wheel', onWheel, { passive: false });
     return () => {
-      window.removeEventListener('wheel', onWheel);
+      windowVar.removeEventListener('wheel', onWheel);
     };
   });
 
@@ -81,7 +84,7 @@ export const GraphContainer: React.FC<{
     translateY,
     scale,
     ref,
-    window
+    windowVar
   );
 
   useEffect(() => {

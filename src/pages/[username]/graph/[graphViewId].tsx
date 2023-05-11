@@ -21,22 +21,15 @@ const Graph2: React.FC<{ viewId: string; title: string }> = ({
   title,
   viewId,
 }) => {
-  const [windowVar, setWindow] = useState<any>();
-  const [documentVar, setDocument] = useState<any>();
-  useEffect(() => {
-    setWindow(window);
-    setDocument(document);
-  });
-
   return (
     <DndProvider backend={HTML5Backend}>
       <SplitPane className='split-pane-row'>
         <SplitPaneLeft>
-          <Graph window={windowVar} document={documentVar} viewId={viewId} />
+          <Graph viewId={viewId} />
         </SplitPaneLeft>
         <Divider className='separator-col' />
         <SplitPaneRight>
-          <GraphSideTabs windowVar={windowVar} documentVar={documentVar} />
+          <GraphSideTabs />
         </SplitPaneRight>
       </SplitPane>
     </DndProvider>

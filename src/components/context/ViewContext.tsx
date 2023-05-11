@@ -20,6 +20,8 @@ export type ViewContextInterface = {
   nodeId: string;
   currTab: number;
   setCurrTab: (val: number) => void;
+  windowVar: Window;
+  documentVar: Document;
 };
 
 const ViewContext = createContext<ViewContextInterface | null>(null);

@@ -1,10 +1,15 @@
 /**
  * Display of nodes and lines connecting them in "mind map" style
  */
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import LineTo from '../../../packages/lineto/LineTo';
 
 import { ItemProps } from '../../../components/organisms/Dropdown';
+import {
+  getConnectionType,
+  getIconAndColor,
+  isLineDirectional,
+} from '../../../helpers/backend/getHelpers';
 import {
   changeConnectionType,
   deleteConnection,
@@ -24,15 +29,6 @@ import {
 } from '../hooks/drawingHooks';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
-import {
-  getConnectionInfo,
-  getConnectionType,
-  getIconAndColor,
-  isLineDirectional,
-} from '../../../helpers/backend/getHelpers';
-import GraphActionContext, {
-  GraphActionContextInterface,
-} from '../context/GraphActionContext';
 
 type MindMapProps = {
   points: any;
@@ -97,7 +93,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
       {Object.keys(nodeData_Graph).map(function (node, i) {
         return Object.keys(nodeData_Graph[node].connections).map((line, j) => {
           return (
-            <div key={i}>
+            <div key={j}>
               <LineTo
                 key={j}
                 from={node}

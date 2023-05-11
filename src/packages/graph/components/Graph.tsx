@@ -27,10 +27,8 @@ import SplitPaneContext, {
 } from '../../../components/organisms/split-pane/SplitPaneContext';
 
 const Graph: React.FC<{
-  window: Window;
-  document: Document;
   viewId: string;
-}> = ({ window, document, viewId }) => {
+}> = ({ viewId }) => {
   if (!document || !window) return <div></div>;
 
   const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
@@ -159,7 +157,7 @@ const Graph: React.FC<{
             setTags: setTags,
           }}
         >
-          <GraphContainer window={window} document={document} />
+          <GraphContainer />
           {/* <BoxDragLayer parentRef={containerRef} /> */}
         </GraphViewContext.Provider>
       </DrawingContext.Provider>

@@ -13,6 +13,13 @@ import Graph2 from './graph/[graphViewId]';
 import Link from 'next/link';
 
 const Home: React.FC = () => {
+  const [windowVar, setWindow] = useState<any>();
+  const [documentVar, setDocument] = useState<any>();
+  useEffect(() => {
+    setWindow(window);
+    setDocument(document);
+  });
+
   const router = useRouter();
 
   const { username, nodeId } = router.query;
@@ -68,6 +75,8 @@ const Home: React.FC = () => {
         nodeId: nodeId as string,
         currTab: currTab,
         setCurrTab: setCurrTab,
+        windowVar: windowVar,
+        documentVar: documentVar,
       }}
     >
       <MainTabs />

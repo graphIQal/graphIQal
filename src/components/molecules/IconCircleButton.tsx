@@ -31,74 +31,78 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
   circle = true,
 }) => {
   const iconSize = size * 0.5;
+  const handleClick = (e: any) => {
+    e.stopPropagation();
+    onClick();
+  };
   const icons: any = {
     plus: (
       <Plus
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     draw: (
       <Pencil
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     undo: (
       <Undo
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     redo: (
       <Redo
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     spotlight: (
       <Flashlight
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     navigation: (
       <Navigation
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     expand: (
       <ArrowsAngleExpand
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     remove: (
       <Trash
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     connection: (
       <Connectdevelop
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     close: (
       <CloseOutline
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
@@ -106,7 +110,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
       <Cube
         size={'1em'}
         color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        onClick={handleClick}
       />
     ),
   };

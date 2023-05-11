@@ -23,6 +23,9 @@ import GraphViewContext, {
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import { iconList } from '../../../theme/iconList';
 import { colors } from '../../../theme/colors';
+import ViewContext, {
+  ViewContextInterface,
+} from '../../../components/context/ViewContext';
 
 export interface NodeProps {
   id: any;
@@ -56,6 +59,10 @@ export const GraphNode: FC<NodeProps> = ({
   const { drawingMode, setDrawingMode } = useContext(
     DrawingContext
   ) as DrawingContextInterface;
+
+  const { windowVar, documentVar } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
   const [showDropdown, setShowDropdown] = useState(false);
@@ -149,7 +156,13 @@ export const GraphNode: FC<NodeProps> = ({
           className='w-full absolute'
           style={{ left: left, top: top + (2 * size[1]) / 3 }}
         >
-          <Dropdown activeIndex={0} list={false}>
+          <Dropdown
+            activeIndex={0}
+            list={false}
+            windowVar={windowVar}
+            setShowDropdown={setShowDropdown}
+            showDropdown={showDropdown}
+          >
             <div>
               <div className='gap-x-0 grid grid-cols-4'>
                 {colors.map((color, i) => {

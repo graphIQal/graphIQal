@@ -29,6 +29,9 @@ import { Dropdown, ItemProps } from '../../components/organisms/Dropdown';
 import { ConnectionTypes } from '../../schemas/Data_structures/DS_schema';
 import IconCircleButton from '../../components/molecules/IconCircleButton';
 import { deleteConnection } from '../../helpers/backend/mutateHelpers';
+import ViewContext, {
+  ViewContextInterface,
+} from '../../components/context/ViewContext';
 
 // Default styling stuff
 const defaultAnchor = { x: 0.5, y: 0.5 };
@@ -146,6 +149,10 @@ export const Arrow = ({
   getDropdownItems,
   deleteConnection,
 }: ArrowProps) => {
+  const { windowVar, documentVar } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
+
   const { isPointInCanvasFuncs, numPointsInTriangleFuncs } = useContext(
     DrawingContext
   ) as DrawingContextInterface;
@@ -244,13 +251,18 @@ export const Arrow = ({
       >
         <IconCircleButton
           selected={showDropdown}
-          onClick={() => setShowDropdown(!showDropdown)}
+          onClick={() => {
+            setShowDropdown(!showDropdown);
+          }}
           src='connection'
         />
         {showDropdown && (
           <Dropdown
+            showDropdown={showDropdown}
             items={getDropdownItems().items}
             activeIndex={getDropdownItems().activeIndex}
+            windowVar={windowVar}
+            setShowDropdown={setShowDropdown}
           />
         )}
       </div>

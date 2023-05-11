@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import Graph from '../../../packages/graph/components/Graph';
 import { Tab } from '../../atoms/Tab';
 import { Tabs } from './Tabs';
+import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
 
 export type SideTabProps = {
   label: string;
@@ -10,10 +11,7 @@ export type SideTabProps = {
   component: any;
 };
 
-const GraphSideTabs: React.FC<{
-  windowVar: Window;
-  documentVar: Document;
-}> = ({ windowVar, documentVar }) => {
+const GraphSideTabs: React.FC<{}> = () => {
   const [tabs, setTabs] = useState<SideTabProps[]>([
     {
       label: 'Connections',
@@ -28,9 +26,7 @@ const GraphSideTabs: React.FC<{
     {
       label: 'Shelf',
       viewType: 'shelf',
-      component: (
-        <Graph window={windowVar} document={documentVar} viewId={''} />
-      ),
+      component: <Graph viewId={''} />,
     },
   ]);
 

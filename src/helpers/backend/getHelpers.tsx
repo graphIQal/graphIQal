@@ -356,3 +356,18 @@ export const getConnectionType = (
 ) => {
   return context.nodeData_Graph[from].connections[to].type;
 };
+
+export const getIconAndColor = (
+  viewContext: GraphViewContextInterface,
+  node: string
+) => {
+  let categorizing_node =
+    viewContext.nodeVisualData_Graph[node].categorizing_node;
+  if (!categorizing_node) {
+    categorizing_node = node;
+  }
+  return {
+    icon: viewContext.nodeData_Graph[categorizing_node].icon,
+    color: viewContext.nodeData_Graph[categorizing_node].color,
+  };
+};

@@ -27,6 +27,7 @@ import { GraphNode } from './GraphNode';
 import {
   getConnectionInfo,
   getConnectionType,
+  getIconAndColor,
   isLineDirectional,
 } from '../../../helpers/backend/getHelpers';
 import GraphActionContext, {
@@ -120,8 +121,9 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         const y = nodeVisualData_Graph[node].y.low;
         const width = nodeVisualData_Graph[node].width.low;
         const height = nodeVisualData_Graph[node].height.low;
-        const icon = nodeData_Graph[node].icon;
-        const color = nodeData_Graph[node].color;
+        // const icon = nodeData_Graph[node].icon;
+        // const color = nodeData_Graph[node].color;
+        const { icon, color } = getIconAndColor(viewContext, node);
         return (
           <div
             className={node}

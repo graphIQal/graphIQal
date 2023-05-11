@@ -13,6 +13,7 @@ import { Tag } from '../../../components/molecules/Tag';
 import TextButton from '../../../components/molecules/TextButton';
 import { createNode } from '@udecode/plate';
 import { saveGraphView } from '../../../backend/functions/graph/saveGraphView';
+import { applyTags } from '../helpers/Filtering/applyTags';
 
 type FilteringProps = {
   xCategory: string;
@@ -28,8 +29,8 @@ export const Filtering: React.FC<FilteringProps> = ({
   getDropdownItemsX,
   getDropdownItemsY,
 }) => {
-  const { tags } = useContext(GraphViewContext) as GraphViewContextInterface;
-
+  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
+  const { tags } = viewContext;
   return (
     <div className=' relative ml-3 mt-3 flex flex-row gap-x-3 mb-3 w-full'>
       {/* <TextButton
@@ -69,6 +70,12 @@ export const Filtering: React.FC<FilteringProps> = ({
         {Object.keys(tags).map((tag: string, i: number) => {
           return <Tag tag={tag} id={i} />;
         })}
+        <TextButton
+          text='Apply Tags'
+          onClick={() => {
+            applyTags(viewContext);
+          }}
+        ></TextButton>
       </div>
     </div>
   );

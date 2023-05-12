@@ -21,12 +21,8 @@ export type NodeData = {
 };
 
 export type GraphNodeData = {
-  width: {
-    low: number;
-  };
-  height: {
-    low: number;
-  };
+  width: number;
+  height: number;
   x: {
     low: number;
   };

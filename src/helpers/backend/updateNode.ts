@@ -26,20 +26,20 @@ export const updateNode = (
       const newSize = [newVal.width, newVal.height];
       if (newVal.tag === 'top') {
         const val =
-          graphNodes[nodeID].y.low + graphNodes[nodeID].height.low - newSize[1];
+          graphNodes[nodeID].y.low + graphNodes[nodeID].height - newSize[1];
         if (Number.isFinite(val)) {
           graphNodes[nodeID].y.low = val;
         }
       }
       if (newVal.tag === 'left') {
         const val =
-          graphNodes[nodeID].x.low + graphNodes[nodeID].width.low - newSize[0];
+          graphNodes[nodeID].x.low + graphNodes[nodeID].width - newSize[0];
         if (Number.isFinite(val)) {
           graphNodes[nodeID].x.low = val;
         }
       }
-      graphNodes[nodeID].width.low = newSize[0];
-      graphNodes[nodeID].height.low = newSize[1];
+      graphNodes[nodeID].width = newSize[0];
+      graphNodes[nodeID].height = newSize[1];
       context?.setnodeVisualData_Graph({ ...graphNodes });
       break;
 

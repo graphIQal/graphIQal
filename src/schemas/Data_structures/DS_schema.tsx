@@ -31,13 +31,6 @@ export type VisualData = {
   z?: number;
 };
 
-export const ConnectionTypes = {
-  IN: 'Includes',
-  DEPENDS_ON: 'Dependency',
-  FOLLOWS: 'Chronology',
-  RELATED: 'No Type',
-};
-
 export const ids = [
   'homenode',
   'course_topics',

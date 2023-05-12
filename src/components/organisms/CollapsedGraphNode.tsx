@@ -9,6 +9,7 @@ import GraphViewContext, {
 import { deleteNode } from '../../helpers/backend/deleteNode';
 import IconCircleButton from '../molecules/IconCircleButton';
 import { updateNode } from '../../helpers/backend/updateNode';
+import { setCollapsedNode } from '../../packages/graph/helpers/setCollapsedNode';
 
 const CollapsedGraphNode: React.FC<{
   title: string;
@@ -29,7 +30,7 @@ const CollapsedGraphNode: React.FC<{
     },
     {
       src: 'expand',
-      onClick: () => setNodeInView(id),
+      onClick: () => setCollapsedNode(id, viewContext),
     },
     {
       src: 'remove',

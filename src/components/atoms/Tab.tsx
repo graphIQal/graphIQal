@@ -41,7 +41,7 @@ export const Tab: React.FC<TabProps> = ({
       onMouseOver={() => setShowDel(true)}
       onMouseLeave={() => setShowDel(false)}
       className={
-        ' w-36 border-x-[0.5px] border-lining p-2 text-sm hover:cursor-pointer hover:bg-base_white flex flex-row items-center justify-between align-middle ' +
+        'w-36  border-x-[0.5px] border-lining p-2 text-sm hover:cursor-pointer hover:bg-base_white flex flex-row items-center justify-between align-middle ' +
         (selected && ' bg-base_white')
       }
     >

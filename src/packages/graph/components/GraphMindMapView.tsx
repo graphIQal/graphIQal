@@ -12,7 +12,6 @@ import {
 } from '../../../helpers/backend/gettersConnectionInfo';
 
 import { updateConnection } from '../../../helpers/backend/updateConnection';
-import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
 import DrawingContext, {
   DrawingContextInterface,
 } from '../context/GraphDrawingContext';
@@ -25,6 +24,7 @@ import { deleteConnection } from '../../../helpers/backend/deleteConnection';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { handleEndPoint } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
+import { ConnectionTypes } from '../graphTypes';
 
 type MindMapProps = {
   points: any;

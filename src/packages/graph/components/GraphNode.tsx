@@ -26,6 +26,7 @@ import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
 import { useDragNode } from '../hooks/dragging/useDragNode';
+import { getTypedConnections } from '../../../helpers/frontend/getTypedConnections';
 
 export interface NodeProps {
   id: any;
@@ -53,6 +54,7 @@ export const GraphNode: FC<NodeProps> = ({
     canDrag,
     setCanDrag,
     hideSourceOnDrag,
+
     // addAction,
   } = useContext(GraphActionContext) as GraphActionContextInterface;
 
@@ -66,7 +68,7 @@ export const GraphNode: FC<NodeProps> = ({
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
   const [showDropdown, setShowDropdown] = useState(false);
-
+  const collapsed = viewContext.nodeVisualData_Graph[id].collapsed;
   //disables dragging if we're drawing
   useEffect(() => {
     if (drawingMode) {
@@ -142,14 +144,43 @@ export const GraphNode: FC<NodeProps> = ({
             <Cube className='absolute right-sm top-sm' size={'1.5em'} />
           </div>
         ) : ( */}
-        <CollapsedGraphNode
-          toggleDropdown={() => setShowDropdown(!showDropdown)}
-          title={title}
-          id={id}
-          icon={icon}
-          color={color}
-        />
-        {/* )} */}
+        {collapsed ? (
+          <CollapsedGraphNode
+            toggleDropdown={() => setShowDropdown(!showDropdown)}
+            title={title}
+            id={id}
+            icon={icon}
+            color={color}
+          />
+        ) : (
+          <div>
+            {getTypedConnections(viewContext, id, 'IN')?.map((nodeID, i) => {
+              let { icon, color } = viewContext.nodeData_Graph[nodeID];
+              let childTitle = viewContext.nodeData_Graph[nodeID].title;
+
+              return (
+                <div key={i} className=' bg-opacity-50'>
+                  <h3
+                    className={
+                      'absolute top-0 left-0 text-white p-1 bg-' + color
+                    }
+                  >
+                    {title}
+                  </h3>
+                  <div className='mt-8'>
+                    <CollapsedGraphNode
+                      id={nodeID}
+                      title={childTitle}
+                      icon={icon}
+                      color={color}
+                      toggleDropdown={() => setShowDropdown(!showDropdown)}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </ResizableBox>
       {showDropdown && (
         <div

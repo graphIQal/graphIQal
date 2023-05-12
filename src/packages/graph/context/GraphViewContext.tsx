@@ -2,15 +2,8 @@
  * Context for everything that is displayed in the Graph.
  */
 
-import { createContext, MutableRefObject } from 'react';
-import {
-	ConnectionData,
-	GraphNodeData,
-	Node,
-	NodeData,
-	VisualData,
-} from '../../../schemas/Data_structures/DS_schema';
-import { LineRefs } from '../graphTypes';
+import { createContext } from 'react';
+import { NodeData, GraphNodeData } from '../graphTypes';
 
 export type GraphViewContextInterface = {
 	nodeInFocus: string; //ID of "centered" node (shows only its connections and relevant data), 'homenode' if no centered node
@@ -21,9 +14,12 @@ export type GraphViewContextInterface = {
 	setnodeVisualData_Graph: (val: { [key: string]: GraphNodeData }) => void;
 	modalNode: string; //The node that will show in the popup modal
 	setModalNode: (val: string) => void;
-	username: string;
-	nodeId: string;
 	graphViewId: string;
+	setGraphViewId: (val: string) => void;
+	tags: { [key: string]: Set<string> }[];
+	setTags: (val: { [key: string]: Set<string> }[]) => void;
+	alert: string;
+	setAlert: (val: string) => void;
 };
 
 const GraphViewContext = createContext<GraphViewContextInterface | null>(null);

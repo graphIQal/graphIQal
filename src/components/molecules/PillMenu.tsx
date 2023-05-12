@@ -1,14 +1,7 @@
-import React, { useContext, useState } from 'react';
-import { List } from '@styled-icons/feather/List';
-import GraphActionContext, {
-  GraphActionContextInterface,
-} from '../../pages/graph/context/GraphActionContext';
 import { AngleDown } from '@styled-icons/fa-solid/AngleDown';
-import BlockMenu from '../organisms/BlockMenu';
-import HoveringToolbar from '../organisms/HoveringToolbar';
+import { List } from '@styled-icons/feather/List';
+import React, { useState } from 'react';
 import { Dropdown, ItemProps } from '../organisms/Dropdown';
-import { nodesData } from '../../schemas/Data_structures/DS_schema';
-import { getNodeTitle } from '../../helpers/backend/getHelpers';
 
 export const PillMenu: React.FC<{
   label: string;
@@ -24,18 +17,18 @@ export const PillMenu: React.FC<{
       >
         <List className='w-5' />
         <div>
-          {label} <span className='font-bold'> {getNodeTitle(value)}</span>
+          {label} <span className='font-bold'> {value}</span>
         </div>
         <AngleDown
           onClick={() => setShowDropdown(!showDropdown)}
           className='w-2 hover:opacity-80 hover:cursor-pointer'
         />
       </div>
-      {showDropdown && (
+      {/* {showDropdown && (
         <div className='w-full relative'>
-          <Dropdown items={dropdownItems} />
+          <Dropdown items={dropdownItems} activeIndex={0} />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

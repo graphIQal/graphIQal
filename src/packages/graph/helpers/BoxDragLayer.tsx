@@ -4,7 +4,7 @@
 import { CSSProperties, FC, MutableRefObject } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { useDragLayer } from 'react-dnd';
-import { snapToGrid } from './snapping';
+import { snapToGrid } from './snapToGrid';
 
 const layerStyles: CSSProperties = {
   position: 'fixed',

@@ -10,11 +10,16 @@ import { Flashlight } from '@styled-icons/fluentui-system-filled/Flashlight';
 import { Navigation } from '@styled-icons/boxicons-regular/Navigation';
 import { ArrowsAngleExpand } from '@styled-icons/bootstrap/ArrowsAngleExpand';
 import { Trash } from '@styled-icons/bootstrap/Trash';
+import { Connectdevelop } from '@styled-icons/fa-brands/Connectdevelop';
+import { CloseOutline } from '@styled-icons/evaicons-outline/CloseOutline';
+
 type NodeButtonProps = {
   onClick: () => void;
   src: string;
   selected?: boolean;
   size?: number;
+  circle?: boolean;
+  color?: string;
 };
 
 //filled circle button with plus icon button inside
@@ -24,74 +29,105 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
   src,
   selected = false,
   size = 30,
+  circle = true,
+  color = 'black',
 }) => {
   const iconSize = size * 0.5;
+  const handleClick = (e: any) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onClick();
+  };
   const icons: any = {
     plus: (
       <Plus
-        color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     draw: (
       <Pencil
-        color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
-    node: <Cube color={'blue'} size={size} onClick={onClick} />,
     undo: (
       <Undo
-        color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     redo: (
       <Redo
-        color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     spotlight: (
       <Flashlight
-        color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     navigation: (
       <Navigation
-        color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     expand: (
       <ArrowsAngleExpand
-        color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
         size={iconSize}
       />
     ),
     remove: (
       <Trash
-        color={!selected ? 'black' : 'white'}
-        onClick={onClick}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
         size={iconSize}
+      />
+    ),
+    connection: (
+      <Connectdevelop
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
+        size={iconSize}
+      />
+    ),
+    close: (
+      <CloseOutline
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
+        size={iconSize}
+      />
+    ),
+    block: (
+      <Cube
+        size={'1em'}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
       />
     ),
   };
   return (
     <div className='hover:cursor-pointer hover:opacity-80'>
-      <Circle
-        diameter={size}
-        children={<IconButton onClick={onClick} src={icons[src]} />}
-        backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
-      />
+      {circle ? (
+        <Circle
+          diameter={size}
+          children={<IconButton onClick={onClick} src={icons[src]} />}
+          backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
+        />
+      ) : (
+        <IconButton onClick={onClick} src={icons[src]} />
+      )}
     </div>
   );
 };

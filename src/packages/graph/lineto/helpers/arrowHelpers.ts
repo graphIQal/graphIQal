@@ -2,7 +2,8 @@
  * Helper functions for the arrow drawing
  */
 
-import { Coord } from '../../pages/graph/hooks/drawingHooks';
+import { Coord } from '../../hooks/drawing/useDrawingEnd';
+import { useVerticalOffset } from '../../hooks/useVerticalOffset';
 
 //Calculates delta and absolute delta between two given points
 export const calculateDeltas = (
@@ -208,11 +209,12 @@ export const calculateTransformArrow = ({
 };
 
 //Calculates the number of points of the triangle formed by an arrow that intersect a line to judge whether arrow belongs to that line
-export const numPointsInTriangle = (
+export const useNumPointsInTriangle = (
   a: Coord,
   b: Coord,
   c: Coord,
-  points: Coord[]
+  points: Coord[],
+  offset: number
 ) => {
   const AB = { x: b.x - a.x, y: b.y - a.y };
   const AC = { x: c.x - a.x, y: c.y - a.y };
@@ -220,13 +222,13 @@ export const numPointsInTriangle = (
   let numPoints = 0;
   for (let p in points) {
     let point = points[p];
-    const AP = { x: point.x - a.x, y: point.y - a.y };
+    const AP = { x: point.x - a.x, y: point.y - offset - a.y };
     const thirdTermABxAPisPositive = AB.x * AP.y - AB.y * AP.x > 0;
     const thirdTermACxAPisPositive = AC.x * AP.y - AC.y * AP.x > 0;
 
     if (thirdTermACxAPisPositive == thirdTermABxAPisPositive) continue;
 
-    const BP = { x: point.x - b.x, y: point.y - b.y };
+    const BP = { x: point.x - b.x, y: point.y - offset - b.y };
     const thirdTermBCxBPisPositive = BC.x * BP.y - BC.y * BP.x > 0;
 
     if (thirdTermBCxBPisPositive != thirdTermABxAPisPositive) continue;

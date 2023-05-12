@@ -2,39 +2,36 @@
  * Container for Graph; renders either "Mind map" view or "Axis" view
  * Sets information for Context wrapper that deals with actions like dragging, undo/redo, resize
  */
-import {
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { addLine } from '../../../helpers/backend/mutateHelpers';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { addConnection } from '../../../helpers/backend/addConnection';
+import GraphActionContext from '../context/GraphActionContext';
 import DrawingContext, {
   DrawingContextInterface,
 } from '../context/GraphDrawingContext';
-import GraphActionContext from '../context/GraphActionContext';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
-import { useResize } from '../hooks/useResize';
-import { useDropNode } from '../hooks/draggingHooks';
-import {
-  useDrawingCanvas,
-  useDrawingEnd,
-  useDrawingStart,
-} from '../hooks/drawingHooks';
-import { useFiltering } from '../hooks/filteringHooks';
-import { useCanvas } from '../hooks/useCanvas';
+import { useDropNode } from '../hooks/dragging/useDropNode';
+
+import { useFiltering } from '../hooks/useFiltering';
+import { useCanvas } from '../hooks/drawing/useCanvas';
 import { Action } from '../hooks/useHistoryState';
+import { useResize } from '../hooks/useResize';
+import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
-import { usePanAndZoom } from '../hooks/zoomingHooks';
+import ViewContext, {
+  ViewContextInterface,
+} from '../../../components/context/ViewContext';
+import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
+import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
+import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
+import { Alert } from '../../../components/organisms/Alert';
 
-export const GraphContainer: React.FC<{
-  window: Window;
-  document: Document;
-}> = ({ window, document }) => {
+export const GraphContainer: React.FC<{}> = () => {
+  const { windowVar, documentVar } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
   //History
   const [history, setHistory] = useState<Action[]>([]);
   const [pointer, setPointer] = useState<number>(-1);
@@ -64,16 +61,16 @@ export const GraphContainer: React.FC<{
   }
 
   useEffect(() => {
-    window.addEventListener('wheel', onWheel, { passive: false });
+    windowVar.addEventListener('wheel', onWheel, { passive: false });
     return () => {
-      window.removeEventListener('wheel', onWheel);
+      windowVar.removeEventListener('wheel', onWheel);
     };
   });
 
   //Lines and nodes to show
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
-  const { nodeData_Graph } = viewContext;
+  // const { lines, setLines, nodeData_Graph } = viewContext;
 
   //DND
   const startPos = useRef<{ left: number; top: number }>();
@@ -87,7 +84,7 @@ export const GraphContainer: React.FC<{
     translateY,
     scale,
     ref,
-    window
+    windowVar
   );
 
   useEffect(() => {
@@ -114,7 +111,7 @@ export const GraphContainer: React.FC<{
       endNode.current !== '' &&
       startNode.current != endNode.current
     ) {
-      addLine(startNode.current, endNode.current, null, viewContext);
+      addConnection(startNode.current, endNode.current, viewContext);
       // addAction({
       //   undo: { id: '', value: null, type: 'LINE' },
       //   redo: {
@@ -128,7 +125,7 @@ export const GraphContainer: React.FC<{
 
   const handleStartPoint = useDrawingStart();
   const handleDrawing = useDrawingCanvas();
-  const handleDrawingEnd = useDrawingEnd();
+  const handleDrawingEnd = useDrawingEnd(translateX, translateY, scale);
 
   //Pinching hook
   // const handlePinch = usePinch();

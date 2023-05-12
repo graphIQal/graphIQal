@@ -17,6 +17,7 @@ export default function Home() {
 	const [email, setemail] = useState('icejes8@gmail.com');
 	const [username, setusername] = useState('jesseliii');
 	const [password, setpassword] = useState('password');
+	const [viewType, setViewType] = useState('graph');
 
 	const router = useRouter();
 
@@ -52,13 +53,7 @@ export default function Home() {
 					onClick={async () => {
 						const res = await login(email, username, password);
 						console.log('result', res);
-						router.push(
-							'/' +
-								username +
-								'/' +
-								res.n.properties.id +
-								'/document'
-						);
+						router.push('/' + username + '/' + res.n.properties.id);
 					}}
 				/>
 				<TextButton

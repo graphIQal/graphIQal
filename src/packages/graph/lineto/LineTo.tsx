@@ -12,24 +12,32 @@ import React, {
   useRef,
   useState,
 } from 'react';
-
 import {
   calculateControlPointsWithBuffer,
   calculateDeltas,
   calculateTransformArrow,
-  numPointsInTriangle,
-} from './arrowHelpers';
-import { calculateCanvasDimensions, isPointInCanvas } from './canvasHelpers';
-import { calcAnchor, findElement, parseAnchor } from './lineHelpers';
+  useNumPointsInTriangle,
+} from './helpers/arrowHelpers';
 import DrawingContext, {
   DrawingContextInterface,
-} from '../graph/context/GraphDrawingContext';
-import { Coord } from '../graph/hooks/drawingHooks';
-import { getDy } from '../graph/hooks/useCanvas';
-import { Dropdown, ItemProps } from '../../components/organisms/Dropdown';
-import { ConnectionTypes } from '../../schemas/Data_structures/DS_schema';
-import IconCircleButton from '../../components/molecules/IconCircleButton';
-import { deleteConnection } from '../../helpers/backend/mutateHelpers';
+} from '../context/GraphDrawingContext';
+import { Coord } from '../hooks/drawing/useDrawingEnd';
+import { useVerticalOffset } from '../hooks/useVerticalOffset';
+import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
+import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
+import IconCircleButton from '../../../components/molecules/IconCircleButton';
+import ViewContext, {
+  ViewContextInterface,
+} from '../../../components/context/ViewContext';
+import {
+  calculateCanvasDimensions,
+  useIsPointInCanvas,
+} from './helpers/canvasHelpers';
+import {
+  parseAnchor,
+  findElement,
+  calcAnchor,
+} from './helpers/linePositionHelpers';
 
 // Default styling stuff
 const defaultAnchor = { x: 0.5, y: 0.5 };
@@ -40,10 +48,11 @@ type LineToPropTypes = {
   id: any;
   from: string;
   to: string;
-  arrow: string | null;
-  translateX: number;
-  translateY: number;
-  getDropDownItems: (from: string, to: string) => ItemProps[];
+  arrow: boolean;
+  getDropDownItems: (
+    from: string,
+    to: string
+  ) => { items: ItemProps[]; activeIndex: number };
   deleteConnection: (from: string, to: string) => void;
   fromAnchor?: any;
   toAnchor?: any;
@@ -56,8 +65,10 @@ type LineToPropTypes = {
 };
 
 export const LineTo: React.FC<LineToPropTypes> = (props) => {
+  if (props.from == props.to) return <div></div>;
   const [fromAnchor, setFromAnchor] = useState<any>();
   const [toAnchor, setToAnchor] = useState<any>();
+  const offset = useVerticalOffset();
   useEffect(() => {
     setFromAnchor(parseAnchor(props.fromAnchor, defaultAnchor));
     setToAnchor(parseAnchor(props.toAnchor, defaultAnchor));
@@ -90,9 +101,9 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
     const y1 = box1.top + box1.height * anchor1.y;
     return {
       x0: x0,
-      y0: y0 + getDy(),
+      y0: y0 + offset,
       x1: x1,
-      y1: y1 + getDy(),
+      y1: y1 + offset,
       anchor0,
       anchor1,
     };
@@ -110,8 +121,6 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
       {...points}
       getDropdownItems={() => props.getDropDownItems(props.from, props.to)}
       deleteConnection={() => props.deleteConnection(props.from, props.to)}
-      translateY={props.translateY}
-      translateX={props.translateX}
     />
   );
 };
@@ -123,8 +132,8 @@ type ArrowProps = {
   y0?: any;
   x1?: any;
   y1?: any;
-  arrow: string | null;
-  getDropdownItems: () => ItemProps[];
+  arrow: boolean;
+  getDropdownItems: () => { items: ItemProps[]; activeIndex: number };
   deleteConnection: () => void;
   anchor0?: any;
   anchor1?: any;
@@ -133,8 +142,6 @@ type ArrowProps = {
   borderWidth?: number | undefined;
   className?: string | undefined;
   zIndex?: number | undefined;
-  translateX: number;
-  translateY: number;
 };
 
 export const Arrow = ({
@@ -148,9 +155,12 @@ export const Arrow = ({
   arrow,
   getDropdownItems,
   deleteConnection,
-  translateX,
-  translateY,
 }: ArrowProps) => {
+  const offset = useVerticalOffset();
+  const { windowVar, documentVar } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
+
   const { isPointInCanvasFuncs, numPointsInTriangleFuncs } = useContext(
     DrawingContext
   ) as DrawingContextInterface;
@@ -203,11 +213,12 @@ export const Arrow = ({
       //     'y ' + canvasStartPoint.y + ' ' + (canvasStartPoint.y + canvasHeight)
       //   );
       //   console.log(JSON.stringify(point));
-      return isPointInCanvas(
+      return useIsPointInCanvas(
         point,
         canvasStartPoint,
         canvasWidth,
-        canvasHeight
+        canvasHeight,
+        offset
       );
     },
     [canvasStartPoint, canvasWidth, canvasHeight]
@@ -216,7 +227,8 @@ export const Arrow = ({
   (isPointInCanvasFuncs.current as any)[id] = isPointInCanvasCallback;
   let points: Coord[] = [];
   let numPointsInTriangleCallback = useCallback(
-    (a: Coord, b: Coord, c: Coord) => numPointsInTriangle(a, b, c, points),
+    (a: Coord, b: Coord, c: Coord) =>
+      useNumPointsInTriangle(a, b, c, points, offset),
     [points]
   );
 
@@ -239,16 +251,32 @@ export const Arrow = ({
   }, []);
 
   return (
-    <div id='container' className='relative'>
-      {showDropdown && (
-        <div
-          className='absolute w-max'
-          style={{ left: p1.x + canvasXOffset, top: p1.y + canvasYOffset }}
-        >
-          <Dropdown items={getDropdownItems()} />
-          {/* <IconCircleButton onClick={deleteConnection} src='remove' /> */}
-        </div>
-      )}
+    <div className='relative'>
+      <div
+        className='absolute w-max z-30'
+        style={{
+          left: (p1.x + p4.x) / 2 + canvasXOffset - 15,
+          top: (p1.y + p4.y) / 2 + canvasYOffset - 15,
+        }}
+      >
+        <IconCircleButton
+          selected={showDropdown}
+          onClick={() => {
+            setShowDropdown(!showDropdown);
+          }}
+          src='connection'
+        />
+        {showDropdown && (
+          <Dropdown
+            showDropdown={showDropdown}
+            items={getDropdownItems().items}
+            activeIndex={getDropdownItems().activeIndex}
+            windowVar={windowVar}
+            setShowDropdown={setShowDropdown}
+          />
+        )}
+      </div>
+
       <svg
         width={canvasWidth}
         id='svg'
@@ -276,7 +304,7 @@ export const Arrow = ({
         ${p4.x}, ${p4.y} 
       `}
         />
-        {arrow != null && (
+        {arrow && (
           <path
             d={`
       M ${(arrowHeadEndingSize / 5) * 2} 0

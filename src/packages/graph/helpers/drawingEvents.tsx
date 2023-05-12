@@ -2,9 +2,9 @@
  * Helpers for detecting what is drawn.
  */
 
-import { getLineDataEndpoints } from '../../../helpers/backend/getHelpers';
+import { getLineEndpointData } from '../../../helpers/backend/gettersConnectionInfo';
 import { GraphViewContextInterface } from '../context/GraphViewContext';
-import { Coord } from '../hooks/drawingHooks';
+import { Coord } from '../hooks/drawing/useDrawingEnd';
 
 export const isCircle = (coords: Coord[]) => {
   let xAvg = 0;
@@ -91,45 +91,44 @@ export const calcArrowStart = (
   context: GraphViewContextInterface | null
 ) => {
   //get visual information for start and end node
-  const { x1, x2, y1, y2, node1, node2 } = getLineDataEndpoints(
-    context,
-    lineID
-  );
+  const { x1, x2, y1, y2, node1, node2 } = getLineEndpointData(context, lineID);
 
-  if (!y1 || !y2 || !x1 || !x2 || !node1 || !node2) return;
-
+  if (!y1 || !y2 || !x1 || !x2 || !node1 || !node2)
+    return { arrowStart: node1, arrowEnd: node2 };
+  let start = node1;
   if (startPoint.x < middlePoint.x && middlePoint.x < endPoint.x) {
     if (middlePoint.y < startPoint.y || middlePoint.y < endPoint.y) {
       //up arrow
       if (y1 < y2) {
-        return node1;
+        start = node1;
       } else {
-        return node2;
+        start = node2;
       }
     } else {
       //down arrow
 
       if (y1 < y2) {
-        return node2;
+        start = node2;
       } else {
-        return node1;
+        start = node1;
       }
     }
   } else {
     if (middlePoint.x < startPoint.x || middlePoint.x < endPoint.x) {
       //left arrow
       if (x1 < x2) {
-        return node2;
+        start = node2;
       } else {
-        return node1;
+        start = node1;
       }
     } else {
       //right arrow
       if (x1 < x2) {
-        return node1;
+        start = node1;
       } else {
-        return node2;
+        start = node2;
       }
     }
   }
+  return { arrowStart: start, arrowEnd: node1 == start ? node2 : node1 };
 };

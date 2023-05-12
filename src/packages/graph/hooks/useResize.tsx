@@ -2,7 +2,7 @@
  * Hook that returns the updateSize method that will be used on resize
  */
 import { useCallback, useContext } from 'react';
-import { updateNode } from '../../../helpers/backend/mutateHelpers';
+import { updateNode } from '../../../helpers/backend/updateNode';
 import GraphViewContext, {
 	GraphViewContextInterface,
 } from '../context/GraphViewContext';

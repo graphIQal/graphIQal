@@ -5,7 +5,7 @@
 import React, { useContext } from 'react';
 import { PillMenu } from '../../../components/molecules/PillMenu';
 import { ItemProps } from '../../../components/organisms/Dropdown';
-import { getNodeTags } from '../../../helpers/backend/getHelpers';
+import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
@@ -13,6 +13,7 @@ import { Tag } from '../../../components/molecules/Tag';
 import TextButton from '../../../components/molecules/TextButton';
 import { createNode } from '@udecode/plate';
 import { saveGraphView } from '../../../backend/functions/graph/saveGraphView';
+import { applyTags } from '../helpers/Filtering/applyTags';
 
 type FilteringProps = {
   xCategory: string;
@@ -28,20 +29,11 @@ export const Filtering: React.FC<FilteringProps> = ({
   getDropdownItemsX,
   getDropdownItemsY,
 }) => {
-  const {
-    nodeInView,
-    nodeVisualData_Graph,
-    nodeData_Graph,
-    username,
-    graphViewId,
-    nodeId,
-  } = useContext(GraphViewContext) as GraphViewContextInterface;
-
-  const tags = getNodeTags(nodeInView, nodeData_Graph);
-
+  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
+  const { tags } = viewContext;
   return (
     <div className=' relative ml-3 mt-3 flex flex-row gap-x-3 mb-3 w-full'>
-      <TextButton
+      {/* <TextButton
         text='Save Graph'
         onClick={() => {
           saveGraphView({
@@ -52,14 +44,14 @@ export const Filtering: React.FC<FilteringProps> = ({
             nodeData: nodeData_Graph,
           });
         }}
-      ></TextButton>
+      ></TextButton> */}
       <TextButton
         text='Create Node'
         onClick={() => {
           console.log('hmm');
         }}
       ></TextButton>
-      <PillMenu
+      {/* <PillMenu
         label='In View: '
         value={nodeInView}
         dropdownItems={getDropdownItems()}
@@ -73,11 +65,17 @@ export const Filtering: React.FC<FilteringProps> = ({
         label='Y-Axis: '
         value={yCategory}
         dropdownItems={getDropdownItemsY()}
-      />
+      /> */}
       <div className='flex flex-row justify-items-stretch gap-x-2'>
         {Object.keys(tags).map((tag: string, i: number) => {
           return <Tag tag={tag} id={i} />;
         })}
+        <TextButton
+          text='Apply Tags'
+          onClick={() => {
+            applyTags(viewContext);
+          }}
+        ></TextButton>
       </div>
     </div>
   );

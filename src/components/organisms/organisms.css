@@ -12,4 +12,8 @@
     @apply flex;
     @apply flex-row;
   }
+
+  .collapsed_node {
+    font-size: calc(theme(fontSize[sm]));
+  }
 }

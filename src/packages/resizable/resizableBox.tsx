@@ -56,18 +56,18 @@ const ResizableBox: React.FC<{
       const e = event as any;
       const dx = e.clientX - x;
       x = e.clientX;
-      if (width + dx < MIN_X) {
-        width = MIN_X;
-      } else {
-        width = width + dx;
-      }
+      // if (width + dx < MIN_X) {
+      //   width = MIN_X;
+      // } else {
+      width = width + dx;
+      // }
       resizeableEle.style.width = width + 'px';
       const dy = e.clientY - y;
-      if (height + dy < MIN_Y) {
-        height = MIN_Y;
-      } else {
-        height = height + dy;
-      }
+      // if (height + dy < MIN_Y) {
+      //   height = MIN_Y;
+      // } else {
+      height = height + dy;
+      // }
       updateSize(id, width, height);
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
@@ -94,11 +94,11 @@ const ResizableBox: React.FC<{
       const e = event as any;
       const dx = e.clientX - x;
       x = e.clientX;
-      if (width + dx < MIN_X) {
-        width = MIN_X;
-      } else {
-        width = width + dx;
-      }
+      // if (width + dx < MIN_X) {
+      //   width = MIN_X;
+      // } else {
+      width = width + dx;
+      // }
 
       updateSize(id, width, parseInt(resizeableEle.style.height));
       resizeableEle.style.width = width + 'px';
@@ -147,11 +147,11 @@ const ResizableBox: React.FC<{
     const onMouseMoveBottomResize = (event: any) => {
       const e = event as any;
       const dy = e.clientY - y;
-      if (height + dy < MIN_Y) {
-        height = MIN_Y;
-      } else {
-        height = height + dy;
-      }
+      // if (height + dy < MIN_Y) {
+      //   height = MIN_Y;
+      // } else {
+      height = height + dy;
+      // }
 
       y = e.clientY;
       resizeableEle.style.height = height + 'px';

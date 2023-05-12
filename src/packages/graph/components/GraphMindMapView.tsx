@@ -1,28 +1,30 @@
 /**
  * Display of nodes and lines connecting them in "mind map" style
  */
-import React, { useContext, useEffect } from 'react';
-import LineTo from '../../../packages/lineto/LineTo';
+import React, { useContext } from 'react';
+import LineTo from '../lineto/LineTo';
 
 import { ItemProps } from '../../../components/organisms/Dropdown';
 import {
-  changeConnectionType,
-  deleteConnection,
-} from '../../../helpers/backend/mutateHelpers';
-import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
+  getConnectionType,
+  getIconAndColor,
+  isLineDirectional,
+} from '../../../helpers/backend/gettersConnectionInfo';
+
+import { updateConnection } from '../../../helpers/backend/updateConnection';
 import DrawingContext, {
   DrawingContextInterface,
 } from '../context/GraphDrawingContext';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
-import {
-  handleEndPoint,
-  useDrawingCanvas,
-  useDrawingStart,
-} from '../hooks/drawingHooks';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
+import { deleteConnection } from '../../../helpers/backend/deleteConnection';
+import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
+import { handleEndPoint } from '../hooks/drawing/useDrawingEnd';
+import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
+import { ConnectionTypes } from '../graphTypes';
 
 type MindMapProps = {
   points: any;
@@ -48,44 +50,59 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
   const { nodeData_Graph, nodeVisualData_Graph, setnodeVisualData_Graph } =
     viewContext;
 
-  // useEffect(() => {
-  // 	setLines([...lines]);
-  // }, [translateX]);
-
   const getDropdownItems = (from: string, to: string) => {
+    let activeIndex = 0;
     const items: ItemProps[] = [];
     Object.keys(ConnectionTypes).map((connection: string, i: number) => {
       items.push({
         text: (ConnectionTypes as any)[connection],
-        onPress: () => changeConnectionType(from, to, connection, viewContext),
+        onPress: () =>
+          updateConnection(viewContext, 'type', '', {
+            start: from,
+            end: to,
+            newType: connection,
+          }),
       });
+      if (getConnectionType(from, to, viewContext) == connection) {
+        activeIndex = i;
+      }
     });
+    if (getConnectionType(from, to, viewContext) != 'RELATED') {
+      items.push({
+        text: 'Reverse Connection',
+        onPress: () =>
+          updateConnection(viewContext, 'reverse', '', {
+            arrowStart: to,
+            arrowEnd: from,
+          }),
+      });
+    }
     items.push({
       text: 'Delete Connection',
       onPress: () => deleteConnection(from, to, viewContext),
       icon: 'remove',
     });
 
-    return items;
+    return { items, activeIndex };
   };
 
   const { startNode, endNode, drawingMode, isDrawing, setIsDrawing } =
     useContext(DrawingContext) as DrawingContextInterface;
 
   return (
-    <div className='relative' id='container'>
+    <div className='relative' id={'container' + viewContext.graphViewId}>
       {Object.keys(nodeData_Graph).map(function (node, i) {
-        return Object.keys(nodeData_Graph[node].connections).map((line, i) => {
+        return Object.keys(nodeData_Graph[node].connections).map((line, j) => {
           return (
-            <div>
+            <div key={j}>
               <LineTo
-                key={i}
+                key={j}
                 from={node}
                 to={line}
-                id={i}
-                arrow={node}
-                translateX={translateX ? translateX : 0}
-                translateY={translateY ? translateX : 0}
+                id={node + '_' + line}
+                arrow={isLineDirectional(
+                  nodeData_Graph[node].connections[line]
+                )}
                 getDropDownItems={getDropdownItems}
                 deleteConnection={(from: string, to: string) =>
                   deleteConnection(from, to, viewContext)
@@ -101,6 +118,9 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         const y = nodeVisualData_Graph[node].y.low;
         const width = nodeVisualData_Graph[node].width.low;
         const height = nodeVisualData_Graph[node].height.low;
+        // const icon = nodeData_Graph[node].icon;
+        // const color = nodeData_Graph[node].color;
+        const { icon, color } = getIconAndColor(viewContext, node);
         return (
           <div
             className={node}
@@ -142,6 +162,8 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
               left={(x - translateX) * scale}
               top={(y - translateY) * scale}
               id={node}
+              icon={icon}
+              color={color}
               size={[width * scale, height * scale]}
               updateStartPos={(val) => (startPos.current = val)}
             >

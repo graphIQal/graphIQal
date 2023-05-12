@@ -6,12 +6,18 @@ import { OnHoverMenu } from './OnHoverMenu';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../packages/graph/context/GraphViewContext';
-import { deleteNode, updateNode } from '../../helpers/backend/mutateHelpers';
+import { deleteNode } from '../../helpers/backend/deleteNode';
+import IconCircleButton from '../molecules/IconCircleButton';
+import { updateNode } from '../../helpers/backend/updateNode';
+import { setCollapsedNode } from '../../packages/graph/helpers/setCollapsedNode';
 
-const CollapsedGraphNode: React.FC<{ title: string; id: string }> = ({
-  title,
-  id,
-}) => {
+const CollapsedGraphNode: React.FC<{
+  title: string;
+  id: string;
+  icon: string;
+  color: string;
+  toggleDropdown: () => void;
+}> = ({ title, id, icon, color, toggleDropdown }) => {
   const [showMenu, setShowMenu] = useState(false);
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
@@ -24,7 +30,7 @@ const CollapsedGraphNode: React.FC<{ title: string; id: string }> = ({
     },
     {
       src: 'expand',
-      onClick: () => setNodeInView(id),
+      onClick: () => setCollapsedNode(id, viewContext),
     },
     {
       src: 'remove',
@@ -35,14 +41,15 @@ const CollapsedGraphNode: React.FC<{ title: string; id: string }> = ({
     <div
       onMouseOver={() => setShowMenu(true)}
       onMouseLeave={() => setShowMenu(false)}
-      className='w-full h-full flex items-center content-center justify-items-stretch flex-row bg-base_white'
+      className='w-full h-full flex items-center content-center justify-items-stretch flex-row bg-base_white '
     >
       <div className='flex flex-row gap-x-3 items-center'>
-        <Cube size={'1em'} />
+        <IconCircleButton src={icon} onClick={toggleDropdown} circle={false} />
         <form>
           <input
             type='text'
             name='name'
+            id='collapsed_node'
             defaultValue={title}
             onChange={(newVal: any) =>
               updateNode('title', newVal.target.value, id, viewContext)

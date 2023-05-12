@@ -3,40 +3,45 @@
  * Creates and sets all the global props that go into Context wrappers
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
-import {
-	ConnectionData,
-	GraphNodeData,
-	NodeData,
-} from '../../../schemas/Data_structures/DS_schema';
 import DrawingContext from '../context/GraphDrawingContext';
 import GraphViewContext from '../context/GraphViewContext';
 import { BoxDragLayer } from '../helpers/BoxDragLayer';
-import { handleDrawingHotkey } from '../hooks/drawingHooks';
+import { handleDrawingHotkey } from '../hooks/drawing/useDrawingEnd';
 import { GraphContainer } from './GraphContainer';
+import ViewContext, {
+	ViewContextInterface,
+} from '../../../components/context/ViewContext';
+import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
+import SplitPaneContext, {
+	SplitPaneContextInterface,
+} from '../../../components/organisms/split-pane/SplitPaneContext';
+import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
+import { Alert } from '../../../components/organisms/Alert';
+import { Divider } from '@udecode/plate';
+import TextButton from '../../../components/molecules/TextButton';
 import SplitPane, {
-	Divider,
 	SplitPaneLeft,
 	SplitPaneRight,
 } from '../../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../../editor/EditorComponent';
-import TextButton from '../../../components/molecules/TextButton';
+import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
 
-const Graph: React.FC<{ window: Window; document: Document }> = ({
-	window,
-	document,
-}) => {
+const Graph: React.FC<{
+	viewId: string;
+}> = ({ viewId }) => {
 	if (!document || !window) return <div></div>;
 
-	const router = useRouter();
-	const { username, nodeId, graphViewId } = router.query;
+	const { nodeId, username } = useContext(
+		ViewContext
+	) as ViewContextInterface;
 
 	const { data, error, isLoading } = useSWR(
-		nodeId ? `/api/${username}/${nodeId}/graph/${graphViewId}` : null,
+		nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
 		fetcher
 	);
 
@@ -46,6 +51,7 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 	if (!isLoading) {
 		console.log('data');
 		console.log(data);
+
 		for (let node in data) {
 			let nodeConnections: { [key: string]: ConnectionData } = {};
 			for (let connection in data[node].connections) {
@@ -57,11 +63,23 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 			nodeData[data[node].node.id] = {
 				...data[node].node,
 				connections: nodeConnections,
+				icon: 'block',
+				color: 'black',
 			};
 
 			visualData[data[node].node.id] = data[node].relationship;
 		}
 	}
+
+	// node data
+	const [nodeData_Graph, setnodeData_Graph] = useState(nodeData);
+	const [nodeVisualData_Graph, setnodeVisualData_Graph] =
+		useState(visualData);
+
+	useEffect(() => {
+		setnodeData_Graph(nodeData);
+		setnodeVisualData_Graph(visualData);
+	}, [isLoading]);
 
 	//Graph in view of one node, keep the id.
 	const [nodeInFocus, setnodeInFocus] = useState(nodeId);
@@ -89,30 +107,17 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 		setnodeInFocus(nodeId);
 	}, [nodeId]);
 
-	// node data
-	const [nodeData_Graph, setnodeData_Graph] = useState(
-		// getNodesToDisplay(nodeInFocus, allNodes)
-		nodeData
-	);
+	const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
 
-	// nodeVisualData_Graph is
-	const [nodeVisualData_Graph, setnodeVisualData_Graph] =
-		useState(visualData);
+	//Drawing states
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [drawingMode, setDrawingMode] = useState(true);
+	const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
 	console.log('nodeData_Graph');
 	console.log(nodeData_Graph);
 	console.log('nodeVisualData_Graph');
 	console.log(nodeVisualData_Graph);
-
-	useEffect(() => {
-		setnodeData_Graph(nodeData);
-		setnodeVisualData_Graph(visualData);
-	}, [isLoading]);
-
-	//Drawing states
-	const containerRef = useRef(null);
-	const [drawingMode, setDrawingMode] = useState(true);
-	const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
 	//Drawing line data
 	const startNode = useRef<string>('');
@@ -122,10 +127,8 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 	let isPointInCanvasFuncs = useRef<any>({});
 	let numPointsInTriangleFuncs = useRef<any>({});
 
-	//Modal to show node details and connection details
 	const [modalNode, setModalNode] = useState('');
 	const [showModalConnection, setShowModalConnection] = useState(false);
-	// const [currConnection, setCurrConnection] = useState(lines[0]);
 
 	// Hot key for undo/redo
 	useEffect(() => {
@@ -147,6 +150,12 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 		);
 	}, []);
 
+	//graph view tags default
+	const [tags, setTags] = useState(getTags(nodeData_Graph));
+
+	//alert message
+	const [alert, setAlert] = useState('');
+
 	return (
 		<div
 			onKeyDown={(event) =>
@@ -154,6 +163,7 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 			}
 			tabIndex={-1}
 			ref={containerRef}
+			// className='relative'
 		>
 			<DrawingContext.Provider
 				value={{
@@ -176,19 +186,20 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 						setnodeVisualData_Graph: setnodeVisualData_Graph,
 						modalNode: modalNode,
 						setModalNode: setModalNode,
-						nodeInFocus: nodeInFocus ? (nodeInFocus as string) : '',
-						graphViewId: graphViewId as string,
-						username: username as string,
-						nodeId: nodeId as string,
+						nodeInFocus: nodeInFocus,
+						graphViewId: currGraphViewId as string,
+						setGraphViewId: setCurrGraphViewId,
+						tags: tags,
+						setTags: setTags,
+						alert: alert,
+						setAlert: setAlert,
 					}}
 				>
 					<SplitPane className='split-pane-row'>
 						<SplitPaneLeft>
-							<GraphContainer
-								window={window}
-								document={document}
-							/>
-							<BoxDragLayer parentRef={containerRef} />
+							<GraphContainer />
+							<Alert />
+							{/* <BoxDragLayer parentRef={containerRef} /> */}
 						</SplitPaneLeft>
 						<Divider className='separator-col' />
 						<SplitPaneRight>
@@ -207,7 +218,7 @@ const Graph: React.FC<{ window: Window; document: Document }> = ({
 										/>
 								  ))
 								: null}
-							<EditorComponent />
+							<GraphSideTabs />
 						</SplitPaneRight>
 					</SplitPane>
 				</GraphViewContext.Provider>

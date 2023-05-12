@@ -1,14 +1,9 @@
+import { ConnectionData } from '../../packages/graph/graphTypes';
+
 //DATA
 export type Block = {
   id: string;
   content: string;
-};
-
-export type ConnectionData = {
-  content: string[]; //ids of the blocks of the node's data that are contained in this connection
-  startNode: string;
-  endNode: string;
-  type: string;
 };
 
 export type Node = {
@@ -26,27 +21,6 @@ export type GraphView = {
   elements: { [keyCell: string]: VisualData };
 };
 
-export type NodeData = {
-  id: string;
-  title: string;
-  connections: { [key: string]: ConnectionData };
-};
-export type GraphNodeData = {
-  width: {
-    low: number;
-  };
-  height: {
-    low: number;
-  };
-  x: {
-    low: number;
-  };
-  y: {
-    low: number;
-  };
-  collapsed?: boolean;
-};
-
 export type VisualData = {
   x?: number;
   y?: number;
@@ -55,12 +29,6 @@ export type VisualData = {
   size: number[];
   collapsed: boolean;
   z?: number;
-};
-
-export const ConnectionTypes = {
-  includes: 'Includes',
-  dependency: 'Dependency',
-  chronology: 'Chronology',
 };
 
 export const ids = [

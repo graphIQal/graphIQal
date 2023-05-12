@@ -1,7 +1,7 @@
 /**
  * Helpers for dragging nodes
  */
-import { updateNode } from '../../../helpers/backend/mutateHelpers';
+import { updateNode } from '../../../helpers/backend/updateNode';
 import { GraphViewContextInterface } from '../context/GraphViewContext';
 
 //called when the node is dropped in a new place to update x and y values

@@ -11,7 +11,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // import Document from '../../src/pages/document/Document';
 
 import { useRouter } from 'next/router';
-import ShelfEditor from '../../packages/shelf-editor/ShelfEditor';
+import ShelfEditor from '../shelf-editor/ShelfEditor';
 import SplitPane, {
   Divider,
   SplitPaneBottom,
@@ -19,7 +19,7 @@ import SplitPane, {
   SplitPaneRight,
   SplitPaneTop,
 } from '../../components/organisms/split-pane/SplitPane';
-import EditorComponent from '../../packages/editor/EditorComponent';
+import EditorComponent from '../editor/EditorComponent';
 import { getDocument } from '../../backend/functions/getDocument';
 import TextButton from '../../components/molecules/TextButton';
 import useSWR from 'swr';

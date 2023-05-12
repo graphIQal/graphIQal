@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import SplitPaneWrapper from './document';
 import MainTabs from '../../components/organisms/Tabs/MainTabs';
 import ViewContext, {
   ViewContextInterface,
@@ -9,8 +8,9 @@ import { useRouter, withRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../backend/driver/fetcher';
 import TextButton from '../../components/molecules/TextButton';
-import Graph2 from './graph/[graphViewId]';
+import Graph2 from '../../packages/graph/Graph';
 import Link from 'next/link';
+import SplitPaneWrapper from '../../packages/dnd-editor/Document';
 
 const Home: React.FC = () => {
   const [windowVar, setWindow] = useState<any>();

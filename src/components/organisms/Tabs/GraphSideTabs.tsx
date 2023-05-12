@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import EditorComponent from '../../../packages/editor/EditorComponent';
-import Graph from '../../../packages/graph/components/Graph';
+import Graph from '../../../packages/graph/components/GraphPage';
 import { Tab } from '../../atoms/Tab';
 import { Tabs } from './Tabs';
 import ViewContext, { ViewContextInterface } from '../../context/ViewContext';

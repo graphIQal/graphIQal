@@ -45,6 +45,7 @@ export const updateNode = (
 
     case 'title':
       nodeData[nodeID].title = newVal;
+
       context?.setnodeData_Graph({ ...nodeData });
       break;
     case 'icon':

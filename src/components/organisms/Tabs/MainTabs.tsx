@@ -19,20 +19,18 @@ const MainTabs: React.FC<{
     currTab,
     setCurrTab,
   } = useContext(ViewContext) as ViewContextInterface;
-  const [activeTabs, setActiveTabs] = useState([0]);
 
   return (
     <div>
       <Tabs>
         {mainViewTabs.map((tab, index) => {
           return (
-            <>
+            <div key={index}>
               <Link
                 href={{
                   pathname: '/' + username + '/' + nodeId,
                   query: { view: tab.viewType, viewId: tab.viewId },
                 }}
-                key={index}
               >
                 <Tab
                   label={tab.label}
@@ -42,11 +40,9 @@ const MainTabs: React.FC<{
                   setCurrTab={setCurrTab}
                   tabs={mainViewTabs}
                   setTabs={setMainViewTabs}
-                  activeTabs={activeTabs}
-                  setActiveTabs={setActiveTabs}
                 />
               </Link>
-            </>
+            </div>
           );
         })}
       </Tabs>

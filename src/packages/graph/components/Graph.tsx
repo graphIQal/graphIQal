@@ -22,6 +22,7 @@ import SplitPaneContext, {
   SplitPaneContextInterface,
 } from '../../../components/organisms/split-pane/SplitPaneContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
+import { Alert } from '../../../components/organisms/Alert';
 
 const Graph: React.FC<{
   viewId: string;
@@ -118,6 +119,9 @@ const Graph: React.FC<{
   //graph view tags default
   const [tags, setTags] = useState(getTags(nodeData_Graph));
 
+  //alert message
+  const [alert, setAlert] = useState('');
+
   return (
     <div
       onKeyDown={(event) =>
@@ -125,6 +129,7 @@ const Graph: React.FC<{
       }
       tabIndex={-1}
       ref={containerRef}
+      // className='relative'
     >
       <DrawingContext.Provider
         value={{
@@ -152,9 +157,12 @@ const Graph: React.FC<{
             setGraphViewId: setCurrGraphViewId,
             tags: tags,
             setTags: setTags,
+            alert: alert,
+            setAlert: setAlert,
           }}
         >
           <GraphContainer />
+          <Alert />
           {/* <BoxDragLayer parentRef={containerRef} /> */}
         </GraphViewContext.Provider>
       </DrawingContext.Provider>

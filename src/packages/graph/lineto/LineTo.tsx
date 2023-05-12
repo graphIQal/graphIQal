@@ -68,6 +68,7 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
   if (props.from == props.to) return <div></div>;
   const [fromAnchor, setFromAnchor] = useState<any>();
   const [toAnchor, setToAnchor] = useState<any>();
+  const offset = useVerticalOffset();
   useEffect(() => {
     setFromAnchor(parseAnchor(props.fromAnchor, defaultAnchor));
     setToAnchor(parseAnchor(props.toAnchor, defaultAnchor));
@@ -100,9 +101,9 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
     const y1 = box1.top + box1.height * anchor1.y;
     return {
       x0: x0,
-      y0: y0 + useVerticalOffset(),
+      y0: y0 + offset,
       x1: x1,
-      y1: y1 + useVerticalOffset(),
+      y1: y1 + offset,
       anchor0,
       anchor1,
     };
@@ -155,6 +156,7 @@ export const Arrow = ({
   getDropdownItems,
   deleteConnection,
 }: ArrowProps) => {
+  const offset = useVerticalOffset();
   const { windowVar, documentVar } = useContext(
     ViewContext
   ) as ViewContextInterface;
@@ -215,7 +217,8 @@ export const Arrow = ({
         point,
         canvasStartPoint,
         canvasWidth,
-        canvasHeight
+        canvasHeight,
+        offset
       );
     },
     [canvasStartPoint, canvasWidth, canvasHeight]
@@ -224,7 +227,8 @@ export const Arrow = ({
   (isPointInCanvasFuncs.current as any)[id] = isPointInCanvasCallback;
   let points: Coord[] = [];
   let numPointsInTriangleCallback = useCallback(
-    (a: Coord, b: Coord, c: Coord) => useNumPointsInTriangle(a, b, c, points),
+    (a: Coord, b: Coord, c: Coord) =>
+      useNumPointsInTriangle(a, b, c, points, offset),
     [points]
   );
 

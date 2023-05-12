@@ -5,6 +5,7 @@ export const deleteNode = (
   viewContext: GraphViewContextInterface
 ) => {
   let newNodes = { ...viewContext.nodeData_Graph };
+  viewContext.setAlert('Deleted node: ' + newNodes[id].title);
   delete newNodes[id];
   viewContext.setnodeData_Graph(newNodes);
 };

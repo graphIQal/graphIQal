@@ -29,13 +29,14 @@ export const useIsPointInCanvas = (
   point: Coord,
   canvasStartPoint: Coord,
   canvasWidth: number,
-  canvasHeight: number
+  canvasHeight: number,
+  offset: number
 ) => {
   if (
     point.x > canvasStartPoint.x &&
     point.x < canvasStartPoint.x + canvasWidth &&
-    point.y > canvasStartPoint.y - useVerticalOffset() &&
-    point.y < canvasStartPoint.y - useVerticalOffset() + canvasHeight
+    point.y > canvasStartPoint.y - offset &&
+    point.y < canvasStartPoint.y - offset + canvasHeight
   ) {
     return true;
   }

@@ -19,5 +19,11 @@ export const addConnection = (
   //   content: [],
   //   type: 'IN',
   // };
+  viewContext.setAlert(
+    'Connection of type RELATED added between ' +
+      newnodeData_Graph[node1].title +
+      ' and ' +
+      newnodeData_Graph[node2].title
+  );
   viewContext.setnodeData_Graph(newnodeData_Graph);
 };

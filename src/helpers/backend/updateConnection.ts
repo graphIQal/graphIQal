@@ -20,15 +20,31 @@ export const updateConnection = (
         type: 'IN',
       };
       delete newData[newVal.arrowEnd].connections[newVal.arrowStart];
-
+      context?.setAlert(
+        'Added connection of type IN from ' +
+          newData[newVal.arrowStart].title +
+          ' to ' +
+          newData[newVal.arrowEnd].title
+      );
       context?.setnodeData_Graph(newData);
       break;
     case 'type':
       const start = newVal.start;
       const end = newVal.end;
       const newType = newVal.newType;
+
       const newNodes = { ...nodeData_Graph };
       if (newNodes[start].connections[end].type == newType) return;
+      context?.setAlert(
+        'Changed connection type of ' +
+          nodeData_Graph[start].title +
+          ' to ' +
+          nodeData_Graph[end].title +
+          ' from ' +
+          nodeData_Graph[start].connections[end].type +
+          ' to ' +
+          newVal.newType
+      );
       newNodes[start].connections[end].type = newType;
       if (newNodes[end].connections[start]) {
         newNodes[end].connections[start].type = newType;
@@ -38,6 +54,7 @@ export const updateConnection = (
       break;
     case 'reverse':
       newData = { ...nodeData_Graph };
+
       newData[newVal.arrowStart].connections[newVal.arrowEnd] = {
         ...newData[newVal.arrowEnd].connections[newVal.arrowStart],
         startNode: newVal.arrowStart,

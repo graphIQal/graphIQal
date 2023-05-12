@@ -1,9 +1,6 @@
 import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
-import {
-  ConnectionData,
-  NodeData,
-  resources,
-} from '../../schemas/Data_structures/DS_schema';
+import { NodeData, ConnectionData } from '../../packages/graph/graphTypes';
+import { resources } from '../../schemas/Data_structures/DS_schema';
 
 export const getLineEndpointData = (
   context: GraphViewContextInterface | null,

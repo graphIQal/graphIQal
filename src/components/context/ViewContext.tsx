@@ -1,5 +1,5 @@
 /**
- * Context for everything that is displayed in the Graph.
+ * Context for common info across a state of the app.
  */
 
 import { createContext, MutableRefObject } from 'react';
@@ -14,8 +14,6 @@ export type MainTabProps = {
 export type ViewContextInterface = {
   mainViewTabs: MainTabProps[];
   setMainViewTabs: (val: MainTabProps[]) => void;
-  // sidePanelTabs: TabProps[];
-  // setSidePanelTabs: (val: TabProps[]) => void;
   username: string;
   nodeId: string;
   currTab: number;

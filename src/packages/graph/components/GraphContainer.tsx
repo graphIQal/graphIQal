@@ -26,6 +26,7 @@ import ViewContext, {
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
+import { Alert } from '../../../components/organisms/Alert';
 
 export const GraphContainer: React.FC<{}> = () => {
   const { windowVar, documentVar } = useContext(

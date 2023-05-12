@@ -30,7 +30,6 @@ const DocumentSideTabs: React.FC = () => {
   ]);
 
   const [currTab, setCurrTab] = useState(0);
-  const [activeTabs, setActiveTabs] = useState([0]);
 
   return (
     <>
@@ -46,8 +45,6 @@ const DocumentSideTabs: React.FC = () => {
                 setCurrTab={setCurrTab}
                 tabs={tabs}
                 setTabs={setTabs}
-                activeTabs={activeTabs}
-                setActiveTabs={setActiveTabs}
               />
             </div>
           );

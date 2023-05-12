@@ -27,7 +27,7 @@ export const jsonToCypher_graphView = ({
 	// for (const key in graphViewData) {
 	// 	cypher += `
 	// 	MERGE (:GRAPH_VIEW {id: "${graphViewId}"})-[${relationship}:IN]->(${node}: Node {id: "${key}"})
-	// 	SET ${relationship}.x = ${graphViewData[key].x.low}, ${relationship}.y = ${graphViewData[key].y.low}, ${relationship}.height = ${graphViewData[key].height.low}, ${relationship}.width = ${graphViewData[key].width.low}, ${relationship}.collapsed = ${graphViewData[key].collapsed}
+	// 	SET ${relationship}.x = ${graphViewData[key].x}, ${relationship}.y = ${graphViewData[key].y}, ${relationship}.height = ${graphViewData[key].height}, ${relationship}.width = ${graphViewData[key].width}, ${relationship}.collapsed = ${graphViewData[key].collapsed}
 	// 	SET ${node}.title = "${nodeData[key].title}"
 	// 	`;
 	// 	relationship += 'r';
@@ -35,14 +35,14 @@ export const jsonToCypher_graphView = ({
 	// }
 
 	for (const key in graphViewData) {
-		console.log(graphViewData[key].height.low);
+		console.log(graphViewData[key].height);
 		cypher += `
 		OPTIONAL MATCH (${node}: Node {id: "${key}"})
 		MATCH (g:GRAPH_VIEW {id: "${graphViewId}"})
 		// When the node already exists
 		FOREACH(ignoreMe IN CASE WHEN ${node} is not NULL THEN [1] ELSE [] END | 
 			MERGE (g)-[${relationship}:IN]->(${node})
-			SET ${relationship}.x = ${graphViewData[key].x.low}, ${relationship}.y = ${graphViewData[key].y.low}, ${relationship}.height = ${graphViewData[key].height.low}, ${relationship}.width = ${graphViewData[key].width.low}, ${relationship}.collapsed = ${graphViewData[key].collapsed}
+			SET ${relationship}.x = ${graphViewData[key].x}, ${relationship}.y = ${graphViewData[key].y}, ${relationship}.height = ${graphViewData[key].height}, ${relationship}.width = ${graphViewData[key].width}, ${relationship}.collapsed = ${graphViewData[key].collapsed}
 			SET ${node}.title = "${nodeData[key].title}"
 		)
 		// When the node doesn't exist yet
@@ -51,7 +51,7 @@ export const jsonToCypher_graphView = ({
 			MERGE (g)-[${relationship}:IN]->(${node}a:Node {id: "${key}"})
 			
 			// Create it's own graph view
-			(${node}a)-[:VIEW]->(:GRAPH_VIEW {id: randomUuid(), title: "Graph View"})
+			MERGE (${node}a)-[:VIEW]->(:GRAPH_VIEW {id: randomUuid(), title: "Graph View"})
 			// create blocks 
 			MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
 			MERGE (${node}a)-[:NEXT_BLOCK]->(b)
@@ -61,15 +61,15 @@ export const jsonToCypher_graphView = ({
 			// connect to current node
 			MERGE (currentNode: Node {id: "${nodeId}"})
 			MERGE (currentNode)-[:IN]->(${node}a)
-			SET ${relationship}.x = ${graphViewData[key].x.low}, ${relationship}.y = ${graphViewData[key].y.low}, ${relationship}.height = ${graphViewData[key].height.low}, ${relationship}.width = ${graphViewData[key].width.low}, ${relationship}.collapsed = ${graphViewData[key].collapsed}
+			SET ${relationship}.x = ${graphViewData[key].x}, ${relationship}.y = ${graphViewData[key].y}, ${relationship}.height = ${graphViewData[key].height}, ${relationship}.width = ${graphViewData[key].width}, ${relationship}.collapsed = ${graphViewData[key].collapsed}
 			SET ${node}a.title = "${nodeData[key].title}"
 		)
-		`;
+		WITH count(*) as dummy`;
 		relationship += 'r';
 		node += 'n';
 	}
 
 	// cypher += '\nRETURN g, r, n';
 
-	return cypher;
+	return cypher.replace(/\n.*$/, '');
 };

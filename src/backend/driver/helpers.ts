@@ -10,7 +10,8 @@ const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD || '';
 // lib/neo4j.js
 const driver = neo4j.driver(
 	NEO4J_URI,
-	neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD)
+	neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD),
+	{ disableLosslessIntegers: true }
 );
 
 export async function read(cypher: string, params = {}) {

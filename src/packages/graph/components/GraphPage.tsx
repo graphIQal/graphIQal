@@ -206,6 +206,7 @@ const Graph: React.FC<{
 							{nodeInFocus_Connections
 								? nodeInFocus_Connections.map((el) => (
 										<TextButton
+											key={el.c.id}
 											text={el.c.title}
 											onClick={() => {
 												router.push(

@@ -23,12 +23,11 @@ export const saveGraphView = async ({
 	graphViewData,
 	nodeData,
 }: saveGraphViewInput) => {
-	console.log('Save graph view');
-
 	const body = jsonToCypher_graphView({
 		nodeData,
 		graphViewData,
 		graphViewId,
+		nodeId,
 	});
 	// const body = JSON.stringify({ ...nodeData, ...graphViewData });
 	console.log(body);

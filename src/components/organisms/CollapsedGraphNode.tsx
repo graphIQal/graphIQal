@@ -6,8 +6,9 @@ import { OnHoverMenu } from './OnHoverMenu';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../packages/graph/context/GraphViewContext';
-import { deleteNode, updateNode } from '../../helpers/backend/mutateHelpers';
+import { deleteNode } from '../../helpers/backend/deleteNode';
 import IconCircleButton from '../molecules/IconCircleButton';
+import { updateNode } from '../../helpers/backend/updateNode';
 
 const CollapsedGraphNode: React.FC<{
   title: string;

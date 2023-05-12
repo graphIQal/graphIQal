@@ -2,19 +2,16 @@
  * Display of nodes and lines connecting them in "mind map" style
  */
 import React, { useContext } from 'react';
-import LineTo from '../../../packages/lineto/LineTo';
+import LineTo from '../lineto/LineTo';
 
 import { ItemProps } from '../../../components/organisms/Dropdown';
 import {
   getConnectionType,
   getIconAndColor,
   isLineDirectional,
-} from '../../../helpers/backend/getHelpers';
-import {
-  changeConnectionType,
-  deleteConnection,
-  updateLine,
-} from '../../../helpers/backend/mutateHelpers';
+} from '../../../helpers/backend/gettersConnectionInfo';
+
+import { updateConnection } from '../../../helpers/backend/updateConnection';
 import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
 import DrawingContext, {
   DrawingContextInterface,
@@ -22,13 +19,12 @@ import DrawingContext, {
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
-import {
-  handleEndPoint,
-  useDrawingCanvas,
-  useDrawingStart,
-} from '../hooks/drawingHooks';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
+import { deleteConnection } from '../../../helpers/backend/deleteConnection';
+import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
+import { handleEndPoint } from '../hooks/drawing/useDrawingEnd';
+import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
 
 type MindMapProps = {
   points: any;
@@ -60,7 +56,12 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
     Object.keys(ConnectionTypes).map((connection: string, i: number) => {
       items.push({
         text: (ConnectionTypes as any)[connection],
-        onPress: () => changeConnectionType(from, to, connection, viewContext),
+        onPress: () =>
+          updateConnection(viewContext, 'type', '', {
+            start: from,
+            end: to,
+            newType: connection,
+          }),
       });
       if (getConnectionType(from, to, viewContext) == connection) {
         activeIndex = i;
@@ -70,7 +71,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
       items.push({
         text: 'Reverse Connection',
         onPress: () =>
-          updateLine(viewContext, 'arrowAdd', '', {
+          updateConnection(viewContext, 'reverse', '', {
             arrowStart: to,
             arrowEnd: from,
           }),

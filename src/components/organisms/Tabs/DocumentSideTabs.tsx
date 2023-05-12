@@ -56,6 +56,7 @@ const DocumentSideTabs: React.FC = () => {
       {tabs.map((tab, i) => {
         return (
           <div
+            key={i}
             style={{
               display: currTab == i ? 'block' : 'none',
             }}

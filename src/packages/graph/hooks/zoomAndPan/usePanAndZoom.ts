@@ -4,7 +4,7 @@
 
 import { MutableRefObject, useReducer } from 'react';
 import { initialState, reducer } from './reducer';
-import { pan, zoom } from './zoomAndPan/actions';
+import { pan, zoom } from './actions';
 
 export const usePanAndZoom = (containerRef: MutableRefObject<any>) => {
   const [state, dispatch] = useReducer(reducer, initialState);

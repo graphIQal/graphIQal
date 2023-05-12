@@ -17,21 +17,27 @@ import {
   calculateDeltas,
   calculateTransformArrow,
   useNumPointsInTriangle,
-} from './arrowHelpers';
-import { calculateCanvasDimensions, useIsPointInCanvas } from './canvasHelpers';
-import { calcAnchor, findElement, parseAnchor } from './lineHelpers';
+} from './helpers/arrowHelpers';
 import DrawingContext, {
   DrawingContextInterface,
-} from '../graph/context/GraphDrawingContext';
-import { Coord } from '../graph/hooks/drawingHooks';
-import { useVerticalOffset } from '../graph/hooks/useVerticalOffset';
-import { Dropdown, ItemProps } from '../../components/organisms/Dropdown';
-import { ConnectionTypes } from '../../schemas/Data_structures/DS_schema';
-import IconCircleButton from '../../components/molecules/IconCircleButton';
-import { deleteConnection } from '../../helpers/backend/mutateHelpers';
+} from '../context/GraphDrawingContext';
+import { Coord } from '../hooks/drawing/useDrawingEnd';
+import { useVerticalOffset } from '../hooks/useVerticalOffset';
+import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
+import { ConnectionTypes } from '../../../schemas/Data_structures/DS_schema';
+import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import ViewContext, {
   ViewContextInterface,
-} from '../../components/context/ViewContext';
+} from '../../../components/context/ViewContext';
+import {
+  calculateCanvasDimensions,
+  useIsPointInCanvas,
+} from './helpers/canvasHelpers';
+import {
+  parseAnchor,
+  findElement,
+  calcAnchor,
+} from './helpers/linePositionHelpers';
 
 // Default styling stuff
 const defaultAnchor = { x: 0.5, y: 0.5 };

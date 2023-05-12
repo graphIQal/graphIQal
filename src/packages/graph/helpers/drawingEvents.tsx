@@ -2,9 +2,9 @@
  * Helpers for detecting what is drawn.
  */
 
-import { getLineDataEndpoints } from '../../../helpers/backend/getHelpers';
+import { getLineEndpointData } from '../../../helpers/backend/gettersConnectionInfo';
 import { GraphViewContextInterface } from '../context/GraphViewContext';
-import { Coord } from '../hooks/drawingHooks';
+import { Coord } from '../hooks/drawing/useDrawingEnd';
 
 export const isCircle = (coords: Coord[]) => {
   let xAvg = 0;
@@ -91,10 +91,7 @@ export const calcArrowStart = (
   context: GraphViewContextInterface | null
 ) => {
   //get visual information for start and end node
-  const { x1, x2, y1, y2, node1, node2 } = getLineDataEndpoints(
-    context,
-    lineID
-  );
+  const { x1, x2, y1, y2, node1, node2 } = getLineEndpointData(context, lineID);
 
   if (!y1 || !y2 || !x1 || !x2 || !node1 || !node2)
     return { arrowStart: node1, arrowEnd: node2 };

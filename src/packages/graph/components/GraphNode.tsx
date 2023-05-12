@@ -12,11 +12,10 @@ import DrawingContext, {
 import GraphActionContext, {
   GraphActionContextInterface,
 } from '../context/GraphActionContext';
-import { OFFSET } from '../hooks/drawingHooks';
-import { useDragNode } from '../hooks/draggingHooks';
+import { OFFSET } from '../hooks/drawing/useDrawingEnd';
 import { Dropdown } from '../../../components/organisms/Dropdown';
 import IconButton from '../../../components/atoms/IconButton';
-import { updateNode } from '../../../helpers/backend/mutateHelpers';
+import { updateNode } from '../../../helpers/backend/updateNode';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
@@ -26,6 +25,7 @@ import { colors } from '../../../theme/colors';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
+import { useDragNode } from '../hooks/dragging/useDragNode';
 
 export interface NodeProps {
   id: any;
@@ -169,10 +169,9 @@ export const GraphNode: FC<NodeProps> = ({
                   return (
                     <div
                       className={
-                        'w-[40px] h-[40px] bg-[' +
-                        color +
-                        '] m-1 break-inside-avoid hover:opacity-70 hover: cursor-pointer'
+                        'w-[40px] h-[40px] m-1 break-inside-avoid hover:opacity-70 hover: cursor-pointer'
                       }
+                      style={{ backgroundColor: color }}
                       onClick={() =>
                         updateNode('color', color, id, viewContext)
                       }

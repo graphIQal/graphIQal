@@ -1,7 +1,6 @@
 import { AngleDown } from '@styled-icons/fa-solid/AngleDown';
 import { List } from '@styled-icons/feather/List';
 import React, { useState } from 'react';
-import { getNodeTitle } from '../../helpers/backend/getHelpers';
 import { Dropdown, ItemProps } from '../organisms/Dropdown';
 
 export const PillMenu: React.FC<{
@@ -18,7 +17,7 @@ export const PillMenu: React.FC<{
       >
         <List className='w-5' />
         <div>
-          {label} <span className='font-bold'> {getNodeTitle(value)}</span>
+          {label} <span className='font-bold'> {value}</span>
         </div>
         <AngleDown
           onClick={() => setShowDropdown(!showDropdown)}

@@ -3,17 +3,18 @@
  */
 
 import { MutableRefObject, useCallback, useContext } from 'react';
-import { addNode, updateLine } from '../../../helpers/backend/mutateHelpers';
+import { addNode } from '../../../../helpers/backend/addNode';
+import { updateConnection } from '../../../../helpers/backend/updateConnection';
 import DrawingContext, {
   DrawingContextInterface,
-} from '../context/GraphDrawingContext';
-import GraphViewContext from '../context/GraphViewContext';
-import { calcArrowStart, isArrow, isCircle } from '../helpers/drawingEvents';
-import { snapToGrid } from '../helpers/snapping';
+} from '../../context/GraphDrawingContext';
+import GraphViewContext from '../../context/GraphViewContext';
+import { calcArrowStart, isArrow, isCircle } from '../../helpers/drawingEvents';
+import { snapToGrid } from '../../helpers/snapToGrid';
 import GraphActionContext, {
   GraphActionContextInterface,
-} from '../context/GraphActionContext';
-import { useVerticalOffset } from './useVerticalOffset';
+} from '../../context/GraphActionContext';
+import { useVerticalOffset } from '../useVerticalOffset';
 
 export type Coord = {
   x: number;
@@ -22,27 +23,6 @@ export type Coord = {
 
 //for border room for drawing
 export const OFFSET = 50;
-
-//When user starts drawing
-export const useDrawingStart = () => {
-  const { startNode, setIsDrawing } = useContext(
-    DrawingContext
-  ) as DrawingContextInterface;
-  return useCallback((lineID: string) => {
-    startNode.current = lineID;
-    setIsDrawing(true);
-  }, []);
-};
-
-//As user draws on the canvas
-export const useDrawingCanvas = () => {
-  return useCallback(
-    (event: any, points: Coord[], setPoints: (val: Coord[]) => void) => {
-      setPoints([...points, { x: event.clientX, y: event.clientY }]);
-    },
-    []
-  );
-};
 
 //When user stops drawing at any point in the canvas except for when completing a line
 export const useDrawingEnd = (
@@ -54,9 +34,14 @@ export const useDrawingEnd = (
   const offset = useVerticalOffset();
   const { setIsDrawing, isPointInCanvasFuncs, numPointsInTriangleFuncs } =
     useContext(DrawingContext) as DrawingContextInterface;
+
   return useCallback(
     (points: Coord[], setPoints: (val: Coord[]) => void) => {
       setIsDrawing(false);
+      if (points.length <= 1) {
+        setPoints([]);
+        return;
+      }
       const { circle, center, size } = isCircle(points);
       if (circle) {
         let dimension = Math.sqrt(Math.pow(size, 2) / 2) * 2;
@@ -93,7 +78,7 @@ export const useDrawingEnd = (
                   context
                 );
 
-                updateLine(context, 'arrowAdd', func, {
+                updateConnection(context, 'arrowAdd', func, {
                   arrowStart: arrowStart,
                   arrowEnd: arrowEnd,
                 });

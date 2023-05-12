@@ -2,8 +2,8 @@
  * Helper functions for the arrow drawing
  */
 
-import { Coord } from '../graph/hooks/drawingHooks';
-import { useVerticalOffset } from '../graph/hooks/useVerticalOffset';
+import { Coord } from '../../hooks/drawing/useDrawingEnd';
+import { useVerticalOffset } from '../../hooks/useVerticalOffset';
 
 //Calculates delta and absolute delta between two given points
 export const calculateDeltas = (

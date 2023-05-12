@@ -1,38 +1,17 @@
 /**
  * Hooks for dragging and dropping nodes: useDragNode and useDropNode
  */
-import { useDrag, useDrop, XYCoord } from 'react-dnd';
-import { DragItemGraph } from '../graphTypes';
 import { useCallback, useContext } from 'react';
-import { moveNodeCallback } from '../helpers/dragging';
-import { snapToGrid } from '../helpers/snapping';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
+import { useDrop, XYCoord } from 'react-dnd';
 import DrawingContext, {
   DrawingContextInterface,
-} from '../context/GraphDrawingContext';
-
-//use drag hook for graph node
-export const useDragNode = (
-  id: string,
-  left: number,
-  top: number,
-  width: number,
-  height: number,
-  canDrag: boolean
-) =>
-  useDrag(
-    () => ({
-      type: 'node',
-      item: { id, left, top, width: width, height: height },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-      canDrag: canDrag,
-    }),
-    [id, left, top, canDrag]
-  );
+} from '../../context/GraphDrawingContext';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../../context/GraphViewContext';
+import { DragItemGraph } from '../../graphTypes';
+import { moveNodeCallback } from '../../helpers/moveNodeCallback';
+import { snapToGrid } from '../../helpers/snapToGrid';
 
 export const useDropNode = (
   setIsDrawing: (val: boolean) => void,

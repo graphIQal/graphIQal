@@ -53,6 +53,7 @@ const MainTabs: React.FC<{
       {mainViewTabs.map((tab, i) => {
         return (
           <div
+            key={i}
             style={{
               display:
                 mainViewTabs[currTab].viewId === tab.viewId ? 'block' : 'none',

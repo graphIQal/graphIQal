@@ -2,10 +2,7 @@
  * 2D information viewing: a set of grouped nodes (categories) on the X-axis and the Y-axis and each cell shows the connection information of them
  */
 import React, { useContext } from 'react';
-import {
-  getConnectionInfo,
-  getNodeConnections,
-} from '../../../helpers/backend/getHelpers';
+import { getConnectionInfo } from '../../../helpers/backend/gettersConnectionInfo';
 
 import GraphViewContext from '../context/GraphViewContext';
 

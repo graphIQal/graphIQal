@@ -3,7 +3,7 @@
  * Sets information for Context wrapper that deals with actions like dragging, undo/redo, resize
  */
 import { useContext, useEffect, useRef, useState } from 'react';
-import { addLine } from '../../../helpers/backend/mutateHelpers';
+import { addConnection } from '../../../helpers/backend/addConnection';
 import GraphActionContext from '../context/GraphActionContext';
 import DrawingContext, {
   DrawingContextInterface,
@@ -11,22 +11,21 @@ import DrawingContext, {
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
-import { useDropNode } from '../hooks/draggingHooks';
-import {
-  useDrawingCanvas,
-  useDrawingEnd,
-  useDrawingStart,
-} from '../hooks/drawingHooks';
-import { useFiltering } from '../hooks/filteringHooks';
-import { useCanvas } from '../hooks/useCanvas';
+import { useDropNode } from '../hooks/dragging/useDropNode';
+
+import { useFiltering } from '../hooks/useFiltering';
+import { useCanvas } from '../hooks/drawing/useCanvas';
 import { Action } from '../hooks/useHistoryState';
 import { useResize } from '../hooks/useResize';
-import { usePanAndZoom } from '../hooks/zoomingHooks';
+import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
+import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
+import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
+import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
 
 export const GraphContainer: React.FC<{}> = () => {
   const { windowVar, documentVar } = useContext(
@@ -111,7 +110,7 @@ export const GraphContainer: React.FC<{}> = () => {
       endNode.current !== '' &&
       startNode.current != endNode.current
     ) {
-      addLine(startNode.current, endNode.current, viewContext);
+      addConnection(startNode.current, endNode.current, viewContext);
       // addAction({
       //   undo: { id: '', value: null, type: 'LINE' },
       //   redo: {

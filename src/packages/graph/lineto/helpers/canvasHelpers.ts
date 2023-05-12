@@ -2,8 +2,8 @@
  * Helper functions for the "canvas" on which each arrow is drawn
  */
 
-import { Coord } from '../graph/hooks/drawingHooks';
-import { useVerticalOffset } from '../graph/hooks/useVerticalOffset';
+import { Coord } from '../../hooks/drawing/useDrawingEnd';
+import { useVerticalOffset } from '../../hooks/useVerticalOffset';
 
 //Calculates dimensions based on the deltas and box buffers
 export const calculateCanvasDimensions = ({

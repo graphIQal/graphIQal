@@ -2,21 +2,12 @@
  * Hook that draws on canvas and draws dot grid
  */
 
-import {
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { GRID_X_SIZE, GRID_Y_SIZE } from '../helpers/snapping';
+import { MutableRefObject, useContext, useEffect, useState } from 'react';
 import ViewContext, {
   ViewContextInterface,
-} from '../../../components/context/ViewContext';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
-import { useVerticalOffset } from './useVerticalOffset';
+} from '../../../../components/context/ViewContext';
+import { GRID_X_SIZE, GRID_Y_SIZE } from '../../helpers/snapToGrid';
+import { useVerticalOffset } from '../useVerticalOffset';
 
 export function drawLine(
   ctx: any,
@@ -53,6 +44,7 @@ export const useCanvas = (
 
   const { currTab } = useContext(ViewContext) as ViewContextInterface;
   useEffect(() => {
+    console.log('window ' + window.innerWidth);
     if (canvasWidth == 0) {
       canvasWidth = window.innerWidth;
     }

@@ -8,23 +8,20 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
-import {
-  ConnectionData,
-  GraphNodeData,
-  NodeData,
-} from '../../../schemas/Data_structures/DS_schema';
+
 import DrawingContext from '../context/GraphDrawingContext';
 import GraphViewContext from '../context/GraphViewContext';
 import { BoxDragLayer } from '../helpers/BoxDragLayer';
-import { handleDrawingHotkey } from '../hooks/drawingHooks';
+import { handleDrawingHotkey } from '../hooks/drawing/useDrawingEnd';
 import { GraphContainer } from './GraphContainer';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
-import { getTags } from '../../../helpers/backend/getHelpers';
+import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
 import SplitPaneContext, {
   SplitPaneContextInterface,
 } from '../../../components/organisms/split-pane/SplitPaneContext';
+import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 
 const Graph: React.FC<{
   viewId: string;

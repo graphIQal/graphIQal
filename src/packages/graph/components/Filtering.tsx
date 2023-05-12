@@ -5,7 +5,7 @@
 import React, { useContext } from 'react';
 import { PillMenu } from '../../../components/molecules/PillMenu';
 import { ItemProps } from '../../../components/organisms/Dropdown';
-import { getTags } from '../../../helpers/backend/getHelpers';
+import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';

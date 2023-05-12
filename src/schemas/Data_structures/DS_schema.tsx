@@ -1,14 +1,9 @@
+import { ConnectionData } from '../../packages/graph/graphTypes';
+
 //DATA
 export type Block = {
   id: string;
   content: string;
-};
-
-export type ConnectionData = {
-  content: string[]; //ids of the blocks of the node's data that are contained in this connection
-  startNode: string;
-  endNode: string;
-  type: string;
 };
 
 export type Node = {
@@ -24,30 +19,6 @@ export type GraphView = {
   node: string;
   title: string;
   elements: { [keyCell: string]: VisualData };
-};
-
-export type NodeData = {
-  id: string;
-  title: string;
-  connections: { [key: string]: ConnectionData };
-  icon: string;
-  color: string;
-};
-export type GraphNodeData = {
-  width: {
-    low: number;
-  };
-  height: {
-    low: number;
-  };
-  x: {
-    low: number;
-  };
-  y: {
-    low: number;
-  };
-  collapsed?: boolean;
-  categorizing_node: string; // which icon and color do we display? If its own, it will be its own ID, if any of its parents, it'll be that parent's ID
 };
 
 export type VisualData = {

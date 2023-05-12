@@ -1,6 +1,6 @@
 import { MutableRefObject } from 'react';
-import { Coord } from './drawingHooks';
-import { types, zoom } from './zoomAndPan/actions';
+import { Coord } from '../drawing/useDrawingEnd';
+import { types, zoom } from './actions';
 
 type State = {
   translateX: number;

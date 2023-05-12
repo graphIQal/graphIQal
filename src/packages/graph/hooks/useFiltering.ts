@@ -4,7 +4,6 @@
  */
 
 import { useContext, useState } from 'react';
-import { isNodeCategorical } from '../../../helpers/backend/getHelpers';
 import { nodesData, titles } from '../../../schemas/Data_structures/DS_schema';
 import GraphViewContext, {
   GraphViewContextInterface,

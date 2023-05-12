@@ -33,7 +33,6 @@ export const updateConnection = (
       if (newNodes[end].connections[start]) {
         newNodes[end].connections[start].type = newType;
       }
-      console.log('set connection ' + newNodes[start].connections[end].type);
 
       context?.setnodeData_Graph(newNodes);
       break;

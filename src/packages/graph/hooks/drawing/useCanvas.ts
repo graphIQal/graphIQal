@@ -44,7 +44,6 @@ export const useCanvas = (
 
   const { currTab } = useContext(ViewContext) as ViewContextInterface;
   useEffect(() => {
-    console.log('window ' + window.innerWidth);
     if (canvasWidth == 0) {
       canvasWidth = window.innerWidth;
     }

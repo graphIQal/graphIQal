@@ -38,7 +38,6 @@ export const useDropNode = (
     () => ({
       accept: 'node',
       drop(item: DragItemGraph, monitor) {
-        console.log('translate x in func ' + translateX);
         const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
 
         let left = Math.round(item.left + delta.x);

@@ -22,7 +22,6 @@ import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 
 const EditorComponent: React.FC<{ textIn: string }> = ({ textIn }) => {
-  console.log('in here ' + textIn);
   const [value, setValue] = useState([
     {
       type: ELEMENT_H1,

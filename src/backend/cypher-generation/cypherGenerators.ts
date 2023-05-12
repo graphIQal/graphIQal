@@ -45,6 +45,6 @@ export const getConnectedNodes = (nodeId: string) => {
 	return `
 	MATCH (n: Node {id: "${nodeId}"})-[r]->(c:Node)
 	// RETURN n, collect([r, c]) AS connectedNodes
-	RETURN n, r, c
+	RETURN r {.*, type: type(r)}, c {.*} 
 	`;
 };

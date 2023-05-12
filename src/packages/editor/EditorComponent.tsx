@@ -37,7 +37,7 @@ const EditorComponent: React.FC<{ textIn: string }> = ({ textIn }) => {
           id: '33333',
           children: [
             {
-              text: '1',
+              text: textIn,
             },
             // { type: 'p', id: 'bbbbb', children: [{ text: 'hmm' }] },
           ],

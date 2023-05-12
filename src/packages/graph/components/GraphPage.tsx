@@ -158,9 +158,9 @@ const Graph: React.FC<{
 
 	return (
 		<div
-			onKeyDown={(event) =>
-				handleDrawingHotkey(event, drawingMode, setDrawingMode)
-			}
+			// onKeyDown={(event) =>
+			// 	handleDrawingHotkey(event, drawingMode, setDrawingMode)
+			// }
 			tabIndex={-1}
 			ref={containerRef}
 			// className='relative'
@@ -203,16 +203,14 @@ const Graph: React.FC<{
 						</SplitPaneLeft>
 						<Divider className='separator-col' />
 						<SplitPaneRight>
-							{/* Get all connections to the main node, check if they aren't displayed on graph, and add a button to add them to this graph */}
 							{nodeInFocus_Connections
 								? nodeInFocus_Connections.map((el) => (
 										<TextButton
 											text={el.c.title}
 											onClick={() => {
 												router.push(
-													`/${username}/${el.c.id}/document`,
-													undefined,
-													{ shallow: true }
+													`/${username}/${el.c.id}`,
+													undefined
 												);
 											}}
 										/>

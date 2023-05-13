@@ -150,60 +150,58 @@ const Graph: React.FC<{
   const [alert, setAlert] = useState('');
 
   return (
-    <div
-      // onKeyDown={(event) =>
-      // 	handleDrawingHotkey(event, drawingMode, setDrawingMode)
-      // }
-      tabIndex={-1}
-      ref={containerRef}
-      // className='relative'
+    <DrawingContext.Provider
+      value={{
+        startNode: startNode,
+        endNode: endNode,
+        isPointInCanvasFuncs: isPointInCanvasFuncs,
+        numPointsInTriangleFuncs: numPointsInTriangleFuncs,
+        drawingMode: drawingMode,
+        setDrawingMode: setDrawingMode,
+        isDrawing: isDrawing,
+        setIsDrawing: setIsDrawing,
+      }}
     >
-      <DrawingContext.Provider
+      <GraphViewContext.Provider
         value={{
-          startNode: startNode,
-          endNode: endNode,
-          isPointInCanvasFuncs: isPointInCanvasFuncs,
-          numPointsInTriangleFuncs: numPointsInTriangleFuncs,
-          drawingMode: drawingMode,
-          setDrawingMode: setDrawingMode,
-          isDrawing: isDrawing,
-          setIsDrawing: setIsDrawing,
+          setnodeInFocus: setnodeInFocus,
+          nodeData_Graph: nodeData_Graph,
+          setnodeData_Graph: setnodeData_Graph,
+          nodeVisualData_Graph: nodeVisualData_Graph,
+          setnodeVisualData_Graph: setnodeVisualData_Graph,
+          modalNode: modalNode,
+          setModalNode: setModalNode,
+          nodeInFocus: nodeInFocus,
+          graphViewId: currGraphViewId as string,
+          setGraphViewId: setCurrGraphViewId,
+          tags: tags,
+          setTags: setTags,
+          alert: alert,
+          setAlert: setAlert,
         }}
       >
-        <GraphViewContext.Provider
-          value={{
-            setnodeInFocus: setnodeInFocus,
-            nodeData_Graph: nodeData_Graph,
-            setnodeData_Graph: setnodeData_Graph,
-            nodeVisualData_Graph: nodeVisualData_Graph,
-            setnodeVisualData_Graph: setnodeVisualData_Graph,
-            modalNode: modalNode,
-            setModalNode: setModalNode,
-            nodeInFocus: nodeInFocus,
-            graphViewId: currGraphViewId as string,
-            setGraphViewId: setCurrGraphViewId,
-            tags: tags,
-            setTags: setTags,
-            alert: alert,
-            setAlert: setAlert,
-          }}
-        >
-          <SplitPane className='split-pane-row'>
-            <SplitPaneLeft>
+        <SplitPane className='split-pane-row'>
+          <SplitPaneLeft>
+            <div
+              // onKeyDown={(event) =>
+              // 	handleDrawingHotkey(event, drawingMode, setDrawingMode)
+              // }
+              tabIndex={-1}
+              ref={containerRef}
+              // className='relative'
+            >
               <GraphContainer />
               <Alert />
-              {/* <BoxDragLayer parentRef={containerRef} /> */}
-            </SplitPaneLeft>
-            <Divider className='separator-col' />
-            <SplitPaneRight>
-              <GraphSideTabs
-                nodeInFocus_Connections={nodeInFocus_Connections}
-              />
-            </SplitPaneRight>
-          </SplitPane>
-        </GraphViewContext.Provider>
-      </DrawingContext.Provider>
-    </div>
+            </div>
+            {/* <BoxDragLayer parentRef={containerRef} /> */}
+          </SplitPaneLeft>
+          <Divider className='separator-col' />
+          <SplitPaneRight>
+            <GraphSideTabs nodeInFocus_Connections={nodeInFocus_Connections} />
+          </SplitPaneRight>
+        </SplitPane>
+      </GraphViewContext.Provider>
+    </DrawingContext.Provider>
   );
 };
 

@@ -1,8 +1,9 @@
 export const ConnectionTypes = {
-	IN: 'Includes',
-	DEPENDS_ON: 'Dependency',
+	IN: 'In',
+	NEEDS: 'Dependency',
 	FOLLOWS: 'Chronology',
 	RELATED: 'No Type',
+	// CUSTOM: 'Custom',
 };
 
 export type ConnectionData = {

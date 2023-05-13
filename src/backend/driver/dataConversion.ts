@@ -1,7 +1,9 @@
-import {
-	GraphNodeData,
-	NodeData,
-} from '../../schemas/Data_structures/DS_schema';
+// import {
+// 	GraphNodeData,
+// 	NodeData,
+// } from '../../schemas/Data_structures/DS_schema';
+
+import { GraphNodeData, NodeData } from '../../packages/graph/graphTypes';
 
 export const cypherToJson_graphView = () => {};
 
@@ -34,6 +36,7 @@ export const jsonToCypher_graphView = ({
 	// 	node += 'n';
 	// }
 
+	// Creating nodes
 	for (const key in graphViewData) {
 		console.log(graphViewData[key].height);
 		cypher += `
@@ -65,11 +68,33 @@ export const jsonToCypher_graphView = ({
 			SET ${node}a.title = "${nodeData[key].title}"
 		)
 		WITH count(*) as dummy`;
-		relationship += 'r';
-		node += 'n';
+
+		// Don't need this with the WITH function.
+		// relationship += 'r';
+		// node += 'n';
 	}
 
-	// cypher += '\nRETURN g, r, n';
+	// cypher = cypher.replace(/\n.*$/, '');
 
+	// Adding relationships
+	for (const key in nodeData) {
+		for (const connectionKey in nodeData[key].connections) {
+			// console.log(nodeData[key].connections[connectionKey]);
+			const connection = nodeData[key].connections[connectionKey];
+			if (connection.startNode === nodeId) continue;
+
+			cypher += `
+
+			MATCH (s:Node {id: "${connection.startNode}"}), (e:Node {id: "${
+				connection.endNode
+			}"})
+			// LIMIT 1
+			MERGE (s)-[r:${connection.type}]->(e)
+			SET r.content = ${JSON.stringify(connection.content)}
+			WITH count(*) as dummy`;
+		}
+	}
+
+	// return cypher;
 	return cypher.replace(/\n.*$/, '');
 };

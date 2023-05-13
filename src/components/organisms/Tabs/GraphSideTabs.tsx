@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import Graph from '../../../packages/graph/components/GraphPage';
 import { Tab } from '../../atoms/Tab';
@@ -14,12 +14,14 @@ export type SideTabProps = {
 const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
   nodeInFocus_Connections,
 }) => {
-  console.log('node in focus ' + nodeInFocus_Connections);
-  const renderConnections = () => {
+  const renderConnections = (nodeInFocus_Connections: any) => {
     return (
       <div>
         {nodeInFocus_Connections.map((connection: any, i: number) => (
-          <div> {'Connection ' + (i + 1) + ' : ' + connection.c.title}</div>
+          <div key={i}>
+            {' '}
+            {'Connection ' + (i + 1) + ' : ' + connection.c.title}
+          </div>
         ))}
       </div>
     );
@@ -40,12 +42,18 @@ const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
     //   : null}
   };
 
+  useEffect(() => {
+    let newTabs = [...tabs];
+    newTabs[0].component = renderConnections(nodeInFocus_Connections);
+    setTabs(newTabs);
+  }, [nodeInFocus_Connections]);
+
   const [tabs, setTabs] = useState<SideTabProps[]>([
     {
       label: 'Connections',
       viewType: 'connections',
       // component: <EditorComponent textIn={renderConnections()} />,
-      component: <div>{renderConnections()}</div>,
+      component: <div>{renderConnections(nodeInFocus_Connections)}</div>,
     },
     {
       label: 'Content',

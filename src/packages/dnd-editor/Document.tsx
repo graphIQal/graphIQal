@@ -13,11 +13,11 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useRouter } from 'next/router';
 import ShelfEditor from '../shelf-editor/ShelfEditor';
 import SplitPane, {
-  Divider,
-  SplitPaneBottom,
-  SplitPaneLeft,
-  SplitPaneRight,
-  SplitPaneTop,
+	Divider,
+	SplitPaneBottom,
+	SplitPaneLeft,
+	SplitPaneRight,
+	SplitPaneTop,
 } from '../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../editor/EditorComponent';
 import { getDocument } from '../../backend/functions/getDocument';
@@ -25,26 +25,36 @@ import TextButton from '../../components/molecules/TextButton';
 import useSWR from 'swr';
 import { fetcher } from '../../backend/driver/fetcher';
 import DocumentSideTabs, {
-  SideTabPropsDoc,
+	SideTabPropsDoc,
 } from '../../components/organisms/Tabs/DocumentSideTabs';
+import { createGraphView } from '../../backend/functions/graph/createGraphView';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
-  const router = useRouter();
-  const { username, nodeId } = router.query;
-  const [nodeData, setnodeData] = useState();
+	const router = useRouter();
+	const { username, nodeId } = router.query;
+	// const [nodeData, setnodeData] = useState();
 
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <SplitPane className='split-pane-row'>
-        <SplitPaneLeft>
-          <EditorComponent textIn={'Showing content of ' + nodeId} />
-        </SplitPaneLeft>
-        <Divider className='separator-col' />
-        <SplitPaneRight>
-          <DocumentSideTabs />
-        </SplitPaneRight>
-      </SplitPane>
-    </DndProvider>
-  );
+	return (
+		<DndProvider backend={HTML5Backend}>
+			<SplitPane className='split-pane-row'>
+				<SplitPaneLeft>
+					<EditorComponent textIn={'Showing content of ' + nodeId} />
+				</SplitPaneLeft>
+				<Divider className='separator-col' />
+				<SplitPaneRight>
+					<TextButton
+						text='Create new graph view'
+						onClick={() =>
+							createGraphView(
+								username as string,
+								nodeId as string
+							)
+						}
+					/>
+					<DocumentSideTabs />
+				</SplitPaneRight>
+			</SplitPane>
+		</DndProvider>
+	);
 };
 export default SplitPaneWrapper;

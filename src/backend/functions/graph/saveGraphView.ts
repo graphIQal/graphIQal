@@ -25,7 +25,7 @@ export const saveGraphView = async ({
 		graphViewId,
 		nodeId,
 	});
-	// const body = JSON.stringify({ ...nodeData, ...graphViewData });
+
 	console.log(body);
 
 	const res = await fetch(

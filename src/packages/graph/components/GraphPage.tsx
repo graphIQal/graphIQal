@@ -30,10 +30,17 @@ import SplitPane, {
 } from '../../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../../editor/EditorComponent';
 import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
+import { handleKeyPress } from '../helpers/handleKeyPress';
+import View from '../../../components/layouts/View';
 
 const Graph: React.FC<{
   viewId: string;
 }> = ({ viewId }) => {
+  const { documentVar, windowVar } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
+  let document = documentVar;
+  let window = windowVar;
   if (!document || !window) return <div></div>;
 
   const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
@@ -104,7 +111,10 @@ const Graph: React.FC<{
     setnodeInFocus(nodeId);
   }, [nodeId]);
 
-  const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
+  // const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
+  const [currGraphViewId, setCurrGraphViewId] = useState(
+    'f5cddebe-f6e3-49bc-8994-f40c499b9296'
+  );
 
   //Drawing states
   const containerRef = useRef<HTMLDivElement>(null);
@@ -128,20 +138,20 @@ const Graph: React.FC<{
   const [showModalConnection, setShowModalConnection] = useState(false);
 
   // Hot key for undo/redo
-  useEffect(() => {
-    const listenerFunc = (evt: any) => {
-      evt.stopImmediatePropagation();
-      if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
-        // redo();
-      } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
-        // undo();
-      }
-    };
-    document.addEventListener('keydown', (event) => listenerFunc(event));
-    return document.removeEventListener('keydown', (event) =>
-      listenerFunc(event)
-    );
-  }, []);
+  // useEffect(() => {
+  //   const listenerFunc = (evt: any) => {
+  //     evt.stopImmediatePropagation();
+  //     if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
+  //       // redo();
+  //     } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+  //       // undo();
+  //     }
+  //   };
+  //   document.addEventListener('keydown', (event) => listenerFunc(event));
+  //   return document.removeEventListener('keydown', (event) =>
+  //     listenerFunc(event)
+  //   );
+  // }, []);
 
   //graph view tags default
   const [tags, setTags] = useState(getTags(nodeData_Graph));

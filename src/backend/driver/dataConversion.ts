@@ -98,3 +98,11 @@ export const jsonToCypher_graphView = ({
 	// return cypher;
 	return cypher.replace(/\n.*$/, '');
 };
+
+export const duplicate_gv = (graphViewId: string) => {
+	return `
+		MATCH (g:GRAPH_VIEW {id:'${graphViewId}'})
+		CALL apoc.refactor.cloneNodesWithRelationships([g])
+		YIELD node RETURN node
+	`;
+};

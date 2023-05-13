@@ -1,11 +1,7 @@
 import useSWR from 'swr';
 import { fetcher } from '../../driver/fetcher';
-import {
-	GraphNodeData,
-	NodeData,
-	VisualData,
-} from '../../../schemas/Data_structures/DS_schema';
 import { jsonToCypher_graphView } from '../../driver/dataConversion';
+import { GraphNodeData, NodeData } from '../../../packages/graph/graphTypes';
 
 type saveGraphViewInput = {
 	username: string;
@@ -32,21 +28,21 @@ export const saveGraphView = async ({
 	// const body = JSON.stringify({ ...nodeData, ...graphViewData });
 	console.log(body);
 
-	// const res = await fetch(
-	// 	`/api/${username}/${nodeId}/graph/${graphViewId}/save`,
-	// 	{
-	// 		method: 'POST',
-	// 		body: body,
-	// 	}
-	// )
-	// 	.then((res) => {
-	// 		console.log('res ', res);
-	// 		return res.json();
-	// 	})
-	// 	.then((json) => {
-	// 		console.log('json: ', json);
-	// 		return json;
-	// 	});
+	const res = await fetch(
+		`/api/${username}/${nodeId}/graph/${graphViewId}/save`,
+		{
+			method: 'POST',
+			body: body,
+		}
+	)
+		.then((res) => {
+			console.log('res ', res);
+			return res.json();
+		})
+		.then((json) => {
+			console.log('json: ', json);
+			return json;
+		});
 
-	// return res;
+	return res;
 };

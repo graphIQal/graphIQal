@@ -34,6 +34,7 @@ import EditorComponent from '../../editor/EditorComponent';
 import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
 import View from '../../../components/layouts/View';
 import SearchBar from '../../../components/organisms/SearchBar';
+import { useHistoryState } from '../hooks/useHistoryState';
 
 const Graph: React.FC<{
   viewId: string;
@@ -86,6 +87,14 @@ const Graph: React.FC<{
     setnodeData_Graph(nodeData);
     setnodeVisualData_Graph(visualData);
   }, [isLoading]);
+
+  //History
+  const { addAction, undo, redo } = useHistoryState(
+    nodeData_Graph,
+    setnodeData_Graph,
+    nodeVisualData_Graph,
+    setnodeVisualData_Graph
+  );
 
   //Graph in view of one node, keep the id.
   const [nodeInFocus, setnodeInFocus] = useState(nodeId);
@@ -194,6 +203,9 @@ const Graph: React.FC<{
           setAlert: setAlert,
           showSearchBar: showSearchBar,
           setShowSearchBar: setShowSearchBar,
+          addAction: addAction,
+          undo: undo,
+          redo: redo,
         }}
       >
         <SplitPane className='split-pane-row'>

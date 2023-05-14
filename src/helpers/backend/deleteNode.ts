@@ -4,8 +4,18 @@ export const deleteNode = (
   id: string,
   viewContext: GraphViewContextInterface
 ) => {
-  let newNodes = { ...viewContext.nodeData_Graph };
-  viewContext.setAlert('Deleted node: ' + newNodes[id].title);
-  delete newNodes[id];
-  viewContext.setnodeData_Graph(newNodes);
+  let newnodeData_Graph = { ...viewContext.nodeData_Graph };
+  let newVisualNodes = { ...viewContext.nodeVisualData_Graph };
+
+  viewContext.setAlert('Deleted node: ' + newnodeData_Graph[id].title);
+  viewContext.addAction(id, 'NODE_DELETE', {
+    deletedNode: newnodeData_Graph[id],
+    deletedVisualNode: newVisualNodes[id],
+  });
+
+  delete newnodeData_Graph[id];
+  delete newVisualNodes[id];
+
+  viewContext.setnodeData_Graph(newnodeData_Graph);
+  viewContext.setnodeVisualData_Graph(newVisualNodes);
 };

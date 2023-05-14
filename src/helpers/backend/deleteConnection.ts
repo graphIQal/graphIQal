@@ -12,6 +12,12 @@ export const deleteConnection = (
       viewContext.nodeData_Graph[end].title
   );
   let newNodes = { ...viewContext.nodeData_Graph };
+
+  viewContext.addAction(start, 'CONNECTION_DELETE', {
+    endNode: end,
+    connection: newNodes[start].connections[end],
+  });
+
   delete newNodes[start].connections[end];
   delete newNodes[end].connections[start];
 

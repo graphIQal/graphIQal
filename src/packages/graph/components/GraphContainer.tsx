@@ -15,7 +15,7 @@ import { useDropNode } from '../hooks/dragging/useDropNode';
 
 import { useFiltering } from '../hooks/useFiltering';
 import { useCanvas } from '../hooks/drawing/useCanvas';
-import { Action } from '../hooks/useHistoryState';
+import { Action, useHistoryState } from '../hooks/useHistoryState';
 import { useResize } from '../hooks/useResize';
 import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { Filtering } from './Filtering';
@@ -36,10 +36,6 @@ export const GraphContainer: React.FC<{}> = () => {
   const { windowVar, documentVar } = useContext(
     ViewContext
   ) as ViewContextInterface;
-  //History
-  const [history, setHistory] = useState<Action[]>([]);
-  const [pointer, setPointer] = useState<number>(-1);
-  // const { addAction, undo, redo } = useHistoryState(nodes, setNodes, setLines);
 
   //For drawing
   const drawingContext = useContext(DrawingContext) as DrawingContextInterface;
@@ -52,13 +48,17 @@ export const GraphContainer: React.FC<{}> = () => {
     isDrawing,
   } = drawingContext;
 
+  const graphViewContext = useContext(
+    GraphViewContext
+  ) as GraphViewContextInterface;
+
   useEffect(() => {
     const listenerFunc = (evt: any) => {
       evt.stopImmediatePropagation();
       if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
-        // redo();
+        graphViewContext.redo();
       } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
-        // undo();
+        graphViewContext.undo();
       } else if (evt.code == 'KeyM') {
         handleEscapeDrawing(drawingContext, setPoints);
       } else if (evt.code === 'KeyP' && (evt.ctrlKey || evt.metaKey)) {

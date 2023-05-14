@@ -74,6 +74,8 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
+      console.log('DOne mouse up');
+      updateSize(id, width, height, '', true);
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
     };
     const onMouseDownBottomRightResize = (event: any) => {
@@ -105,6 +107,7 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpRightResize = (event: Event) => {
+      updateSize(id, width, height, true);
       document.removeEventListener('mousemove', onMouseMoveRightResize);
     };
     const onMouseDownRightResize = (event: any) => {
@@ -132,6 +135,7 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpTopResize = (event: Event) => {
+      updateSize(id, width, height, true);
       document.removeEventListener('mousemove', onMouseMoveTopResize);
     };
     const onMouseDownTopResize = (event: any) => {
@@ -159,6 +163,7 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpBottomResize = (event: Event) => {
+      updateSize(id, width, height, true);
       document.removeEventListener('mousemove', onMouseMoveBottomResize);
     };
     const onMouseDownBottomResize = (event: any) => {
@@ -186,6 +191,7 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpLeftResize = (event: Event) => {
+      updateSize(id, width, height, true);
       document.removeEventListener('mousemove', onMouseMoveLeftResize);
     };
     const onMouseDownLeftResize = (event: any) => {

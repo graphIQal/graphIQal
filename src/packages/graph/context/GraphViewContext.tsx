@@ -4,6 +4,7 @@
 
 import { createContext } from 'react';
 import { NodeData, GraphNodeData } from '../graphTypes';
+import { Action, ActionChanges } from '../hooks/useHistoryState';
 
 export type GraphViewContextInterface = {
   nodeInFocus: string; //ID of "centered" node (shows only its connections and relevant data), 'homenode' if no centered node
@@ -22,6 +23,9 @@ export type GraphViewContextInterface = {
   setAlert: (val: string) => void;
   showSearchBar: boolean;
   setShowSearchBar: (val: boolean) => void;
+  addAction: (id: string, type: ActionChanges, value: any) => void;
+  undo: () => void;
+  redo: () => void;
 };
 
 const GraphViewContext = createContext<GraphViewContextInterface | null>(null);

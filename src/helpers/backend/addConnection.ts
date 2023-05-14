@@ -26,4 +26,8 @@ export const addConnection = (
       newnodeData_Graph[node2].title
   );
   viewContext.setnodeData_Graph(newnodeData_Graph);
+  viewContext.addAction(node1, 'CONNECTION_ADD', {
+    endNode: node2,
+    connection: newnodeData_Graph[node1].connections[node2],
+  });
 };

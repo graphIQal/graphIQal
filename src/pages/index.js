@@ -12,6 +12,7 @@ import {
 	returnCypher,
 } from '../backend/cypher-generation/cypherGenerators';
 import { useRouter } from 'next/router';
+import { deleteUser } from '../backend/functions/general/deleteUser';
 
 export default function Home() {
 	const [email, setemail] = useState('icejes8@gmail.com');
@@ -72,6 +73,15 @@ export default function Home() {
 					}}
 				/>
 				<TextButton
+					text={'Delete user'}
+					onClick={async () => {
+						console.log(
+							await deleteUser({ username, password, email })
+						);
+					}}
+				/>
+				<div>care</div>
+				<TextButton
 					text={'Add resources'}
 					onClick={async () => {
 						// GenerateCypher([
@@ -87,7 +97,6 @@ export default function Home() {
 						);
 					}}
 				/>
-				<div>care</div>
 				<TextButton
 					text={'Delete ALL NODES'}
 					onClick={() => deleteAll()}

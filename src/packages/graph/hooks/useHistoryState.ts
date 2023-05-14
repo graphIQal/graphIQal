@@ -50,6 +50,8 @@ export const useHistoryState = (
       action,
     ];
     pointer.current += 1;
+    console.log('history');
+    console.log(history.current);
   };
 
   const addAction = (id: string, type: ActionChanges, value: any) => {
@@ -73,6 +75,8 @@ export const useHistoryState = (
             let newState = { ...prevState };
             newState[id].height = value.oldHeight;
             newState[id].width = value.oldWidth;
+            newState[id].x = value.oldX;
+            newState[id].y = value.oldY;
             return newState;
           }
         );
@@ -184,9 +188,12 @@ export const useHistoryState = (
       case 'SIZE':
         setnodeVisualData_Graph(
           (prevState: { [key: string]: GraphNodeData }) => {
+            console.log('value ' + JSON.stringify(value));
             let newState = { ...prevState };
             newState[id].height = value.height;
             newState[id].width = value.width;
+            newState[id].x = value.x;
+            newState[id].y = value.y;
             return newState;
           }
         );

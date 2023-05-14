@@ -30,27 +30,33 @@ export const updateNode = (
     case 'resize':
       if (!graphNodes[nodeID].y || !graphNodes[nodeID].x) return;
       const newSize = [newVal.width, newVal.height];
+      const oldX = graphNodes[nodeID].x;
+      const oldY = graphNodes[nodeID].y;
+      let valX;
+      let valY;
       if (newVal.tag === 'top') {
-        const val =
-          graphNodes[nodeID].y + graphNodes[nodeID].height - newSize[1];
-        if (Number.isFinite(val)) {
-          graphNodes[nodeID].y = val;
+        valY = graphNodes[nodeID].y + graphNodes[nodeID].height - newSize[1];
+        if (Number.isFinite(valY)) {
+          graphNodes[nodeID].y = valY;
         }
       }
       if (newVal.tag === 'left') {
-        const val =
-          graphNodes[nodeID].x + graphNodes[nodeID].width - newSize[0];
-        if (Number.isFinite(val)) {
-          graphNodes[nodeID].x = val;
+        valX = graphNodes[nodeID].x + graphNodes[nodeID].width - newSize[0];
+        if (Number.isFinite(valX)) {
+          graphNodes[nodeID].x = valX;
         }
       }
+      console.log('done ' + newVal.done);
       if (newVal.done) {
-        console.log('adding action');
         context?.addAction(nodeID, 'SIZE', {
-          width: newSize[0],
-          height: newSize[1],
-          oldWidth: graphNodes[nodeID].width,
-          oldHeight: graphNodes[nodeID].height,
+          width: graphNodes[nodeID].width,
+          height: graphNodes[nodeID].height,
+          oldWidth: newVal.width,
+          oldHeight: newVal.height,
+          x: valX ? valX : oldX,
+          y: valY ? valY : oldY,
+          oldX: oldX,
+          oldY: oldY,
         });
         return;
       }

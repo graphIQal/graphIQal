@@ -121,11 +121,6 @@ const Graph: React.FC<{
   const [drawingMode, setDrawingMode] = useState(true);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
-  console.log('nodeData_Graph');
-  console.log(nodeData_Graph);
-  console.log('nodeVisualData_Graph');
-  console.log(nodeVisualData_Graph);
-
   //Drawing line data
   const startNode = useRef<string>('');
   const endNode = useRef<string>('');

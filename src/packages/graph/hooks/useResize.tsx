@@ -21,7 +21,6 @@ export const useResize = () => {
       tag?: string,
       done?: boolean
     ) => {
-      console.log('DONE  in func ' + done);
       updateNode(
         'resize',
         { width: width, height: height, tag: tag, done: done },

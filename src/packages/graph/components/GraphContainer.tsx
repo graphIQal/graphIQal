@@ -59,7 +59,8 @@ export const GraphContainer: React.FC<{}> = () => {
         graphViewContext.redo();
       } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
         graphViewContext.undo();
-      } else if (evt.code == 'KeyM') {
+      } else if (evt.keyCode == 27) {
+        //escape key
         handleEscapeDrawing(drawingContext, setPoints);
       } else if (evt.code === 'KeyP' && (evt.ctrlKey || evt.metaKey)) {
         evt.preventDefault();

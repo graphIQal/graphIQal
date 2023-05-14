@@ -16,12 +16,15 @@ import DrawingContext, {
 const ResizableBox: React.FC<{
   children: any;
   classes?: string;
-  style?: object;
+  style?: any;
   id: string | number;
 }> = ({ children, classes, style, id }) => {
   const { nodeVisualData_Graph } = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
+
+  const startWidth = useRef<number>();
+  const startHeight = useRef<number>();
 
   const { setDrawingMode } = useContext(
     DrawingContext
@@ -68,17 +71,19 @@ const ResizableBox: React.FC<{
       // } else {
       height = height + dy;
       // }
-      updateSize(id, width, height);
+      updateSize(id, width, height, '', false);
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
-      console.log('DOne mouse up');
-      updateSize(id, width, height, '', true);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
+      document.removeEventListener('mouseup', onMouseUpBottomRightResize);
     };
     const onMouseDownBottomRightResize = (event: any) => {
+      startWidth.current = style?.width;
+      startHeight.current = style?.height;
       x = event.clientX;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.left = styles.left;
@@ -102,15 +107,18 @@ const ResizableBox: React.FC<{
       width = width + dx;
       // }
 
-      updateSize(id, width, parseInt(resizeableEle.style.height));
+      updateSize(id, width, parseInt(resizeableEle.style.height), '', false);
       resizeableEle.style.width = width + 'px';
     };
 
     const onMouseUpRightResize = (event: Event) => {
-      updateSize(id, width, height, true);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveRightResize);
+      document.removeEventListener('mouseup', onMouseUpRightResize);
     };
     const onMouseDownRightResize = (event: any) => {
+      startWidth.current = style?.width;
+      startHeight.current = style?.height;
       x = event.clientX;
       resizeableEle.style.left = styles.left;
       resizeableEle.style.right = null;
@@ -131,14 +139,17 @@ const ResizableBox: React.FC<{
       y = e.clientY;
       //   resizeableEle.style.top -= dy;
       resizeableEle.style.height = height + 'px';
-      updateSize(id, parseInt(resizeableEle.style.width), height, 'top');
+      updateSize(id, parseInt(resizeableEle.style.width), height, 'top', false);
     };
 
     const onMouseUpTopResize = (event: Event) => {
-      updateSize(id, width, height, true);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveTopResize);
+      document.removeEventListener('mouseup', onMouseUpTopResize);
     };
     const onMouseDownTopResize = (event: any) => {
+      startWidth.current = style?.width;
+      startHeight.current = style?.height;
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.bottom = styles.bottom;
@@ -159,14 +170,17 @@ const ResizableBox: React.FC<{
 
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
-      updateSize(id, parseInt(resizeableEle.style.width), height);
+      updateSize(id, parseInt(resizeableEle.style.width), height, '', false);
     };
 
     const onMouseUpBottomResize = (event: Event) => {
-      updateSize(id, width, height, true);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveBottomResize);
+      document.removeEventListener('mouseup', onMouseUpBottomResize);
     };
     const onMouseDownBottomResize = (event: any) => {
+      startWidth.current = style?.width;
+      startHeight.current = style?.height;
       y = event.clientY;
       const styles = window.getComputedStyle(resizeableEle);
       resizeableEle.style.top = styles.top;
@@ -187,14 +201,23 @@ const ResizableBox: React.FC<{
       // }
 
       resizeableEle.style.width = width + 'px';
-      updateSize(id, width, parseInt(resizeableEle.style.height), 'left');
+      updateSize(
+        id,
+        width,
+        parseInt(resizeableEle.style.height),
+        'left',
+        false
+      );
     };
 
     const onMouseUpLeftResize = (event: Event) => {
-      updateSize(id, width, height, true);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveLeftResize);
+      document.removeEventListener('mouseup', onMouseUpLeftResize);
     };
     const onMouseDownLeftResize = (event: any) => {
+      startWidth.current = style?.width;
+      startHeight.current = style?.height;
       x = event.clientX;
       resizeableEle.style.right = styles.right;
       resizeableEle.style.left = null;

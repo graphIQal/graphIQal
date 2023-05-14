@@ -30,19 +30,11 @@ const Home: React.FC = () => {
   );
 
   let newTabs: MainTabProps[] = [
-    // {
-    //   label: 'Home',
-    //   viewId: '',
-    //   viewType: 'document',
-    //   component: <SplitPaneWrapper viewId={''} />,
-    // },
     {
-      label: 'Graph',
+      label: 'Home',
       viewId: '',
-      viewType: 'graph',
-      component: (
-        <Graph2 viewId={'f5cddebe-f6e3-49bc-8994-f40c499b9296'} title='' />
-      ),
+      viewType: 'document',
+      component: <SplitPaneWrapper viewId={''} />,
     },
   ];
   const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
@@ -54,7 +46,6 @@ const Home: React.FC = () => {
         console.log(data);
 
         let includedIDs: { [key: string]: boolean } = {};
-        if (!data) return;
         data.map((record: any, index: number) => {
           if (!includedIDs[record.g.properties.id]) {
             includedIDs[record.g.properties.id] = true;

@@ -24,7 +24,7 @@ import { deleteConnection } from '../../../helpers/backend/deleteConnection';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { handleEndPoint } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
-import { ConnectionTypes } from '../graphTypes';
+import { ConnectionTypesMap } from '../graphTypes';
 
 type MindMapProps = {
 	points: any;
@@ -55,9 +55,9 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 	const getDropdownItems = (from: string, to: string) => {
 		let activeIndex = 0;
 		const items: ItemProps[] = [];
-		Object.keys(ConnectionTypes).map((connection: string, i: number) => {
+		Object.keys(ConnectionTypesMap).map((connection: string, i: number) => {
 			items.push({
-				text: (ConnectionTypes as any)[connection],
+				text: (ConnectionTypesMap as any)[connection],
 				onPress: () =>
 					updateConnection(viewContext, 'type', '', {
 						start: from,

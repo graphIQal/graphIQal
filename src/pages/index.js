@@ -62,12 +62,28 @@ export default function Home() {
 				/>
 				<TextButton
 					text={'Test Button'}
-					onClick={() => {
+					onClick={async () => {
 						console.log(
 							GenerateCypher([
 								addBlockOnNodeCreation,
 								returnCypher,
 							])
+						);
+					}}
+				/>
+				<TextButton
+					text={'Add resources'}
+					onClick={async () => {
+						// GenerateCypher([
+						// 	addBlockOnNodeCreation,
+						// 	returnCypher,
+						// ])
+						await fetch('/api/general/load_resources').then(
+							(res) => {
+								res.json().then((json) => {
+									console.log(json);
+								});
+							}
 						);
 					}}
 				/>

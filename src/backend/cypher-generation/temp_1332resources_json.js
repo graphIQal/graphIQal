@@ -1,4 +1,4 @@
-export const json = {
+export const thirteenthirtytwojson = {
 	homework: [
 		{
 			name: 'ArrayList.zip',
@@ -3657,7 +3657,7 @@ export const json = {
 			name: 'Collision Handling: Wrap-Up',
 			url: 'https://gatech.instructure.com/courses/296880/modules/items/2943348',
 		},
-		{},
+		// {},
 		{
 			name: 'Introduction to AVLs',
 			url: 'https://gatech.instructure.com/courses/296880/modules/items/2943368',

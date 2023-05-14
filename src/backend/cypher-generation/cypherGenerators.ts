@@ -1,3 +1,8 @@
+import {
+	ConnectionData,
+	ConnectionTypes,
+} from '../../packages/graph/graphTypes';
+
 type Context = {};
 type CypherGenerator = { cypher: string; context: Object };
 
@@ -25,20 +30,56 @@ export const returnCypher = (params: Object = {}) => {
 	return '\nRETURN ' + returnString;
 };
 
-export const createNewNode = (
-	title: string,
-	connectedNode: string,
-	connectionType: string
-): CypherGenerator => {
-	const res: CypherGenerator = { cypher: '', context: '' };
-	res.cypher = `
-	MERGE (b:Block {blocks:})
-	MERGE (${title})-[r:BLOCK_CHILD]-()
-	ON CREATE sET b.id = randomUuid()
-	MERGE (n)-[:BLOCK_CHILD]->(b)
-	`;
-	res.context = { r: '' };
-	return res;
+type createNewNodeCypher_Input = {
+	properties?: {
+		[key: string]: string | number | boolean;
+	};
+	connections?: {
+		connectionNodeProperties: { [key: string]: string };
+		type: ConnectionTypes;
+		properties?: {
+			[key: string]: string | number | boolean;
+		};
+	}[];
+};
+
+export const mergeNodeCypher = (node: createNewNodeCypher_Input): string => {
+	let cypher = `MERGE (n: Node {`;
+
+	// create/find the current node
+	if (node.properties) {
+		if ('id' in node.properties) delete node.properties.id;
+
+		for (const key in node.properties) {
+			cypher += key + `:'${node.properties[key]}',`;
+		}
+
+		cypher = cypher.slice(0, -1);
+		cypher += '})';
+		cypher += '\n SET n.id = randomUuid()';
+	}
+
+	// Create all connections, this is currently directionless
+	if (node.connections) {
+		for (const i in node.connections) {
+			const connection = node.connections[i];
+			cypher += `
+			MERGE (a {`;
+
+			for (const key in connection.connectionNodeProperties) {
+				cypher +=
+					key + `:'${connection.connectionNodeProperties[key]}',`;
+			}
+
+			cypher = cypher.slice(0, -1);
+
+			cypher += `})
+			MERGE (n)-[r:${connection.type}]-(a)`;
+		}
+	}
+
+	console.log(cypher);
+	return cypher;
 };
 
 export const getConnectedNodes = (nodeId: string) => {

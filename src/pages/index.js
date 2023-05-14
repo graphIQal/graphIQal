@@ -84,11 +84,21 @@ export default function Home() {
 				<TextButton
 					text={'Add resources'}
 					onClick={async () => {
-						// GenerateCypher([
-						// 	addBlockOnNodeCreation,
-						// 	returnCypher,
-						// ])
+						console.log('add resources');
 						await fetch('/api/general/load_resources').then(
+							(res) => {
+								res.json().then((json) => {
+									console.log(json);
+								});
+							}
+						);
+					}}
+				/>
+				<TextButton
+					text={'Delete resources'}
+					onClick={async () => {
+						console.log('add resources');
+						await fetch('/api/general/delete_resources').then(
 							(res) => {
 								res.json().then((json) => {
 									console.log(json);

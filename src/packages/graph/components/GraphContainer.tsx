@@ -136,14 +136,6 @@ export const GraphContainer: React.FC<{}> = () => {
       startNode.current != endNode.current
     ) {
       addConnection(startNode.current, endNode.current, viewContext);
-      // addAction({
-      //   undo: { id: '', value: null, type: 'LINE' },
-      //   redo: {
-      //     id: '',
-      //     value: { start: startNode.current, end: endNode.current },
-      //     type: 'LINE',
-      //   },
-      // });
     }
   }, [endNode.current]);
 

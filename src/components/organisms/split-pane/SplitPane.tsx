@@ -33,6 +33,7 @@ const SplitPane: React.FC<SplitPaneProps> = ({ children, className }) => {
   const xDividerPos = useRef<number | null>(null);
 
   const onMouseHoldDown = (e: MouseEvent) => {
+    console.log('pressing');
     xDividerPos.current = e.clientX;
   };
 
@@ -61,7 +62,6 @@ const SplitPane: React.FC<SplitPaneProps> = ({ children, className }) => {
       document.removeEventListener('mousemove', onMouseHoldMove);
     };
   });
-
   return (
     <div className={className}>
       <SplitPaneContext.Provider

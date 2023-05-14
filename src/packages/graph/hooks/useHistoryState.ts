@@ -53,7 +53,6 @@ export const useHistoryState = (
   };
 
   const addAction = (id: string, type: ActionChanges, value: any) => {
-    console.log('action ' + type + ' ' + JSON.stringify(value));
     addActionToStack({
       undo: { id: id, value: value, type: type },
       redo: { id: id, value: value, type: type },
@@ -181,8 +180,6 @@ export const useHistoryState = (
       return;
     }
     const { id, value, type } = history.current[pointer.current + 1].redo;
-    let newNodes = { ...nodeData_Graph };
-    let newVisualNodes = { ...nodeVisualData_Graph };
     switch (type) {
       case 'SIZE':
         setnodeVisualData_Graph(
@@ -264,10 +261,10 @@ export const useHistoryState = (
         setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
           let newState = { ...prevState };
           if (newState[id].connections[value.endNode]) {
-            newState[value.endNode].connections[id] = value.oldConnection;
+            newState[value.endNode].connections[id] = value.newConnection;
             delete newState[id].connections[value.endNode];
           } else {
-            newState[id].connections[value.endNode] = value.oldConnection;
+            newState[id].connections[value.endNode] = value.newConnection;
             delete newState[value.endNode].connections[id];
           }
 

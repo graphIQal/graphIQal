@@ -13,12 +13,6 @@ export const addConnection = (
     content: [],
     type: 'RELATED',
   };
-  // newnodeData_Graph[node2].connections[node1] = {
-  //   startNode: node2,
-  //   endNode: node1,
-  //   content: [],
-  //   type: 'IN',
-  // };
   viewContext.setAlert(
     'Connection of type RELATED added between ' +
       newnodeData_Graph[node1].title +

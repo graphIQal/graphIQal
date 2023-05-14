@@ -5,36 +5,25 @@
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import router, { useRouter } from 'next/router';
+import { Divider } from '@udecode/plate';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
-import DrawingContext from '../context/GraphDrawingContext';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
-import { BoxDragLayer } from '../helpers/BoxDragLayer';
-import { handleDrawingHotkey } from '../hooks/drawing/useDrawingEnd';
-import { GraphContainer } from './GraphContainer';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
-import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
-import SplitPaneContext, {
-  SplitPaneContextInterface,
-} from '../../../components/organisms/split-pane/SplitPaneContext';
-import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { Alert } from '../../../components/organisms/Alert';
-import { Divider } from '@udecode/plate';
-import TextButton from '../../../components/molecules/TextButton';
+import SearchBar from '../../../components/organisms/SearchBar';
+import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
 import SplitPane, {
   SplitPaneLeft,
   SplitPaneRight,
 } from '../../../components/organisms/split-pane/SplitPane';
-import EditorComponent from '../../editor/EditorComponent';
-import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
-import View from '../../../components/layouts/View';
-import SearchBar from '../../../components/organisms/SearchBar';
+import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
+import DrawingContext from '../context/GraphDrawingContext';
+import GraphViewContext from '../context/GraphViewContext';
+import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
+import { GraphContainer } from './GraphContainer';
 
 const Graph: React.FC<{
   viewId: string;

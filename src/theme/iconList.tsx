@@ -10,4 +10,6 @@ export const iconList = [
   'connection',
   'close',
   'block',
+  'angleRight',
+  'angleDown',
 ];

@@ -9,7 +9,9 @@ import router, { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
 import DrawingContext from '../context/GraphDrawingContext';
-import GraphViewContext from '../context/GraphViewContext';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../context/GraphViewContext';
 import { BoxDragLayer } from '../helpers/BoxDragLayer';
 import { handleDrawingHotkey } from '../hooks/drawing/useDrawingEnd';
 import { GraphContainer } from './GraphContainer';
@@ -30,8 +32,8 @@ import SplitPane, {
 } from '../../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../../editor/EditorComponent';
 import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
-import { handleKeyPress } from '../helpers/handleKeyPress';
 import View from '../../../components/layouts/View';
+import SearchBar from '../../../components/organisms/SearchBar';
 
 const Graph: React.FC<{
   viewId: string;
@@ -159,6 +161,8 @@ const Graph: React.FC<{
   //alert message
   const [alert, setAlert] = useState('');
 
+  const [showSearchBar, setShowSearchBar] = useState(false);
+
   return (
     <DrawingContext.Provider
       value={{
@@ -188,6 +192,8 @@ const Graph: React.FC<{
           setTags: setTags,
           alert: alert,
           setAlert: setAlert,
+          showSearchBar: showSearchBar,
+          setShowSearchBar: setShowSearchBar,
         }}
       >
         <SplitPane className='split-pane-row'>
@@ -202,6 +208,13 @@ const Graph: React.FC<{
             >
               <GraphContainer />
               <Alert />
+              {showSearchBar && <SearchBar />}
+              {showSearchBar && (
+                <div
+                  onClick={() => setShowSearchBar(false)}
+                  className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
+                ></div>
+              )}
             </div>
             {/* <BoxDragLayer parentRef={containerRef} /> */}
           </SplitPaneLeft>

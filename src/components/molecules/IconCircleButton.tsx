@@ -12,6 +12,8 @@ import { ArrowsAngleExpand } from '@styled-icons/bootstrap/ArrowsAngleExpand';
 import { Trash } from '@styled-icons/bootstrap/Trash';
 import { Connectdevelop } from '@styled-icons/fa-brands/Connectdevelop';
 import { CloseOutline } from '@styled-icons/evaicons-outline/CloseOutline';
+import { AngleDown } from '@styled-icons/fa-solid/AngleDown';
+import { AngleRight } from '@styled-icons/fa-solid/AngleRight';
 
 type NodeButtonProps = {
   onClick: () => void;
@@ -111,6 +113,20 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
     ),
     block: (
       <Cube
+        size={'1em'}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
+      />
+    ),
+    angleRight: (
+      <AngleRight
+        size={'1em'}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
+      />
+    ),
+    angleDown: (
+      <AngleDown
         size={'1em'}
         color={!selected ? color : 'white'}
         onClick={handleClick}

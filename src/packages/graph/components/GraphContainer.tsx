@@ -27,7 +27,10 @@ import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
 import { Alert } from '../../../components/organisms/Alert';
-import { handleEscapeDrawing, handleKeyPress } from '../helpers/handleKeyPress';
+import {
+  handleEscapeDrawing,
+  handleInvokeSearch,
+} from '../helpers/handleKeyPress';
 
 export const GraphContainer: React.FC<{}> = () => {
   const { windowVar, documentVar } = useContext(
@@ -57,10 +60,10 @@ export const GraphContainer: React.FC<{}> = () => {
       } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
         // undo();
       } else if (evt.code == 'KeyM') {
-        handleEscapeDrawing(evt, drawingContext, setPoints);
+        handleEscapeDrawing(drawingContext, setPoints);
       } else if (evt.code === 'KeyP' && (evt.ctrlKey || evt.metaKey)) {
         evt.preventDefault();
-        console.log('search invoked');
+        handleInvokeSearch(viewContext);
       }
     };
     document.addEventListener('keydown', (event) => listenerFunc(event));

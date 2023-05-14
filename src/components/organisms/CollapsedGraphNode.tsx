@@ -10,6 +10,8 @@ import { deleteNode } from '../../helpers/backend/deleteNode';
 import IconCircleButton from '../molecules/IconCircleButton';
 import { updateNode } from '../../helpers/backend/updateNode';
 import { setCollapsedNode } from '../../packages/graph/helpers/setCollapsedNode';
+import router from 'next/router';
+import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 
 const CollapsedGraphNode: React.FC<{
   title: string;
@@ -20,21 +22,24 @@ const CollapsedGraphNode: React.FC<{
 }> = ({ title, id, icon, color, toggleDropdown }) => {
   const [showMenu, setShowMenu] = useState(false);
 
-  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
+  const graphViewContext = useContext(
+    GraphViewContext
+  ) as GraphViewContextInterface;
+  const viewContext = useContext(ViewContext) as ViewContextInterface;
 
-  const { setNodeInView } = viewContext;
+  // const { setNodeInView } = viewContext;
   const buttonItems = [
     {
       src: 'navigation',
-      onClick: () => setNodeInView(id),
+      onClick: () => router.push('/' + viewContext.username + '/' + id),
     },
     {
       src: 'expand',
-      onClick: () => setCollapsedNode(id, viewContext),
+      onClick: () => setCollapsedNode(id, graphViewContext),
     },
     {
       src: 'remove',
-      onClick: () => deleteNode(id, viewContext),
+      onClick: () => deleteNode(id, graphViewContext),
     },
   ];
   return (
@@ -52,7 +57,7 @@ const CollapsedGraphNode: React.FC<{
             id='collapsed_node'
             defaultValue={title}
             onChange={(newVal: any) =>
-              updateNode('title', newVal.target.value, id, viewContext)
+              updateNode('title', newVal.target.value, id, graphViewContext)
             }
           />
         </form>

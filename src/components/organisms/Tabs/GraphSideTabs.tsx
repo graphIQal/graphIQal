@@ -4,6 +4,8 @@ import Graph from '../../../packages/graph/components/GraphPage';
 import { Tab } from '../../atoms/Tab';
 import { Tabs } from './Tabs';
 import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
+import SearchBar from '../SearchBar';
+import router from 'next/router';
 
 export type SideTabProps = {
   label: string;
@@ -14,11 +16,17 @@ export type SideTabProps = {
 const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
   nodeInFocus_Connections,
 }) => {
+  const { username } = useContext(ViewContext) as ViewContextInterface;
   const renderConnections = (nodeInFocus_Connections: any) => {
     return (
       <div>
         {nodeInFocus_Connections.map((connection: any, i: number) => (
-          <div key={i}>
+          <div
+            onClick={() => {
+              router.push(`/${username}/${connection.c.id}`, undefined);
+            }}
+            key={i}
+          >
             {' '}
             {'Connection ' + (i + 1) + ' : ' + connection.c.title}
           </div>
@@ -88,6 +96,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
           );
         })}
       </Tabs>
+
       {tabs.map((tab, i) => {
         return (
           <div

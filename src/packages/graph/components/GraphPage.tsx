@@ -5,35 +5,34 @@
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import router, { useRouter } from 'next/router';
+import { Divider } from '@udecode/plate';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
-import DrawingContext from '../context/GraphDrawingContext';
-import GraphViewContext from '../context/GraphViewContext';
-import { BoxDragLayer } from '../helpers/BoxDragLayer';
-import { handleDrawingHotkey } from '../hooks/drawing/useDrawingEnd';
-import { GraphContainer } from './GraphContainer';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
-import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
-import SplitPaneContext, {
-  SplitPaneContextInterface,
-} from '../../../components/organisms/split-pane/SplitPaneContext';
-import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { Alert } from '../../../components/organisms/Alert';
-import { Divider } from '@udecode/plate';
-import TextButton from '../../../components/molecules/TextButton';
+import SearchBar from '../../../components/organisms/SearchBar';
+import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
 import SplitPane, {
   SplitPaneLeft,
   SplitPaneRight,
 } from '../../../components/organisms/split-pane/SplitPane';
-import EditorComponent from '../../editor/EditorComponent';
-import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
+import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
+import DrawingContext from '../context/GraphDrawingContext';
+import GraphViewContext from '../context/GraphViewContext';
+import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
+import { useHistoryState } from '../hooks/useHistoryState';
+import { GraphContainer } from './GraphContainer';
 
 const Graph: React.FC<{
   viewId: string;
 }> = ({ viewId }) => {
+  const { documentVar, windowVar } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
+  let document = documentVar;
+  let window = windowVar;
   if (!document || !window) return <div></div>;
 
   const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
@@ -78,6 +77,14 @@ const Graph: React.FC<{
     setnodeVisualData_Graph(visualData);
   }, [isLoading]);
 
+  //History
+  const { addAction, undo, redo } = useHistoryState(
+    nodeData_Graph,
+    setnodeData_Graph,
+    nodeVisualData_Graph,
+    setnodeVisualData_Graph
+  );
+
   //Graph in view of one node, keep the id.
   const [nodeInFocus, setnodeInFocus] = useState(nodeId);
   const [nodeInFocus_Connections, setNodeInFocus_Connections] = useState<
@@ -104,17 +111,15 @@ const Graph: React.FC<{
     setnodeInFocus(nodeId);
   }, [nodeId]);
 
-  const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
+  // const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
+  const [currGraphViewId, setCurrGraphViewId] = useState(
+    'f5cddebe-f6e3-49bc-8994-f40c499b9296'
+  );
 
   //Drawing states
   const containerRef = useRef<HTMLDivElement>(null);
   const [drawingMode, setDrawingMode] = useState(true);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-
-  console.log('nodeData_Graph');
-  console.log(nodeData_Graph);
-  console.log('nodeVisualData_Graph');
-  console.log(nodeVisualData_Graph);
 
   //Drawing line data
   const startNode = useRef<string>('');
@@ -128,26 +133,28 @@ const Graph: React.FC<{
   const [showModalConnection, setShowModalConnection] = useState(false);
 
   // Hot key for undo/redo
-  useEffect(() => {
-    const listenerFunc = (evt: any) => {
-      evt.stopImmediatePropagation();
-      if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
-        // redo();
-      } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
-        // undo();
-      }
-    };
-    document.addEventListener('keydown', (event) => listenerFunc(event));
-    return document.removeEventListener('keydown', (event) =>
-      listenerFunc(event)
-    );
-  }, []);
+  // useEffect(() => {
+  //   const listenerFunc = (evt: any) => {
+  //     evt.stopImmediatePropagation();
+  //     if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
+  //       // redo();
+  //     } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+  //       // undo();
+  //     }
+  //   };
+  //   document.addEventListener('keydown', (event) => listenerFunc(event));
+  //   return document.removeEventListener('keydown', (event) =>
+  //     listenerFunc(event)
+  //   );
+  // }, []);
 
   //graph view tags default
   const [tags, setTags] = useState(getTags(nodeData_Graph));
 
   //alert message
   const [alert, setAlert] = useState('');
+
+  const [showSearchBar, setShowSearchBar] = useState(false);
 
   return (
     <DrawingContext.Provider
@@ -178,6 +185,11 @@ const Graph: React.FC<{
           setTags: setTags,
           alert: alert,
           setAlert: setAlert,
+          showSearchBar: showSearchBar,
+          setShowSearchBar: setShowSearchBar,
+          addAction: addAction,
+          undo: undo,
+          redo: redo,
         }}
       >
         <SplitPane className='split-pane-row'>
@@ -192,6 +204,13 @@ const Graph: React.FC<{
             >
               <GraphContainer />
               <Alert />
+              {showSearchBar && <SearchBar />}
+              {showSearchBar && (
+                <div
+                  onClick={() => setShowSearchBar(false)}
+                  className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
+                ></div>
+              )}
             </div>
             {/* <BoxDragLayer parentRef={containerRef} /> */}
           </SplitPaneLeft>

@@ -3,6 +3,7 @@
  */
 
 import { createContext, MutableRefObject } from 'react';
+import { Action } from '../../packages/graph/hooks/useHistoryState';
 
 export type MainTabProps = {
   label: string;

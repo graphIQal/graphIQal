@@ -12,10 +12,11 @@ export type GraphActionContextInterface = {
   // addAction: (val: Action) => void; //Function that adds a given action to the history stack for undo/redo
   updateSize:
     | ((
-        id: string | number,
+        id: string,
         width: number,
         height: number,
-        tag?: string | undefined
+        tag?: string | undefined,
+        done?: boolean
       ) => void)
     | undefined;
 };

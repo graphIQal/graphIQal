@@ -1,5 +1,3 @@
-import { AngleDown } from '@styled-icons/fa-solid/AngleDown';
-import { AngleRight } from '@styled-icons/fa-solid/AngleRight';
 import React, {
   createRef,
   useContext,
@@ -35,6 +33,7 @@ const SplitPane: React.FC<SplitPaneProps> = ({ children, className }) => {
   const xDividerPos = useRef<number | null>(null);
 
   const onMouseHoldDown = (e: MouseEvent) => {
+    console.log('pressing');
     xDividerPos.current = e.clientX;
   };
 
@@ -63,7 +62,6 @@ const SplitPane: React.FC<SplitPaneProps> = ({ children, className }) => {
       document.removeEventListener('mousemove', onMouseHoldMove);
     };
   });
-
   return (
     <div className={className}>
       <SplitPaneContext.Provider
@@ -174,13 +172,14 @@ export const SplitPaneTop = (props: any) => {
       <div {...props} className={'split-pane-top'} ref={topRef}>
         <IconTitle
           title={props.title}
-          icon={
-            active ? (
-              <AngleDown onClick={() => setActive(false)} size={UNIT + 'em'} />
-            ) : (
-              <AngleRight onClick={() => setActive(true)} size={UNIT + 'em'} />
-            )
-          }
+          icon={active ? 'angleDown' : 'angleRight'}
+          //   active ? (
+          //     <AngleDown onClick={() => setActive(false)} size={UNIT + 'em'} />
+          //   ) : (
+          //     <AngleRight onClick={() => setActive(true)} size={UNIT + 'em'} />
+          //   )
+          // }
+          onClick={active ? () => setActive(false) : () => setActive(true)}
         />
         <div style={{ paddingTop: UNIT * 3.5 + 'em' }}>{props.children}</div>
       </div>

@@ -24,7 +24,7 @@ export const Tab: React.FC<TabProps> = ({
   tabs,
   setTabs,
 }) => {
-  const [showDel, setShowDel] = useState(false);
+  // const [showDel, setShowDel] = useState(false);
 
   const onClick = (index: number) => {
     setCurrTab(index);
@@ -38,23 +38,24 @@ export const Tab: React.FC<TabProps> = ({
 
   return (
     <div
-      onMouseOver={() => setShowDel(true)}
-      onMouseLeave={() => setShowDel(false)}
+      onClick={() => onClick(index)}
+      // onMouseOver={() => setShowDel(true)}
+      // onMouseLeave={() => setShowDel(false)}
       className={
         'w-36  border-x-[0.5px] border-lining p-2 text-sm hover:cursor-pointer hover:bg-base_white flex flex-row items-center justify-between align-middle ' +
         (selected && ' bg-base_white')
       }
     >
-      <div onClick={() => onClick(index)}>
+      <div>
         <h3>{label}</h3>
       </div>
-      {showDel && (
+      {/* {showDel && (
         <IconCircleButton
           src='close'
           circle={false}
           onClick={() => onClose(index)}
         />
-      )}
+      )} */}
     </div>
   );
 };

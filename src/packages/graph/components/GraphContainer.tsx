@@ -15,7 +15,7 @@ import { useDropNode } from '../hooks/dragging/useDropNode';
 
 import { useFiltering } from '../hooks/useFiltering';
 import { useCanvas } from '../hooks/drawing/useCanvas';
-import { Action } from '../hooks/useHistoryState';
+import { Action, useHistoryState } from '../hooks/useHistoryState';
 import { useResize } from '../hooks/useResize';
 import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { Filtering } from './Filtering';
@@ -27,15 +27,15 @@ import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
 import { Alert } from '../../../components/organisms/Alert';
+import {
+  handleEscapeDrawing,
+  handleInvokeSearch,
+} from '../helpers/handleKeyPress';
 
 export const GraphContainer: React.FC<{}> = () => {
   const { windowVar, documentVar } = useContext(
     ViewContext
   ) as ViewContextInterface;
-  //History
-  const [history, setHistory] = useState<Action[]>([]);
-  const [pointer, setPointer] = useState<number>(-1);
-  // const { addAction, undo, redo } = useHistoryState(nodes, setNodes, setLines);
 
   //For drawing
   const drawingContext = useContext(DrawingContext) as DrawingContextInterface;
@@ -47,6 +47,31 @@ export const GraphContainer: React.FC<{}> = () => {
     setIsDrawing,
     isDrawing,
   } = drawingContext;
+
+  const graphViewContext = useContext(
+    GraphViewContext
+  ) as GraphViewContextInterface;
+
+  useEffect(() => {
+    const listenerFunc = (evt: any) => {
+      evt.stopImmediatePropagation();
+      if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
+        graphViewContext.redo();
+      } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+        graphViewContext.undo();
+      } else if (evt.keyCode == 27) {
+        //escape key
+        handleEscapeDrawing(drawingContext, setPoints);
+      } else if (evt.code === 'KeyP' && (evt.ctrlKey || evt.metaKey)) {
+        evt.preventDefault();
+        handleInvokeSearch(viewContext);
+      }
+    };
+    document.addEventListener('keydown', (event) => listenerFunc(event));
+    return document.removeEventListener('keydown', (event) =>
+      listenerFunc(event)
+    );
+  }, []);
 
   //Pan and zoom
   const ref = useRef(null);
@@ -112,14 +137,6 @@ export const GraphContainer: React.FC<{}> = () => {
       startNode.current != endNode.current
     ) {
       addConnection(startNode.current, endNode.current, viewContext);
-      // addAction({
-      //   undo: { id: '', value: null, type: 'LINE' },
-      //   redo: {
-      //     id: '',
-      //     value: { start: startNode.current, end: endNode.current },
-      //     type: 'LINE',
-      //   },
-      // });
     }
   }, [endNode.current]);
 

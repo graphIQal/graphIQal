@@ -3,6 +3,7 @@ Context used for drawing functionalities including nodes (circles), lines, and a
 */
 
 import { createContext, MutableRefObject } from 'react';
+import { Coord } from '../hooks/drawing/useDrawingEnd';
 
 export type DrawingContextInterface = {
   startNode: MutableRefObject<string>; //Ref of node that line is drawn from

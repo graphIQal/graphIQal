@@ -51,10 +51,7 @@ export const useDropNode = (
         moveNode(item.id, left, top, context);
         setDrawingMode(true);
         setIsDrawing(false);
-        // addAction({
-        //   undo: { id: item.id, type: 'DRAG', value: startPos.current },
-        //   redo: { id: item.id, type: 'DRAG', value: { left, top } },
-        // });
+
         return undefined;
       },
     }),

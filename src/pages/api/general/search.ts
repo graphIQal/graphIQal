@@ -1,18 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { read_subscribe } from '../../../backend/driver/helpers';
+import { read, read_subscribe } from '../../../backend/driver/helpers';
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const { username, password, email } = req.query;
+	const { username, search } = req.query;
 
 	const cypher: string = `
-	MATCH (u:User {username: "${username}", password: "${password}", email: "${email}" })-[*0..]->(n)
-	DETACH DELETE u, n
+	MATCH (u: User {username: "${username}"})-[*0..]->(n:Node)
+    WHERE toLower(n.title) STARTS WITH toLower("${search}")
+    RETURN DISTINCT n {.*}
+    LIMIT 100
 	`;
 
-	const result: any = await read_subscribe(cypher as string);
+	const result: any = await read(cypher as string);
 
-	res.status(200).json({ ...result });
+	res.status(200).json(result);
 }

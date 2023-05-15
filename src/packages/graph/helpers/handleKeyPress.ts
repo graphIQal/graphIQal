@@ -12,6 +12,5 @@ export const handleEscapeDrawing = (
 };
 
 export const handleInvokeSearch = (viewContext: GraphViewContextInterface) => {
-	console.log(viewContext.showSearchBar);
 	viewContext.setShowSearchBar(!viewContext.showSearchBar);
 };

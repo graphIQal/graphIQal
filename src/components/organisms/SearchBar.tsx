@@ -11,12 +11,15 @@ import { OnHoverMenu } from './OnHoverMenu';
 import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 import router from 'next/router';
 import { addNodeToGraph } from '../../helpers/frontend/addNodeToGraph';
+import { NodeData } from '../../packages/graph/graphTypes';
 
 const SearchBar: React.FC = () => {
 	const graphViewContext = useContext(
 		GraphViewContext
 	) as GraphViewContextInterface;
+
 	const viewContext = useContext(ViewContext) as ViewContextInterface;
+
 	const getButtonItems = (id: string) => {
 		return [
 			{
@@ -47,12 +50,7 @@ const SearchBar: React.FC = () => {
 	};
 
 	//state to hold the results from the search
-	const [results, setResults] = useState([
-		{
-			title: 'Node 1',
-			id: 'node1',
-		},
-	]);
+	const [results, setResults] = useState([]);
 
 	return (
 		<div className='absolute top-[10vh] m-auto left-0 right-0 w-[60vw] min-w-[30%] min-h-[30%] bg-base_white flex flex-col gap-y-2 p-2 rounded-sm shadow-sm z-[100]'>
@@ -64,11 +62,20 @@ const SearchBar: React.FC = () => {
 						id='collapsed_node'
 						placeholder='Search for a node...'
 						className='bg-base_white'
-						onChange={(newVal: any) =>
+						onChange={async (newVal: any) => {
 							console.log(
 								'search ' + JSON.stringify(newVal.target.value)
-							)
-						}
+							);
+							if (newVal.target.value.length > 0)
+								await fetch(
+									`/api/general/search?username=${viewContext.username}&search=${newVal.target.value}`
+								).then((res) => {
+									res.json().then((json) => {
+										console.log(json);
+										setResults(json);
+									});
+								});
+						}}
 					/>
 				</form>
 				<IconCircleButton
@@ -97,9 +104,9 @@ const SearchBar: React.FC = () => {
 								src='block'
 								onClick={() => null}
 							/>
-							<h4 className='text-sm'>{result.title}</h4>
+							<h4 className='text-sm'>{result.n.title}</h4>
 							<OnHoverMenu
-								buttonItems={getButtonItems(result.id)}
+								buttonItems={getButtonItems(result.n.id)}
 							/>
 						</div>
 					);

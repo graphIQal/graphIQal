@@ -24,6 +24,7 @@ import GraphViewContext from '../context/GraphViewContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
+import { getConnections } from '../../../backend/functions/general/getConnections';
 
 const Graph: React.FC<{
   viewId: string;
@@ -44,38 +45,38 @@ const Graph: React.FC<{
 
   let nodeData: { [key: string]: NodeData } = {};
   let visualData: { [key: string]: GraphNodeData } = {};
-
-  if (!isLoading) {
-    console.log('data');
-    console.log(data);
-
-    for (let node in data) {
-      let nodeConnections: { [key: string]: ConnectionData } = {};
-      for (let connection in data[node].connections) {
-        nodeConnections[data[node].connections[connection].endNode] = {
-          ...data[node].connections[connection],
-          content: [],
-        };
-      }
-      nodeData[data[node].node.id] = {
-        ...data[node].node,
-        connections: nodeConnections,
-        icon: 'block',
-        color: 'black',
-      };
-
-      visualData[data[node].node.id] = data[node].relationship;
-    }
-  }
-
   // node data
   const [nodeData_Graph, setnodeData_Graph] = useState(nodeData);
   const [nodeVisualData_Graph, setnodeVisualData_Graph] = useState(visualData);
 
   useEffect(() => {
-    setnodeData_Graph(nodeData);
-    setnodeVisualData_Graph(visualData);
-  }, [isLoading]);
+    if (nodeId) {
+      fetch(`/api/${username}/${nodeId}/graph/${viewId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log('node info' + JSON.stringify(data));
+          for (let node in data) {
+            let nodeConnections: { [key: string]: ConnectionData } = {};
+            for (let connection in data[node].connections) {
+              nodeConnections[data[node].connections[connection].endNode] = {
+                ...data[node].connections[connection],
+                content: [],
+              };
+            }
+            nodeData[data[node].node.id] = {
+              ...data[node].node,
+              connections: nodeConnections,
+              icon: 'block',
+              color: 'black',
+            };
+
+            visualData[data[node].node.id] = data[node].relationship;
+          }
+        });
+      setnodeData_Graph(nodeData);
+      setnodeVisualData_Graph(visualData);
+    }
+  }, [nodeId]);
 
   //History
   const { addAction, undo, redo } = useHistoryState(
@@ -93,16 +94,15 @@ const Graph: React.FC<{
 
   // get the connected nodes of seleced node
   useEffect(() => {
-    console.log('nodeInFocus');
-    console.log(nodeInFocus);
-    if (nodeInFocus)
-      fetch(`/api/${username}/${nodeInFocus}`)
-        .then((res) => res.json())
-        .then((json) => {
-          console.log('connected Nodes');
-          console.log(json);
-          setNodeInFocus_Connections(json);
-        });
+    console.log('nodeInFocus ' + nodeInFocus);
+    if (nodeInFocus) {
+      getConnections(nodeInFocus, username).then((res) => {
+        setNodeInFocus_Connections(res);
+        console.log(
+          'New connections ' + JSON.stringify(nodeInFocus_Connections)
+        );
+      });
+    }
   }, [nodeInFocus]);
 
   // // set NodeId once it changes
@@ -112,9 +112,7 @@ const Graph: React.FC<{
   }, [nodeId]);
 
   // const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
-  const [currGraphViewId, setCurrGraphViewId] = useState(
-    'f5cddebe-f6e3-49bc-8994-f40c499b9296'
-  );
+  const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
 
   //Drawing states
   const containerRef = useRef<HTMLDivElement>(null);
@@ -204,7 +202,9 @@ const Graph: React.FC<{
             >
               <GraphContainer />
               <Alert />
-              {showSearchBar && <SearchBar />}
+              {showSearchBar && (
+                <SearchBar connections={nodeInFocus_Connections} />
+              )}
               {showSearchBar && (
                 <div
                   onClick={() => setShowSearchBar(false)}

@@ -12,7 +12,12 @@ import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 import router from 'next/router';
 import { addNodeToGraph } from '../../helpers/frontend/addNodeToGraph';
 
-const SearchBar: React.FC = () => {
+const SearchBar: React.FC<{
+  connections: {
+    r: any;
+    c: any;
+  }[];
+}> = ({ connections }) => {
   const graphViewContext = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
@@ -23,7 +28,7 @@ const SearchBar: React.FC = () => {
         //this button should navigate to the views of the clicked node
         src: 'navigation',
         onClick: () => {
-          router.push('/' + viewContext.username + '/' + id);
+          router.push(`/${viewContext.username}/${id}`, undefined);
           graphViewContext.setShowSearchBar(false);
         },
       },
@@ -86,16 +91,19 @@ const SearchBar: React.FC = () => {
         <TextButton text='Add to graph' onClick={() => console.log('add')} />
       </div> */}
       <div>
-        {results.map((result, i) => {
+        {connections.map((result, i) => {
           return (
-            <div className='flex flex-row gap-x-3 items-center align-middle'>
+            <div
+              key={i}
+              className='flex flex-row gap-x-3 items-center align-middle'
+            >
               <IconCircleButton
                 circle={false}
                 src='block'
                 onClick={() => null}
               />
-              <h4 className='text-sm'>{result.title}</h4>
-              <OnHoverMenu buttonItems={getButtonItems(result.id)} />
+              <h4 className='text-sm'>{result.c.title}</h4>
+              <OnHoverMenu buttonItems={getButtonItems(result.c.id)} />
             </div>
           );
         })}

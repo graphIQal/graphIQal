@@ -42,11 +42,17 @@ const CollapsedGraphNode: React.FC<{
       onClick: () => deleteNode(id, graphViewContext),
     },
   ];
+
+  const backgroundColor =
+    id == graphViewContext.nodeInFocus ? color : 'base_white';
   return (
     <div
       onMouseOver={() => setShowMenu(true)}
       onMouseLeave={() => setShowMenu(false)}
-      className='w-full h-full flex items-center content-center justify-items-stretch flex-row bg-base_white '
+      className={
+        'w-full h-full flex items-center content-center justify-items-stretch flex-row bg-' +
+        backgroundColor
+      }
     >
       <div className='flex flex-row gap-x-3 items-center'>
         <IconCircleButton src={icon} onClick={toggleDropdown} circle={false} />

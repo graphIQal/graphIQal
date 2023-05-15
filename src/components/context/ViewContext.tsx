@@ -17,6 +17,7 @@ export type ViewContextInterface = {
   setMainViewTabs: (val: MainTabProps[]) => void;
   username: string;
   nodeId: string;
+  setNodeId: (val: string) => void;
   currTab: number;
   setCurrTab: (val: number) => void;
   windowVar: Window;

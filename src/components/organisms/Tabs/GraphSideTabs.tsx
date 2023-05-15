@@ -16,7 +16,8 @@ export type SideTabProps = {
 const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
   nodeInFocus_Connections,
 }) => {
-  const { username } = useContext(ViewContext) as ViewContextInterface;
+  const viewContext = useContext(ViewContext) as ViewContextInterface;
+  const { username } = viewContext;
   const renderConnections = (nodeInFocus_Connections: any) => {
     return (
       <div>

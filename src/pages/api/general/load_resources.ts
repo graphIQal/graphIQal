@@ -34,7 +34,7 @@ export default async function handler(
 
 	let index = 0;
 	let cypher = ``;
-	const id = '7579d555-c21a-47a3-996e-ca70483b6441';
+	const id = '8d2d4dbc-d530-417b-8054-b69288e0f953';
 
 	const promises: Promise<unknown>[] = [];
 	// const promises: string[] = [];
@@ -51,14 +51,15 @@ export default async function handler(
 						id: id,
 					},
 					type: 'HAS',
+					direction_away: false,
 				},
 			],
 		});
 
 		// for batching uploads
 		index++;
-		if (index < 40) continue;
-		// if (index > 40) break;
+		if (index < 25) continue;
+		if (index > 50) break;
 
 		// promises.push(cypher);
 		const categoryNode = await write(cypher as string);
@@ -75,6 +76,7 @@ export default async function handler(
 						{
 							connectionNodeProperties: { title: key },
 							type: 'HAS',
+							direction_away: false,
 						},
 					],
 				});

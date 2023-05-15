@@ -40,6 +40,7 @@ type createNewNodeCypher_Input = {
 		properties?: {
 			[key: string]: string | number | boolean;
 		};
+		direction_away?: boolean;
 	}[];
 };
 
@@ -73,8 +74,13 @@ export const mergeNodeCypher = (node: createNewNodeCypher_Input): string => {
 
 			cypher = cypher.slice(0, -1);
 
-			cypher += `})
-			MERGE (n)-[r:${connection.type}]-(a)`;
+			if (connection.direction_away) {
+				cypher += `})
+				MERGE (n)-[r:${connection.type}]->(a)`;
+			} else {
+				cypher += `})
+				MERGE (n)<-[r:${connection.type}]-(a)`;
+			}
 		}
 	}
 

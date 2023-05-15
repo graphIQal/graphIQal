@@ -31,7 +31,7 @@ const CollapsedGraphNode: React.FC<{
   const buttonItems = [
     {
       src: 'navigation',
-      onClick: () => router.push('/' + viewContext.username + '/' + id),
+      onClick: () => router.push(`/${viewContext.username}/${id}`, undefined),
     },
     {
       src: 'expand',

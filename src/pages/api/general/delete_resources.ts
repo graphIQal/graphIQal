@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { write } from '../../../backend/driver/helpers';
-import { mergeNodeCypher } from '../../../backend/cypher-generation/cypherGenerators';
+import {
+	deleteNodeCypher,
+	mergeNodeCypher,
+} from '../../../backend/cypher-generation/cypherGenerators';
 import { thirteenthirtytwojson } from '../../../backend/cypher-generation/temp_1332resources_json';
 // import { write } from '../../../src/backend/driver/helpers';
 
@@ -34,34 +37,14 @@ export default async function handler(
 
 	let index = 0;
 	let cypher = ``;
-	const id = '7579d555-c21a-47a3-996e-ca70483b6441';
-
+	const id = '18922a12-a2ad-416c-9385-ff7fa298a018';
 	const promises: Promise<unknown>[] = [];
 	// const promises: string[] = [];
 
 	for (const key in json) {
+		if (key !== 'bfs') continue;
+
 		const array = json[key];
-
-		cypher = mergeNodeCypher({
-			properties: { title: key },
-			connections: [
-				{
-					// Write home-node id
-					connectionNodeProperties: {
-						id: id,
-					},
-					type: 'IN',
-				},
-			],
-		});
-
-		// for batching uploads
-		index++;
-		if (index < 40) continue;
-		// if (index > 40) break;
-
-		// promises.push(cypher);
-		const categoryNode = await write(cypher as string);
 
 		for (const i in array) {
 			if (Object.keys(array[i]).length > 0) {
@@ -69,7 +52,7 @@ export default async function handler(
 					array[i].title = array[i].name;
 					delete array[i].name;
 				}
-				cypher = mergeNodeCypher({
+				cypher = deleteNodeCypher({
 					properties: array[i],
 					connections: [
 						{
@@ -80,14 +63,23 @@ export default async function handler(
 				});
 				promises.push(write(cypher as string));
 				// promises.push(cypher);
-				// index++;
+				index++;
 			}
-
-			// if (index > 1000) {
-			// 	res.status(200).json({ promises: promises });
-			// 	return;
-			// }
 		}
+
+		cypher = deleteNodeCypher({
+			properties: { title: key },
+			connections: [
+				{
+					connectionNodeProperties: {
+						id: id,
+					},
+					type: 'IN',
+				},
+			],
+		});
+
+		promises.push(write(cypher as string));
 	}
 
 	await Promise.all(promises);

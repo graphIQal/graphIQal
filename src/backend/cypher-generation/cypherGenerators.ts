@@ -82,6 +82,26 @@ export const mergeNodeCypher = (node: createNewNodeCypher_Input): string => {
 	return cypher;
 };
 
+export const deleteNodeCypher = (node: createNewNodeCypher_Input): string => {
+	let cypher = `MATCH (n: Node {`;
+
+	// create/find the current node
+	if (node.properties) {
+		if ('id' in node.properties) delete node.properties.id;
+
+		for (const key in node.properties) {
+			cypher += key + `:'${node.properties[key]}',`;
+		}
+
+		cypher = cypher.slice(0, -1);
+		cypher += '})';
+		cypher += '\nDETACH DELETE n';
+	}
+
+	console.log(cypher);
+	return cypher;
+};
+
 export const getConnectedNodes = (nodeId: string) => {
 	return `
 	MATCH (n: Node {id: "${nodeId}"})-[r]->(c:Node)

@@ -20,6 +20,7 @@ const SearchBar: React.FC = () => {
   const getButtonItems = (id: string) => {
     return [
       {
+        //this button should navigate to the views of the clicked node
         src: 'navigation',
         onClick: () => {
           router.push('/' + viewContext.username + '/' + id);
@@ -27,6 +28,7 @@ const SearchBar: React.FC = () => {
         },
       },
       {
+        //this button should add the selected node to the graph
         src: 'plus',
         onClick: () => {
           addNodeToGraph(id, graphViewContext);
@@ -34,6 +36,7 @@ const SearchBar: React.FC = () => {
         },
       },
       {
+        //this button should put the selected node in focus
         src: 'spotlight',
         onClick: () => {
           graphViewContext.setnodeInFocus(id);
@@ -43,6 +46,7 @@ const SearchBar: React.FC = () => {
     ];
   };
 
+  //state to hold the results from the search
   const [results, setResults] = useState([
     {
       title: 'Node 1',
@@ -51,13 +55,14 @@ const SearchBar: React.FC = () => {
   ]);
   return (
     <div className='absolute bottom-0 left-0 min-w-[30%] min-h-[30%] bg-base_white flex flex-col gap-y-2 p-2 rounded-sm shadow-sm z-[100]'>
-      <div className='flex flex-row justify-between w-full'>
-        <form>
+      <div className='flex flex-row justify-between w-full align-middle items-center'>
+        <form className='bg-base_white w-full p-1'>
           <input
             type='text'
             name='name'
             id='collapsed_node'
             placeholder='Search for a node...'
+            className='bg-base_white'
             onChange={(newVal: any) =>
               console.log('search ' + JSON.stringify(newVal.target.value))
             }

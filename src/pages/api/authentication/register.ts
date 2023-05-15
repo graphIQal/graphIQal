@@ -20,7 +20,7 @@ export default async function handler(
 	ON CREATE SET u.id = randomUuid()
 	MERGE (n:Node {title: $hometitle})
 	ON CREATE SET n.id = randomUuid()
-	MERGE (u)-[r:IN]->(n)
+	MERGE (u)-[r:HAS]->(n)
 	
 	MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
 	MERGE (n)-[:NEXT_BLOCK]->(b)

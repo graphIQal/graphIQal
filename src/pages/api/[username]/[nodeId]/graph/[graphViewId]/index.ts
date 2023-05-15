@@ -12,7 +12,7 @@ export default async function handler(
 
 	// Find all graph data
 	const cypher = `
-	MATCH (g:GRAPH_VIEW {id: $graphViewId})-[relationship:IN]-(node), (node)-[r]-(d:Node)
+	MATCH (g:GRAPH_VIEW {id: $graphViewId})-[relationship:HAS]-(node), (node)-[r]-(d:Node)
 
 	RETURN node {.*}, relationship {.*}, collect(r {startNode: startNode(r).id, endNode: endNode(r).id, type: type(r)}) AS connections
 	`;

@@ -1,12 +1,12 @@
 export const ConnectionTypesMap = {
-	IN: 'In',
+	HAS: 'Has',
 	NEEDS: 'Dependency',
 	FOLLOWS: 'Chronology',
 	RELATED: 'No Type',
 	// CUSTOM: 'Custom',
 };
 
-export type ConnectionTypes = 'IN' | 'NEEDS' | 'FOLLOWS' | 'RELATED';
+export type ConnectionTypes = 'HAS' | 'NEEDS' | 'FOLLOWS' | 'RELATED';
 
 export type ConnectionData = {
 	content: string[]; //ids of the blocks of the node's data that are contained in this connection

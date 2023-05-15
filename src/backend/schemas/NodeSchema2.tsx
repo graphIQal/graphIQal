@@ -34,7 +34,7 @@ type BlockChildren = CustomText | Block;
 
 type Connection = {
 	// nodes: [Node, Node];
-	type: 'IN' | 'DIRECTED' | 'EQUAL';
+	type: 'HAS' | 'DIRECTED' | 'EQUAL';
 	content: Block[];
 	block_one: {
 		id?: string;

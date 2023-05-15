@@ -26,7 +26,7 @@ export const jsonToCypher_graphView = ({
 	// Original
 	// for (const key in graphViewData) {
 	// 	cypher += `
-	// 	MERGE (:GRAPH_VIEW {id: "${graphViewId}"})-[${relationship}:IN]->(${node}: Node {id: "${key}"})
+	// 	MERGE (:GRAPH_VIEW {id: "${graphViewId}"})-[${relationship}:HAS]->(${node}: Node {id: "${key}"})
 	// 	SET ${relationship}.x = ${graphViewData[key].x}, ${relationship}.y = ${graphViewData[key].y}, ${relationship}.height = ${graphViewData[key].height}, ${relationship}.width = ${graphViewData[key].width}, ${relationship}.collapsed = ${graphViewData[key].collapsed}
 	// 	SET ${node}.title = "${nodeData[key].title}"
 	// 	`;
@@ -41,14 +41,14 @@ export const jsonToCypher_graphView = ({
 		MATCH (g:GRAPH_VIEW {id: "${graphViewId}"})
 		// When the node already exists
 		FOREACH(ignoreMe IN CASE WHEN ${node} is not NULL THEN [1] ELSE [] END | 
-			MERGE (g)-[${relationship}:IN]->(${node})
+			MERGE (g)-[${relationship}:HAS]->(${node})
 			SET ${relationship}.x = ${graphViewData[key].x}, ${relationship}.y = ${graphViewData[key].y}, ${relationship}.height = ${graphViewData[key].height}, ${relationship}.width = ${graphViewData[key].width}, ${relationship}.collapsed = ${graphViewData[key].collapsed}
 			SET ${node}.title = "${nodeData[key].title}"
 		)
 		// When the node doesn't exist yet
 		FOREACH(ignoreMe IN CASE WHEN NOT ${node} is not NULL THEN [1] ELSE [] END | 
 			// Create Node and link to current graph view
-			MERGE (g)-[${relationship}:IN]->(${node}a:Node {id: "${key}"})
+			MERGE (g)-[${relationship}:HAS]->(${node}a:Node {id: "${key}"})
 			
 			// Create it's own graph view
 			// MERGE (${node}a)-[:VIEW]->(:GRAPH_VIEW {id: randomUuid(), title: "Graph View"})
@@ -60,7 +60,7 @@ export const jsonToCypher_graphView = ({
 			MERGE (b)-[:BLOCK_CHILD]->(p)
 			// connect to current node
 			MERGE (currentNode: Node {id: "${nodeId}"})
-			MERGE (currentNode)-[:IN]->(${node}a)
+			MERGE (currentNode)-[:HAS]->(${node}a)
 			SET ${relationship}.x = ${graphViewData[key].x}, ${relationship}.y = ${graphViewData[key].y}, ${relationship}.height = ${graphViewData[key].height}, ${relationship}.width = ${graphViewData[key].width}, ${relationship}.collapsed = ${graphViewData[key].collapsed}
 			SET ${node}a.title = "${nodeData[key].title}"
 		)

@@ -57,7 +57,7 @@ export default async function handler(
 					connections: [
 						{
 							connectionNodeProperties: { title: key },
-							type: 'IN',
+							type: 'HAS',
 						},
 					],
 				});
@@ -74,7 +74,7 @@ export default async function handler(
 					connectionNodeProperties: {
 						id: id,
 					},
-					type: 'IN',
+					type: 'HAS',
 				},
 			],
 		});

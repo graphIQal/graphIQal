@@ -35,7 +35,7 @@ type CustomText = {
 
 type Connection = {
 	// nodes: [Node, Node];
-	type: 'IN' | 'IS' | 'EQUAL';
+	type: 'HAS' | 'IS' | 'EQUAL';
 	content: Block[];
 	block_one: {
 		id?: string;

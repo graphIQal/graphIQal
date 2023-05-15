@@ -14,7 +14,7 @@ export default async function handler(
 	MATCH (o:Node {id: $currentNodeId})
 	MATCH (g:GRAPH_VIEW {id: $graphViewId})
 
-	MERGE (o)-[r:IN]->(n:Node {title: $nodeTitle, id: randomUuid()})<-[r:IN {
+	MERGE (o)-[r:HAS]->(n:Node {title: $nodeTitle, id: randomUuid()})<-[r:HAS {
 		x_size: $x_size,
 		y_size: $y_size,
 		x_cell: $x_cell,

@@ -23,13 +23,13 @@ const SearchBar: React.FC<{
     GraphViewContext
   ) as GraphViewContextInterface;
   const viewContext = useContext(ViewContext) as ViewContextInterface;
-  const getButtonItems = (id: string) => {
+  const getButtonItems = (result: any) => {
     return [
       {
         //this button should navigate to the views of the clicked node
         src: 'navigation',
         onClick: () => {
-          router.push(`/${viewContext.username}/${id}`, undefined);
+          router.push(`/${viewContext.username}/${result.id}`, undefined);
           graphViewContext.setShowSearchBar(false);
         },
       },
@@ -37,7 +37,7 @@ const SearchBar: React.FC<{
         //this button should add the selected node to the graph
         src: 'plus',
         onClick: () => {
-          addNodeToGraph(id, graphViewContext);
+          addNodeToGraph(result, graphViewContext, viewContext.username);
           graphViewContext.setShowSearchBar(false);
         },
       },
@@ -45,7 +45,7 @@ const SearchBar: React.FC<{
         //this button should put the selected node in focus
         src: 'spotlight',
         onClick: () => {
-          graphViewContext.setnodeInFocus(id);
+          graphViewContext.setnodeInFocus(result.id);
           graphViewContext.setShowSearchBar(false);
         },
       },
@@ -53,7 +53,7 @@ const SearchBar: React.FC<{
   };
 
   //state to hold the results from the search
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<{ n: any }[]>([]);
 
   return (
     <div className='absolute top-[10vh] m-auto left-0 right-0 w-[60vw] min-w-[30%] min-h-[30%] bg-base_white flex flex-col gap-y-2 p-2 rounded-sm shadow-sm z-[100]'>
@@ -72,7 +72,7 @@ const SearchBar: React.FC<{
                   `/api/general/search?username=${viewContext.username}&search=${newVal.target.value}`
                 ).then((res) => {
                   res.json().then((json) => {
-                    console.log(json);
+                    console.log('result ' + JSON.stringify(json));
                     setResults(json);
                   });
                 });
@@ -97,7 +97,7 @@ const SearchBar: React.FC<{
         <TextButton text='Add to graph' onClick={() => console.log('add')} />
       </div> */}
       <div>
-        {connections.map((result, i) => {
+        {results.map((result, i) => {
           return (
             <div
               key={i}
@@ -108,8 +108,8 @@ const SearchBar: React.FC<{
                 src='block'
                 onClick={() => null}
               />
-              <h4 className='text-sm'>{result.c.title}</h4>
-              <OnHoverMenu buttonItems={getButtonItems(result.c.id)} />
+              <h4 className='text-sm'>{result.n.title}</h4>
+              <OnHoverMenu buttonItems={getButtonItems(result.n)} />
             </div>
           );
         })}

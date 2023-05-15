@@ -6,6 +6,9 @@ import { Tabs } from './Tabs';
 import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
 import SearchBar from '../SearchBar';
 import router from 'next/router';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../../../packages/graph/context/GraphViewContext';
 
 export type SideTabProps = {
   label: string;
@@ -18,9 +21,13 @@ const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
 }) => {
   const viewContext = useContext(ViewContext) as ViewContextInterface;
   const { username } = viewContext;
+  const { nodeInFocus } = useContext(
+    GraphViewContext
+  ) as GraphViewContextInterface;
   const renderConnections = (nodeInFocus_Connections: any) => {
     return (
       <div>
+        <h3>{'In Focus: ' + nodeInFocus}</h3>
         {nodeInFocus_Connections.map((connection: any, i: number) => (
           <div
             onClick={() => {

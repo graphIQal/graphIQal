@@ -76,6 +76,7 @@ const Graph: React.FC<{
         });
       setnodeData_Graph(nodeData);
       setnodeVisualData_Graph(visualData);
+      console.log('nodes ' + JSON.stringify(nodeData));
     }
   }, [nodeId]);
 

@@ -67,6 +67,7 @@ export const GraphNode: FC<NodeProps> = ({
   ) as ViewContextInterface;
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
+  const { nodeInFocus } = viewContext;
   const [showDropdown, setShowDropdown] = useState(false);
   const collapsed = viewContext.nodeVisualData_Graph[id].collapsed;
   //disables dragging if we're drawing
@@ -99,7 +100,8 @@ export const GraphNode: FC<NodeProps> = ({
       />
     );
   }
-
+  const backgroundClass =
+    nodeInFocus == id ? 'bg-opacity-30 bg-' + color : 'bg-base_white';
   return (
     <div>
       <div
@@ -127,7 +129,8 @@ export const GraphNode: FC<NodeProps> = ({
       ></div>
       <ResizableBox
         classes={
-          'p-sm overflow-hidden h-full w-full bg-base_white  h-12 rounded-sm border-grey border-[1px] flex flex-row items-center align-middle z-10 p-3 gap-x-3 border-l-[3px] '
+          'p-sm overflow-hidden h-full w-full h-12 rounded-sm border-grey border-[1px] flex flex-row items-center align-middle z-10 p-3 gap-x-3 border-l-[3px] ' +
+          backgroundClass
         }
         style={{
           width: size[0],

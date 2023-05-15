@@ -40,6 +40,7 @@ const Home: React.FC = () => {
   const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
   useEffect(() => {
+    if (!data) return;
     if (!isLoading) {
       if (data) {
         console.log('data');

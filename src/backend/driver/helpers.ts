@@ -37,6 +37,35 @@ export async function read(cypher: string, params = {}) {
 	}
 }
 
+export async function read_subscribe(cypher: string, params = {}) {
+	// 1. Open a sessionxX
+	// const driver = getDriver();
+	const session = driver.session();
+
+	try {
+		// 2. Execute a Cypher Statement
+		const res = await session.executeRead((tx: ManagedTransaction) =>
+			tx.run(cypher, params).subscribe({
+				onKeys: (keys) => {
+					console.log(keys);
+				},
+				onNext: (record) => {
+					console.log(record);
+					return record;
+				},
+				onCompleted: (summary) => {
+					session.close();
+				},
+			})
+		);
+	} catch (e) {
+		return e;
+	} finally {
+		// 4. Close the session
+		await session.close();
+	}
+}
+
 export async function write(cypher: string, params = {}) {
 	// 1. Open a session
 	// const driver = getDriver();

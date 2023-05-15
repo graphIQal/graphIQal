@@ -32,21 +32,20 @@ export const Filtering: React.FC<FilteringProps> = ({
 	getDropdownItemsX,
 	getDropdownItemsY,
 }) => {
-	const viewContext = useContext(
-		GraphViewContext
-	) as GraphViewContextInterface;
+	const { tags, graphViewId, nodeVisualData_Graph, nodeData_Graph } =
+		useContext(GraphViewContext) as GraphViewContextInterface;
 
 	const { username, nodeId } = useContext(
 		ViewContext
 	) as ViewContextInterface;
 
-	const { tags, graphViewId, nodeVisualData_Graph, nodeData_Graph } =
-		viewContext;
 	return (
 		<div className=' relative ml-3 mt-3 flex flex-row gap-x-3 mb-3 w-full'>
 			<TextButton
 				text='Save Graph'
 				onClick={() => {
+					console.log('graphViewId');
+					console.log(graphViewId);
 					saveGraphView({
 						username,
 						graphViewId,

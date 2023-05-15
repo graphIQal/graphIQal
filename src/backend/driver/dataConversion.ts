@@ -19,8 +19,6 @@ export const jsonToCypher_graphView = ({
 	graphViewId,
 	nodeId,
 }: graphViewInput) => {
-	console.log(graphViewData);
-	console.log(nodeData);
 	let cypher = '';
 	let relationship = 'r';
 	let node = 'n';
@@ -38,7 +36,6 @@ export const jsonToCypher_graphView = ({
 
 	// Creating nodes
 	for (const key in graphViewData) {
-		console.log(graphViewData[key].height);
 		cypher += `
 		OPTIONAL MATCH (${node}: Node {id: "${key}"})
 		MATCH (g:GRAPH_VIEW {id: "${graphViewId}"})
@@ -54,7 +51,7 @@ export const jsonToCypher_graphView = ({
 			MERGE (g)-[${relationship}:IN]->(${node}a:Node {id: "${key}"})
 			
 			// Create it's own graph view
-			MERGE (${node}a)-[:VIEW]->(:GRAPH_VIEW {id: randomUuid(), title: "Graph View"})
+			// MERGE (${node}a)-[:VIEW]->(:GRAPH_VIEW {id: randomUuid(), title: "Graph View"})
 			// create blocks 
 			MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
 			MERGE (${node}a)-[:NEXT_BLOCK]->(b)

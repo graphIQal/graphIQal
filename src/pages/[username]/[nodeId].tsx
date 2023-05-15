@@ -24,10 +24,17 @@ const Home: React.FC = () => {
 
   const { username, nodeId } = router.query;
 
+  const [currNodeId, setCurrNodeId] = useState(nodeId as string);
+
   const { data, error, isLoading } = useSWR(
     nodeId ? `/api/${username}/${nodeId}/document` : null,
     fetcher
   );
+
+  useEffect(() => {
+    console.log('changing node id ');
+    setCurrNodeId(nodeId as string);
+  }, [nodeId]);
 
   let newTabs: MainTabProps[] = [
     {
@@ -43,9 +50,6 @@ const Home: React.FC = () => {
     if (!data) return;
     if (!isLoading) {
       if (data) {
-        console.log('data');
-        console.log(data);
-
         let includedIDs: { [key: string]: boolean } = {};
         data.map((record: any, index: number) => {
           if (!includedIDs[record.g.properties.id]) {
@@ -77,7 +81,8 @@ const Home: React.FC = () => {
         mainViewTabs: tabs,
         setMainViewTabs: setTabs,
         username: username as string,
-        nodeId: nodeId as string,
+        nodeId: currNodeId,
+        setNodeId: setCurrNodeId,
         currTab: currTab,
         setCurrTab: setCurrTab,
         windowVar: windowVar,

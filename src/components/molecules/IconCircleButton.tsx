@@ -133,6 +133,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
       />
     ),
   };
+
   return (
     <div className='hover:cursor-pointer hover:opacity-80'>
       {circle ? (
@@ -142,7 +143,12 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
           backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
         />
       ) : (
-        <IconButton onClick={onClick} src={icons[src]} />
+        <div
+          className='rounded-full bg-opacity-0 hover:bg-opacity-20 bg-black flex align-middle justify-center items-center'
+          style={{ width: size + 'px', height: size + 'px' }}
+        >
+          <IconButton onClick={onClick} src={icons[src]} />
+        </div>
       )}
     </div>
   );

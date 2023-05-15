@@ -9,7 +9,7 @@ export type MainTabProps = {
   label: string;
   viewId: string;
   viewType: 'document' | 'graph';
-  component: any;
+  component?: any;
 };
 
 export type ViewContextInterface = {

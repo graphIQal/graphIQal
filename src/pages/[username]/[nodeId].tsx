@@ -31,8 +31,37 @@ const Home: React.FC = () => {
     fetcher
   );
 
+  // useEffect(() => {
+  //   if (nodeId) {
+  //     fetch(`/api/${username}/${nodeId}/document`)
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         if (data) {
+  //           let includedIDs: { [key: string]: boolean } = {};
+  //           data.map((record: any, index: number) => {
+  //             if (!includedIDs[record.g.properties.id]) {
+  //               includedIDs[record.g.properties.id] = true;
+
+  //               newTabs.push({
+  //                 label: record.g.properties.title,
+  //                 viewId: record.g.properties.id,
+  //                 viewType: 'graph',
+  //                 component: (
+  //                   <Graph2
+  //                     viewId={record.g.properties.id}
+  //                     title={record.g.properties.title}
+  //                   />
+  //                 ),
+  //               });
+  //             }
+  //           });
+  //         }
+  //       });
+  //   }
+  //   setTabs(newTabs);
+  // }, []);
+
   useEffect(() => {
-    console.log('changing node id ');
     setCurrNodeId(nodeId as string);
   }, [nodeId]);
 
@@ -74,6 +103,14 @@ const Home: React.FC = () => {
   }, [data]);
 
   const [currTab, setCurrTab] = useState(0);
+
+  useEffect(() => {
+    setCurrTab(0);
+  }, [nodeId]);
+
+  if (tabs) {
+    console.log('tabs ' + tabs.length);
+  }
 
   return (
     <ViewContext.Provider

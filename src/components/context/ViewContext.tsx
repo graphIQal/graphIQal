@@ -9,7 +9,7 @@ export type MainTabProps = {
   label: string;
   viewId: string;
   viewType: 'document' | 'graph';
-  component: any;
+  component?: any;
 };
 
 export type ViewContextInterface = {
@@ -17,6 +17,9 @@ export type ViewContextInterface = {
   setMainViewTabs: (val: MainTabProps[]) => void;
   username: string;
   nodeId: string;
+  setNodeId: (val: string) => void;
+  currNodeConnections: { r: any; c: any }[];
+  setCurrNodeConnections: (val: { r: any; c: any }[]) => void;
   currTab: number;
   setCurrTab: (val: number) => void;
   windowVar: Window;

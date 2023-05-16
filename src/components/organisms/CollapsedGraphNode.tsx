@@ -42,11 +42,14 @@ const CollapsedGraphNode: React.FC<{
       onClick: () => deleteNode(id, graphViewContext),
     },
   ];
+
   return (
     <div
       onMouseOver={() => setShowMenu(true)}
       onMouseLeave={() => setShowMenu(false)}
-      className='w-full h-full flex items-center content-center justify-items-stretch flex-row bg-base_white '
+      className={
+        'w-full h-full flex items-center content-center justify-items-stretch flex-row '
+      }
     >
       <div className='flex flex-row gap-x-3 items-center'>
         <IconCircleButton src={icon} onClick={toggleDropdown} circle={false} />
@@ -54,11 +57,12 @@ const CollapsedGraphNode: React.FC<{
           <input
             type='text'
             name='name'
-            id='collapsed_node'
+            id='node_title'
             defaultValue={title}
             onChange={(newVal: any) =>
               updateNode('title', newVal.target.value, id, graphViewContext)
             }
+            className='bg-transparent border-none outline-none'
           />
         </form>
         {/* <h4 className='text-sm'>{title}</h4> */}

@@ -11,6 +11,7 @@ import TextButton from '../../components/molecules/TextButton';
 import Graph2 from '../../packages/graph/Graph';
 import Link from 'next/link';
 import SplitPaneWrapper from '../../packages/dnd-editor/Document';
+import { getConnections } from '../../backend/functions/general/getConnections';
 
 const Home: React.FC = () => {
   const [windowVar, setWindow] = useState<any>();
@@ -24,10 +25,57 @@ const Home: React.FC = () => {
 
   const { username, nodeId } = router.query;
 
+  const [currNodeId, setCurrNodeId] = useState(nodeId as string);
+  const [currNodeConnections, setCurrNodeConnections] = useState<
+    { r: any; c: any }[]
+  >([]);
+
   const { data, error, isLoading } = useSWR(
     nodeId ? `/api/${username}/${nodeId}/document` : null,
     fetcher
   );
+
+  // useEffect(() => {
+  //   if (nodeId) {
+  //     fetch(`/api/${username}/${nodeId}/document`)
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         if (data) {
+  //           let includedIDs: { [key: string]: boolean } = {};
+  //           data.map((record: any, index: number) => {
+  //             if (!includedIDs[record.g.properties.id]) {
+  //               includedIDs[record.g.properties.id] = true;
+
+  //               newTabs.push({
+  //                 label: record.g.properties.title,
+  //                 viewId: record.g.properties.id,
+  //                 viewType: 'graph',
+  //                 component: (
+  //                   <Graph2
+  //                     viewId={record.g.properties.id}
+  //                     title={record.g.properties.title}
+  //                   />
+  //                 ),
+  //               });
+  //             }
+  //           });
+  //         }
+  //       });
+  //   }
+  //   setTabs(newTabs);
+  // }, []);
+
+  useEffect(() => {
+    setCurrNodeId(nodeId as string);
+  }, [nodeId]);
+
+  useEffect(() => {
+    if (currNodeId) {
+      getConnections(currNodeId, username as string).then((res) => {
+        setCurrNodeConnections(res);
+      });
+    }
+  }, [currNodeId]);
 
   let newTabs: MainTabProps[] = [
     {
@@ -36,6 +84,12 @@ const Home: React.FC = () => {
       viewType: 'document',
       component: <SplitPaneWrapper viewId={''} />,
     },
+    // {
+    //   label: 'Graph View',
+    //   viewId: '',
+    //   viewType: 'graph',
+    //   component: <Graph2 viewId={''} title={'Graph View'} />,
+    // },
   ];
   const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
@@ -43,9 +97,6 @@ const Home: React.FC = () => {
     if (!data) return;
     if (!isLoading) {
       if (data) {
-        console.log('data');
-        console.log(data);
-
         let includedIDs: { [key: string]: boolean } = {};
         data.map((record: any, index: number) => {
           if (!includedIDs[record.g.properties.id]) {
@@ -71,13 +122,24 @@ const Home: React.FC = () => {
 
   const [currTab, setCurrTab] = useState(0);
 
+  useEffect(() => {
+    setCurrTab(0);
+  }, [nodeId]);
+
+  if (tabs) {
+    console.log('tabs ' + tabs.length);
+  }
+
   return (
     <ViewContext.Provider
       value={{
         mainViewTabs: tabs,
         setMainViewTabs: setTabs,
         username: username as string,
-        nodeId: nodeId as string,
+        nodeId: currNodeId,
+        setNodeId: setCurrNodeId,
+        currNodeConnections: currNodeConnections,
+        setCurrNodeConnections: setCurrNodeConnections,
         currTab: currTab,
         setCurrTab: setCurrTab,
         windowVar: windowVar,

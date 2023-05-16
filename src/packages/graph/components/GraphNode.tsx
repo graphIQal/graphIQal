@@ -50,13 +50,9 @@ export const GraphNode: FC<NodeProps> = ({
 	color,
 	updateStartPos,
 }) => {
-	const {
-		canDrag,
-		setCanDrag,
-		hideSourceOnDrag,
-
-		// addAction,
-	} = useContext(GraphActionContext) as GraphActionContextInterface;
+	const { canDrag, setCanDrag, hideSourceOnDrag } = useContext(
+		GraphActionContext
+	) as GraphActionContextInterface;
 
 	const { drawingMode, setDrawingMode } = useContext(
 		DrawingContext

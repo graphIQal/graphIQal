@@ -26,7 +26,7 @@ export type ActionChanges =
 	| 'NODE_ICON'
 	| 'NODE_COLOR'
 	| 'NODE_TITLE'
-	| 'SIZE';
+	| 'NODE_SIZE';
 
 export const useHistoryState = (
 	nodeData_Graph: { [key: string]: NodeData }, //The data of the nodes that are shown on the screen
@@ -45,7 +45,11 @@ export const useHistoryState = (
 		pointer.current += 1;
 	};
 
-	const addAction = (id: string, type: ActionChanges, value: any) => {
+	const addAction = (
+		id: string,
+		type: ActionChanges,
+		value: { old: any; new: any }
+	) => {
 		addActionToStack({
 			id: id,
 			value: value,
@@ -61,7 +65,7 @@ export const useHistoryState = (
 		let newNodes = { ...nodeData_Graph };
 		let newNodesVisual = { ...nodeVisualData_Graph };
 		switch (type) {
-			case 'SIZE':
+			case 'NODE_SIZE':
 				setnodeVisualData_Graph(
 					(prevState: { [key: string]: GraphNodeData }) => {
 						let newState = { ...prevState };
@@ -155,8 +159,8 @@ export const useHistoryState = (
 				setnodeVisualData_Graph(
 					(oldNodes: { [key: string]: GraphNodeData }) => {
 						let newNodes = { ...oldNodes };
-						newNodes[id].x = value.oldX;
-						newNodes[id].y = value.oldY;
+						newNodes[id].x = value.old.x;
+						newNodes[id].y = value.old.y;
 						return newNodes;
 					}
 				);
@@ -179,7 +183,7 @@ export const useHistoryState = (
 		}
 		const { id, value, type } = history.current[pointer.current + 1];
 		switch (type) {
-			case 'SIZE':
+			case 'NODE_SIZE':
 				setnodeVisualData_Graph(
 					(prevState: { [key: string]: GraphNodeData }) => {
 						console.log('value ' + JSON.stringify(value));
@@ -196,13 +200,13 @@ export const useHistoryState = (
 			case 'NODE_ADD':
 				setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
 					let newState = { ...prevState };
-					newState[id] = value.newNode;
+					newState[id] = value.new.node_data;
 					return newState;
 				});
 				setnodeVisualData_Graph(
 					(prevState: { [key: string]: GraphNodeData }) => {
 						let newState = { ...prevState };
-						newState[id] = value.newVisualNode;
+						newState[id] = value.new.node_visual;
 						return newState;
 					}
 				);
@@ -278,8 +282,8 @@ export const useHistoryState = (
 				setnodeVisualData_Graph(
 					(oldNodes: { [key: string]: GraphNodeData }) => {
 						let newNodes = { ...oldNodes };
-						newNodes[id].x = value.x;
-						newNodes[id].y = value.y;
+						newNodes[id].x = value.new.x;
+						newNodes[id].y = value.new.y;
 						return newNodes;
 					}
 				);

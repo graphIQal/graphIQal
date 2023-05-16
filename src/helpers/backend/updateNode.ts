@@ -59,14 +59,18 @@ export const updateNode = (
 			console.log('done ' + newVal.done);
 			if (newVal.done) {
 				context?.addAction(nodeID, 'NODE_SIZE', {
-					width: graphNodes[nodeID].width,
-					height: graphNodes[nodeID].height,
-					oldWidth: newVal.width,
-					oldHeight: newVal.height,
-					x: valX ? valX : oldX,
-					y: valY ? valY : oldY,
-					oldX: oldX,
-					oldY: oldY,
+					new: {
+						width: graphNodes[nodeID].width,
+						height: graphNodes[nodeID].height,
+						x: valX ? valX : oldX,
+						y: valY ? valY : oldY,
+					},
+					old: {
+						width: newVal.width,
+						height: newVal.height,
+						x: oldX,
+						y: oldY,
+					},
 				});
 				return;
 			}

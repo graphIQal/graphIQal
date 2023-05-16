@@ -69,10 +69,10 @@ export const useHistoryState = (
 				setnodeVisualData_Graph(
 					(prevState: { [key: string]: GraphNodeData }) => {
 						let newState = { ...prevState };
-						newState[id].height = value.oldHeight;
-						newState[id].width = value.oldWidth;
-						newState[id].x = value.oldX;
-						newState[id].y = value.oldY;
+						newState[id].height = value.old.height;
+						newState[id].width = value.old.width;
+						newState[id].x = value.old.x;
+						newState[id].y = value.old.y;
 						return newState;
 					}
 				);
@@ -188,10 +188,10 @@ export const useHistoryState = (
 					(prevState: { [key: string]: GraphNodeData }) => {
 						console.log('value ' + JSON.stringify(value));
 						let newState = { ...prevState };
-						newState[id].height = value.height;
-						newState[id].width = value.width;
-						newState[id].x = value.x;
-						newState[id].y = value.y;
+						newState[id].height = value.new.height;
+						newState[id].width = value.new.width;
+						newState[id].x = value.new.x;
+						newState[id].y = value.new.y;
 						return newState;
 					}
 				);

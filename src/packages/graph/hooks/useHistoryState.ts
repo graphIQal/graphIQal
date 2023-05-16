@@ -110,14 +110,14 @@ export const useHistoryState = (
 			case 'NODE_COLOR':
 				setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
 					let newState = { ...prevState };
-					newState[id].color = value.oldColor;
+					newState[id].color = value.old.color;
 					return newState;
 				});
 				break;
 			case 'NODE_ICON':
 				setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
 					let newState = { ...prevState };
-					newState[id].icon = value.oldIcon;
+					newState[id].icon = value.old.icon;
 					return newState;
 				});
 				break;
@@ -228,14 +228,14 @@ export const useHistoryState = (
 			case 'NODE_COLOR':
 				setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
 					let newState = { ...prevState };
-					newState[id].color = value.color;
+					newState[id].color = value.new.color;
 					return newState;
 				});
 				break;
 			case 'NODE_ICON':
 				setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
 					let newState = { ...prevState };
-					newState[id].icon = value.icon;
+					newState[id].icon = value.new.icon;
 					return newState;
 				});
 				break;

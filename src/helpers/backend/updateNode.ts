@@ -91,16 +91,16 @@ export const updateNode = (
 			break;
 		case 'icon':
 			context?.addAction(nodeID, 'NODE_ICON', {
-				icon: newVal,
-				oldIcon: nodeData[nodeID].icon,
+				new: { icon: newVal },
+				old: { icon: nodeData[nodeID].icon },
 			});
 			nodeData[nodeID].icon = newVal;
 			context?.setnodeData_Graph({ ...nodeData });
 			break;
 		case 'color':
 			context?.addAction(nodeID, 'NODE_COLOR', {
-				color: newVal,
-				oldColor: nodeData[nodeID].color,
+				new: { color: newVal },
+				old: { color: nodeData[nodeID].color },
 			});
 			nodeData[nodeID].color = newVal;
 			context?.setnodeData_Graph({ ...nodeData });

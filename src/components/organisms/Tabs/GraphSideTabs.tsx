@@ -6,6 +6,14 @@ import { Tabs } from './Tabs';
 import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
 import SearchBar from '../SearchBar';
 import router from 'next/router';
+import GraphViewContext, {
+	GraphViewContextInterface,
+} from '../../../packages/graph/context/GraphViewContext';
+import { SidePanel } from '../../layouts/SidePanel';
+import {
+	connectedNode_type,
+	getNode_data,
+} from '../../../backend/cypher-generation/cypherGenerators';
 
 export type SideTabProps = {
 	label: string;
@@ -13,14 +21,17 @@ export type SideTabProps = {
 	component: any;
 };
 
-const GraphSideTabs: React.FC<{ nodeInFocus_data: any }> = ({
+const GraphSideTabs: React.FC<{ nodeInFocus_data: getNode_data }> = ({
 	nodeInFocus_data,
 }) => {
-	const { username } = useContext(ViewContext) as ViewContextInterface;
-	const renderConnections = (nodeInFocus_data: any) => {
+	const { username, currNode_data, nodeId } = useContext(
+		ViewContext
+	) as ViewContextInterface;
+
+	const renderConnections = (connectedNodes: connectedNode_type[]) => {
 		return (
 			<div>
-				{nodeInFocus_data.connectedNodes.map(
+				{connectedNodes.map(
 					({ rel, connected_node }: any, i: number) => (
 						<div
 							onClick={() => {
@@ -58,17 +69,56 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: any }> = ({
 	};
 
 	useEffect(() => {
+		console.log('nodeInFocus_data');
+		console.log(nodeInFocus_data);
 		let newTabs = [...tabs];
-		newTabs[0].component = renderConnections(nodeInFocus_data);
+		newTabs[0].component = (
+			<SidePanel
+				title={'All Connections for ' + nodeInFocus_data.n.title}
+			>
+				{renderConnections(nodeInFocus_data.connectedNodes)}
+			</SidePanel>
+		);
+
+		const mainNodeConnections = {};
+
+		console.log('currNode_data');
+		console.log(currNode_data);
+
+		currNode_data.connectedNodes.map((connection) => {
+			(mainNodeConnections as any)[connection.connected_node.id] =
+				connection;
+		});
+
+		newTabs[1].component = (
+			<SidePanel
+				title={
+					'Focused Connections between ' +
+					nodeId +
+					' and ' +
+					nodeInFocus_data.n.title
+				}
+			>
+				{renderConnections(
+					nodeInFocus_data.connectedNodes.filter(
+						({ r, connected_node }: any) =>
+							connected_node.id in mainNodeConnections
+					)
+				)}
+			</SidePanel>
+		);
+
 		setTabs(newTabs);
-	}, [nodeInFocus_data]);
+	}, [nodeInFocus_data, currNode_data]);
 
 	const [tabs, setTabs] = useState<SideTabProps[]>([
 		{
 			label: 'Connections',
 			viewType: 'connections',
 			// component: <EditorComponent textIn={renderConnections()} />,
-			component: <div>{renderConnections(nodeInFocus_data)}</div>,
+			component: (
+				<div>{renderConnections(nodeInFocus_data.connectedNodes)}</div>
+			),
 		},
 		{
 			label: 'Content',

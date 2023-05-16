@@ -14,6 +14,7 @@ import { Connectdevelop } from '@styled-icons/fa-brands/Connectdevelop';
 import { CloseOutline } from '@styled-icons/evaicons-outline/CloseOutline';
 import { AngleDown } from '@styled-icons/fa-solid/AngleDown';
 import { AngleRight } from '@styled-icons/fa-solid/AngleRight';
+import { AngleLeft } from '@styled-icons/fa-solid/AngleLeft';
 
 type NodeButtonProps = {
   onClick: () => void;
@@ -125,6 +126,13 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
         onClick={handleClick}
       />
     ),
+    angleLeft: (
+      <AngleLeft
+        size={'1em'}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
+      />
+    ),
     angleDown: (
       <AngleDown
         size={'1em'}
@@ -133,6 +141,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
       />
     ),
   };
+
   return (
     <div className='hover:cursor-pointer hover:opacity-80'>
       {circle ? (
@@ -142,7 +151,12 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
           backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
         />
       ) : (
-        <IconButton onClick={onClick} src={icons[src]} />
+        <div
+          className='rounded-full bg-opacity-0 hover:bg-opacity-10 bg-black flex align-middle justify-center items-center'
+          style={{ width: size + 'px', height: size + 'px' }}
+        >
+          <IconButton onClick={onClick} src={icons[src]} />
+        </div>
       )}
     </div>
   );

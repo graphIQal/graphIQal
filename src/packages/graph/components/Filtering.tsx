@@ -17,6 +17,7 @@ import { applyTags } from '../helpers/Filtering/applyTags';
 import ViewContext, {
 	ViewContextInterface,
 } from '../../../components/context/ViewContext';
+import { TitleWithNavigation } from '../../../components/molecules/TitleWithNavigation';
 
 type FilteringProps = {
 	xCategory: string;
@@ -32,37 +33,48 @@ export const Filtering: React.FC<FilteringProps> = ({
 	getDropdownItemsX,
 	getDropdownItemsY,
 }) => {
-	const { tags, graphViewId, nodeVisualData_Graph, nodeData_Graph, history } =
-		useContext(GraphViewContext) as GraphViewContextInterface;
+	const viewContext = useContext(
+		GraphViewContext
+	) as GraphViewContextInterface;
+	const {
+		tags,
+		graphViewId,
+		nodeVisualData_Graph,
+		nodeData_Graph,
+		history,
+		pointer,
+	} = viewContext;
 
 	const { username, nodeId } = useContext(
 		ViewContext
 	) as ViewContextInterface;
 
 	return (
-		<div className=' relative ml-3 mt-3 flex flex-row gap-x-3 mb-3 w-full'>
-			<TextButton
-				text='Save Graph'
-				onClick={() => {
-					console.log('graphViewId');
-					console.log(graphViewId);
-					saveGraphView({
-						username,
-						graphViewId,
-						nodeId,
-						graphViewData: nodeVisualData_Graph,
-						nodeData: nodeData_Graph,
-						history,
-					});
-				}}
-			></TextButton>
-			{/* <TextButton
+		<div className=' relative flex flex-row p-3 justify-between mb-3 w-full'>
+			<div className='flex flex-row gap-x-3'>
+				<TextButton
+					text='Save Graph'
+					onClick={() => {
+						console.log('graphViewId');
+						console.log(graphViewId);
+						saveGraphView({
+							username,
+							graphViewId,
+							nodeId,
+							graphViewData: nodeVisualData_Graph,
+							nodeData: nodeData_Graph,
+							history: history,
+							pointer: pointer,
+						});
+					}}
+				></TextButton>
+				{/* <TextButton
 				text='Create Node'
 				onClick={() => {
 					console.log('hmm');
 				}}
 			></TextButton> */}
-			{/* <PillMenu
+				{/* <PillMenu
         label='In View: '
         value={nodeInView}
         dropdownItems={getDropdownItems()}
@@ -77,17 +89,19 @@ export const Filtering: React.FC<FilteringProps> = ({
         value={yCategory}
         dropdownItems={getDropdownItemsY()}
       /> */}
-			<div className='flex flex-row justify-items-stretch gap-x-2'>
-				{Object.keys(tags).map((tag: string, i: number) => {
-					return <Tag tag={tag} id={i} />;
-				})}
-				<TextButton
-					text='Apply Tags'
-					onClick={() => {
-						applyTags(viewContext);
-					}}
-				></TextButton>
+				<div className='flex flex-row justify-items-stretch gap-x-2'>
+					{Object.keys(tags).map((tag: string, i: number) => {
+						return <Tag tag={tag} id={i} />;
+					})}
+					<TextButton
+						text='Apply Tags'
+						onClick={() => {
+							applyTags(viewContext);
+						}}
+					></TextButton>
+				</div>
 			</div>
+			<TitleWithNavigation />
 		</div>
 	);
 };

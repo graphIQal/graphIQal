@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { int } from 'neo4j-driver';
 import { write } from '../../../../../../backend/driver/helpers';
-import { getConnectedNodes } from '../../../../../../backend/cypher-generation/cypherGenerators';
+import { getConnectedNodes_Cypher } from '../../../../../../backend/cypher-generation/cypherGenerators';
 
 export default async function handler(
 	req: NextApiRequest,

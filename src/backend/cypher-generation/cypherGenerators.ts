@@ -108,10 +108,20 @@ export const deleteNodeCypher = (node: createNewNodeCypher_Input): string => {
 	return cypher;
 };
 
-export const getConnectedNodes = (nodeId: string) => {
+export type getNode_data = {
+	n: { [key: string]: string };
+	connectedNodes: connectedNode_type[];
+};
+
+export type connectedNode_type = {
+	r: { type: string; [key: string]: string };
+	connected_node: { [key: string]: string };
+};
+
+export const getConnectedNodes_Cypher = (nodeId: string) => {
 	return `
 	MATCH (n: Node {id: "${nodeId}"})-[r]->(c:Node)
-	RETURN n, collect({r:r {.*, type: type(r)}, connected_node:c {.*}}) AS connectedNodes
+	RETURN n {.*}, collect({r:r {.*, type: type(r)}, connected_node:c {.*}}) AS connectedNodes
 	// RETURN r {.*, type: type(r)}, c {.*} 
 	`;
 };

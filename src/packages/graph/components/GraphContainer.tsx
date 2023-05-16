@@ -90,9 +90,13 @@ export const GraphContainer: React.FC<{}> = () => {
 	}
 
 	useEffect(() => {
-		windowVar.addEventListener('wheel', onWheel, { passive: false });
+		documentVar
+			.getElementById('parent')
+			?.addEventListener('wheel', onWheel, { passive: false });
 		return () => {
-			windowVar.removeEventListener('wheel', onWheel);
+			documentVar
+				.getElementById('parent')
+				?.removeEventListener('wheel', onWheel);
 		};
 	});
 

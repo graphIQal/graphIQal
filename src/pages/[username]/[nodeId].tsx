@@ -67,22 +67,32 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     setCurrNodeId(nodeId as string);
-    if (currNodeId) {
-      getConnections(currNodeId, username as string).then((res) => {
-        setCurrNodeConnections(res);
-      });
-    }
-    console.log(
-      'curr node connections  ' + JSON.stringify(currNodeConnections)
-    );
   }, [nodeId]);
 
+  useEffect(() => {
+    if (currNodeId) {
+      getConnections(currNodeId, username as string).then((res) => {
+        console.log('res connection' + JSON.stringify(res));
+        setCurrNodeConnections(res);
+        console.log(
+          'curr node connections  ' + JSON.stringify(currNodeConnections)
+        );
+      });
+    }
+  }, [currNodeId]);
+
   let newTabs: MainTabProps[] = [
+    // {
+    //   label: 'Home',
+    //   viewId: '',
+    //   viewType: 'document',
+    //   component: <SplitPaneWrapper viewId={''} />,
+    // },
     {
-      label: 'Home',
+      label: 'Graph View',
       viewId: '',
-      viewType: 'document',
-      component: <SplitPaneWrapper viewId={''} />,
+      viewType: 'graph',
+      component: <Graph2 viewId={''} title={'Graph View'} />,
     },
   ];
   const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);

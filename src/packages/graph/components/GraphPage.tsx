@@ -93,29 +93,30 @@ const Graph: React.FC<{
 	console.log(history);
 
 	//Graph in view of one node, keep the id.
-	const [nodeInFocus, setnodeInFocus] = useState(nodeId);
-	const [nodeInFocus_Connections, setNodeInFocus_Connections] = useState<
-		{ r: any; c: any }[]
-	>([]);
+	const [nodeInFocusId, setnodeInFocusId] = useState(nodeId);
+	const [nodeInFocus_data, setnodeInFocus_data] = useState<{
+		n: any;
+		connectedNodes: any[];
+	}>({ n: {}, connectedNodes: [] });
 
 	// get the connected nodes of seleced node
 	useEffect(() => {
 		console.log('nodeInFocus');
-		console.log(nodeInFocus);
-		if (nodeInFocus)
-			fetch(`/api/${username}/${nodeInFocus}`)
+		console.log(nodeInFocusId);
+		if (nodeInFocusId)
+			fetch(`/api/${username}/${nodeInFocusId}`)
 				.then((res) => res.json())
 				.then((json) => {
 					console.log('connected Nodes');
 					console.log(json);
-					setNodeInFocus_Connections(json);
+					setnodeInFocus_data(json[0]);
 				});
-	}, [nodeInFocus]);
+	}, [nodeInFocusId]);
 
 	// // set NodeId once it changes
 	useEffect(() => {
 		console.log('nodeId updated' + nodeId);
-		setnodeInFocus(nodeId);
+		setnodeInFocusId(nodeId);
 	}, [nodeId]);
 
 	const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
@@ -178,14 +179,14 @@ const Graph: React.FC<{
 		>
 			<GraphViewContext.Provider
 				value={{
-					setnodeInFocus: setnodeInFocus,
+					setnodeInFocusId: setnodeInFocusId,
 					nodeData_Graph: nodeData_Graph,
 					setnodeData_Graph: setnodeData_Graph,
 					nodeVisualData_Graph: nodeVisualData_Graph,
 					setnodeVisualData_Graph: setnodeVisualData_Graph,
 					modalNode: modalNode,
 					setModalNode: setModalNode,
-					nodeInFocus: nodeInFocus,
+					nodeInFocusId: nodeInFocusId,
 					graphViewId: currGraphViewId as string,
 					setGraphViewId: setCurrGraphViewId,
 					tags: tags,
@@ -227,9 +228,7 @@ const Graph: React.FC<{
 							text='Show search bar'
 							onClick={() => setShowSearchBar(true)}
 						/> */}
-						<GraphSideTabs
-							nodeInFocus_Connections={nodeInFocus_Connections}
-						/>
+						<GraphSideTabs nodeInFocus_data={nodeInFocus_data} />
 					</SplitPaneRight>
 				</SplitPane>
 			</GraphViewContext.Provider>

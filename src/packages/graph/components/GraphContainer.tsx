@@ -13,24 +13,22 @@ import GraphViewContext, {
 } from '../context/GraphViewContext';
 import { useDropNode } from '../hooks/dragging/useDropNode';
 
-import { useFiltering } from '../hooks/useFiltering';
-import { useCanvas } from '../hooks/drawing/useCanvas';
-import { Action, useHistoryState } from '../hooks/useHistoryState';
-import { useResize } from '../hooks/useResize';
-import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
-import { Filtering } from './Filtering';
-import { GraphMindMapView } from './GraphMindMapView';
 import ViewContext, {
 	ViewContextInterface,
 } from '../../../components/context/ViewContext';
-import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
-import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
-import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
-import { Alert } from '../../../components/organisms/Alert';
 import {
 	handleEscapeDrawing,
 	handleInvokeSearch,
 } from '../helpers/handleKeyPress';
+import { useCanvas } from '../hooks/drawing/useCanvas';
+import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
+import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
+import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
+import { useFiltering } from '../hooks/useFiltering';
+import { useResize } from '../hooks/useResize';
+import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
+import { Filtering } from './Filtering';
+import { GraphMindMapView } from './GraphMindMapView';
 
 export const GraphContainer: React.FC<{}> = () => {
 	const { windowVar, documentVar } = useContext(

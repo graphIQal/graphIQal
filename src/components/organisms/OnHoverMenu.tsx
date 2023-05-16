@@ -17,6 +17,7 @@ export const OnHoverMenu: React.FC<OnHoverMenuProps> = ({ buttonItems }) => {
           onClick={button.onClick}
           src={button.src}
           size={30}
+          circle={false}
         />
       ))}
     </div>

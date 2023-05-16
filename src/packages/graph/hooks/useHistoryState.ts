@@ -140,7 +140,7 @@ export const useHistoryState = (
 				setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
 					let newState = { ...prevState };
 					newState[id].connections[value.endNode].type =
-						value.oldType;
+						value.old.type;
 					return newState;
 				});
 				break;
@@ -257,7 +257,8 @@ export const useHistoryState = (
 			case 'CONNECTION_TYPE':
 				setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
 					let newState = { ...prevState };
-					newState[id].connections[value.endNode].type = value.type;
+					newState[id].connections[value.endNode].type =
+						value.new.type;
 					return newState;
 				});
 				break;

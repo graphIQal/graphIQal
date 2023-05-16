@@ -9,16 +9,9 @@ import GraphViewContext, {
 } from '../context/GraphViewContext';
 
 export type Action = {
-	undo: {
-		type: ActionChanges;
-		id: string | number;
-		value: any;
-	};
-	redo: {
-		type: ActionChanges;
-		id: string | number;
-		value: any;
-	};
+	type: ActionChanges;
+	id: string | number;
+	value: any;
 };
 
 export type ActionChanges =
@@ -50,14 +43,13 @@ export const useHistoryState = (
 			action,
 		];
 		pointer.current += 1;
-		console.log('history');
-		console.log(history.current);
 	};
 
 	const addAction = (id: string, type: ActionChanges, value: any) => {
 		addActionToStack({
-			undo: { id: id, value: value, type: type },
-			redo: { id: id, value: value, type: type },
+			id: id,
+			value: value,
+			type: type,
 		});
 	};
 
@@ -65,7 +57,7 @@ export const useHistoryState = (
 		if (pointer.current == -1) {
 			return;
 		}
-		const { id, value, type } = history.current[pointer.current].undo;
+		const { id, value, type } = history.current[pointer.current];
 		let newNodes = { ...nodeData_Graph };
 		let newNodesVisual = { ...nodeVisualData_Graph };
 		switch (type) {
@@ -185,7 +177,7 @@ export const useHistoryState = (
 		if (pointer.current + 1 >= history.current.length) {
 			return;
 		}
-		const { id, value, type } = history.current[pointer.current + 1].redo;
+		const { id, value, type } = history.current[pointer.current + 1];
 		switch (type) {
 			case 'SIZE':
 				setnodeVisualData_Graph(

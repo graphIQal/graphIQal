@@ -89,8 +89,8 @@ const Graph: React.FC<{
 		setnodeVisualData_Graph
 	);
 
-	console.log('history', pointer);
-	console.log(history);
+	console.log('history: ', pointer);
+	console.log(history.current);
 
 	//Graph in view of one node, keep the id.
 	const [nodeInFocusId, setnodeInFocusId] = useState(nodeId);

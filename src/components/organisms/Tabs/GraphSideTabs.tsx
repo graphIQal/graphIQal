@@ -31,7 +31,6 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: any }> = ({
 							}}
 							key={i}
 						>
-							{' '}
 							{'Connection ' +
 								(i + 1) +
 								' : ' +

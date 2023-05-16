@@ -172,7 +172,6 @@ export const GraphContainer: React.FC<{}> = () => {
 				canDrag: canDrag,
 				setCanDrag: setCanDrag,
 				updateSize: updateSize,
-				// addAction: addAction,
 			}}
 		>
 			<div className='h-full w-full' id='parent' ref={drop}>

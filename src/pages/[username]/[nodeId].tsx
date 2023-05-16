@@ -11,6 +11,7 @@ import TextButton from '../../components/molecules/TextButton';
 import Graph2 from '../../packages/graph/Graph';
 import Link from 'next/link';
 import SplitPaneWrapper from '../../packages/dnd-editor/Document';
+import { getConnections } from '../../backend/functions/general/getConnections';
 
 const Home: React.FC = () => {
   const [windowVar, setWindow] = useState<any>();
@@ -25,6 +26,9 @@ const Home: React.FC = () => {
   const { username, nodeId } = router.query;
 
   const [currNodeId, setCurrNodeId] = useState(nodeId as string);
+  const [currNodeConnections, setCurrNodeConnections] = useState<
+    { r: any; c: any }[]
+  >([]);
 
   const { data, error, isLoading } = useSWR(
     nodeId ? `/api/${username}/${nodeId}/document` : null,
@@ -63,6 +67,14 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     setCurrNodeId(nodeId as string);
+    if (currNodeId) {
+      getConnections(currNodeId, username as string).then((res) => {
+        setCurrNodeConnections(res);
+      });
+    }
+    console.log(
+      'curr node connections  ' + JSON.stringify(currNodeConnections)
+    );
   }, [nodeId]);
 
   let newTabs: MainTabProps[] = [
@@ -120,6 +132,8 @@ const Home: React.FC = () => {
         username: username as string,
         nodeId: currNodeId,
         setNodeId: setCurrNodeId,
+        currNodeConnections: currNodeConnections,
+        setCurrNodeConnections: setCurrNodeConnections,
         currTab: currTab,
         setCurrTab: setCurrTab,
         windowVar: windowVar,

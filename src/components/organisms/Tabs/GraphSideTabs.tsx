@@ -20,7 +20,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
   nodeInFocus_Connections,
 }) => {
   const viewContext = useContext(ViewContext) as ViewContextInterface;
-  const { username } = viewContext;
+  const { username, currNodeConnections } = viewContext;
   const { nodeInFocus } = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
@@ -61,8 +61,17 @@ const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
   useEffect(() => {
     let newTabs = [...tabs];
     newTabs[0].component = renderConnections(nodeInFocus_Connections);
+    const mainNodeConnections = {};
+    currNodeConnections.map((connection) => {
+      (mainNodeConnections as any)[connection.c.id] = connection;
+    });
+    newTabs[1].component = renderConnections(
+      nodeInFocus_Connections.filter(
+        (connection: any) => connection.c.id in mainNodeConnections
+      )
+    );
     setTabs(newTabs);
-  }, [nodeInFocus_Connections]);
+  }, [nodeInFocus_Connections, currNodeConnections]);
 
   const [tabs, setTabs] = useState<SideTabProps[]>([
     {

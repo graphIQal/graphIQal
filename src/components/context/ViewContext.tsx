@@ -18,6 +18,8 @@ export type ViewContextInterface = {
   username: string;
   nodeId: string;
   setNodeId: (val: string) => void;
+  currNodeConnections: { r: any; c: any }[];
+  setCurrNodeConnections: (val: { r: any; c: any }[]) => void;
   currTab: number;
   setCurrTab: (val: number) => void;
   windowVar: Window;

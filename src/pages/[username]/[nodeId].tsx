@@ -20,7 +20,6 @@ const Home: React.FC = () => {
     setWindow(window);
     setDocument(document);
   });
-
   const router = useRouter();
 
   const { username, nodeId } = router.query;

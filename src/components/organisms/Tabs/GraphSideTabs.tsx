@@ -10,6 +10,8 @@ import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../../packages/graph/context/GraphViewContext';
 import { SidePanel } from '../../layouts/SidePanel';
+import { addNodeToGraph } from '../../../helpers/frontend/addNodeToGraph';
+import ConnectionListItem from '../ConnectionListItem';
 
 export type SideTabProps = {
   label: string;
@@ -22,13 +24,43 @@ const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
 }) => {
   const viewContext = useContext(ViewContext) as ViewContextInterface;
   const { username, currNodeConnections, nodeId } = viewContext;
-  const { nodeInFocus } = useContext(
+  const graphViewContext = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
+
+  const { nodeInFocus, setnodeInFocus } = graphViewContext;
+
+  const getButtonItems = (result: any) => {
+    return [
+      {
+        //this button should navigate to the views of the clicked node
+        src: 'navigation',
+        onClick: () => {
+          router.push(`/${viewContext.username}/${result.id}`, undefined);
+        },
+      },
+      {
+        //this button should add the selected node to the graph
+        src: 'plus',
+        onClick: () => {
+          addNodeToGraph(result, graphViewContext, viewContext.username);
+        },
+      },
+      {
+        //this button should put the selected node in focus
+        src: 'spotlight',
+        onClick: () => {
+          setnodeInFocus(result.id);
+        },
+      },
+    ];
+  };
+
+  const [highlightedConnection, setHighlightedConnection] = useState(0);
   const renderConnections = (nodeInFocus_Connections: any) => {
     return (
       <div>
-        {nodeInFocus_Connections.map((connection: any, i: number) => (
+        {/* {nodeInFocus_Connections.map((connection: any, i: number) => (
           <div
             onClick={() => {
               router.push(`/${username}/${connection.c.id}`, undefined);
@@ -36,8 +68,19 @@ const GraphSideTabs: React.FC<{ nodeInFocus_Connections: any }> = ({
             key={i}
           >
             {' '}
-            {'Connection ' + (i + 1) + ' : ' + connection.c.title}
+            {connection.c.title}
           </div>
+        ))} */}
+        {nodeInFocus_Connections.map((connection: any, i: number) => (
+          <ConnectionListItem
+            highlighted={highlightedConnection}
+            setHighlighted={setHighlightedConnection}
+            title={connection.c.title}
+            id={connection.c.id}
+            index={i}
+            buttonItems={getButtonItems(connection.c)}
+            url={connection.c.url}
+          />
         ))}
       </div>
     );

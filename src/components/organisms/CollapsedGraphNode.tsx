@@ -59,6 +59,13 @@ const CollapsedGraphNode: React.FC<{
       src: 'remove',
       onClick: () => deleteNode(id, graphViewContext),
     },
+    {
+      src: 'spotlight',
+      onClick: () =>
+        graphViewContext.setnodeInFocus(
+          graphViewContext.nodeInFocus == id ? viewContext.nodeId : id
+        ),
+    },
   ];
 
   return (

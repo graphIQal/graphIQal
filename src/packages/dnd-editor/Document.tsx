@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import SplitPane, {
@@ -11,23 +11,15 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // import Document from '../../src/pages/document/Document';
 
 import { useRouter } from 'next/router';
-import ShelfEditor from '../shelf-editor/ShelfEditor';
+import { createGraphView } from '../../backend/functions/graph/mutate/createGraphView';
+import TextButton from '../../components/molecules/TextButton';
+import DocumentSideTabs from '../../components/organisms/Tabs/DocumentSideTabs';
 import SplitPane, {
 	Divider,
-	SplitPaneBottom,
 	SplitPaneLeft,
 	SplitPaneRight,
-	SplitPaneTop,
 } from '../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../editor/EditorComponent';
-import { getDocument } from '../../backend/functions/getDocument';
-import TextButton from '../../components/molecules/TextButton';
-import useSWR from 'swr';
-import { fetcher } from '../../backend/driver/fetcher';
-import DocumentSideTabs, {
-	SideTabPropsDoc,
-} from '../../components/organisms/Tabs/DocumentSideTabs';
-import { createGraphView } from '../../backend/functions/graph/mutate/createGraphView';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 	const router = useRouter();

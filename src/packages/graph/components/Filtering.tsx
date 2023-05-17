@@ -5,7 +5,6 @@
 import React, { useContext } from 'react';
 import { PillMenu } from '../../../components/molecules/PillMenu';
 import { ItemProps } from '../../../components/organisms/Dropdown';
-import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
@@ -86,9 +85,14 @@ export const Filtering: React.FC<FilteringProps> = ({
         dropdownItems={getDropdownItemsY()}
       /> */}
         <div className='flex flex-row justify-items-stretch gap-x-2'>
-          {Object.keys(tags).map((tag: string, i: number) => {
-            return <Tag tag={tag} id={i} />;
-          })}
+          {tags.map(
+            (
+              tag: { id: string; title: string; color: string; icon: string },
+              i: number
+            ) => {
+              return <Tag tag={tag.title} id={i} />;
+            }
+          )}
           <TextButton
             text='Apply Tags'
             onClick={() => {

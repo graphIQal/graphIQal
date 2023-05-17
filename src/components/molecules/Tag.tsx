@@ -3,6 +3,7 @@ import { OnHoverMenu } from '../organisms/OnHoverMenu';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../packages/graph/context/GraphViewContext';
+import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 
 type TagProps = {
   tag: string;
@@ -12,13 +13,14 @@ type TagProps = {
 export const Tag: React.FC<TagProps> = ({ tag, id }) => {
   const [showMenu, setShowMenu] = useState(false);
 
-  const { setNodeInView } = useContext(
+  const { nodeId, setNodeId } = useContext(ViewContext) as ViewContextInterface;
+  const { nodeInFocusId, setnodeInFocusId } = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
 
   const buttonItems = [
-    { src: 'spotlight', onClick: () => null },
-    { src: 'navigation', onClick: () => setNodeInView(tag) },
+    { src: 'spotlight', onClick: () => setnodeInFocusId(tag) },
+    { src: 'navigation', onClick: () => setNodeId(tag) },
   ];
   return (
     <div

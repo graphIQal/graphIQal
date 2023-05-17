@@ -141,14 +141,14 @@ const CollapsedGraphNode: React.FC<{
                     //     };
                     //   });
                     // });
-                  } else {
-                    updateNode(
-                      'title',
-                      newVal.target.value,
-                      id,
-                      graphViewContext
-                    );
                   }
+                } else {
+                  updateNode(
+                    'title',
+                    newVal.target.value,
+                    id,
+                    graphViewContext
+                  );
                 }
               }}
               className='bg-transparent border-none outline-none'

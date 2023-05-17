@@ -18,7 +18,6 @@ import SplitPane, {
   SplitPaneLeft,
   SplitPaneRight,
 } from '../../../components/organisms/split-pane/SplitPane';
-import { getTags } from '../../../helpers/backend/gettersConnectionInfo';
 import DrawingContext from '../context/GraphDrawingContext';
 import GraphViewContext from '../context/GraphViewContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
@@ -26,6 +25,7 @@ import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
 import TextButton from '../../../components/molecules/TextButton';
 import { getNodeData } from '../../../backend/functions/node/query/getNodeData';
+import { getCommonParents } from '../../../backend/functions/general/getCommonParents';
 
 const Graph: React.FC<{
   viewId: string;
@@ -153,7 +153,9 @@ const Graph: React.FC<{
   // }, []);
 
   //graph view tags default
-  const [tags, setTags] = useState(getTags(nodeData_Graph));
+  const [tags, setTags] = useState(
+    getCommonParents(Object.keys(nodeData_Graph))
+  );
 
   //alert message
   const [alert, setAlert] = useState('');

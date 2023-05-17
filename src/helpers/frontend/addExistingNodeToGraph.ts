@@ -19,7 +19,6 @@ export const addExistingNodeToGraph = async (
     color: 'black',
     icon: 'block',
     connections: await getNodeData(nodeToAdd.id, username).then((result) => {
-      console.log('RESULT OF QUERY ' + JSON.stringify(result));
       let connections: { [key: string]: ConnectionData } = {};
       result[0].connectedNodes.map((connection: any) => {
         if (connection.connected_node) {
@@ -35,8 +34,6 @@ export const addExistingNodeToGraph = async (
     }),
   };
 
-  console.log('NOde adding ' + JSON.stringify(node));
-
   let newNodes = { ...context.nodeData_Graph };
   delete newNodes[id];
   newNodes[nodeToAdd.id] = node;
@@ -47,6 +44,7 @@ export const addExistingNodeToGraph = async (
     categorizing_node: nodeToAdd.id,
   };
   delete newVisualNodes[id];
+  console.log('adding node to visual ' + JSON.stringify(newVisualNodes));
 
   context.setnodeData_Graph(newNodes);
   context.setnodeVisualData_Graph(newVisualNodes);

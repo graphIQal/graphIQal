@@ -198,6 +198,8 @@ const Graph: React.FC<{
 					addAction: addAction,
 					undo: undo,
 					redo: redo,
+					history: history,
+					pointer: pointer,
 				}}
 			>
 				<SplitPane className='split-pane-row'>

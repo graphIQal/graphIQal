@@ -26,6 +26,8 @@ export type GraphViewContextInterface = {
 	addAction: (id: string, type: ActionChanges, value: any) => void;
 	undo: () => void;
 	redo: () => void;
+	history: React.MutableRefObject<Action[]>;
+	pointer: React.MutableRefObject<Number>;
 };
 
 const GraphViewContext = createContext<GraphViewContextInterface | null>(null);

@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import { fetcher } from '../../driver/fetcher';
 import { jsonToCypher_graphView } from '../../driver/dataConversion';
 import { GraphNodeData, NodeData } from '../../../packages/graph/graphTypes';
+import { Action } from '../../../packages/graph/hooks/useHistoryState';
 
 type saveGraphViewInput = {
 	username: string;
@@ -10,6 +11,8 @@ type saveGraphViewInput = {
 	graphViewId: string;
 	graphViewData: { [key: string]: GraphNodeData };
 	nodeData: { [key: string]: NodeData };
+	history: React.MutableRefObject<Action[]>;
+	pointer: React.MutableRefObject<Number>;
 };
 
 export const saveGraphView = async ({
@@ -18,6 +21,8 @@ export const saveGraphView = async ({
 	graphViewId,
 	graphViewData,
 	nodeData,
+	history,
+	pointer,
 }: saveGraphViewInput) => {
 	const body = jsonToCypher_graphView({
 		nodeData,
@@ -25,8 +30,6 @@ export const saveGraphView = async ({
 		graphViewId,
 		nodeId,
 	});
-
-	console.log(body);
 
 	const res = await fetch(
 		`/api/${username}/${nodeId}/graph/${graphViewId}/save`,

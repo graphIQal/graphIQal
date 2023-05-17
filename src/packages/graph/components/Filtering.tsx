@@ -32,7 +32,7 @@ export const Filtering: React.FC<FilteringProps> = ({
 	getDropdownItemsX,
 	getDropdownItemsY,
 }) => {
-	const { tags, graphViewId, nodeVisualData_Graph, nodeData_Graph } =
+	const { tags, graphViewId, nodeVisualData_Graph, nodeData_Graph, history } =
 		useContext(GraphViewContext) as GraphViewContextInterface;
 
 	const { username, nodeId } = useContext(
@@ -52,6 +52,7 @@ export const Filtering: React.FC<FilteringProps> = ({
 						nodeId,
 						graphViewData: nodeVisualData_Graph,
 						nodeData: nodeData_Graph,
+						history,
 					});
 				}}
 			></TextButton>

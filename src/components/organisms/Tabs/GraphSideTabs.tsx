@@ -10,10 +10,11 @@ import GraphViewContext, {
 	GraphViewContextInterface,
 } from '../../../packages/graph/context/GraphViewContext';
 import { SidePanel } from '../../layouts/SidePanel';
+
 import {
 	connectedNode_type,
-	getNode_data,
-} from '../../../backend/cypher-generation/cypherGenerators';
+	getNodeData_type,
+} from '../../../backend/functions/node/query/getNodeData';
 
 export type SideTabProps = {
 	label: string;
@@ -21,12 +22,15 @@ export type SideTabProps = {
 	component: any;
 };
 
-const GraphSideTabs: React.FC<{ nodeInFocus_data: getNode_data }> = ({
+const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
 	nodeInFocus_data,
 }) => {
 	const { username, currNode_data, nodeId } = useContext(
 		ViewContext
 	) as ViewContextInterface;
+
+	console.log(nodeInFocus_data);
+	console.log(nodeInFocus_data);
 
 	const renderConnections = (connectedNodes: connectedNode_type[]) => {
 		return (

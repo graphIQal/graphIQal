@@ -1,4 +1,4 @@
-import { getConnectedNodes_Cypher } from '../../../../backend/cypher-generation/cypherGenerators';
+import { getNodeData_cypher } from '../../../../backend/cypher-generation/cypherGenerators';
 import { read } from '../../../../backend/driver/helpers';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -10,7 +10,7 @@ export default async function handler(
 	const params = req.query;
 	// Find all relevant data to the node
 	const nodeConnections: any = await read(
-		getConnectedNodes_Cypher(params.nodeId as string)
+		getNodeData_cypher(params.nodeId as string)
 	);
 
 	res.status(200).json(nodeConnections);

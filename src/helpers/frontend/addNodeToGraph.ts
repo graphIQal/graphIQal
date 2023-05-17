@@ -1,9 +1,7 @@
-import { getConnectedNodes_Cypher } from '../../backend/cypher-generation/cypherGenerators';
-import { getConnections } from '../../backend/functions/general/getConnections';
-import { ViewContextInterface } from '../../components/context/ViewContext';
+import { getNodeData } from '../../backend/functions/node/query/getNodeData';
+// import { getNodeData } from '../../backend/functions/node/query/getNodeData';
 import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
 import { GraphNodeData, NodeData } from '../../packages/graph/graphTypes';
-import { VisualData } from '../../schemas/Data_structures/DS_schema';
 
 export const addNodeToGraph = async (
 	result: any,
@@ -16,14 +14,12 @@ export const addNodeToGraph = async (
 		title: result.title,
 		color: 'black',
 		icon: 'block',
-		connections: await getConnections(result.id, username).then(
-			(result) => {
-				console.log('result of ' + JSON.stringify(result));
-				return result.map((connection: any) => {
-					return connection.c;
-				});
-			}
-		),
+		connections: await getNodeData(result.id, username).then((result) => {
+			console.log('result of ' + JSON.stringify(result));
+			return result.map((connection: any) => {
+				return connection.c;
+			});
+		}),
 	};
 
 	const visualNode: GraphNodeData = {

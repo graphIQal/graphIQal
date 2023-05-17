@@ -5,7 +5,7 @@
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { Divider } from '@udecode/plate';
+import { Divider, getNode } from '@udecode/plate';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
 import ViewContext, {
@@ -25,7 +25,7 @@ import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
 import TextButton from '../../../components/molecules/TextButton';
-import { getConnections } from '../../../backend/functions/general/getConnections';
+import { getNodeData } from '../../../backend/functions/node/query/getNodeData';
 
 const Graph: React.FC<{
 	viewId: string;
@@ -109,7 +109,9 @@ const Graph: React.FC<{
 	useEffect(() => {
 		console.log('nodeInFocus');
 		console.log(nodeInFocusId);
+
 		if (nodeInFocusId)
+			// setnodeInFocus_data(getNodeData(nodeId, username)[0]);
 			fetch(`/api/${username}/${nodeInFocusId}`)
 				.then((res) => res.json())
 				.then((json) => {
@@ -117,6 +119,7 @@ const Graph: React.FC<{
 					console.log(json);
 					setnodeInFocus_data(json[0]);
 				});
+		if (nodeInFocusId) console.log(getNodeData(nodeId, username));
 	}, [nodeInFocusId]);
 
 	// // set NodeId once it changes

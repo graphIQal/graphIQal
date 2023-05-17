@@ -12,7 +12,7 @@ import GraphViewContext, {
 import { Tag } from '../../../components/molecules/Tag';
 import TextButton from '../../../components/molecules/TextButton';
 import { createNode } from '@udecode/plate';
-import { saveGraphView } from '../../../backend/functions/graph/saveGraphView';
+import { saveGraphView } from '../../../backend/functions/graph/mutate/saveGraphView';
 import { applyTags } from '../helpers/Filtering/applyTags';
 import ViewContext, {
 	ViewContextInterface,

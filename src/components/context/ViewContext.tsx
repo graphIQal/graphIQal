@@ -3,7 +3,7 @@
  */
 
 import { createContext } from 'react';
-import { getNode_data } from '../../backend/cypher-generation/cypherGenerators';
+import { getNodeData_type } from '../../backend/functions/node/query/getNodeData';
 
 export type MainTabProps = {
 	label: string;
@@ -18,8 +18,8 @@ export type ViewContextInterface = {
 	username: string;
 	nodeId: string;
 	setNodeId: (val: string) => void;
-	currNode_data: getNode_data;
-	setcurrNode_data: (val: getNode_data) => void;
+	currNode_data: getNodeData_type;
+	setcurrNode_data: (val: getNodeData_type) => void;
 	currTab: number;
 	setCurrTab: (val: number) => void;
 	windowVar: Window;

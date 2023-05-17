@@ -27,7 +27,7 @@ import { fetcher } from '../../backend/driver/fetcher';
 import DocumentSideTabs, {
 	SideTabPropsDoc,
 } from '../../components/organisms/Tabs/DocumentSideTabs';
-import { createGraphView } from '../../backend/functions/graph/createGraphView';
+import { createGraphView } from '../../backend/functions/graph/mutate/createGraphView';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 	const router = useRouter();

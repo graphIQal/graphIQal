@@ -1,8 +1,8 @@
 import useSWR from 'swr';
-import { fetcher } from '../../driver/fetcher';
+import { fetcher } from '../../../driver/fetcher';
 
-import { jsonToCypher_graphView } from '../../driver/dataConversion';
-import { GraphNodeData, NodeData } from '../../../packages/graph/graphTypes';
+import { jsonToCypher_graphView } from '../../../driver/dataConversion';
+import { GraphNodeData, NodeData } from '../../../../packages/graph/graphTypes';
 
 type saveGraphViewInput = {
 	username: string;

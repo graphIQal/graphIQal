@@ -25,7 +25,7 @@ export const addNode = (
   let newnodeData_Graph = { ...context.nodeData_Graph };
   newnodeData_Graph[id] = {
     id: id,
-    title: 'New Node',
+    title: '',
     connections: {},
     icon: 'block',
     color: 'black',

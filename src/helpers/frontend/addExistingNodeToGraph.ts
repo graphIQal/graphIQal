@@ -1,41 +1,36 @@
-import { getConnectedNodes } from '../../backend/cypher-generation/cypherGenerators';
 import { getConnections } from '../../backend/functions/general/getConnections';
 import { ViewContextInterface } from '../../components/context/ViewContext';
 import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
 import { GraphNodeData, NodeData } from '../../packages/graph/graphTypes';
-import { VisualData } from '../../schemas/Data_structures/DS_schema';
 
-export const addNodeToGraph = async (
-  result: any,
+export const addExistingNodeToGraph = async (
   context: GraphViewContextInterface,
-  username: string
+  username: string,
+  id: string,
+  nodeToAdd: { id: string; title: string }
 ) => {
   const node: NodeData = {
     //node is the node that you get from the database with the given ID
-    id: result.id,
-    title: result.title,
+    ...nodeToAdd,
     color: 'black',
     icon: 'block',
-    connections: await getConnections(result.id, username).then((result) => {
+    connections: await getConnections(nodeToAdd.id, username).then((result) => {
       return result.map((connection: any) => {
         return connection.c;
       });
     }),
   };
 
-  const visualNode: GraphNodeData = {
-    width: 200,
-    height: 100,
-    x: 200,
-    y: 200,
-    categorizing_node: result.id,
-    collapsed: true,
+  let newNodes = { ...context.nodeData_Graph };
+  delete newNodes[id];
+  newNodes[nodeToAdd.id] = node;
+  let x: GraphNodeData;
+  let newVisualNodes = { ...context.nodeVisualData_Graph };
+  newVisualNodes[nodeToAdd.id] = {
+    ...newVisualNodes[id],
+    categorizing_node: nodeToAdd.id,
   };
-
-  const newNodes = { ...context.nodeData_Graph };
-  newNodes[result.id] = node;
-  const newVisualNodes = { ...context.nodeVisualData_Graph };
-  newVisualNodes[result.id] = visualNode;
+  delete newVisualNodes[id];
 
   context.setnodeData_Graph(newNodes);
   context.setnodeVisualData_Graph(newVisualNodes);

@@ -13,7 +13,7 @@ import GraphActionContext, {
   GraphActionContextInterface,
 } from '../context/GraphActionContext';
 import { OFFSET } from '../hooks/drawing/useDrawingEnd';
-import { Dropdown } from '../../../components/organisms/Dropdown';
+import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
 import IconButton from '../../../components/atoms/IconButton';
 import { updateNode } from '../../../helpers/backend/updateNode';
 import GraphViewContext, {
@@ -69,6 +69,9 @@ export const GraphNode: FC<NodeProps> = ({
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
   const { nodeInFocus } = viewContext;
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(true);
+  const [searchResults, setSearchResults] = useState<ItemProps[]>([]);
+
   const collapsed = viewContext.nodeVisualData_Graph[id].collapsed;
   //disables dragging if we're drawing
   useEffect(() => {
@@ -78,6 +81,25 @@ export const GraphNode: FC<NodeProps> = ({
       setCanDrag(true);
     }
   }, [drawingMode]);
+
+  useEffect(() => {
+    const listenForSlash = (event: any) => {
+      console.log('listening');
+      if (event.keyCode == 220) {
+        setShowSearchDropdown(true);
+      }
+    };
+    if (title == '') {
+      // documentVar.getElementById('node_title')?.focus();
+      documentVar
+        .getElementById('node_title')
+        ?.addEventListener('keydown', listenForSlash);
+    }
+
+    return documentVar
+      .getElementById('node_title')
+      ?.removeEventListener('keydown', listenForSlash);
+  });
 
   //DND dragging hook
   const [{ isDragging }, drag, preview] = useDragNode(
@@ -154,6 +176,10 @@ export const GraphNode: FC<NodeProps> = ({
             id={id}
             icon={icon}
             color={color}
+            results={searchResults}
+            setResults={setSearchResults}
+            showSearchDropdown={showSearchDropdown}
+            setShowSearchDropdown={setShowSearchDropdown}
           />
         ) : (
           <div>
@@ -177,6 +203,10 @@ export const GraphNode: FC<NodeProps> = ({
                       icon={icon}
                       color={color}
                       toggleDropdown={() => setShowDropdown(!showDropdown)}
+                      results={searchResults}
+                      setResults={setSearchResults}
+                      showSearchDropdown={showSearchDropdown}
+                      setShowSearchDropdown={setShowSearchDropdown}
                     />
                   </div>
                 </div>
@@ -185,6 +215,20 @@ export const GraphNode: FC<NodeProps> = ({
           </div>
         )}
       </ResizableBox>
+      {showSearchDropdown && (
+        <div
+          className='absolute'
+          style={{ left: left, top: top + (2 * size[1]) / 3 }}
+        >
+          <Dropdown
+            windowVar={windowVar}
+            activeIndex={-1}
+            items={searchResults}
+            showDropdown={showSearchDropdown}
+            setShowDropdown={setShowSearchDropdown}
+          />
+        </div>
+      )}
       {showDropdown && (
         <div
           className='w-full absolute'

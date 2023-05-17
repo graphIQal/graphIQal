@@ -21,7 +21,6 @@ const Home: React.FC = () => {
     setWindow(window);
     setDocument(document);
   });
-
   const router = useRouter();
 
   const { username, nodeId } = router.query;
@@ -81,11 +80,12 @@ const Home: React.FC = () => {
 
   let newTabs: MainTabProps[] = [
     // {
-    // 	label: 'Home',
-    // 	viewId: '',
-    // 	viewType: 'document',
-    // 	component: <SplitPaneWrapper viewId={''} />,
+    //   label: 'Home',
+    //   viewId: '',
+    //   viewType: 'document',
+    //   component: <SplitPaneWrapper viewId={''} />,
     // },
+    //temp
     {
       label: 'Graph View',
       viewId: '',

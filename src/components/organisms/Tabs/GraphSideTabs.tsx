@@ -78,11 +78,11 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNode_data }> = ({
           <ConnectionListItem
             highlighted={highlightedConnection}
             setHighlighted={setHighlightedConnection}
-            title={connection.c.title}
-            id={connection.c.id}
+            title={connection.connected_node.title}
+            id={connection.connected_node.id}
             index={i}
-            buttonItems={getButtonItems(connection.c)}
-            url={connection.c.url}
+            buttonItems={getButtonItems(connection.connected_node)}
+            url={connection.connected_node.url}
           />
         ))}
       </div>
@@ -112,7 +112,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNode_data }> = ({
       <SidePanel
         title={
           'Focused Connections between ' +
-          nodeId +
+          currNode_data.n.title +
           ' and ' +
           nodeInFocus_data.n.title
         }
@@ -131,7 +131,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNode_data }> = ({
 
   const [tabs, setTabs] = useState<SideTabProps[]>([
     {
-      label: 'Connections',
+      label: 'All Connections',
       viewType: 'connections',
       // component: <EditorComponent textIn={renderConnections()} />,
       component: (
@@ -139,15 +139,15 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNode_data }> = ({
       ),
     },
     {
-      label: 'Content',
+      label: 'Focused Connections',
       viewType: 'content',
       component: <EditorComponent textIn={'content'} />,
     },
-    {
-      label: 'Shelf',
-      viewType: 'shelf',
-      component: <div />,
-    },
+    // {
+    //   label: 'Shelf',
+    //   viewType: 'shelf',
+    //   component: <div />,
+    // },
   ]);
 
   const [currTab, setCurrTab] = useState(0);

@@ -77,9 +77,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpBottomRightResize = (event: Event) => {
-      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
       document.removeEventListener('mouseup', onMouseUpBottomRightResize);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
     };
     const onMouseDownBottomRightResize = (event: any) => {
       startWidth.current = style?.width;

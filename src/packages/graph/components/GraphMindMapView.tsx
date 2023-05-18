@@ -94,9 +94,6 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
   return (
     <div className='relative' id={'container' + viewContext.graphViewId}>
       {Object.keys(nodeData_Graph).map(function (node, i) {
-        console.log(
-          'connection sending ' + JSON.stringify(nodeData_Graph[node])
-        );
         return Object.keys(nodeData_Graph[node].connections).map((line, j) => {
           return (
             <div key={j}>

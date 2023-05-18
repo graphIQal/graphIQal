@@ -12,7 +12,6 @@ export const useResize = () => {
   const context = useContext(GraphViewContext);
   const { nodeVisualData_Graph, setnodeVisualData_Graph } =
     context as GraphViewContextInterface;
-
   let updateSize = useCallback(
     (
       id: string,

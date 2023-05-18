@@ -18,6 +18,7 @@ import {
   getNodeData_type,
 } from '../../../backend/functions/node/query/getNodeData';
 import { SelectableList } from '../../templates/SelectableList';
+import { addExistingNodeToGraph } from '../../../helpers/frontend/addExistingNodeToGraph';
 
 export type SideTabProps = {
   label: string;
@@ -48,7 +49,10 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
         //this button should add the selected node to the graph
         src: 'plus',
         onClick: () => {
-          addNodeToGraph(result, graphViewContext, viewContext.username);
+          addExistingNodeToGraph(graphViewContext, viewContext.username, '', {
+            id: result.id,
+            title: result.title,
+          });
         },
       },
       {
@@ -62,10 +66,9 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
   };
 
   const renderConnections = (connectedNodes: connectedNode_type[]) => {
-    let itemsToRender: any[] = [];
-
+    const items: any[] = [];
     connectedNodes.map((connection: any, i: number) => {
-      itemsToRender.push(
+      items.push(
         <ConnectionListItem
           title={connection.connected_node.title}
           id={connection.connected_node.id}
@@ -75,7 +78,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
         />
       );
     });
-    return itemsToRender;
+    return items;
   };
 
   useEffect(() => {
@@ -92,9 +95,6 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
     );
 
     const mainNodeConnections = {};
-
-    console.log('currNode_data');
-    console.log(currNode_data);
 
     currNode_data.connectedNodes.map((connection) => {
       (mainNodeConnections as any)[connection.connected_node.id] = connection;
@@ -119,16 +119,14 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
     );
 
     setTabs(newTabs);
-  }, [nodeInFocus_data, currNode_data]);
+  }, [nodeInFocus_data, currNode_data, graphViewContext.nodeData_Graph]);
 
   const [tabs, setTabs] = useState<SideTabProps[]>([
     {
       label: 'All Connections',
       viewType: 'connections',
       // component: <EditorComponent textIn={renderConnections()} />,
-      component: (
-        <div>{renderConnections(nodeInFocus_data.connectedNodes)}</div>
-      ),
+      component: <div></div>,
     },
     {
       label: 'Focused Connections',

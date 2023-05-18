@@ -8,6 +8,7 @@ export const updateNode = (
   nodeID: string,
   context: GraphViewContextInterface | null
 ) => {
+  console.log('new val ' + newVal.done);
   let graphNodes = context?.nodeVisualData_Graph;
   let nodeData = context?.nodeData_Graph;
   if (!graphNodes || !nodeData) return;

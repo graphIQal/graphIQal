@@ -7,6 +7,9 @@ import { GraphNodeData, LineRefs, NodeData } from '../graphTypes';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../context/GraphViewContext';
+import ViewContext, {
+  ViewContextInterface,
+} from '../../../components/context/ViewContext';
 
 export type Action = {
   type: ActionChanges;
@@ -16,6 +19,7 @@ export type Action = {
 
 export type ActionChanges =
   | 'NODE_ADD'
+  | 'NODE_ADD_EXISTING'
   | 'NODE_DELETE'
   | 'CONNECTION_ADD'
   | 'CONNECTION_DELETE'
@@ -25,6 +29,7 @@ export type ActionChanges =
   | 'DRAG'
   | 'NODE_ICON'
   | 'NODE_COLOR'
+  //not done
   | 'NODE_TITLE'
   | 'NODE_SIZE';
 
@@ -62,8 +67,6 @@ export const useHistoryState = (
       return;
     }
     const { id, value, type } = history.current[pointer.current];
-    let newNodes = { ...nodeData_Graph };
-    let newNodesVisual = { ...nodeVisualData_Graph };
     switch (type) {
       case 'NODE_SIZE':
         setnodeVisualData_Graph(
@@ -76,6 +79,8 @@ export const useHistoryState = (
             return newState;
           }
         );
+
+        alert('');
 
         break;
       case 'NODE_ADD':
@@ -93,6 +98,27 @@ export const useHistoryState = (
         );
 
         break;
+      case 'NODE_ADD_EXISTING':
+        setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
+          let newState = { ...prevState };
+          if (value.old.node_data) {
+            newState[value.old.node_data.id] = value.old.node_data;
+          }
+
+          delete newState[id];
+          return newState;
+        });
+        setnodeVisualData_Graph(
+          (prevState: { [key: string]: GraphNodeData }) => {
+            let newState = { ...prevState };
+            if (value.old.node_data)
+              newState[value.old.node_data.id] = value.old.node_visual;
+            delete newState[id];
+            return newState;
+          }
+        );
+        break;
+
       case 'NODE_DELETE':
         setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
           let newState = { ...prevState };
@@ -164,9 +190,21 @@ export const useHistoryState = (
         );
         break;
       case 'NODE_TITLE':
+        let undoOps = 0;
+        for (let i = history.current.length - 1; i > 0; --i) {
+          if (history.current[i].type == 'NODE_TITLE' && undoOps < 5) {
+            undoOps += 1;
+          } else {
+            break;
+          }
+        }
+        pointer.current -= undoOps;
         setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
           let newState = { ...prevState };
-          newState[id].title = value.oldTitle;
+          newState[id].title =
+            history.current[
+              history.current.length - undoOps - 1
+            ].value.oldTitle;
           return newState;
         });
         break;
@@ -204,6 +242,22 @@ export const useHistoryState = (
           (prevState: { [key: string]: GraphNodeData }) => {
             let newState = { ...prevState };
             newState[id] = value.new.node_visual;
+            return newState;
+          }
+        );
+        break;
+      case 'NODE_ADD_EXISTING':
+        setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
+          let newState = { ...prevState };
+          newState[id] = value.new.node_data;
+          if (value.old.node_data) delete newState[value.old.node_data.id];
+          return newState;
+        });
+        setnodeVisualData_Graph(
+          (prevState: { [key: string]: GraphNodeData }) => {
+            let newState = { ...prevState };
+            newState[id] = value.new.node_visual;
+            if (value.old.node_data) delete newState[value.old.node_data.id];
             return newState;
           }
         );
@@ -258,7 +312,6 @@ export const useHistoryState = (
           return newState;
         });
         break;
-      //fix redo for arrow drawing
       case 'CONNECTION_DIRECTION':
         setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
           let newState = { ...prevState };
@@ -284,9 +337,18 @@ export const useHistoryState = (
         );
         break;
       case 'NODE_TITLE':
+        let redoOps = 0;
+        for (let i = pointer.current + 1; i < history.current.length; ++i) {
+          if (history.current[i].type == 'NODE_TITLE' && redoOps < 5) {
+            redoOps += 1;
+          } else {
+            break;
+          }
+        }
+        pointer.current += redoOps - 1;
         setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
           let newState = { ...prevState };
-          newState[id].title = value.title;
+          newState[id].title = history.current[pointer.current].value.title;
           return newState;
         });
         break;

@@ -13,6 +13,7 @@ import router from 'next/router';
 import { addNodeToGraph } from '../../helpers/frontend/addNodeToGraph';
 import { NodeData } from '../../packages/graph/graphTypes';
 import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
+import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
 
 const SearchBar: React.FC = () => {
   const graphViewContext = useContext(
@@ -34,7 +35,10 @@ const SearchBar: React.FC = () => {
         //this button should add the selected node to the graph
         src: 'plus',
         onClick: () => {
-          addNodeToGraph(result, graphViewContext, viewContext.username);
+          addExistingNodeToGraph(graphViewContext, viewContext.username, '', {
+            id: result.id,
+            title: result.title,
+          });
           viewContext.setShowSearchBar(false);
         },
       },

@@ -53,9 +53,11 @@ const CollapsedGraphNode: React.FC<{
               name='name'
               id='node_title'
               placeholder='Type title or press /'
-              defaultValue={title}
+              // defaultValue={title}
+              value={title}
               autoComplete='off'
               onChange={async (newVal: any) => {
+                updateNode('title', newVal.target.value, id, graphViewContext);
                 if (newVal.target.value[0] == '/' && !showSearchDropdown) {
                   setShowSearchDropdown(true);
                 }
@@ -88,13 +90,6 @@ const CollapsedGraphNode: React.FC<{
                       });
                     });
                   }
-                } else {
-                  updateNode(
-                    'title',
-                    newVal.target.value,
-                    id,
-                    graphViewContext
-                  );
                 }
               }}
               className='bg-transparent border-none outline-none'

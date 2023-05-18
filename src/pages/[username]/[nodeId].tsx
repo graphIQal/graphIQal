@@ -154,13 +154,6 @@ const Home: React.FC = () => {
       }}
     >
       <MainTabs />
-      {showSearchBar && <SearchBar />}
-      {showSearchBar && (
-        <div
-          onClick={() => setShowSearchBar(false)}
-          className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
-        ></div>
-      )}
     </ViewContext.Provider>
   );
 };

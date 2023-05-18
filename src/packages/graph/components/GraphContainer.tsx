@@ -52,9 +52,11 @@ export const GraphContainer: React.FC<{}> = () => {
     const listenerFunc = (evt: any) => {
       if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
         evt.stopImmediatePropagation();
+        evt.preventDefault();
         graphViewContext.redo();
       } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
         evt.stopImmediatePropagation();
+        evt.preventDefault();
         graphViewContext.undo();
       } else if (evt.keyCode == 27) {
         evt.stopImmediatePropagation();

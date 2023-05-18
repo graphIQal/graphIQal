@@ -21,6 +21,7 @@ import GraphViewContext from '../context/GraphViewContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
+import SearchBar from '../../../components/organisms/SearchBar';
 
 const GraphSplitPaneWrapper: React.FC<{
   viewId: string;
@@ -32,7 +33,9 @@ const GraphSplitPaneWrapper: React.FC<{
   let window = windowVar;
   if (!document || !window) return <div></div>;
 
-  const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
+  const { nodeId, username, showSearchBar, setShowSearchBar } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
 
   // node data on screen
   let nodeData: { [key: string]: NodeData } = {};
@@ -77,8 +80,10 @@ const GraphSplitPaneWrapper: React.FC<{
     setnodeVisualData_Graph
   );
 
-  console.log('history: ', pointer);
-  console.log(history.current);
+  useEffect(() => {
+    console.log('history: ', pointer);
+    console.log(history.current);
+  }, [history.current, pointer.current]);
 
   //Graph in view of one node, keep the id.
   const [nodeInFocusId, setnodeInFocusId] = useState(nodeId);
@@ -173,6 +178,13 @@ const GraphSplitPaneWrapper: React.FC<{
             <GraphSideTabs nodeInFocus_data={nodeInFocus_data} />
           </SplitPaneRight>
         </SplitPane>
+        {showSearchBar && <SearchBar />}
+        {showSearchBar && (
+          <div
+            onClick={() => setShowSearchBar(false)}
+            className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
+          ></div>
+        )}
       </GraphViewContext.Provider>
     </DrawingContext.Provider>
   );

@@ -53,6 +53,11 @@ const Graph: React.FC<{
 	const [nodeVisualData_Graph, setnodeVisualData_Graph] =
 		useState(visualData);
 
+	console.log('nodeData_Graph');
+	console.log(nodeData_Graph);
+	console.log('nodeVisualData_Graph');
+	console.log(nodeVisualData_Graph);
+
 	useEffect(() => {
 		if (nodeId) {
 			fetch(`/api/${username}/${nodeId}/graph/${viewId}`)

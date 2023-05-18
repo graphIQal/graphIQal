@@ -115,3 +115,7 @@ export const getNodeData_cypher = (nodeId: string) => {
 	// RETURN r {.*, type: type(r)}, c {.*} 
 	`;
 };
+
+export const chainCypher = (cypher: string): string => {
+	return cypher;
+};

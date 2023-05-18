@@ -10,7 +10,7 @@ import GraphViewContext, {
 
 export type Action = {
 	type: ActionChanges;
-	id: string | number;
+	id: string;
 	value: any;
 };
 

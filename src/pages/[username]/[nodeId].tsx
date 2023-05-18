@@ -39,36 +39,6 @@ const Home: React.FC = () => {
 		fetcher
 	);
 
-	// useEffect(() => {
-	//   if (nodeId) {
-	//     fetch(`/api/${username}/${nodeId}/document`)
-	//       .then((res) => res.json())
-	//       .then((data) => {
-	//         if (data) {
-	//           let includedIDs: { [key: string]: boolean } = {};
-	//           data.map((record: any, index: number) => {
-	//             if (!includedIDs[record.g.properties.id]) {
-	//               includedIDs[record.g.properties.id] = true;
-
-	//               newTabs.push({
-	//                 label: record.g.properties.title,
-	//                 viewId: record.g.properties.id,
-	//                 viewType: 'graph',
-	//                 component: (
-	//                   <Graph2
-	//                     viewId={record.g.properties.id}
-	//                     title={record.g.properties.title}
-	//                   />
-	//                 ),
-	//               });
-	//             }
-	//           });
-	//         }
-	//       });
-	//   }
-	//   setTabs(newTabs);
-	// }, []);
-
 	useEffect(() => {
 		setCurrNodeId(nodeId as string);
 	}, [nodeId]);
@@ -82,26 +52,30 @@ const Home: React.FC = () => {
 	}, [currNodeId]);
 
 	let newTabs: MainTabProps[] = [
-		{
-			label: 'Home',
-			viewId: '',
-			viewType: 'document',
-			component: <SplitPaneWrapper viewId={''} />,
-		},
 		// {
-		//   label: 'Graph View',
-		//   viewId: '',
-		//   viewType: 'graph',
-		//   component: <Graph2 viewId={''} title={'Graph View'} />,
+		// 	label: 'Home',
+		// 	viewId: '',
+		// 	viewType: 'document',
+		// 	component: <SplitPaneWrapper viewId={''} />,
 		// },
+		{
+			label: 'Graph View',
+			viewId: '',
+			viewType: 'graph',
+			component: <Graph2 viewId={''} title={'Graph View'} />,
+		},
 	];
 	const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
 	useEffect(() => {
 		if (!data) return;
+
 		if (!isLoading) {
 			if (data) {
 				let includedIDs: { [key: string]: boolean } = {};
+				// console.log(JSON.stringify(data));
+				console.log('data');
+				console.log(JSON.stringify(data));
 				data.map((record: any, index: number) => {
 					if (!includedIDs[record.g.properties.id]) {
 						includedIDs[record.g.properties.id] = true;
@@ -121,6 +95,8 @@ const Home: React.FC = () => {
 				});
 			}
 		}
+		console.log('newTabs');
+		console.log(newTabs);
 		setTabs(newTabs);
 	}, [data]);
 

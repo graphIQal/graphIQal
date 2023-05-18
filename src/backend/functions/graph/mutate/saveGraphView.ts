@@ -29,23 +29,27 @@ export const saveGraphView = async ({
 		graphViewData,
 		graphViewId,
 		nodeId,
+		history,
+		pointer,
 	});
 
-	const res = await fetch(
-		`/api/${username}/${nodeId}/graph/${graphViewId}/save`,
-		{
-			method: 'POST',
-			body: body,
-		}
-	)
-		.then((res) => {
-			console.log('res ', res);
-			return res.json();
-		})
-		.then((json) => {
-			console.log('json: ', json);
-			return json;
-		});
+	console.log(body);
 
-	return res;
+	// const res = await fetch(
+	// 	`/api/${username}/${nodeId}/graph/${graphViewId}/save`,
+	// 	{
+	// 		method: 'POST',
+	// 		body: body,
+	// 	}
+	// )
+	// 	.then((res) => {
+	// 		console.log('res ', res);
+	// 		return res.json();
+	// 	})
+	// 	.then((json) => {
+	// 		console.log('json: ', json);
+	// 		return json;
+	// 	});
+
+	// return res;
 };

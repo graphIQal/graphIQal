@@ -25,6 +25,7 @@ import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { handleEndPoint } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
 import { ConnectionTypesMap } from '../graphTypes';
+import GraphNodeContext from '../context/GraphNodeContext';
 
 type MindMapProps = {
   points: any;
@@ -47,9 +48,9 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
 
-  const { nodeData_Graph, nodeVisualData_Graph, setnodeVisualData_Graph } =
-    viewContext;
+  const { nodeData_Graph, nodeVisualData_Graph } = viewContext;
 
+  // Types in connection dropdown to select from
   const getDropdownItems = (from: string, to: string) => {
     let activeIndex = 0;
     const items: ItemProps[] = [];
@@ -67,7 +68,9 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         activeIndex = i;
       }
     });
-    if (getConnectionType(from, to, viewContext) != 'RELATED') {
+    if (
+      getConnectionType(from, to, viewContext) != ConnectionTypesMap.RELATED
+    ) {
       items.push({
         text: 'Reverse Connection',
         onPress: () =>
@@ -86,8 +89,9 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
     return { items, activeIndex };
   };
 
-  const { startNode, endNode, drawingMode, isDrawing, setIsDrawing } =
-    useContext(DrawingContext) as DrawingContextInterface;
+  const { endNode, drawingMode, isDrawing, setIsDrawing } = useContext(
+    DrawingContext
+  ) as DrawingContextInterface;
 
   return (
     <div className='relative' id={'container' + viewContext.graphViewId}>
@@ -158,19 +162,22 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
                   }
             }
           >
-            <GraphNode
-              title={title}
-              key={node}
-              left={(x - translateX) * scale}
-              top={(y - translateY) * scale}
-              id={node}
-              icon={icon}
-              color={color}
-              size={[width * scale, height * scale]}
-              updateStartPos={(val) => (startPos.current = val)}
+            <GraphNodeContext.Provider
+              value={{
+                title: title,
+                id: node,
+                icon: icon,
+                color: color,
+                left: (x - translateX) * scale,
+                top: (y - translateY) * scale,
+                width: width * scale,
+                height: height * scale,
+              }}
             >
-              <GraphEditor />
-            </GraphNode>
+              <GraphNode updateStartPos={(val) => (startPos.current = val)}>
+                <GraphEditor />
+              </GraphNode>
+            </GraphNodeContext.Provider>
           </div>
         );
       })}

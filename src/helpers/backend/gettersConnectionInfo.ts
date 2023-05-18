@@ -1,6 +1,10 @@
 import { getCommonParents } from '../../backend/functions/general/getCommonParents';
 import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
-import { NodeData, ConnectionData } from '../../packages/graph/graphTypes';
+import {
+  NodeData,
+  ConnectionData,
+  ConnectionTypes,
+} from '../../packages/graph/graphTypes';
 import { resources } from '../../schemas/Data_structures/DS_schema';
 
 export const getLineEndpointData = (
@@ -38,9 +42,9 @@ export const getLineEndpointData = (
 
 export const isLineDirectional = (connection: ConnectionData) => {
   return (
-    connection.type == 'HAS' ||
-    connection.type == 'NEEDS' ||
-    connection.type == 'FOLLOWS'
+    connection.type == ConnectionTypes.HAS ||
+    connection.type == ConnectionTypes.NEEDS ||
+    connection.type == ConnectionTypes.FOLLOWS
   );
 };
 

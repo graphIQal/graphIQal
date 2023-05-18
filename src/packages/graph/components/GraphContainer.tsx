@@ -47,8 +47,7 @@ export const GraphContainer: React.FC<{}> = () => {
     GraphViewContext
   ) as GraphViewContextInterface;
 
-  const { setShowSearchBar } = useContext(ViewContext) as ViewContextInterface;
-
+  //key events: undo, redo, escaping drawing
   useEffect(() => {
     const listenerFunc = (evt: any) => {
       if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
@@ -70,6 +69,18 @@ export const GraphContainer: React.FC<{}> = () => {
     );
   }, []);
 
+  // Wheel event: panning and zooming
+  useEffect(() => {
+    documentVar
+      .getElementById('parent')
+      ?.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      documentVar
+        .getElementById('parent')
+        ?.removeEventListener('wheel', onWheel);
+    };
+  });
+
   //Pan and zoom
   const ref = useRef(null);
   let { onWheel, translateX, translateY, scale } = usePanAndZoom(ref);
@@ -82,21 +93,7 @@ export const GraphContainer: React.FC<{}> = () => {
     translateY = 0;
   }
 
-  useEffect(() => {
-    documentVar
-      .getElementById('parent')
-      ?.addEventListener('wheel', onWheel, { passive: false });
-    return () => {
-      documentVar
-        .getElementById('parent')
-        ?.removeEventListener('wheel', onWheel);
-    };
-  });
-
-  //Lines and nodes to show
-
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
-  // const { lines, setLines, nodeData_Graph } = viewContext;
 
   //DND
   const startPos = useRef<{ left: number; top: number }>();
@@ -144,9 +141,6 @@ export const GraphContainer: React.FC<{}> = () => {
   const handleStartPoint = useDrawingStart();
   const handleDrawing = useDrawingCanvas();
   const handleDrawingEnd = useDrawingEnd(translateX, translateY, scale);
-
-  //Pinching hook
-  // const handlePinch = usePinch();
 
   //Pill menu information for centered node
   const {

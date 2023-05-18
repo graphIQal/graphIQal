@@ -5,14 +5,12 @@
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { Divider, getNode } from '@udecode/plate';
-import useSWR from 'swr';
-import { fetcher } from '../../../backend/driver/fetcher';
+import { Divider } from '@udecode/plate';
+import { getCommonParents } from '../../../backend/functions/general/getCommonParents';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
 import { Alert } from '../../../components/organisms/Alert';
-import SearchBar from '../../../components/organisms/SearchBar';
 import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
 import SplitPane, {
   SplitPaneLeft,
@@ -23,29 +21,23 @@ import GraphViewContext from '../context/GraphViewContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
-import TextButton from '../../../components/molecules/TextButton';
-import { getNodeData } from '../../../backend/functions/node/query/getNodeData';
-import { getCommonParents } from '../../../backend/functions/general/getCommonParents';
 
-const Graph: React.FC<{
+const GraphSplitPaneWrapper: React.FC<{
   viewId: string;
 }> = ({ viewId }) => {
-  const { documentVar, windowVar, showSearchBar, setShowSearchBar } =
-    useContext(ViewContext) as ViewContextInterface;
+  const { documentVar, windowVar } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
   let document = documentVar;
   let window = windowVar;
   if (!document || !window) return <div></div>;
 
   const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
 
-  const { data, error, isLoading } = useSWR(
-    nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
-    fetcher
-  );
-
+  // node data on screen
   let nodeData: { [key: string]: NodeData } = {};
   let visualData: { [key: string]: GraphNodeData } = {};
-  // node data
+
   const [nodeData_Graph, setnodeData_Graph] = useState(nodeData);
   const [nodeVisualData_Graph, setnodeVisualData_Graph] = useState(visualData);
 
@@ -54,7 +46,6 @@ const Graph: React.FC<{
       fetch(`/api/${username}/${nodeId}/graph/${viewId}`)
         .then((res) => res.json())
         .then((data) => {
-          // console.log('node info' + JSON.stringify(data));
           for (let node in data) {
             let nodeConnections: { [key: string]: ConnectionData } = {};
             for (let connection in data[node].connections) {
@@ -96,19 +87,18 @@ const Graph: React.FC<{
     connectedNodes: any[];
   }>({ n: {}, connectedNodes: [] });
 
+  //jesse
   // get the connected nodes of seleced node
   useEffect(() => {
     if (nodeInFocusId)
       fetch(`/api/${username}/${nodeInFocusId}`)
         .then((res) => res.json())
         .then((json) => {
-          console.log('connected Nodes');
-          console.log(json);
           setnodeInFocus_data(json[0]);
         });
   }, [nodeInFocusId]);
 
-  // // set NodeId once it changes
+  // set NodeId once it changes
   useEffect(() => {
     setnodeInFocusId(nodeId);
   }, [nodeId]);
@@ -127,25 +117,6 @@ const Graph: React.FC<{
   //Line functions for detecting arrows
   let isPointInCanvasFuncs = useRef<any>({});
   let numPointsInTriangleFuncs = useRef<any>({});
-
-  const [modalNode, setModalNode] = useState('');
-  const [showModalConnection, setShowModalConnection] = useState(false);
-
-  // Hot key for undo/redo
-  // useEffect(() => {
-  //   const listenerFunc = (evt: any) => {
-  //     evt.stopImmediatePropagation();
-  //     if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
-  //       // redo();
-  //     } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
-  //       // undo();
-  //     }
-  //   };
-  //   document.addEventListener('keydown', (event) => listenerFunc(event));
-  //   return document.removeEventListener('keydown', (event) =>
-  //     listenerFunc(event)
-  //   );
-  // }, []);
 
   //graph view tags default
   const [tags, setTags] = useState(
@@ -175,8 +146,6 @@ const Graph: React.FC<{
           setnodeData_Graph: setnodeData_Graph,
           nodeVisualData_Graph: nodeVisualData_Graph,
           setnodeVisualData_Graph: setnodeVisualData_Graph,
-          modalNode: modalNode,
-          setModalNode: setModalNode,
           nodeInFocusId: nodeInFocusId,
           graphViewId: currGraphViewId as string,
           setGraphViewId: setCurrGraphViewId,
@@ -193,14 +162,7 @@ const Graph: React.FC<{
       >
         <SplitPane className='split-pane-row'>
           <SplitPaneLeft>
-            <div
-              // onKeyDown={(event) =>
-              // 	handleDrawingHotkey(event, drawingMode, setDrawingMode)
-              // }
-              tabIndex={-1}
-              ref={containerRef}
-              // className='relative'
-            >
+            <div tabIndex={-1} ref={containerRef}>
               <GraphContainer />
               <Alert />
             </div>
@@ -208,10 +170,6 @@ const Graph: React.FC<{
           </SplitPaneLeft>
           <Divider className='separator-col' />
           <SplitPaneRight>
-            {/* <TextButton
-							text='Show search bar'
-							onClick={() => setShowSearchBar(true)}
-						/> */}
             <GraphSideTabs nodeInFocus_data={nodeInFocus_data} />
           </SplitPaneRight>
         </SplitPane>
@@ -220,4 +178,4 @@ const Graph: React.FC<{
   );
 };
 
-export default Graph;
+export default GraphSplitPaneWrapper;

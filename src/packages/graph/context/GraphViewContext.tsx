@@ -13,8 +13,6 @@ export type GraphViewContextInterface = {
   setnodeData_Graph: (val: { [key: string]: NodeData }) => void;
   nodeVisualData_Graph: { [key: string]: GraphNodeData };
   setnodeVisualData_Graph: (val: { [key: string]: GraphNodeData }) => void;
-  modalNode: string; //The node that will show in the popup modal
-  setModalNode: (val: string) => void;
   graphViewId: string;
   setGraphViewId: (val: string) => void;
   tags: NodeData[];

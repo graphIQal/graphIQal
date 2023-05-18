@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import ViewContext, { ViewContextInterface } from '../context/ViewContext';
+import { SelectableList } from '../templates/SelectableList';
 
 export type ItemProps = {
   text: string;
@@ -39,23 +40,24 @@ export const Dropdown: React.FC<{
   return (
     <div className='absolute w-max shadow-md bg-white z-[200]'>
       {' '}
-      {list &&
-        items &&
-        items.map((item, i) => {
-          const active = i == activeIndex;
-          return (
-            <div
-              key={i}
-              className={
-                'p-1 border hover:bg-selected_white hover:cursor-pointer text-sm ' +
-                (active && 'bg-blue-50')
-              }
-              onClick={item.onPress}
-            >
-              {item.text}
-            </div>
-          );
-        })}
+      {list && items && (
+        <SelectableList
+          onEnter={() => null}
+          listItems={items.map((item, i) => {
+            return (
+              <div
+                key={i}
+                className={
+                  'p-1 border hover:bg-selected_white hover:cursor-pointer text-sm '
+                }
+                onClick={item.onPress}
+              >
+                {item.text}
+              </div>
+            );
+          })}
+        />
+      )}
       {!list && children && children}
     </div>
   );

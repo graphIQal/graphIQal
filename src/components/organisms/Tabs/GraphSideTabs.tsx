@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import EditorComponent from '../../../packages/editor/EditorComponent';
-import Graph from '../../../packages/graph/components/GraphPage';
+import Graph from '../../../packages/graph/components/GraphSplitPaneWrapper';
 import { Tab } from '../../atoms/Tab';
 import { Tabs } from './Tabs';
 import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
@@ -9,7 +9,7 @@ import router from 'next/router';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../../packages/graph/context/GraphViewContext';
-import { SidePanel } from '../../layouts/SidePanel';
+import { SidePanel } from '../../templates/SidePanel';
 
 import { addNodeToGraph } from '../../../helpers/frontend/addNodeToGraph';
 import ConnectionListItem from '../ConnectionListItem';
@@ -17,6 +17,7 @@ import {
   connectedNode_type,
   getNodeData_type,
 } from '../../../backend/functions/node/query/getNodeData';
+import { SelectableList } from '../../templates/SelectableList';
 
 export type SideTabProps = {
   label: string;
@@ -60,34 +61,21 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
     ];
   };
 
-  const [highlightedConnection, setHighlightedConnection] = useState(0);
   const renderConnections = (connectedNodes: connectedNode_type[]) => {
-    return (
-      <div>
-        {/* {nodeInFocus_Connections.map((connection: any, i: number) => (
-          <div
-            onClick={() => {
-              router.push(`/${username}/${connection.c.id}`, undefined);
-            }}
-            key={i}
-          >
-            {' '}
-            {connection.c.title}
-          </div>
-        ))} */}
-        {connectedNodes.map((connection: any, i: number) => (
-          <ConnectionListItem
-            highlighted={highlightedConnection}
-            setHighlighted={setHighlightedConnection}
-            title={connection.connected_node.title}
-            id={connection.connected_node.id}
-            index={i}
-            buttonItems={getButtonItems(connection.connected_node)}
-            url={connection.connected_node.url}
-          />
-        ))}
-      </div>
-    );
+    let itemsToRender: any[] = [];
+
+    connectedNodes.map((connection: any, i: number) => {
+      itemsToRender.push(
+        <ConnectionListItem
+          title={connection.connected_node.title}
+          id={connection.connected_node.id}
+          index={i}
+          buttonItems={getButtonItems(connection.connected_node)}
+          url={connection.connected_node.url}
+        />
+      );
+    });
+    return itemsToRender;
   };
 
   useEffect(() => {
@@ -96,7 +84,10 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
     let newTabs = [...tabs];
     newTabs[0].component = (
       <SidePanel title={'All Connections for ' + nodeInFocus_data.n.title}>
-        {renderConnections(nodeInFocus_data.connectedNodes)}
+        <SelectableList
+          onEnter={() => null}
+          listItems={renderConnections(nodeInFocus_data.connectedNodes)}
+        />
       </SidePanel>
     );
 

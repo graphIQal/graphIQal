@@ -16,6 +16,7 @@ import {
   getNodeData_type,
 } from '../../backend/functions/node/query/getNodeData';
 import SearchBar from '../../components/organisms/SearchBar';
+import Graph from '../../packages/graph/Graph';
 
 const Home: React.FC = () => {
   const [windowVar, setWindow] = useState<any>();
@@ -113,7 +114,7 @@ const Home: React.FC = () => {
               viewId: record.g.properties.id,
               viewType: 'graph',
               component: (
-                <Graph2
+                <Graph
                   viewId={record.g.properties.id}
                   title={record.g.properties.title}
                 />

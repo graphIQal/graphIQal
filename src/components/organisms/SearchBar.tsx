@@ -154,6 +154,7 @@ const SearchBar: React.FC = () => {
             className='bg-base_white w-full outline-none border-none'
             onChange={async (newVal: any) => {
               if (newVal.target.value.length > 0)
+                // jesse
                 await fetch(
                   `/api/general/search?username=${viewContext.username}&search=${newVal.target.value}`
                 ).then((res) => {

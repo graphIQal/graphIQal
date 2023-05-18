@@ -24,7 +24,7 @@ import { deleteConnection } from '../../../helpers/backend/deleteConnection';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { handleEndPoint } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
-import { ConnectionTypesMap } from '../graphTypes';
+import { ConnectionTypes } from '../graphTypes';
 import GraphNodeContext from '../context/GraphNodeContext';
 
 type MindMapProps = {
@@ -54,9 +54,9 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
   const getDropdownItems = (from: string, to: string) => {
     let activeIndex = 0;
     const items: ItemProps[] = [];
-    Object.keys(ConnectionTypesMap).map((connection: string, i: number) => {
+    Object.keys(ConnectionTypes).map((connection: string, i: number) => {
       items.push({
-        text: (ConnectionTypesMap as any)[connection],
+        text: (ConnectionTypes as any)[connection],
         onPress: () =>
           updateConnection(viewContext, 'type', '', {
             start: from,
@@ -68,9 +68,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         activeIndex = i;
       }
     });
-    if (
-      getConnectionType(from, to, viewContext) != ConnectionTypesMap.RELATED
-    ) {
+    if (getConnectionType(from, to, viewContext) != ConnectionTypes.RELATED) {
       items.push({
         text: 'Reverse Connection',
         onPress: () =>

@@ -1,16 +1,9 @@
-export const ConnectionTypesMap = {
-  HAS: 'Has',
-  NEEDS: 'Dependency',
-  FOLLOWS: 'Chronology',
-  RELATED: 'No Type',
-  // CUSTOM: 'Custom',
-};
-
 export const ConnectionTypes = {
   HAS: 'HAS',
   NEEDS: 'NEEDS',
   FOLLOWS: 'FOLLOWS',
   RELATED: 'RELATED',
+  CUSTOM: 'CUSTOM',
 };
 
 export type ConnectionData = {

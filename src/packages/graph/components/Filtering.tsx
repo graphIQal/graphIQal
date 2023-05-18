@@ -50,8 +50,6 @@ export const Filtering: React.FC<FilteringProps> = ({
         <TextButton
           text='Save Graph'
           onClick={() => {
-            console.log('graphViewId');
-            console.log(graphViewId);
             saveGraphView({
               username,
               graphViewId,
@@ -90,7 +88,7 @@ export const Filtering: React.FC<FilteringProps> = ({
               tag: { id: string; title: string; color: string; icon: string },
               i: number
             ) => {
-              return <Tag tag={tag.title} id={i} />;
+              return <Tag tag={tag.title} id={tag.id} />;
             }
           )}
           <TextButton

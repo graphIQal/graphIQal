@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Router, withRouter } from 'next/router';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Tab } from '../../atoms/Tab';
 import ViewContext, {
   MainTabProps,
@@ -18,8 +18,26 @@ const MainTabs: React.FC<{
     setMainViewTabs,
     currTab,
     setCurrTab,
+    showSearchBar,
+    setShowSearchBar,
+    windowVar,
   } = useContext(ViewContext) as ViewContextInterface;
-  console.log('node ID ' + nodeId);
+
+  useEffect(() => {
+    const listenerFunc = (evt: any) => {
+      evt.stopImmediatePropagation();
+
+      if (evt.code === 'KeyP' && (evt.ctrlKey || evt.metaKey)) {
+        evt.preventDefault();
+        setShowSearchBar(true);
+      }
+    };
+
+    window.addEventListener('keydown', (event: any) => listenerFunc(event));
+    return window.removeEventListener('keydown', (event: any) =>
+      listenerFunc(event)
+    );
+  }, []);
   return (
     <div>
       <Tabs>

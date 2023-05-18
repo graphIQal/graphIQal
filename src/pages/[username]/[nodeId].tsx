@@ -15,6 +15,7 @@ import {
   getNodeData,
   getNodeData_type,
 } from '../../backend/functions/node/query/getNodeData';
+import SearchBar from '../../components/organisms/SearchBar';
 
 const Home: React.FC = () => {
   const [windowVar, setWindow] = useState<any>();
@@ -82,19 +83,19 @@ const Home: React.FC = () => {
   }, [currNodeId]);
 
   let newTabs: MainTabProps[] = [
-    // {
-    //   label: 'Home',
-    //   viewId: '',
-    //   viewType: 'document',
-    //   component: <SplitPaneWrapper viewId={''} />,
-    // },
-    //temp
     {
-      label: 'Graph View',
+      label: 'Home',
       viewId: '',
-      viewType: 'graph',
-      component: <Graph2 viewId={''} title={'Graph View'} />,
+      viewType: 'document',
+      component: <SplitPaneWrapper viewId={''} />,
     },
+    //temp
+    // {
+    //   label: 'Graph View',
+    //   viewId: '',
+    //   viewType: 'graph',
+    //   component: <Graph2 viewId={''} title={'Graph View'} />,
+    // },
   ];
   const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
@@ -131,9 +132,7 @@ const Home: React.FC = () => {
     setCurrTab(0);
   }, [nodeId]);
 
-  if (tabs) {
-    console.log('tabs ' + tabs.length);
-  }
+  const [showSearchBar, setShowSearchBar] = useState(false);
 
   return (
     <ViewContext.Provider
@@ -149,9 +148,18 @@ const Home: React.FC = () => {
         setCurrTab: setCurrTab,
         windowVar: windowVar,
         documentVar: documentVar,
+        showSearchBar: showSearchBar,
+        setShowSearchBar: setShowSearchBar,
       }}
     >
       <MainTabs />
+      {showSearchBar && <SearchBar />}
+      {showSearchBar && (
+        <div
+          onClick={() => setShowSearchBar(false)}
+          className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
+        ></div>
+      )}
     </ViewContext.Provider>
   );
 };

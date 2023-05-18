@@ -27,6 +27,7 @@ const CollapsedGraphNode: React.FC<{
   setShowSearchDropdown: (val: boolean) => void;
   results: ItemProps[];
   setResults: (val: ItemProps[]) => void;
+  showMenu: boolean;
 }> = ({
   title,
   id,
@@ -37,42 +38,18 @@ const CollapsedGraphNode: React.FC<{
   setShowSearchDropdown,
   results,
   setResults,
+  showMenu,
 }) => {
-  const [showMenu, setShowMenu] = useState(false);
-
   const graphViewContext = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
   const viewContext = useContext(ViewContext) as ViewContextInterface;
 
   // const { setNodeInView } = viewContext;
-  const buttonItems = [
-    {
-      src: 'navigation',
-      onClick: () => router.push(`/${viewContext.username}/${id}`, undefined),
-    },
-    {
-      src: 'expand',
-      onClick: () => setCollapsedNode(id, graphViewContext),
-    },
-    {
-      src: 'remove',
-      onClick: () => deleteNode(id, graphViewContext),
-    },
-    {
-      src: 'spotlight',
-      onClick: () =>
-        graphViewContext.setnodeInFocusId(
-          graphViewContext.nodeInFocusId == id ? viewContext.nodeId : id
-        ),
-    },
-  ];
 
   return (
     <>
       <div
-        onMouseOver={() => setShowMenu(true)}
-        onMouseLeave={() => setShowMenu(false)}
         className={
           'w-full h-full flex items-center content-center justify-items-stretch flex-row '
         }
@@ -102,7 +79,6 @@ const CollapsedGraphNode: React.FC<{
                       }&search=${newVal.target.value.substring(1)}`
                     ).then((res) => {
                       res.json().then((json) => {
-                        console.log('result ' + JSON.stringify(json));
                         const items: ItemProps[] = json.map(
                           (result: any, i: number) => {
                             return {
@@ -156,7 +132,6 @@ const CollapsedGraphNode: React.FC<{
           </form>
           {/* <h4 className='text-sm'>{title}</h4> */}
         </div>
-        {showMenu && <OnHoverMenu buttonItems={buttonItems} />}
       </div>
     </>
   );

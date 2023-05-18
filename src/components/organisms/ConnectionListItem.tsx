@@ -35,7 +35,7 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
       }
       onMouseOver={() => setHighlighted(index)}
     >
-      <div className='flex flex-row items-center align-middle'>
+      <div className='flex flex-row items-center align-middle' key={index}>
         <IconCircleButton circle={false} src='block' onClick={() => null} />
         <h4
           onClick={url ? () => windowVar.open(url) : () => null}

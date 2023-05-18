@@ -63,14 +63,16 @@ export const getIconAndColor = (
   if (!categorizing_node) {
     icon = viewContext.nodeData_Graph[node].icon;
     color = viewContext.nodeData_Graph[node].color;
-  }
-  if (categorizing_node != node) {
+  } else if (categorizing_node != node) {
     for (node in viewContext.tags) {
       if (viewContext.tags[node].id == categorizing_node) {
         icon = viewContext.tags[node].icon;
         color = viewContext.tags[node].color;
       }
     }
+  } else {
+    icon = viewContext.nodeData_Graph[node].icon;
+    color = viewContext.nodeData_Graph[node].color;
   }
 
   return {

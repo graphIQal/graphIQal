@@ -16,10 +16,7 @@ import { useDropNode } from '../hooks/dragging/useDropNode';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
-import {
-  handleEscapeDrawing,
-  handleInvokeSearch,
-} from '../helpers/handleKeyPress';
+import { handleEscapeDrawing } from '../helpers/handleKeyPress';
 import { useCanvas } from '../hooks/drawing/useCanvas';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
@@ -50,21 +47,23 @@ export const GraphContainer: React.FC<{}> = () => {
     GraphViewContext
   ) as GraphViewContextInterface;
 
+  const { setShowSearchBar } = useContext(ViewContext) as ViewContextInterface;
+
   useEffect(() => {
     const listenerFunc = (evt: any) => {
-      evt.stopImmediatePropagation();
       if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
+        evt.stopImmediatePropagation();
         graphViewContext.redo();
       } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+        evt.stopImmediatePropagation();
         graphViewContext.undo();
       } else if (evt.keyCode == 27) {
+        evt.stopImmediatePropagation();
         //escape key
         handleEscapeDrawing(drawingContext, setPoints);
-      } else if (evt.code === 'KeyP' && (evt.ctrlKey || evt.metaKey)) {
-        evt.preventDefault();
-        handleInvokeSearch(viewContext);
       }
     };
+
     document.addEventListener('keydown', (event) => listenerFunc(event));
     return document.removeEventListener('keydown', (event) =>
       listenerFunc(event)

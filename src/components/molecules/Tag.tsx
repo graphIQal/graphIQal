@@ -7,7 +7,7 @@ import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 
 type TagProps = {
   tag: string;
-  id: number;
+  id: string;
 };
 
 export const Tag: React.FC<TagProps> = ({ tag, id }) => {
@@ -19,8 +19,8 @@ export const Tag: React.FC<TagProps> = ({ tag, id }) => {
   ) as GraphViewContextInterface;
 
   const buttonItems = [
-    { src: 'spotlight', onClick: () => setnodeInFocusId(tag) },
-    { src: 'navigation', onClick: () => setNodeId(tag) },
+    { src: 'spotlight', onClick: () => setnodeInFocusId(id) },
+    { src: 'navigation', onClick: () => setNodeId(id) },
   ];
   return (
     <div

@@ -27,6 +27,9 @@ import ViewContext, {
 } from '../../../components/context/ViewContext';
 import { useDragNode } from '../hooks/dragging/useDragNode';
 import { getTypedConnections } from '../../../helpers/frontend/getTypedConnections';
+import { OnHoverMenu } from '../../../components/organisms/OnHoverMenu';
+import { deleteNode } from '../../../helpers/backend/deleteNode';
+import { useRouter } from 'next/router';
 
 export interface NodeProps {
   id: any;
@@ -58,7 +61,7 @@ export const GraphNode: FC<NodeProps> = ({
     DrawingContext
   ) as DrawingContextInterface;
 
-  const { windowVar, documentVar } = useContext(
+  const { windowVar, documentVar, username, nodeId } = useContext(
     ViewContext
   ) as ViewContextInterface;
 
@@ -77,9 +80,33 @@ export const GraphNode: FC<NodeProps> = ({
   const [showSearchDropdown, setShowSearchDropdown] = useState(true);
   const [searchResults, setSearchResults] = useState<ItemProps[]>([]);
 
+  // On hover menu
+  const router = useRouter();
+  const [showMenu, setShowMenu] = useState(false);
+  const buttonItems = [
+    {
+      src: 'navigation',
+      onClick: () => router.push(`/${username}/${id}`, undefined),
+    },
+    {
+      src: 'expand',
+      onClick: () => null,
+    },
+    {
+      src: 'remove',
+      onClick: () => deleteNode(id, viewContext),
+    },
+    {
+      src: 'spotlight',
+      onClick: () =>
+        viewContext.setnodeInFocusId(
+          viewContext.nodeInFocusId == id ? nodeId : id
+        ),
+    },
+  ];
+
   useEffect(() => {
     const listenForSlash = (event: any) => {
-      console.log('listening');
       if (event.keyCode == 220) {
         setShowSearchDropdown(true);
       }
@@ -117,6 +144,7 @@ export const GraphNode: FC<NodeProps> = ({
       />
     );
   }
+
   const backgroundClass =
     nodeInFocusId == id ? 'bg-opacity-30 bg-' + color : 'bg-base_white';
   return (
@@ -134,6 +162,8 @@ export const GraphNode: FC<NodeProps> = ({
       </div>
       {/* This div and the resizable box must remain siblings for the line drawing */}
       <div
+        onMouseOver={() => setShowMenu(true)}
+        onMouseLeave={() => setShowMenu(false)}
         className='absolute flex flex-row justify-center align-middle items-center hover:bg-selected_white pointer-pencil rounded-md'
         style={{
           left: left - OFFSET / 2,
@@ -144,6 +174,17 @@ export const GraphNode: FC<NodeProps> = ({
         ref={preview}
         id={id}
       ></div>
+      <div
+        className='z-30 absolute min-w-[20px] max-w-[20px] hover:w-auto hover:max-w-[400px] transition-width duration-300 overflow-hidden border  '
+        style={{
+          minWidth: 30,
+          minHeight: 20,
+          left: left + size[0],
+          top: top,
+        }}
+      >
+        <OnHoverMenu buttonItems={buttonItems} />
+      </div>
       <ResizableBox
         classes={
           'p-sm overflow-hidden h-full w-full h-12 rounded-sm border-grey border-[1px] flex flex-row items-center align-middle z-10 p-3 gap-x-3 border-l-[3px] ' +
@@ -164,6 +205,7 @@ export const GraphNode: FC<NodeProps> = ({
             <Cube className='absolute right-sm top-sm' size={'1.5em'} />
           </div>
         ) : ( */}
+
         {collapsed ? (
           <CollapsedGraphNode
             toggleDropdown={() => setShowDropdown(!showDropdown)}
@@ -175,6 +217,7 @@ export const GraphNode: FC<NodeProps> = ({
             setResults={setSearchResults}
             showSearchDropdown={showSearchDropdown}
             setShowSearchDropdown={setShowSearchDropdown}
+            showMenu={showMenu}
           />
         ) : (
           <div>
@@ -202,6 +245,7 @@ export const GraphNode: FC<NodeProps> = ({
                       setResults={setSearchResults}
                       showSearchDropdown={showSearchDropdown}
                       setShowSearchDropdown={setShowSearchDropdown}
+                      showMenu={showMenu}
                     />
                   </div>
                 </div>

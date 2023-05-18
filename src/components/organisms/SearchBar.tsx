@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import IconTitle from '../molecules/IconTitle';
 import TextButton from '../molecules/TextButton';
 import IconCircleButton from '../molecules/IconCircleButton';
@@ -12,12 +12,14 @@ import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 import router from 'next/router';
 import { addNodeToGraph } from '../../helpers/frontend/addNodeToGraph';
 import { NodeData } from '../../packages/graph/graphTypes';
+import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
 
 const SearchBar: React.FC = () => {
   const graphViewContext = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
   const viewContext = useContext(ViewContext) as ViewContextInterface;
+  const { documentVar } = viewContext;
   const getButtonItems = (result: any) => {
     return [
       {
@@ -25,7 +27,7 @@ const SearchBar: React.FC = () => {
         src: 'navigation',
         onClick: () => {
           router.push(`/${viewContext.username}/${result.id}`, undefined);
-          graphViewContext.setShowSearchBar(false);
+          viewContext.setShowSearchBar(false);
         },
       },
       {
@@ -33,7 +35,7 @@ const SearchBar: React.FC = () => {
         src: 'plus',
         onClick: () => {
           addNodeToGraph(result, graphViewContext, viewContext.username);
-          graphViewContext.setShowSearchBar(false);
+          viewContext.setShowSearchBar(false);
         },
       },
       {
@@ -41,7 +43,7 @@ const SearchBar: React.FC = () => {
         src: 'spotlight',
         onClick: () => {
           graphViewContext.setnodeInFocusId(result.id);
-          graphViewContext.setShowSearchBar(false);
+          viewContext.setShowSearchBar(false);
         },
       },
     ];
@@ -58,37 +60,76 @@ const SearchBar: React.FC = () => {
   const [highlighted, setHighlighted] = useState(0);
 
   //Hot keys for escape
-  const [plusKeyPressed, setPlusKeyPressed] = useState(false);
-  const [pKeyPressed, setPKeyPressed] = useState(false);
+  const plusKeyPressed = useRef<boolean>(false);
+  const pKeyPressed = useRef<boolean>(false);
+
+  const checkAndScroll = () => {
+    const result = checkIfVisible(
+      documentVar.getElementById('result' + highlighted),
+      documentVar.getElementById('search_container')
+    );
+    if (result == 'bottom') {
+      const scrollOffset = documentVar
+        .getElementById('result' + highlighted)
+        ?.getBoundingClientRect().height;
+      documentVar
+        .getElementById('result_container')
+        ?.scrollBy(0, scrollOffset ? 3 * scrollOffset : 0);
+    } else if (result == 'top') {
+      const scrollOffset = documentVar
+        .getElementById('result' + highlighted)
+        ?.getBoundingClientRect().height;
+      documentVar
+        .getElementById('result_container')
+        ?.scrollBy(0, scrollOffset ? -(3 * scrollOffset) : 0);
+    }
+  };
 
   const handleKeys = (event: any) => {
     if (event.key == '=') {
       event.preventDefault();
-      setPlusKeyPressed(true);
+      plusKeyPressed.current = true;
     }
     if (event.code == 'KeyP') {
       event.preventDefault();
-      setPKeyPressed(true);
+      pKeyPressed.current = true;
     }
-    if ((event.metaKey || event.ctrlKey) && plusKeyPressed && pKeyPressed) {
+    if (
+      (event.metaKey || event.ctrlKey) &&
+      plusKeyPressed.current &&
+      pKeyPressed.current
+    ) {
       event.stopPropagation();
       event.preventDefault();
-      graphViewContext.setShowSearchBar(false);
+      viewContext.setShowSearchBar(false);
     }
     if (event.keyCode == 40) {
       event.preventDefault();
-      if (highlighted < results.length - 1) setHighlighted(highlighted + 1);
+      if (highlighted < results.length - 1) {
+        setHighlighted(highlighted + 1);
+        checkAndScroll();
+      } else {
+        document.getElementById('result_container')?.scrollTo(0, 0);
+        setHighlighted(0);
+      }
     } else if (event.keyCode == 38) {
       event.preventDefault();
-      if (highlighted > 0) setHighlighted(highlighted - 1);
+      if (highlighted > 0) {
+        setHighlighted(highlighted - 1);
+        checkAndScroll();
+      } else {
+        const elem = documentVar.getElementById('result_container');
+        elem?.scrollTo(0, elem.getBoundingClientRect().height);
+        setHighlighted(results.length - 1);
+      }
     } else if (event.code == 'Enter') {
       router.push(
         `/${viewContext.username}/${results[highlighted].n.id}`,
         undefined
       );
-      graphViewContext.setShowSearchBar(false);
+      viewContext.setShowSearchBar(false);
     } else if (event.keyCode == 27) {
-      graphViewContext.setShowSearchBar(false);
+      viewContext.setShowSearchBar(false);
     }
   };
 
@@ -97,9 +138,10 @@ const SearchBar: React.FC = () => {
       className=' fixed top-[10%] left-[50%] translate-x-[-50%] w-[40%] min-h-[30%] bg-base_white flex flex-col gap-y-2 p-2 rounded-sm shadow-sm z-[100]'
       onKeyDown={handleKeys}
       onKeyUp={() => {
-        setPlusKeyPressed(false);
-        setPKeyPressed(false);
+        plusKeyPressed.current = false;
+        pKeyPressed.current = false;
       }}
+      id='search_container'
     >
       <div className='flex flex-row justify-between w-full align-middle items-center'>
         <form className='bg-base_white w-full p-1'>
@@ -111,13 +153,11 @@ const SearchBar: React.FC = () => {
             placeholder='Search for a node...'
             className='bg-base_white w-full outline-none border-none'
             onChange={async (newVal: any) => {
-              console.log('search ' + JSON.stringify(newVal.target.value));
               if (newVal.target.value.length > 0)
                 await fetch(
                   `/api/general/search?username=${viewContext.username}&search=${newVal.target.value}`
                 ).then((res) => {
                   res.json().then((json) => {
-                    console.log('result ' + JSON.stringify(json));
                     setResults(json);
                   });
                 });
@@ -127,15 +167,16 @@ const SearchBar: React.FC = () => {
         <IconCircleButton
           circle={false}
           src={'close'}
-          onClick={() => graphViewContext.setShowSearchBar(false)}
+          onClick={() => viewContext.setShowSearchBar(false)}
         />
       </div>
 
-      <div className='overflow-scroll max-h-[70vh]'>
+      <div id='result_container' className='overflow-scroll max-h-[70vh]'>
         {results.map((result, i) => {
           return (
             <div
               key={i}
+              id={'result' + i}
               className={
                 'flex flex-row gap-x-3 justify-between items-center align-middle hover:cursor-pointer p-2 border-y-[0.5px]  border-base_black border-opacity-10 ' +
                 (i == highlighted ? 'bg-selected_white' : '')

@@ -30,9 +30,8 @@ import { getCommonParents } from '../../../backend/functions/general/getCommonPa
 const Graph: React.FC<{
   viewId: string;
 }> = ({ viewId }) => {
-  const { documentVar, windowVar } = useContext(
-    ViewContext
-  ) as ViewContextInterface;
+  const { documentVar, windowVar, showSearchBar, setShowSearchBar } =
+    useContext(ViewContext) as ViewContextInterface;
   let document = documentVar;
   let window = windowVar;
   if (!document || !window) return <div></div>;
@@ -76,7 +75,6 @@ const Graph: React.FC<{
         });
       setnodeData_Graph(nodeData);
       setnodeVisualData_Graph(visualData);
-      console.log('nodes ' + JSON.stringify(nodeData));
     }
   }, [nodeId]);
 
@@ -100,8 +98,6 @@ const Graph: React.FC<{
 
   // get the connected nodes of seleced node
   useEffect(() => {
-    console.log('nodeInFocus');
-    console.log(nodeInFocusId);
     if (nodeInFocusId)
       fetch(`/api/${username}/${nodeInFocusId}`)
         .then((res) => res.json())
@@ -114,7 +110,6 @@ const Graph: React.FC<{
 
   // // set NodeId once it changes
   useEffect(() => {
-    console.log('nodeId updated' + nodeId);
     setnodeInFocusId(nodeId);
   }, [nodeId]);
   // const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
@@ -160,8 +155,6 @@ const Graph: React.FC<{
   //alert message
   const [alert, setAlert] = useState('');
 
-  const [showSearchBar, setShowSearchBar] = useState(false);
-
   return (
     <DrawingContext.Provider
       value={{
@@ -191,8 +184,6 @@ const Graph: React.FC<{
           setTags: setTags,
           alert: alert,
           setAlert: setAlert,
-          showSearchBar: showSearchBar,
-          setShowSearchBar: setShowSearchBar,
           addAction: addAction,
           undo: undo,
           redo: redo,
@@ -212,13 +203,6 @@ const Graph: React.FC<{
             >
               <GraphContainer />
               <Alert />
-              {showSearchBar && <SearchBar />}
-              {showSearchBar && (
-                <div
-                  onClick={() => setShowSearchBar(false)}
-                  className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
-                ></div>
-              )}
             </div>
             {/* <BoxDragLayer parentRef={containerRef} /> */}
           </SplitPaneLeft>

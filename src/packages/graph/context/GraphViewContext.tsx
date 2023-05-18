@@ -21,8 +21,7 @@ export type GraphViewContextInterface = {
   setTags: (val: NodeData[]) => void;
   alert: string;
   setAlert: (val: string) => void;
-  showSearchBar: boolean;
-  setShowSearchBar: (val: boolean) => void;
+
   addAction: (id: string, type: ActionChanges, value: any) => void;
   undo: () => void;
   redo: () => void;

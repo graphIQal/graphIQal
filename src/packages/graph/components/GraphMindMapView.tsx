@@ -121,8 +121,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
         const y = nodeVisualData_Graph[node].y;
         const width = nodeVisualData_Graph[node].width;
         const height = nodeVisualData_Graph[node].height;
-        // const icon = nodeData_Graph[node].icon;
-        // const color = nodeData_Graph[node].color;
+
         const { icon, color } = getIconAndColor(viewContext, node);
         return (
           <div

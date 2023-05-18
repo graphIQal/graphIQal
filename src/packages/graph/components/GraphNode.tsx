@@ -91,16 +91,17 @@ export const GraphNode: FC<NodeProps> = ({
       src: 'expand',
       onClick: () => null,
     },
-    {
-      src: 'remove',
-      onClick: () => deleteNode(nodeInfo.id, viewContext),
-    },
+
     {
       src: 'spotlight',
       onClick: () =>
         viewContext.setnodeInFocusId(
           viewContext.nodeInFocusId == nodeInfo.id ? nodeId : nodeInfo.id
         ),
+    },
+    {
+      src: 'remove',
+      onClick: () => deleteNode(nodeInfo.id, viewContext),
     },
   ];
 
@@ -162,14 +163,15 @@ export const GraphNode: FC<NodeProps> = ({
         <DragHandle />
       </div>
       <div
-        className='z-30 absolute min-w-[20px] max-w-[20px] hover:w-auto hover:max-w-[400px] transition-width duration-300 overflow-hidden border  '
+        className='z-30 flex flex-row absolute min-w-[30px] max-w-[30px] hover:w-auto hover:max-w-[400px] transition-width duration-300 overflow-hidden  '
         style={{
-          minWidth: 30,
-          minHeight: 20,
+          minWidth: 40,
+          minHeight: 40,
           left: nodeInfo.left + nodeInfo.width,
           top: nodeInfo.top,
         }}
       >
+        <IconCircleButton src='angleRight' onClick={() => null} />
         <OnHoverMenu buttonItems={buttonItems} />
       </div>
       {/* This div and the resizable box must remain siblings for the line drawing */}

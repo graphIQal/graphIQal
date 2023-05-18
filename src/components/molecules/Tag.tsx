@@ -19,8 +19,8 @@ export const Tag: React.FC<TagProps> = ({ tag, id }) => {
   ) as GraphViewContextInterface;
 
   const buttonItems = [
-    { src: 'spotlight', onClick: () => setnodeInFocusId(id) },
     { src: 'navigation', onClick: () => setNodeId(id) },
+    { src: 'spotlight', onClick: () => setnodeInFocusId(id) },
   ];
   return (
     <div

@@ -85,6 +85,7 @@ const SearchBar: React.FC = () => {
     }
   };
 
+  // key events: handling search bar keys
   const handleKeys = (event: any) => {
     if (event.key == '=') {
       event.preventDefault();

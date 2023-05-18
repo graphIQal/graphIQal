@@ -2,54 +2,48 @@
  * Container for node on graph.
  */
 
+import { useRouter } from 'next/router';
 import { FC, ReactNode, useContext, useEffect, useState } from 'react';
-import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode';
-import { DragHandle } from '../../../packages/dnd-editor/components/Draggable';
-import ResizableBox from '../../../packages/resizable/resizableBox';
-import DrawingContext, {
-  DrawingContextInterface,
-} from '../context/GraphDrawingContext';
-import GraphActionContext, {
-  GraphActionContextInterface,
-} from '../context/GraphActionContext';
-import { OFFSET } from '../hooks/drawing/useDrawingEnd';
-import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
-import IconButton from '../../../components/atoms/IconButton';
-import { updateNode } from '../../../helpers/backend/updateNode';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
-import IconCircleButton from '../../../components/molecules/IconCircleButton';
-import { iconList } from '../../../theme/iconList';
-import { colors } from '../../../theme/colors';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
-import { useDragNode } from '../hooks/dragging/useDragNode';
+import IconCircleButton from '../../../components/molecules/IconCircleButton';
+import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode';
+import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
+import { OnHoverMenu } from '../../../components/organisms/OnHoverMenu';
+import { deleteNode } from '../../../helpers/backend/deleteNode';
+import { updateNode } from '../../../helpers/backend/updateNode';
 import { getTypedConnections } from '../../../helpers/frontend/getTypedConnections';
+import { DragHandle } from '../../../packages/dnd-editor/components/Draggable';
+import ResizableBox from '../../../packages/resizable/resizableBox';
+import { colors } from '../../../theme/colors';
+import { iconList } from '../../../theme/iconList';
+import GraphActionContext, {
+  GraphActionContextInterface,
+} from '../context/GraphActionContext';
+import DrawingContext, {
+  DrawingContextInterface,
+} from '../context/GraphDrawingContext';
+import GraphNodeContext, {
+  GraphNodeContextInterface,
+} from '../context/GraphNodeContext';
+import GraphViewContext, {
+  GraphViewContextInterface,
+} from '../context/GraphViewContext';
+import { ConnectionTypes } from '../graphTypes';
+import { useDragNode } from '../hooks/dragging/useDragNode';
+import { OFFSET } from '../hooks/drawing/useDrawingEnd';
 
 export interface NodeProps {
-  id: any;
-  left: number;
-  top: number;
-  size: number[];
   children: ReactNode;
-  title: string;
-  icon: string;
-  color: string;
   updateStartPos: (val: { left: number; top: number }) => void;
 }
 export const GraphNode: FC<NodeProps> = ({
-  id,
-  left,
-  top,
-  size,
-  title,
   children,
-  icon,
-  color,
+
   updateStartPos,
 }) => {
+  const nodeInfo = useContext(GraphNodeContext) as GraphNodeContextInterface;
   const { canDrag, setCanDrag, hideSourceOnDrag } = useContext(
     GraphActionContext
   ) as GraphActionContextInterface;
@@ -58,14 +52,22 @@ export const GraphNode: FC<NodeProps> = ({
     DrawingContext
   ) as DrawingContextInterface;
 
-  const { windowVar, documentVar } = useContext(
+  const { windowVar, documentVar, username, nodeId } = useContext(
     ViewContext
   ) as ViewContextInterface;
 
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
   const { nodeInFocusId } = viewContext;
-  const [showDropdown, setShowDropdown] = useState(false);
-  const collapsed = viewContext.nodeVisualData_Graph[id].collapsed;
+
+  const [showEditDropdown, setshowEditDropdown] = useState(false);
+
+  // Visual information: background and collapsed
+  const backgroundClass =
+    nodeInFocusId == nodeInfo.id
+      ? 'bg-opacity-30 bg-' + nodeInfo.color
+      : 'bg-base_white';
+  const collapsed = viewContext.nodeVisualData_Graph[nodeInfo.id].collapsed;
+
   //disables dragging if we're drawing
   useEffect(() => {
     if (drawingMode) {
@@ -77,14 +79,40 @@ export const GraphNode: FC<NodeProps> = ({
   const [showSearchDropdown, setShowSearchDropdown] = useState(true);
   const [searchResults, setSearchResults] = useState<ItemProps[]>([]);
 
+  // On hover menu
+  const router = useRouter();
+  const [showMenu, setShowMenu] = useState(false);
+  const buttonItems = [
+    {
+      src: 'navigation',
+      onClick: () => router.push(`/${username}/${nodeInfo.id}`, undefined),
+    },
+    {
+      src: 'expand',
+      onClick: () => null,
+    },
+
+    {
+      src: 'spotlight',
+      onClick: () =>
+        viewContext.setnodeInFocusId(
+          viewContext.nodeInFocusId == nodeInfo.id ? nodeId : nodeInfo.id
+        ),
+    },
+    {
+      src: 'remove',
+      onClick: () => deleteNode(nodeInfo.id, viewContext),
+    },
+  ];
+
+  // key event: slash to trigger search
   useEffect(() => {
     const listenForSlash = (event: any) => {
-      console.log('listening');
       if (event.keyCode == 220) {
         setShowSearchDropdown(true);
       }
     };
-    if (title == '') {
+    if (nodeInfo.title == '') {
       // documentVar.getElementById('node_title')?.focus();
       documentVar
         .getElementById('node_title')
@@ -98,11 +126,11 @@ export const GraphNode: FC<NodeProps> = ({
 
   //DND dragging hook
   const [{ isDragging }, drag, preview] = useDragNode(
-    id,
-    left,
-    top,
-    size[0],
-    size[1],
+    nodeInfo.id,
+    nodeInfo.left,
+    nodeInfo.top,
+    nodeInfo.width,
+    nodeInfo.height,
     canDrag
   );
 
@@ -110,39 +138,55 @@ export const GraphNode: FC<NodeProps> = ({
     return (
       <div
         style={{
-          left,
-          top,
+          left: nodeInfo.left,
+          top: nodeInfo.top,
         }}
         className='absolute'
       />
     );
   }
-  const backgroundClass =
-    nodeInFocusId == id ? 'bg-opacity-30 bg-' + color : 'bg-base_white';
+
   return (
     <div>
       <div
         className=' h-[30px] w-[30px] absolute z-10'
-        style={{ left: left - OFFSET / 2, top: top - OFFSET / 2 }}
+        style={{
+          left: nodeInfo.left - OFFSET / 2,
+          top: nodeInfo.top - OFFSET / 2,
+        }}
         onMouseDown={() => {
-          updateStartPos({ left, top });
+          updateStartPos({ left: nodeInfo.left, top: nodeInfo.top });
           setDrawingMode(false);
         }}
         ref={drag}
       >
         <DragHandle />
       </div>
+      <div
+        className='z-30 flex flex-row absolute min-w-[30px] max-w-[30px] hover:w-auto hover:max-w-[400px] transition-width duration-300 overflow-hidden  '
+        style={{
+          minWidth: 40,
+          minHeight: 40,
+          left: nodeInfo.left + nodeInfo.width,
+          top: nodeInfo.top,
+        }}
+      >
+        <IconCircleButton src='angleRight' onClick={() => null} />
+        <OnHoverMenu buttonItems={buttonItems} />
+      </div>
       {/* This div and the resizable box must remain siblings for the line drawing */}
       <div
+        onMouseOver={() => setShowMenu(true)}
+        onMouseLeave={() => setShowMenu(false)}
         className='absolute flex flex-row justify-center align-middle items-center hover:bg-selected_white pointer-pencil rounded-md'
         style={{
-          left: left - OFFSET / 2,
-          top: top - OFFSET / 2,
-          width: size[0] + OFFSET,
-          height: size[1] + OFFSET,
+          left: nodeInfo.left - OFFSET / 2,
+          top: nodeInfo.top - OFFSET / 2,
+          width: nodeInfo.width + OFFSET,
+          height: nodeInfo.height + OFFSET,
         }}
         ref={preview}
-        id={id}
+        id={nodeInfo.id}
       ></div>
       <ResizableBox
         classes={
@@ -150,35 +194,28 @@ export const GraphNode: FC<NodeProps> = ({
           backgroundClass
         }
         style={{
-          width: size[0],
-          height: size[1],
-          borderLeftColor: color,
-          left,
-          top,
+          width: nodeInfo.width,
+          height: nodeInfo.height,
+          borderLeftColor: nodeInfo.color,
+          left: nodeInfo.left,
+          top: nodeInfo.top,
         }}
-        id={id}
+        id={nodeInfo.id}
       >
-        {/* {size[0] > 205 || size[1] > 80 ? (
-          <div className='bg-base_white h-full'>
-            <EditorComponent />
-            <Cube className='absolute right-sm top-sm' size={'1.5em'} />
-          </div>
-        ) : ( */}
-        {collapsed ? (
-          <CollapsedGraphNode
-            toggleDropdown={() => setShowDropdown(!showDropdown)}
-            title={title}
-            id={id}
-            icon={icon}
-            color={color}
-            results={searchResults}
-            setResults={setSearchResults}
-            showSearchDropdown={showSearchDropdown}
-            setShowSearchDropdown={setShowSearchDropdown}
-          />
-        ) : (
+        {/* {collapsed ? ( */}
+        <CollapsedGraphNode
+          toggleDropdown={() => setshowEditDropdown(!showEditDropdown)}
+          setResults={setSearchResults}
+          showSearchDropdown={showSearchDropdown}
+          setShowSearchDropdown={setShowSearchDropdown}
+        />
+        {/* ) : (
           <div>
-            {getTypedConnections(viewContext, id, 'HAS')?.map((nodeID, i) => {
+            {getTypedConnections(
+              viewContext,
+              nodeInfo.id,
+              ConnectionTypes.HAS
+            )?.map((nodeID, i) => {
               let { icon, color } = viewContext.nodeData_Graph[nodeID];
               let childTitle = viewContext.nodeData_Graph[nodeID].title;
 
@@ -189,7 +226,7 @@ export const GraphNode: FC<NodeProps> = ({
                       'absolute top-0 left-0 text-white p-1 bg-' + color
                     }
                   >
-                    {title}
+                    {nodeInfo.title}
                   </h3>
                   <div className='mt-8'>
                     <CollapsedGraphNode
@@ -197,23 +234,30 @@ export const GraphNode: FC<NodeProps> = ({
                       title={childTitle}
                       icon={icon}
                       color={color}
-                      toggleDropdown={() => setShowDropdown(!showDropdown)}
+                      toggleDropdown={() =>
+                        setshowEditDropdown(!showEditDropdown)
+                      }
                       results={searchResults}
                       setResults={setSearchResults}
                       showSearchDropdown={showSearchDropdown}
                       setShowSearchDropdown={setShowSearchDropdown}
+                      showMenu={showMenu}
                     />
                   </div>
                 </div>
               );
             })}
           </div>
-        )}
+        )} */}
       </ResizableBox>
+      {/* Search dropdown and Icon/color dropdown */}
       {showSearchDropdown && (
         <div
           className='absolute'
-          style={{ left: left, top: top + (2 * size[1]) / 3 }}
+          style={{
+            left: nodeInfo.left,
+            top: nodeInfo.top + (2 * nodeInfo.height) / 3,
+          }}
         >
           <Dropdown
             windowVar={windowVar}
@@ -224,17 +268,20 @@ export const GraphNode: FC<NodeProps> = ({
           />
         </div>
       )}
-      {showDropdown && (
+      {showEditDropdown && (
         <div
           className='w-full absolute'
-          style={{ left: left, top: top + (2 * size[1]) / 3 }}
+          style={{
+            left: nodeInfo.left,
+            top: nodeInfo.top + (2 * nodeInfo.height) / 3,
+          }}
         >
           <Dropdown
             activeIndex={0}
             list={false}
             windowVar={windowVar}
-            setShowDropdown={setShowDropdown}
-            showDropdown={showDropdown}
+            setShowDropdown={setshowEditDropdown}
+            showDropdown={showEditDropdown}
           >
             <div>
               <div className='gap-x-0 grid grid-cols-4'>
@@ -246,7 +293,7 @@ export const GraphNode: FC<NodeProps> = ({
                       }
                       style={{ backgroundColor: color }}
                       onClick={() =>
-                        updateNode('color', color, id, viewContext)
+                        updateNode('color', color, nodeInfo.id, viewContext)
                       }
                     ></div>
                   );
@@ -261,7 +308,7 @@ export const GraphNode: FC<NodeProps> = ({
                         circle={false}
                         size={40}
                         onClick={() =>
-                          updateNode('icon', icon, id, viewContext)
+                          updateNode('icon', icon, nodeInfo.id, viewContext)
                         }
                       />
                     </div>

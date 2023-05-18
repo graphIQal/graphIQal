@@ -15,7 +15,6 @@ export const addNodeToGraph = async (
     color: 'black',
     icon: 'block',
     connections: await getNodeData(result.id, username).then((result) => {
-      console.log('result of ' + JSON.stringify(result));
       return result.map((connection: any) => {
         return connection.c;
       });

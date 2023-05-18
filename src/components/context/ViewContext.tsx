@@ -24,6 +24,8 @@ export type ViewContextInterface = {
   setCurrTab: (val: number) => void;
   windowVar: Window;
   documentVar: Document;
+  showSearchBar: boolean;
+  setShowSearchBar: (val: boolean) => void;
 };
 
 const ViewContext = createContext<ViewContextInterface | null>(null);

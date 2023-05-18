@@ -4,13 +4,10 @@ import { GraphViewContextInterface } from '../context/GraphViewContext';
 import { Coord } from '../hooks/drawing/useDrawingEnd';
 
 export const handleEscapeDrawing = (
-	drawingContext: DrawingContextInterface,
-	setPoints: (val: Coord[]) => void
+  drawingContext: DrawingContextInterface,
+  setPoints: (val: Coord[]) => void
 ) => {
-	drawingContext.setIsDrawing(false);
-	setPoints([]);
-};
-
-export const handleInvokeSearch = (viewContext: GraphViewContextInterface) => {
-	viewContext.setShowSearchBar(!viewContext.showSearchBar);
+  if (!drawingContext.isDrawing) return;
+  drawingContext.setIsDrawing(false);
+  setPoints([]);
 };

@@ -1,6 +1,10 @@
 import { getCommonParents } from '../../backend/functions/general/getCommonParents';
 import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
-import { NodeData, ConnectionData } from '../../packages/graph/graphTypes';
+import {
+  NodeData,
+  ConnectionData,
+  ConnectionTypes,
+} from '../../packages/graph/graphTypes';
 import { resources } from '../../schemas/Data_structures/DS_schema';
 
 export const getLineEndpointData = (
@@ -25,21 +29,22 @@ export const getLineEndpointData = (
 };
 
 //gets nodes that current node is "included" in as tags
-export const getTags = (nodeData: { [key: string]: NodeData }) => {
-  //each entry in array is a tag, where the key represents that node's ID and the value represents all the nodes on the screen that are connected to it
-  //ordered by frequency of connection
-  const to_return: { [key: string]: Set<string> }[] = [];
+// export const getTags = (nodeData: { [key: string]: NodeData }) => {
+//   //each entry in array is a tag, where the key represents that node's ID and the value represents all the nodes on the screen that are connected to it
+//   //ordered by frequency of connection
+//   const to_return: { [key: string]: Set<string> }[] = [];
 
-  const parents = getCommonParents([]);
+//   const parents = getCommonParents([]);
+//   for (parent)
 
-  return to_return;
-};
+//   return to_return;
+// };
 
 export const isLineDirectional = (connection: ConnectionData) => {
   return (
-    connection.type == 'HAS' ||
-    connection.type == 'NEEDS' ||
-    connection.type == 'FOLLOWS'
+    connection.type == ConnectionTypes.HAS ||
+    connection.type == ConnectionTypes.NEEDS ||
+    connection.type == ConnectionTypes.FOLLOWS
   );
 };
 
@@ -55,14 +60,28 @@ export const getIconAndColor = (
   viewContext: GraphViewContextInterface,
   node: string
 ) => {
+  let color = '';
+  let icon = '';
   let categorizing_node =
     viewContext.nodeVisualData_Graph[node].categorizing_node;
   if (!categorizing_node) {
-    categorizing_node = node;
+    icon = viewContext.nodeData_Graph[node].icon;
+    color = viewContext.nodeData_Graph[node].color;
+  } else if (categorizing_node != node) {
+    for (node in viewContext.tags) {
+      if (viewContext.tags[node].id == categorizing_node) {
+        icon = viewContext.tags[node].icon;
+        color = viewContext.tags[node].color;
+      }
+    }
+  } else {
+    icon = viewContext.nodeData_Graph[node].icon;
+    color = viewContext.nodeData_Graph[node].color;
   }
+
   return {
-    icon: viewContext.nodeData_Graph[categorizing_node].icon,
-    color: viewContext.nodeData_Graph[categorizing_node].color,
+    icon: icon,
+    color: color,
   };
 };
 

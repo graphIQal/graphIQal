@@ -82,6 +82,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
   };
 
   useEffect(() => {
+    if (!nodeInFocus_data) return;
     console.log('nodeInFocus_data');
     console.log(nodeInFocus_data);
     let newTabs = [...tabs];
@@ -99,7 +100,6 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
     currNode_data.connectedNodes.map((connection) => {
       (mainNodeConnections as any)[connection.connected_node.id] = connection;
     });
-    console.log('main node connections ' + JSON.stringify(mainNodeConnections));
 
     newTabs[1].component = (
       <SidePanel
@@ -120,7 +120,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
     );
 
     setTabs(newTabs);
-  }, [nodeInFocus_data.n.id, currNode_data, graphViewContext.nodeData_Graph]);
+  }, [nodeInFocus_data, currNode_data, graphViewContext.nodeData_Graph]);
 
   const [tabs, setTabs] = useState<SideTabProps[]>([
     {

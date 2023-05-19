@@ -19,7 +19,7 @@ const ResizableBox: React.FC<{
   style?: any;
   id: string | number;
 }> = ({ children, classes, style, id }) => {
-  const { nodeVisualData_Graph } = useContext(
+  const { nodeVisualData_Graph, nodeData_Graph } = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
 
@@ -259,7 +259,7 @@ const ResizableBox: React.FC<{
         onMouseDownBottomRightResize
       );
     };
-  }, [nodeVisualData_Graph]);
+  }, [Object.keys(nodeData_Graph).length]);
 
   return (
     <div

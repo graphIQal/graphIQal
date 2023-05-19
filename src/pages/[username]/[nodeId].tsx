@@ -84,19 +84,19 @@ const Home: React.FC = () => {
   }, [currNodeId]);
 
   let newTabs: MainTabProps[] = [
-    {
-      label: 'Home',
-      viewId: '',
-      viewType: 'document',
-      component: <SplitPaneWrapper viewId={''} />,
-    },
-    //temp
     // {
-    //   label: 'Graph View',
+    //   label: 'Home',
     //   viewId: '',
-    //   viewType: 'graph',
-    //   component: <Graph2 viewId={''} title={'Graph View'} />,
+    //   viewType: 'document',
+    //   component: <SplitPaneWrapper viewId={''} />,
     // },
+    //temp
+    {
+      label: 'Graph View',
+      viewId: '',
+      viewType: 'graph',
+      component: <Graph2 viewId={''} title={'Graph View'} />,
+    },
   ];
   const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 

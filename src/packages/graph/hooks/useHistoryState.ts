@@ -190,21 +190,18 @@ export const useHistoryState = (
         );
         break;
       case 'NODE_TITLE':
-        let undoOps = 0;
-        for (let i = history.current.length - 1; i > 0; --i) {
-          if (history.current[i].type == 'NODE_TITLE' && undoOps < 5) {
-            undoOps += 1;
-          } else {
-            break;
-          }
-        }
-        pointer.current -= undoOps;
+        // let undoOps = 0;
+        // for (let i = history.current.length - 1; i > 0; --i) {
+        //   if (history.current[i].type == 'NODE_TITLE' && undoOps < 5) {
+        //     undoOps += 1;
+        //   } else {
+        //     break;
+        //   }
+        // }
+        // pointer.current -= undoOps;
         setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
           let newState = { ...prevState };
-          newState[id].title =
-            history.current[
-              history.current.length - undoOps - 1
-            ].value.oldTitle;
+          newState[id].title = value.oldTitle;
           return newState;
         });
         break;
@@ -337,18 +334,18 @@ export const useHistoryState = (
         );
         break;
       case 'NODE_TITLE':
-        let redoOps = 0;
-        for (let i = pointer.current + 1; i < history.current.length; ++i) {
-          if (history.current[i].type == 'NODE_TITLE' && redoOps < 5) {
-            redoOps += 1;
-          } else {
-            break;
-          }
-        }
-        pointer.current += redoOps - 1;
+        // let redoOps = 0;
+        // for (let i = pointer.current + 1; i < history.current.length; ++i) {
+        //   if (history.current[i].type == 'NODE_TITLE' && redoOps < 5) {
+        //     redoOps += 1;
+        //   } else {
+        //     break;
+        //   }
+        // }
+        // pointer.current += redoOps - 1;
         setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
           let newState = { ...prevState };
-          newState[id].title = history.current[pointer.current].value.title;
+          newState[id].title = value.title;
           return newState;
         });
         break;

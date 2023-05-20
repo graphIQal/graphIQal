@@ -114,7 +114,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
           );
         });
       })}
-      {Object.keys(nodeData_Graph).map((node) => {
+      {Object.keys(nodeVisualData_Graph).map((node) => {
         const title = nodeData_Graph[node].title;
         const x = nodeVisualData_Graph[node].x;
         const y = nodeVisualData_Graph[node].y;

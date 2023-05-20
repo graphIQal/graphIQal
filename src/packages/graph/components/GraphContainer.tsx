@@ -51,6 +51,7 @@ export const GraphContainer: React.FC<{}> = () => {
   useEffect(() => {
     const listenerFunc = (evt: any) => {
       if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
+        evt.stopPropagation();
         evt.stopImmediatePropagation();
         evt.preventDefault();
         graphViewContext.redo();

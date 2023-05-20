@@ -17,12 +17,18 @@ export const useResize = () => {
       id: string,
       width: number,
       height: number,
+
       tag?: string,
       done?: boolean
     ) => {
       updateNode(
         'resize',
-        { width: width, height: height, tag: tag, done: done },
+        {
+          width: width,
+          height: height,
+          tag: tag,
+          done: done,
+        },
         id,
         context
       );

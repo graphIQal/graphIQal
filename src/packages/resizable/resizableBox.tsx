@@ -19,9 +19,8 @@ const ResizableBox: React.FC<{
   style?: any;
   id: string | number;
 }> = ({ children, classes, style, id }) => {
-  const { nodeVisualData_Graph, nodeData_Graph } = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+  const { nodeVisualData_Graph, nodeData_Graph, setnodeVisualData_Graph } =
+    useContext(GraphViewContext) as GraphViewContextInterface;
 
   const startWidth = useRef<number>();
   const startHeight = useRef<number>();
@@ -71,7 +70,7 @@ const ResizableBox: React.FC<{
       // } else {
       height = height + dy;
       // }
-      updateSize(id, width, height, '', false);
+      // updateSize(id, width, height, '', false);
       y = e.clientY;
       resizeableEle.style.height = height + 'px';
     };
@@ -79,6 +78,7 @@ const ResizableBox: React.FC<{
     const onMouseUpBottomRightResize = (event: Event) => {
       document.removeEventListener('mousemove', onMouseMoveBottomRightResize);
       document.removeEventListener('mouseup', onMouseUpBottomRightResize);
+      updateSize(id, width, height, '', false);
       updateSize(id, startWidth.current, startHeight.current, '', true);
     };
     const onMouseDownBottomRightResize = (event: any) => {
@@ -112,9 +112,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpRightResize = (event: Event) => {
-      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveRightResize);
       document.removeEventListener('mouseup', onMouseUpRightResize);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
     };
     const onMouseDownRightResize = (event: any) => {
       startWidth.current = style?.width;
@@ -143,9 +143,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpTopResize = (event: Event) => {
-      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveTopResize);
       document.removeEventListener('mouseup', onMouseUpTopResize);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
     };
     const onMouseDownTopResize = (event: any) => {
       startWidth.current = style?.width;
@@ -174,9 +174,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpBottomResize = (event: Event) => {
-      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveBottomResize);
       document.removeEventListener('mouseup', onMouseUpBottomResize);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
     };
     const onMouseDownBottomResize = (event: any) => {
       startWidth.current = style?.width;
@@ -211,9 +211,9 @@ const ResizableBox: React.FC<{
     };
 
     const onMouseUpLeftResize = (event: Event) => {
-      updateSize(id, startWidth.current, startHeight.current, '', true);
       document.removeEventListener('mousemove', onMouseMoveLeftResize);
       document.removeEventListener('mouseup', onMouseUpLeftResize);
+      updateSize(id, startWidth.current, startHeight.current, '', true);
     };
     const onMouseDownLeftResize = (event: any) => {
       startWidth.current = style?.width;
@@ -259,7 +259,7 @@ const ResizableBox: React.FC<{
         onMouseDownBottomRightResize
       );
     };
-  }, [Object.keys(nodeData_Graph).length]);
+  }, [nodeVisualData_Graph]);
 
   return (
     <div

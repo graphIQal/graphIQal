@@ -15,6 +15,7 @@ import { CloseOutline } from '@styled-icons/evaicons-outline/CloseOutline';
 import { AngleDown } from '@styled-icons/fa-solid/AngleDown';
 import { AngleRight } from '@styled-icons/fa-solid/AngleRight';
 import { AngleLeft } from '@styled-icons/fa-solid/AngleLeft';
+import { Save } from '@styled-icons/boxicons-regular/Save';
 
 type NodeButtonProps = {
   onClick: () => void;
@@ -135,6 +136,13 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
     ),
     angleDown: (
       <AngleDown
+        size={'1em'}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
+      />
+    ),
+    save: (
+      <Save
         size={'1em'}
         color={!selected ? color : 'white'}
         onClick={handleClick}

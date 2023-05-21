@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Router, withRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Tab } from '../../atoms/Tab';
 import ViewContext, {
   MainTabProps,
@@ -38,6 +38,29 @@ const MainTabs: React.FC<{
       listenerFunc(event)
     );
   }, []);
+
+  useEffect(() => {
+    if (!router.query.tab) return;
+    setCurrTab(parseInt(router.query.tab as string));
+  }, [router.query.tab]);
+
+  useEffect(() => {
+    console.log('router info ' + JSON.stringify(router.query));
+    // if (router.query.tab) return;
+    router.push(
+      {
+        pathname: '/' + username + '/' + nodeId,
+        query: {
+          view: mainViewTabs[0].viewType,
+          viewId: mainViewTabs[0].viewId,
+          tab: 0,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  }, [nodeId]);
+
   return (
     <div>
       <Tabs>
@@ -50,6 +73,7 @@ const MainTabs: React.FC<{
                   query: {
                     view: tab.viewType,
                     viewId: tab.viewId,
+                    tab: index,
                   },
                 }}
               >
@@ -61,6 +85,7 @@ const MainTabs: React.FC<{
                   setCurrTab={setCurrTab}
                   tabs={mainViewTabs}
                   setTabs={setMainViewTabs}
+                  onClick={() => null}
                 />
               </Link>
             </div>

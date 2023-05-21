@@ -17,6 +17,7 @@ import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
 import { TitleWithNavigation } from '../../../components/molecules/TitleWithNavigation';
+import IconCircleButton from '../../../components/molecules/IconCircleButton';
 
 type FilteringProps = {
   xCategory: string;
@@ -43,24 +44,34 @@ export const Filtering: React.FC<FilteringProps> = ({
   } = viewContext;
 
   const { username, nodeId } = useContext(ViewContext) as ViewContextInterface;
+  const { undo, redo } = useContext(
+    GraphViewContext
+  ) as GraphViewContextInterface;
 
   return (
-    <div className=' relative flex flex-row p-3 justify-between mb-3 w-full'>
-      <div className='flex flex-row gap-x-3'>
-        <TextButton
-          text='Save Graph'
-          onClick={() => {
-            saveGraphView({
-              username,
-              graphViewId,
-              nodeId,
-              graphViewData: nodeVisualData_Graph,
-              nodeData: nodeData_Graph,
-              history: history,
-              pointer: pointer,
-            });
-          }}
-        ></TextButton>
+    <div className=' relative flex flex-row p-3 justify-between mb-3 w-full align-middle items-center'>
+      <div className='flex flex-row gap-x-5'>
+        <div className='flex flex-row gap-x-3 align-middle items-center'>
+          <IconCircleButton
+            src='save'
+            size={30}
+            onClick={() => {
+              saveGraphView({
+                username,
+                graphViewId,
+                nodeId,
+                graphViewData: nodeVisualData_Graph,
+                nodeData: nodeData_Graph,
+                history: history,
+                pointer: pointer,
+              });
+            }}
+          />
+          <div className='flex flex-row gap-x-1 align-middle items-center'>
+            <IconCircleButton src='undo' onClick={undo} />
+            <IconCircleButton src='redo' onClick={redo} />
+          </div>
+        </div>
         {/* <TextButton
 				text='Create Node'
 				onClick={() => {
@@ -82,7 +93,7 @@ export const Filtering: React.FC<FilteringProps> = ({
         value={yCategory}
         dropdownItems={getDropdownItemsY()}
       /> */}
-        <div className='flex flex-row justify-items-stretch gap-x-2'>
+        <div className='flex flex-row justify-items-stretch gap-x-2 align-middle items-center'>
           {tags.map(
             (
               tag: { id: string; title: string; color: string; icon: string },

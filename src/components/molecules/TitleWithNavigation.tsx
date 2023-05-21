@@ -14,7 +14,6 @@ export const TitleWithNavigation: React.FC = () => {
           src='angleLeft'
           onClick={() => {
             router.back();
-            router.back();
           }}
           circle={false}
         />

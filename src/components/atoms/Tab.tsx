@@ -14,6 +14,7 @@ type TabProps = {
   setCurrTab: (val: number) => void;
   tabs: any;
   setTabs: (val: any) => void;
+  onClick?: (val: number) => void;
 };
 export const Tab: React.FC<TabProps> = ({
   label,
@@ -23,12 +24,12 @@ export const Tab: React.FC<TabProps> = ({
   setCurrTab,
   tabs,
   setTabs,
+  onClick = (index: number) => {
+    setCurrTab(index);
+  },
 }) => {
   // const [showDel, setShowDel] = useState(false);
 
-  const onClick = (index: number) => {
-    setCurrTab(index);
-  };
   const onClose = (index: number) => {
     if (currTab == tabs.length - 1) {
       setCurrTab(currTab - 1);

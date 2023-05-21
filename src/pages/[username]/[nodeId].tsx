@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import MainTabs from '../../components/organisms/Tabs/MainTabs';
 import ViewContext, {
   ViewContextInterface,
@@ -84,19 +84,19 @@ const Home: React.FC = () => {
   }, [currNodeId]);
 
   let newTabs: MainTabProps[] = [
-    // {
-    //   label: 'Home',
-    //   viewId: '',
-    //   viewType: 'document',
-    //   component: <SplitPaneWrapper viewId={''} />,
-    // },
-    //temp
     {
-      label: 'Graph View',
+      label: 'Home',
       viewId: '',
-      viewType: 'graph',
-      component: <Graph2 viewId={''} title={'Graph View'} />,
+      viewType: 'document',
+      component: <SplitPaneWrapper viewId={''} />,
     },
+    //temp
+    // {
+    //   label: 'Graph View',
+    //   viewId: '',
+    //   viewType: 'graph',
+    //   component: <Graph2 viewId={''} title={'Graph View'} />,
+    // },
   ];
   const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
@@ -124,6 +124,7 @@ const Home: React.FC = () => {
         });
       }
     }
+    console.log('changing tabs');
     setTabs(newTabs);
   }, [data]);
 
@@ -136,6 +137,7 @@ const Home: React.FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
 
   return (
+    // <NavigationContext.Provider value={}>
     <ViewContext.Provider
       value={{
         mainViewTabs: tabs,
@@ -155,6 +157,7 @@ const Home: React.FC = () => {
     >
       <MainTabs />
     </ViewContext.Provider>
+    // </NavigationContext.Provider>
   );
 };
 export default withRouter(Home);

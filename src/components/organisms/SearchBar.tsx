@@ -27,6 +27,7 @@ const SearchBar: React.FC = () => {
         //this button should navigate to the views of the clicked node
         src: 'navigation',
         onClick: () => {
+          console.log('result of query ' + JSON.stringify(result));
           router.push(`/${viewContext.username}/${result.id}`, undefined);
           viewContext.setShowSearchBar(false);
         },

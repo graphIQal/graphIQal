@@ -37,7 +37,8 @@ export const useHistoryState = (
   nodeData_Graph: { [key: string]: NodeData }, //The data of the nodes that are shown on the screen
   setnodeData_Graph: any,
   nodeVisualData_Graph: { [key: string]: GraphNodeData },
-  setnodeVisualData_Graph: any
+  setnodeVisualData_Graph: any,
+  setAlert: (val: string) => void
 ) => {
   const history = useRef<Action[]>([]);
   const pointer = useRef<number>(-1);
@@ -63,6 +64,7 @@ export const useHistoryState = (
   };
 
   const undo = () => {
+    setAlert('');
     if (pointer.current == -1) {
       return;
     }

@@ -72,12 +72,16 @@ const GraphSplitPaneWrapper: React.FC<{
     }
   }, [nodeId]);
 
+  //alert message
+  const [alert, setAlert] = useState('');
+
   //History
   const { addAction, undo, redo, history, pointer } = useHistoryState(
     nodeData_Graph,
     setnodeData_Graph,
     nodeVisualData_Graph,
-    setnodeVisualData_Graph
+    setnodeVisualData_Graph,
+    setAlert
   );
 
   useEffect(() => {
@@ -127,9 +131,6 @@ const GraphSplitPaneWrapper: React.FC<{
   const [tags, setTags] = useState(
     getCommonParents(Object.keys(nodeData_Graph))
   );
-
-  //alert message
-  const [alert, setAlert] = useState('');
 
   return (
     <DrawingContext.Provider

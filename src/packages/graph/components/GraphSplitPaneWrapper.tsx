@@ -5,7 +5,6 @@
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { Divider } from '@udecode/plate';
 import { getCommonParents } from '../../../backend/functions/general/getCommonParents';
 import ViewContext, {
   ViewContextInterface,
@@ -15,6 +14,7 @@ import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
 import SplitPane, {
   SplitPaneLeft,
   SplitPaneRight,
+  Divider,
 } from '../../../components/organisms/split-pane/SplitPane';
 import DrawingContext from '../context/GraphDrawingContext';
 import GraphViewContext from '../context/GraphViewContext';
@@ -166,9 +166,13 @@ const GraphSplitPaneWrapper: React.FC<{
           pointer: pointer,
         }}
       >
-        <SplitPane className='split-pane-row'>
+        <SplitPane className='split-pane-row '>
           <SplitPaneLeft>
-            <div tabIndex={-1} ref={containerRef}>
+            <div
+              className='outline-none border-none'
+              tabIndex={-1}
+              ref={containerRef}
+            >
               <GraphContainer />
               <Alert />
             </div>

@@ -7,7 +7,8 @@ export const handleEscapeDrawing = (
   drawingContext: DrawingContextInterface,
   setPoints: (val: Coord[]) => void
 ) => {
-  if (!drawingContext.isDrawing) return;
+  console.log('in listener 4');
+
   drawingContext.setIsDrawing(false);
   setPoints([]);
 };

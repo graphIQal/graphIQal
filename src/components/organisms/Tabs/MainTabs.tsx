@@ -45,8 +45,8 @@ const MainTabs: React.FC<{
   }, [router.query.tab]);
 
   useEffect(() => {
-    console.log('router info ' + JSON.stringify(router.query));
     // if (router.query.tab) return;
+    if (!username) return;
     router.push(
       {
         pathname: '/' + username + '/' + nodeId,

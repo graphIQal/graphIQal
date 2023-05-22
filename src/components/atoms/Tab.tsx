@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import IconButton from './IconButton';
 import IconCircleButton from '../molecules/IconCircleButton';
 import Link from 'next/link';
 import { SideTabProps } from '../organisms/Tabs/GraphSideTabs';
 import { SideTabPropsDoc } from '../organisms/Tabs/DocumentSideTabs';
 import { MainTabProps } from '../context/ViewContext';
+import { updateView } from '../../helpers/backend/updateView';
 
 type TabProps = {
   label: string;
@@ -37,9 +38,29 @@ export const Tab: React.FC<TabProps> = ({
     setTabs(tabs.filter((tab: any, i: number) => i != index));
   };
 
+  const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    const listenerFunc = (ev: any) => {
+      if (ev.code == 'Enter') {
+        setEditing(false);
+      }
+    };
+    if (editing) {
+      window.addEventListener('click', () => setEditing(false));
+      window.addEventListener('keydown', (ev: any) => listenerFunc(ev));
+    }
+
+    return () => {
+      window.removeEventListener('click', () => setEditing(false));
+      window.removeEventListener('keydown', (ev: any) => listenerFunc(ev));
+    };
+  }, [editing]);
+
   return (
     <div
       onClick={() => onClick(index)}
+      onDoubleClick={() => setEditing(true)}
       // onMouseOver={() => setShowDel(true)}
       // onMouseLeave={() => setShowDel(false)}
       className={
@@ -48,7 +69,23 @@ export const Tab: React.FC<TabProps> = ({
       }
     >
       <div>
-        <h3>{label}</h3>
+        {editing ? (
+          <input
+            className='outline-none border-none'
+            onChange={(e: any) =>
+              updateView('TAB_NAME', {
+                tabs: tabs,
+                setTabs: setTabs,
+                newLabel: e.target.value,
+                index: index,
+              })
+            }
+            defaultValue={label}
+            autoFocus={true}
+          />
+        ) : (
+          <h3>{label}</h3>
+        )}
       </div>
       {/* {showDel && (
         <IconCircleButton

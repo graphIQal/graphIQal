@@ -33,6 +33,7 @@ import GraphViewContext, {
 import { ConnectionTypes } from '../graphTypes';
 import { useDragNode } from '../hooks/dragging/useDragNode';
 import { OFFSET } from '../hooks/drawing/useDrawingEnd';
+import { useToggle } from '../../../helpers/hooks/useToggle';
 
 export interface NodeProps {
   children: ReactNode;
@@ -76,12 +77,14 @@ export const GraphNode: FC<NodeProps> = ({
       setCanDrag(true);
     }
   }, [drawingMode]);
-  const [showSearchDropdown, setShowSearchDropdown] = useState(true);
+
+  const { value: showSearchDropdown, toggle: setShowSearchDropdown } =
+    useToggle(true);
   const [searchResults, setSearchResults] = useState<ItemProps[]>([]);
 
   // On hover menu
   const router = useRouter();
-  const [showMenu, setShowMenu] = useState(false);
+  const { toggle: setShowMenu } = useToggle();
   const buttonItems = [
     {
       src: 'navigation',

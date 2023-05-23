@@ -26,6 +26,7 @@ import { useResize } from '../hooks/useResize';
 import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
+import { useToggle } from '../../../helpers/hooks/useToggle';
 
 export const GraphContainer: React.FC<{}> = () => {
   const { windowVar, documentVar } = useContext(
@@ -101,7 +102,7 @@ export const GraphContainer: React.FC<{}> = () => {
   //DND
   const startPos = useRef<{ left: number; top: number }>();
   const [, drop] = useDropNode(setIsDrawing, translateX, translateY, scale);
-  const [canDrag, setCanDrag] = useState(false);
+  const { value: canDrag, toggle: setCanDrag } = useToggle(false);
 
   //Drawing
   const canvas = useRef<any>();

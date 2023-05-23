@@ -82,6 +82,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
   };
 
   useEffect(() => {
+    console.log('in here');
     if (!nodeInFocus_data) return;
     console.log('nodeInFocus_data');
     console.log(nodeInFocus_data);
@@ -120,7 +121,12 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
     );
 
     setTabs(newTabs);
-  }, [nodeInFocus_data, currNode_data, graphViewContext.nodeData_Graph]);
+  }, [
+    nodeInFocus_data,
+    currNode_data,
+    graphViewContext.nodeData_Graph,
+    graphViewContext.nodeInFocusId,
+  ]);
 
   const [tabs, setTabs] = useState<SideTabProps[]>([
     {

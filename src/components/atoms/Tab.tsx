@@ -6,6 +6,7 @@ import { SideTabProps } from '../organisms/Tabs/GraphSideTabs';
 import { SideTabPropsDoc } from '../organisms/Tabs/DocumentSideTabs';
 import { MainTabProps } from '../context/ViewContext';
 import { updateView } from '../../helpers/backend/updateView';
+import { useToggle } from '../../helpers/hooks/useToggle';
 
 type TabProps = {
   label: string;
@@ -38,29 +39,29 @@ export const Tab: React.FC<TabProps> = ({
     setTabs(tabs.filter((tab: any, i: number) => i != index));
   };
 
-  const [editing, setEditing] = useState(false);
+  const { value: isEditing, toggle: toggleIsEditing } = useToggle();
 
   useEffect(() => {
     const listenerFunc = (ev: any) => {
       if (ev.code == 'Enter') {
-        setEditing(false);
+        toggleIsEditing(false);
       }
     };
-    if (editing) {
-      window.addEventListener('click', () => setEditing(false));
+    if (isEditing) {
+      window.addEventListener('click', () => toggleIsEditing(false));
       window.addEventListener('keydown', (ev: any) => listenerFunc(ev));
     }
 
     return () => {
-      window.removeEventListener('click', () => setEditing(false));
+      window.removeEventListener('click', () => toggleIsEditing(false));
       window.removeEventListener('keydown', (ev: any) => listenerFunc(ev));
     };
-  }, [editing]);
+  }, [isEditing]);
 
   return (
     <div
       onClick={() => onClick(index)}
-      onDoubleClick={() => setEditing(true)}
+      onDoubleClick={() => toggleIsEditing(true)}
       // onMouseOver={() => setShowDel(true)}
       // onMouseLeave={() => setShowDel(false)}
       className={
@@ -69,7 +70,7 @@ export const Tab: React.FC<TabProps> = ({
       }
     >
       <div>
-        {editing ? (
+        {isEditing ? (
           <input
             className='outline-none border-none'
             onChange={(e: any) =>

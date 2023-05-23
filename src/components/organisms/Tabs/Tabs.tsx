@@ -3,11 +3,12 @@ import IconCircleButton from '../../molecules/IconCircleButton';
 import { Dropdown, ItemProps } from '../Dropdown';
 import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
 import { createGraphView } from '../../../backend/functions/graph/mutate/createGraphView';
+import { useToggle } from '../../../helpers/hooks/useToggle';
 
 export const Tabs: React.FC<{ children: any }> = ({ children }) => {
   const { windowVar, username, nodeId, setMainViewTabs, mainViewTabs } =
     useContext(ViewContext) as ViewContextInterface;
-  const [showDropdown, setShowDropdown] = useState(false);
+  const { value: showDropdown, toggle: setShowDropdown } = useToggle();
 
   const items: ItemProps[] = [
     {
@@ -22,11 +23,7 @@ export const Tabs: React.FC<{ children: any }> = ({ children }) => {
     <div className='flex flex-row bg-blue-50 w-full items-center align-middle'>
       {children}
       <div className='ml-[0.5rem]'>
-        <IconCircleButton
-          circle={false}
-          src='plus'
-          onClick={() => setShowDropdown(!showDropdown)}
-        />
+        <IconCircleButton circle={false} src='plus' onClick={setShowDropdown} />
         {showDropdown && (
           <Dropdown
             items={items}

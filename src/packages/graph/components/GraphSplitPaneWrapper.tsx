@@ -99,11 +99,13 @@ const GraphSplitPaneWrapper: React.FC<{
   //jesse
   // get the connected nodes of seleced node
   useEffect(() => {
+    console.log('updating node in focus data ');
     if (nodeInFocusId)
       fetch(`/api/${username}/${nodeInFocusId}`)
         .then((res) => res.json())
         .then((json) => {
           setnodeInFocus_data(json[0]);
+          console.log('new data ' + JSON.stringify(nodeInFocus_data));
         });
   }, [nodeInFocusId]);
 
@@ -131,6 +133,10 @@ const GraphSplitPaneWrapper: React.FC<{
   const [tags, setTags] = useState(
     getCommonParents(Object.keys(nodeData_Graph))
   );
+
+  useEffect(() => {
+    console.log('new node in focus ' + nodeInFocusId);
+  }, [nodeInFocusId]);
 
   return (
     <DrawingContext.Provider

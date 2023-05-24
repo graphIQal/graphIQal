@@ -5,16 +5,7 @@
 import { createContext } from 'react';
 import { getNodeData_type } from '../../backend/functions/node/query/getNodeData';
 
-export type MainTabProps = {
-  label: string;
-  viewId: string;
-  viewType: 'document' | 'graph';
-  component?: any;
-};
-
 export type ViewContextInterface = {
-  mainViewTabs: MainTabProps[];
-  setMainViewTabs: (val: MainTabProps[]) => void;
   username: string;
   nodeId: string;
   setNodeId: (val: string) => void;

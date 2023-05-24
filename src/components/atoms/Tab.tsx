@@ -4,7 +4,6 @@ import IconCircleButton from '../molecules/IconCircleButton';
 import Link from 'next/link';
 import { SideTabProps } from '../organisms/Tabs/GraphSideTabs';
 import { SideTabPropsDoc } from '../organisms/Tabs/DocumentSideTabs';
-import { MainTabProps } from '../context/ViewContext';
 import { updateView } from '../../helpers/backend/updateView';
 import { useToggle } from '../../helpers/hooks/useToggle';
 

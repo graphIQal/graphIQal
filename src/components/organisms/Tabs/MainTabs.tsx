@@ -2,23 +2,29 @@ import Link from 'next/link';
 import { Router, withRouter } from 'next/router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Tab from '../../atoms/Tab';
-import ViewContext, {
-  MainTabProps,
-  ViewContextInterface,
-} from '../../context/ViewContext';
+import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
 import { Tabs } from './Tabs';
 
-const MainTabs: React.FC<{
+type MainTabsProps = {
+  mainViewTabs: MainTabProps[];
+  setMainViewTabs: (val: MainTabProps[]) => void;
   router: Router;
-}> = ({ router }) => {
-  const {
-    username,
-    nodeId,
-    mainViewTabs,
-    setMainViewTabs,
-    currTab,
-    setCurrTab,
-  } = useContext(ViewContext) as ViewContextInterface;
+};
+
+export type MainTabProps = {
+  label: string;
+  viewId: string;
+  viewType: 'document' | 'graph';
+  component?: any;
+};
+const MainTabs: React.FC<MainTabsProps> = ({
+  router,
+  mainViewTabs,
+  setMainViewTabs,
+}) => {
+  const { username, nodeId, currTab, setCurrTab } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
 
   useEffect(() => {
     if (!router.query.tab) return;

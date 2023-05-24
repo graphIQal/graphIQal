@@ -115,7 +115,6 @@ const SearchBar: React.FC = () => {
       plusKeyPressed.current = true;
     }
     if (event.code == 'KeyP') {
-      event.preventDefault();
       pKeyPressed.current = true;
     }
     if (
@@ -201,7 +200,10 @@ const SearchBar: React.FC = () => {
           />
         </div>
 
-        <div id='result_container' className='overflow-scroll max-h-[70vh]'>
+        <div
+          id='result_container'
+          className='overflow-scroll max-h-[70vh] scroll'
+        >
           {results.map((result, i) => {
             return (
               <div

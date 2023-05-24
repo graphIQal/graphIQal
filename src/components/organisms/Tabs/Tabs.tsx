@@ -6,8 +6,9 @@ import { createGraphView } from '../../../backend/functions/graph/mutate/createG
 import { useToggle } from '../../../helpers/hooks/useToggle';
 
 export const Tabs: React.FC<{ children: any }> = ({ children }) => {
-  const { windowVar, username, nodeId, setMainViewTabs, mainViewTabs } =
-    useContext(ViewContext) as ViewContextInterface;
+  const { windowVar, username, nodeId } = useContext(
+    ViewContext
+  ) as ViewContextInterface;
   const { value: showDropdown, toggle: setShowDropdown } = useToggle();
 
   const items: ItemProps[] = [

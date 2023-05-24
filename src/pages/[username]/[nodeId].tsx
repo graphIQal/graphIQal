@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import MainTabs from '../../components/organisms/Tabs/MainTabs';
-import ViewContext, {
-  ViewContextInterface,
+import MainTabs, {
   MainTabProps,
-} from '../../components/context/ViewContext';
+} from '../../components/organisms/Tabs/MainTabs';
+import ViewContext from '../../components/context/ViewContext';
 import { useRouter, withRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../backend/driver/fetcher';
@@ -137,8 +136,6 @@ const Home: React.FC = () => {
     // <NavigationContext.Provider value={}>
     <ViewContext.Provider
       value={{
-        mainViewTabs: tabs,
-        setMainViewTabs: setTabs,
         username: username as string,
         nodeId: currNodeId,
         setNodeId: setCurrNodeId,
@@ -150,8 +147,8 @@ const Home: React.FC = () => {
         documentVar: documentVar,
       }}
     >
-      <MainTabs />
-      {<SearchBar />}
+      <MainTabs mainViewTabs={tabs} setMainViewTabs={setTabs} />
+      <SearchBar />
     </ViewContext.Provider>
     // </NavigationContext.Provider>
   );

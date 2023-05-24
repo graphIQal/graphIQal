@@ -124,7 +124,6 @@ const Home: React.FC = () => {
         });
       }
     }
-    console.log('changing tabs');
     setTabs(newTabs);
   }, [data]);
 
@@ -133,8 +132,6 @@ const Home: React.FC = () => {
   useEffect(() => {
     setCurrTab(0);
   }, [nodeId]);
-
-  const [showSearchBar, setShowSearchBar] = useState(false);
 
   return (
     // <NavigationContext.Provider value={}>
@@ -151,11 +148,10 @@ const Home: React.FC = () => {
         setCurrTab: setCurrTab,
         windowVar: windowVar,
         documentVar: documentVar,
-        showSearchBar: showSearchBar,
-        setShowSearchBar: setShowSearchBar,
       }}
     >
       <MainTabs />
+      {<SearchBar />}
     </ViewContext.Provider>
     // </NavigationContext.Provider>
   );

@@ -16,6 +16,24 @@ import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
 import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
 
 const SearchBar: React.FC = () => {
+  const [showSearchBar, setShowSearchBar] = useState(false);
+
+  useEffect(() => {
+    const listenerFunc = (evt: any) => {
+      evt.stopImmediatePropagation();
+
+      if (evt.code === 'KeyP' && (evt.ctrlKey || evt.metaKey)) {
+        evt.preventDefault();
+        setShowSearchBar(true);
+      }
+    };
+
+    window.addEventListener('keydown', (event: any) => listenerFunc(event));
+    return window.removeEventListener('keydown', (event: any) =>
+      listenerFunc(event)
+    );
+  }, []);
+
   const graphViewContext = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
@@ -29,7 +47,7 @@ const SearchBar: React.FC = () => {
         onClick: () => {
           console.log('result of query ' + JSON.stringify(result));
           router.push(`/${viewContext.username}/${result.id}`, undefined);
-          viewContext.setShowSearchBar(false);
+          setShowSearchBar(false);
         },
       },
       {
@@ -40,7 +58,7 @@ const SearchBar: React.FC = () => {
             id: result.id,
             title: result.title,
           });
-          viewContext.setShowSearchBar(false);
+          setShowSearchBar(false);
         },
       },
       {
@@ -48,7 +66,7 @@ const SearchBar: React.FC = () => {
         src: 'spotlight',
         onClick: () => {
           graphViewContext.setnodeInFocusId(result.id);
-          viewContext.setShowSearchBar(false);
+          setShowSearchBar(false);
         },
       },
     ];
@@ -59,7 +77,7 @@ const SearchBar: React.FC = () => {
 
   useEffect(() => {
     document.getElementById('search_bar')?.focus();
-  }, []);
+  }, [showSearchBar]);
 
   //navigating from keyboard
   const [highlighted, setHighlighted] = useState(0);
@@ -107,7 +125,7 @@ const SearchBar: React.FC = () => {
     ) {
       event.stopPropagation();
       event.preventDefault();
-      viewContext.setShowSearchBar(false);
+      setShowSearchBar(false);
     }
     if (event.keyCode == 40) {
       event.preventDefault();
@@ -133,76 +151,87 @@ const SearchBar: React.FC = () => {
         `/${viewContext.username}/${results[highlighted].n.id}`,
         undefined
       );
-      viewContext.setShowSearchBar(false);
+      setShowSearchBar(false);
     } else if (event.keyCode == 27) {
-      viewContext.setShowSearchBar(false);
+      setShowSearchBar(false);
     }
   };
 
+  if (!showSearchBar) return <></>;
+
   return (
     <div
-      className=' fixed top-[10%] left-[50%] translate-x-[-50%] w-[40%] min-h-[30%] bg-base_white flex flex-col gap-y-2 p-2 rounded-sm shadow-sm z-[100]'
       onKeyDown={handleKeys}
       onKeyUp={() => {
         plusKeyPressed.current = false;
         pKeyPressed.current = false;
       }}
-      id='search_container'
+      id='search_parent'
     >
-      <div className='flex flex-row justify-between w-full align-middle items-center'>
-        <form className='bg-base_white w-full p-1'>
-          <input
-            autoComplete='off'
-            type='text'
-            name='name'
-            id='search_bar'
-            placeholder='Search for a node...'
-            className='bg-base_white w-full outline-none border-none'
-            onChange={async (newVal: any) => {
-              if (newVal.target.value.length > 0)
-                // jesse
-                await fetch(
-                  `/api/general/search?username=${viewContext.username}&search=${newVal.target.value}`
-                ).then((res) => {
-                  res.json().then((json) => {
-                    setResults(json);
+      <div
+        className=' fixed top-[10%] left-[50%] translate-x-[-50%] w-[40%] min-h-[30%] bg-base_white flex flex-col gap-y-2 p-2 rounded-sm shadow-sm z-[100]'
+        id='search_container'
+      >
+        <div className='flex flex-row justify-between w-full align-middle items-center'>
+          <form className='bg-base_white w-full p-1'>
+            <input
+              autoComplete='off'
+              type='text'
+              name='name'
+              id='search_bar'
+              placeholder='Search for a node...'
+              className='bg-base_white w-full outline-none border-none'
+              onChange={async (newVal: any) => {
+                if (newVal.target.value.length > 0)
+                  // jesse
+                  await fetch(
+                    `/api/general/search?username=${viewContext.username}&search=${newVal.target.value}`
+                  ).then((res) => {
+                    res.json().then((json) => {
+                      setResults(json);
+                    });
                   });
-                });
-            }}
+              }}
+            />
+          </form>
+          <IconCircleButton
+            circle={false}
+            src={'close'}
+            onClick={() => setShowSearchBar(false)}
           />
-        </form>
-        <IconCircleButton
-          circle={false}
-          src={'close'}
-          onClick={() => viewContext.setShowSearchBar(false)}
-        />
+        </div>
+
+        <div id='result_container' className='overflow-scroll max-h-[70vh]'>
+          {results.map((result, i) => {
+            return (
+              <div
+                key={i}
+                id={'result' + i}
+                className={
+                  'flex flex-row gap-x-3 justify-between items-center align-middle hover:cursor-pointer p-2 border-y-[0.5px]  border-base_black border-opacity-10 ' +
+                  (i == highlighted ? 'bg-selected_white' : '')
+                }
+                onMouseOver={() => setHighlighted(i)}
+              >
+                <div className='flex flex-row items-center align-middle'>
+                  <IconCircleButton
+                    circle={false}
+                    src='block'
+                    onClick={() => null}
+                  />
+                  <h4 className='text-sm'>{result.n.title}</h4>
+                </div>
+                <OnHoverMenu buttonItems={getButtonItems(result.n)} />
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      <div id='result_container' className='overflow-scroll max-h-[70vh]'>
-        {results.map((result, i) => {
-          return (
-            <div
-              key={i}
-              id={'result' + i}
-              className={
-                'flex flex-row gap-x-3 justify-between items-center align-middle hover:cursor-pointer p-2 border-y-[0.5px]  border-base_black border-opacity-10 ' +
-                (i == highlighted ? 'bg-selected_white' : '')
-              }
-              onMouseOver={() => setHighlighted(i)}
-            >
-              <div className='flex flex-row items-center align-middle'>
-                <IconCircleButton
-                  circle={false}
-                  src='block'
-                  onClick={() => null}
-                />
-                <h4 className='text-sm'>{result.n.title}</h4>
-              </div>
-              <OnHoverMenu buttonItems={getButtonItems(result.n)} />
-            </div>
-          );
-        })}
-      </div>
+      <div
+        onClick={() => setShowSearchBar(false)}
+        className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
+      ></div>
     </div>
   );
 };

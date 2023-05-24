@@ -18,7 +18,7 @@ type TabProps = {
   setTabs: (val: any) => void;
   onClick?: (val: number) => void;
 };
-export const Tab: React.FC<TabProps> = ({
+const Tab: React.FC<TabProps> = ({
   label,
   selected,
   index,
@@ -30,6 +30,7 @@ export const Tab: React.FC<TabProps> = ({
     setCurrTab(index);
   },
 }) => {
+  console.log('tab rendering');
   // const [showDel, setShowDel] = useState(false);
 
   const onClose = (index: number) => {
@@ -98,3 +99,4 @@ export const Tab: React.FC<TabProps> = ({
     </div>
   );
 };
+export default Tab;

@@ -16,10 +16,7 @@ import { useDropNode } from '../hooks/dragging/useDropNode';
 import ViewContext, {
   ViewContextInterface,
 } from '../../../components/context/ViewContext';
-import {
-  handleEscapeDrawing,
-  handleInvokeSearch,
-} from '../helpers/handleKeyPress';
+import { handleEscapeDrawing } from '../helpers/handleKeyPress';
 import { useCanvas } from '../hooks/drawing/useCanvas';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
@@ -29,6 +26,7 @@ import { useResize } from '../hooks/useResize';
 import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
+import { useToggle } from '../../../helpers/hooks/useToggle';
 
 export const GraphContainer: React.FC<{}> = () => {
   const { windowVar, documentVar } = useContext(
@@ -50,26 +48,42 @@ export const GraphContainer: React.FC<{}> = () => {
     GraphViewContext
   ) as GraphViewContextInterface;
 
+  //key events: undo, redo, escaping drawing
   useEffect(() => {
     const listenerFunc = (evt: any) => {
-      evt.stopImmediatePropagation();
       if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
+        evt.stopPropagation();
+        evt.stopImmediatePropagation();
+        evt.preventDefault();
         graphViewContext.redo();
       } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+        evt.stopImmediatePropagation();
+        evt.preventDefault();
         graphViewContext.undo();
       } else if (evt.keyCode == 27) {
+        evt.stopImmediatePropagation();
         //escape key
         handleEscapeDrawing(drawingContext, setPoints);
-      } else if (evt.code === 'KeyP' && (evt.ctrlKey || evt.metaKey)) {
-        evt.preventDefault();
-        handleInvokeSearch(viewContext);
       }
     };
+
     document.addEventListener('keydown', (event) => listenerFunc(event));
     return document.removeEventListener('keydown', (event) =>
       listenerFunc(event)
     );
   }, []);
+
+  // Wheel event: panning and zooming
+  useEffect(() => {
+    documentVar
+      .getElementById('parent')
+      ?.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      documentVar
+        .getElementById('parent')
+        ?.removeEventListener('wheel', onWheel);
+    };
+  });
 
   //Pan and zoom
   const ref = useRef(null);
@@ -83,26 +97,12 @@ export const GraphContainer: React.FC<{}> = () => {
     translateY = 0;
   }
 
-  useEffect(() => {
-    documentVar
-      .getElementById('parent')
-      ?.addEventListener('wheel', onWheel, { passive: false });
-    return () => {
-      documentVar
-        .getElementById('parent')
-        ?.removeEventListener('wheel', onWheel);
-    };
-  });
-
-  //Lines and nodes to show
-
   const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
-  // const { lines, setLines, nodeData_Graph } = viewContext;
 
   //DND
   const startPos = useRef<{ left: number; top: number }>();
   const [, drop] = useDropNode(setIsDrawing, translateX, translateY, scale);
-  const [canDrag, setCanDrag] = useState(false);
+  const { value: canDrag, toggle: setCanDrag } = useToggle(false);
 
   //Drawing
   const canvas = useRef<any>();
@@ -145,9 +145,6 @@ export const GraphContainer: React.FC<{}> = () => {
   const handleStartPoint = useDrawingStart();
   const handleDrawing = useDrawingCanvas();
   const handleDrawingEnd = useDrawingEnd(translateX, translateY, scale);
-
-  //Pinching hook
-  // const handlePinch = usePinch();
 
   //Pill menu information for centered node
   const {

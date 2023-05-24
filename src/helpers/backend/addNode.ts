@@ -31,7 +31,7 @@ export const addNode = (
     color: 'black',
   };
 
-  context.setAlert('Created new node: ' + newnodeData_Graph[id].title);
+  context.setAlert('Created new node');
 
   context.setnodeVisualData_Graph(newNodes);
   context.setnodeData_Graph(newnodeData_Graph);

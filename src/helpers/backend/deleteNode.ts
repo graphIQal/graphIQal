@@ -7,7 +7,7 @@ export const deleteNode = (
   let newnodeData_Graph = { ...viewContext.nodeData_Graph };
   let newVisualNodes = { ...viewContext.nodeVisualData_Graph };
 
-  viewContext.setAlert('Deleted node: ' + newnodeData_Graph[id].title);
+  viewContext.setAlert('Removed node: ' + newnodeData_Graph[id].title);
   viewContext.addAction(id, 'NODE_DELETE', {
     deletedNode: newnodeData_Graph[id],
     deletedVisualNode: newVisualNodes[id],

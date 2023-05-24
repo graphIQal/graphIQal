@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import { deleteUser } from '../backend/functions/general/deleteUser';
 
 export default function Home() {
-  const [email, setemail] = useState('1332ta@gatech');
+  const [email, setemail] = useState('1332@gatech.edu');
   const [username, setusername] = useState('1332');
   const [password, setpassword] = useState('password');
   const [viewType, setViewType] = useState('graph');

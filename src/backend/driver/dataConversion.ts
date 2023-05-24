@@ -51,7 +51,16 @@ export const jsonToCypher_graphView = ({
 			delete?: boolean;
 			set?: any;
 			visualData?: any;
-			connections?: { create?: any; delete?: any; set?: any };
+			connections?: {
+				[key: string]: { create?: any; delete?: any; set?: any };
+			};
+		};
+	} = {};
+
+	const connections: {
+		// startNode
+		[key: string]: {
+			[key: string]: { create?: any; delete?: any; set?: any };
 		};
 	} = {};
 
@@ -91,6 +100,7 @@ export const jsonToCypher_graphView = ({
 
 			data[transaction.id].create = true;
 			data[transaction.id].set = { ...nodeData[transaction.id] };
+			delete data[transaction.id].set.connections;
 			data[transaction.id].visualData = {
 				...graphViewData[transaction.id],
 			};
@@ -102,32 +112,178 @@ export const jsonToCypher_graphView = ({
 
 			data[transaction.id].delete = true;
 		},
-		CONNECTION_ADD: (transaction: Action) => {},
-		CONNECTION_DELETE: (transaction: Action) => {},
+		CONNECTION_ADD: (transaction: Action) => {
+			const connection = transaction.value.connection;
+
+			if (!(connection.startNode in data)) {
+				data[connection.startNode] = {};
+			}
+
+			if (!('connections' in data[connection.startNode])) {
+				data[connection.startNode].connections = {};
+			}
+
+			if (
+				!(connection.endNode in data[connection.startNode].connections)
+			) {
+				data[connection.startNode].connections[connection.endNode] = {};
+			}
+
+			if (
+				!(
+					connection.type in
+					data[connection.startNode].connections[connection.endNode]
+				)
+			) {
+				// @ts-ignore
+				data[connection.startNode].connections[connection.endNode][
+					connection.type
+				] = { create: true, delete: false, ...connection };
+			}
+		},
+		CONNECTION_DELETE: (transaction: Action) => {
+			const connection = transaction.value.connection;
+
+			if (!(connection.startNode in data)) {
+				data[connection.startNode] = {};
+			}
+
+			if (!('connections' in data[connection.startNode])) {
+				data[connection.startNode].connections = {};
+			}
+
+			if (
+				!(connection.endNode in data[connection.startNode].connections)
+			) {
+				data[connection.startNode].connections[connection.endNode] = {};
+			}
+
+			if (
+				!(
+					connection.type in
+					data[connection.startNode].connections[connection.endNode]
+				)
+			) {
+				// @ts-ignore
+				data[connection.startNode].connections[connection.endNode][
+					connection.type
+				] = { create: false, delete: true };
+			}
+		},
 		CONNECTION_DIRECTION_ADD: (transaction: Action) => {},
 		CONNECTION_TYPE: (transaction: Action) => {
-			if (!(transaction.id in data)) {
-				data[transaction.id] = {};
+			const value = transaction.value;
+
+			if (!(value.startNode in data)) {
+				data[value.startNode] = {};
 			}
 
-			if (!('connections' in data[transaction.id])) {
-				data[transaction.id].connections = {};
+			if (!('connections' in data[value.startNode])) {
+				data[value.startNode].connections = {};
 			}
 
-			data[transaction.id].connections = {
-				...data[transaction.id].connections,
-			};
+			if (!(value.endNode in data[value.startNode].connections)) {
+				data[value.startNode].connections[value.endNode] = {};
+			}
 
-			const connection = {
-				create: true,
-				set: {},
-			};
-			// Add one connection
-			// @ts-ignore
-			data[transaction.id].connections.create = true;
-			// @ts-ignore
+			if (
+				!(
+					value.new.type in
+					data[value.startNode].connections[value.endNode]
+				)
+			) {
+				// @ts-ignore
+				data[value.startNode].connections[value.endNode][
+					value.new.type
+				] = { create: true, delete: false };
+			}
+
+			if (
+				!(
+					value.old.type in
+					data[value.startNode].connections[value.endNode]
+				)
+			) {
+				// @ts-ignore
+				data[value.startNode].connections[value.endNode][
+					value.old.type
+				] = { create: false, delete: true };
+			} else {
+				data[value.startNode].connections[value.endNode][
+					value.old.type
+				].create = false;
+
+				data[value.startNode].connections[value.endNode][
+					value.old.type
+				].delete = true;
+			}
 		},
-		CONNECTION_DIRECTION: (transaction: Action) => {},
+		CONNECTION_DIRECTION: (transaction: Action) => {
+			const connection = transaction.value.oldConnection;
+
+			if (!(connection.endNode in data)) {
+				data[connection.endNode] = {};
+			}
+
+			if (!('connections' in data[connection.endNode])) {
+				data[connection.endNode].connections = {};
+			}
+
+			if (
+				!(connection.startNode in data[connection.endNode].connections)
+			) {
+				data[connection.endNode].connections[connection.startNode] = {};
+			}
+
+			if (
+				!(
+					connection.type in
+					data[connection.endNode].connections[connection.startNode]
+				)
+			) {
+				// @ts-ignore
+				data[connection.endNode].connections[connection.startNode][
+					connection.type
+				] = { create: true, delete: false };
+			}
+
+			// Delete original connection
+			if (!(connection.startNode in data)) {
+				data[connection.startNode] = {};
+			}
+
+			if (!('connections' in data[connection.startNode])) {
+				data[connection.startNode].connections = {};
+			}
+
+			if (
+				!(connection.endNode in data[connection.startNode].connections)
+			) {
+				data[connection.startNode].connections[connection.endNode] = {};
+			}
+
+			if (
+				!(
+					connection.type in
+					data[connection.startNode].connections[connection.endNode]
+				)
+			) {
+				// @ts-ignore
+				data[connection.startNode].connections[connection.endNode][
+					connection.type
+				] = { create: false, delete: true };
+			} else {
+				// @ts-ignore
+				data[connection.startNode].connections[connection.endNode][
+					connection.type
+				].create = false;
+
+				// @ts-ignore
+				data[connection.startNode].connections[connection.endNode][
+					connection.type
+				].delete = true;
+			}
+		},
 		DRAG: (transaction: Action) => {
 			changeNodeVisuals(transaction);
 		},

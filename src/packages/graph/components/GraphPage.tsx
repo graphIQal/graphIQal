@@ -118,7 +118,7 @@ const Graph: React.FC<{
 				.then((json) => {
 					console.log('connected Nodes');
 					console.log(json);
-					setnodeInFocus_data(json[0]);
+					if (Array.isArray(json)) setnodeInFocus_data(json[0]);
 				});
 	}, [nodeInFocusId]);
 

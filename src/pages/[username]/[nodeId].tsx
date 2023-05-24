@@ -1,20 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
-import MainTabs from '../../components/organisms/Tabs/MainTabs';
-import ViewContext, {
-	ViewContextInterface,
-	MainTabProps,
-} from '../../components/context/ViewContext';
 import { useRouter, withRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { fetcher } from '../../backend/driver/fetcher';
-import TextButton from '../../components/molecules/TextButton';
-import Graph2 from '../../packages/graph/Graph';
-import Link from 'next/link';
-import SplitPaneWrapper from '../../packages/dnd-editor/Document';
 import {
 	getNodeData,
 	getNodeData_type,
 } from '../../backend/functions/node/query/getNodeData';
+import ViewContext, {
+	MainTabProps,
+} from '../../components/context/ViewContext';
+import MainTabs from '../../components/organisms/Tabs/MainTabs';
+import Graph2 from '../../packages/graph/Graph';
 
 const Home: React.FC = () => {
 	const [windowVar, setWindow] = useState<any>();
@@ -71,7 +67,7 @@ const Home: React.FC = () => {
 		if (!data) return;
 
 		if (!isLoading) {
-			if (data) {
+			if (data && Array.isArray(data)) {
 				let includedIDs: { [key: string]: boolean } = {};
 				// console.log(JSON.stringify(data));
 				console.log('data');

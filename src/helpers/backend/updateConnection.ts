@@ -74,6 +74,7 @@ export const updateConnection = (
 			if (newNodes[start].connections[end].type == newType) return;
 			context?.addAction(newVal.start, 'CONNECTION_TYPE', {
 				endNode: end,
+				startNode: start,
 				new: { type: newType },
 				old: {
 					type: newNodes[start].connections[end].type,

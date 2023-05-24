@@ -324,8 +324,22 @@ export const jsonToCypher_graphView = ({
 			MERGE (g)-[r:HAS]->(n)
 			`;
 			out += 'SET';
-			for (const property in node.set) {
-				out += ' n.' + property + ' = "' + node.set[property] + '",';
+			for (const property in node.visualData) {
+				if (typeof node.visualData[property] === 'string') {
+					out +=
+						' r.' +
+						property +
+						' = "' +
+						node.visualData[property] +
+						'",';
+				} else {
+					out +=
+						' r.' +
+						property +
+						' = ' +
+						node.visualData[property] +
+						',';
+				}
 			}
 			out = out.slice(0, out.length - 1);
 			return out;
@@ -362,8 +376,20 @@ export const jsonToCypher_graphView = ({
 			`;
 		}
 
+		// connections
 		if (node.connections) {
-			//
+			for (const endNode in node.connections) {
+				for (const type in node.connections[endNode]) {
+					if (node.set) {
+					}
+
+					if (node.create) {
+					}
+
+					if (node.delete) {
+					}
+				}
+			}
 		}
 
 		cypher += `

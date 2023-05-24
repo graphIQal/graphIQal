@@ -57,13 +57,6 @@ export const jsonToCypher_graphView = ({
 		};
 	} = {};
 
-	const connections: {
-		// startNode
-		[key: string]: {
-			[key: string]: { create?: any; delete?: any; set?: any };
-		};
-	} = {};
-
 	const changeNodeProperties = (transaction: Action) => {
 		if (!(transaction.id in data)) {
 			data[transaction.id] = {};
@@ -305,11 +298,77 @@ export const jsonToCypher_graphView = ({
 		const transaction = history.current[i];
 		console.log(transaction);
 
-		// add a cypher query by type
-		cypher += transactionToData[transaction.type](transaction);
+		transactionToData[transaction.type](transaction);
 	}
 
 	console.log(data);
+
+	const setPropertiesCypher = (node: any) => {
+		if (node.set) {
+			let out = '';
+			out += 'ON CREATE SET';
+			for (const property in node.set) {
+				out += ' n.' + property + ' = "' + node.set[property] + '",';
+			}
+			out = out.slice(0, out.length - 1);
+			return out;
+		} else {
+			return '';
+		}
+	};
+
+	const setVisualDataCypher = (node: any) => {
+		if (node.visualData) {
+			let out = `
+			MERGE (g: GRAPH_VIEW {id: "${graphViewId}"})
+			MERGE (g)-[r:HAS]->(n)
+			`;
+			out += 'SET';
+			for (const property in node.set) {
+				out += ' n.' + property + ' = "' + node.set[property] + '",';
+			}
+			out = out.slice(0, out.length - 1);
+			return out;
+		} else {
+			return '';
+		}
+	};
+
+	// Create cypher from data
+	// delete doesn't work
+	for (const nodeKey in data) {
+		const node = data[nodeKey];
+
+		cypher += `
+		MERGE (n: Node {id: "${nodeKey}"})
+		${setPropertiesCypher(node)}
+
+		// merge to graph view 
+		${setVisualDataCypher(node)}
+		`;
+
+		if (node.create) {
+			cypher += `
+			// merge to current node
+			MERGE (currentNode: Node {id: "${nodeId}"})
+			MERGE (currentNode)-[:HAS]->(n)
+
+			// create block
+			MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
+			MERGE (n)-[:NEXT_BLOCK]->(b)
+
+			MERGE (p:BLOCK_INLINE {type: "p", id: randomUuid(), children: ["{text: ''}"]})
+			MERGE (b)-[:BLOCK_CHILD]->(p)
+			`;
+		}
+
+		if (node.connections) {
+			//
+		}
+
+		cypher += `
+		WITH count(*) as dummy`;
+	}
 
 	// Creating nodes
 	// for (const key in graphViewData) {

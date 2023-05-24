@@ -69,9 +69,6 @@ const Home: React.FC = () => {
 		if (!isLoading) {
 			if (data && Array.isArray(data)) {
 				let includedIDs: { [key: string]: boolean } = {};
-				// console.log(JSON.stringify(data));
-				console.log('data');
-				console.log(JSON.stringify(data));
 				data.map((record: any, index: number) => {
 					if (!includedIDs[record.g.properties.id]) {
 						includedIDs[record.g.properties.id] = true;
@@ -91,8 +88,6 @@ const Home: React.FC = () => {
 				});
 			}
 		}
-		console.log('newTabs');
-		console.log(newTabs);
 		setTabs(newTabs);
 	}, [data]);
 

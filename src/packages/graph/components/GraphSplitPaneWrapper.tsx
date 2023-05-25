@@ -78,9 +78,9 @@ const GraphSplitPaneWrapper: React.FC<{
 	}, [nodeId]);
 
 	console.log('nodeData');
-	console.log(nodeData);
+	console.log(nodeData_Graph);
 	console.log('visualData');
-	console.log(visualData);
+	console.log(nodeVisualData_Graph);
 
 	//alert message
 	const [alert, setAlert] = useState('');
@@ -108,7 +108,6 @@ const GraphSplitPaneWrapper: React.FC<{
 
 	// get the connected nodes of seleced node
 	useEffect(() => {
-		console.log('updating node in focus data ');
 		if (nodeInFocusId)
 			fetch(`/api/${username}/${nodeInFocusId}`)
 				.then((res) => res.json())
@@ -141,10 +140,6 @@ const GraphSplitPaneWrapper: React.FC<{
 	const [tags, setTags] = useState(
 		getCommonParents(Object.keys(nodeData_Graph))
 	);
-
-	useEffect(() => {
-		console.log('new node in focus ' + nodeInFocusId);
-	}, [nodeInFocusId]);
 
 	return (
 		<DrawingContext.Provider

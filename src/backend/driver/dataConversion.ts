@@ -70,9 +70,16 @@ export const jsonToCypher_graphView = ({
 			data[transaction.id] = {};
 		}
 
+		if (!('visualData' in data[transaction.id])) {
+			data[transaction.id] = {};
+		}
+
 		data[transaction.id] = {
 			...data[transaction.id],
-			visualData: { ...transaction.value.new },
+			visualData: {
+				...transaction.value.new,
+				...data[transaction.id].visualData,
+			},
 		};
 	};
 
@@ -314,7 +321,7 @@ export const jsonToCypher_graphView = ({
 	console.log(data);
 
 	const setPropertiesCypher = (node: any) => {
-		if (node.set) {
+		if (node.set && Object.values(node.set).length > 0) {
 			let out = '';
 			out += 'ON CREATE SET';
 			for (const property in node.set) {
@@ -383,6 +390,10 @@ export const jsonToCypher_graphView = ({
 
 			MERGE (p:BLOCK_INLINE {type: "p", id: randomUuid(), children: ["{text: ''}"]})
 			MERGE (b)-[:BLOCK_CHILD]->(p)
+			`;
+		} else if (node.delete) {
+			cypher += `
+			
 			`;
 		}
 

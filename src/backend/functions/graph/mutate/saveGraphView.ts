@@ -35,21 +35,21 @@ export const saveGraphView = async ({
 
 	console.log(body);
 
-	const res = await fetch(
-		`/api/${username}/${nodeId}/graph/${graphViewId}/save`,
-		{
-			method: 'POST',
-			body: body,
-		}
-	)
-		.then((res) => {
-			console.log('res ', res);
-			return res.json();
-		})
-		.then((json) => {
-			console.log('json: ', json);
-			return json;
-		});
+	// const res = await fetch(
+	// 	`/api/${username}/${nodeId}/graph/${graphViewId}/save`,
+	// 	{
+	// 		method: 'POST',
+	// 		body: body,
+	// 	}
+	// )
+	// 	.then((res) => {
+	// 		console.log('res ', res);
+	// 		return res.json();
+	// 	})
+	// 	.then((json) => {
+	// 		console.log('json: ', json);
+	// 		return json;
+	// 	});
 
-	return res;
+	// return res;
 };

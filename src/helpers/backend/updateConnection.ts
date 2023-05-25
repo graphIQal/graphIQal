@@ -71,14 +71,14 @@ export const updateConnection = (
 			const newType = newVal.newType;
 
 			const newNodes = { ...nodeData_Graph };
+			// const oldType = newNodes[start].connections[end].type;
+
 			if (newNodes[start].connections[end].type == newType) return;
 			context?.addAction(newVal.start, 'CONNECTION_TYPE', {
 				endNode: end,
 				startNode: start,
 				new: { type: newType },
-				old: {
-					type: newNodes[start].connections[end].type,
-				},
+				old: { type: newNodes[start].connections[end].type },
 			});
 			context?.setAlert(
 				'Changed connection type of ' +

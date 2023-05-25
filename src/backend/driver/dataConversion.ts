@@ -47,7 +47,7 @@ export const jsonToCypher_graphView = ({
 			set?: any;
 			visualData?: any;
 			connections?: {
-				[key: string]: { create?: any; delete?: any; set?: any };
+				[key: string]: { [key: string]: any };
 			};
 		};
 	} = {};
@@ -177,7 +177,12 @@ export const jsonToCypher_graphView = ({
 				// @ts-ignore
 				data[connection.startNode].connections[connection.endNode][
 					connection.type
-				] = { create: false, delete: true };
+				] = { delete: true };
+			} else {
+				// @ts-ignore
+				data[connection.startNode].connections[connection.endNode][
+					connection.type
+				].delete = true;
 			}
 		},
 		CONNECTION_DIRECTION_ADD: (transaction: Action) => {},
@@ -214,15 +219,13 @@ export const jsonToCypher_graphView = ({
 					data[value.startNode].connections[value.endNode]
 				)
 			) {
+				console.log('hmm');
+				console.log(data[value.startNode].connections[value.endNode]);
 				// @ts-ignore
 				data[value.startNode].connections[value.endNode][
 					value.old.type
 				] = { create: false, delete: true };
 			} else {
-				data[value.startNode].connections[value.endNode][
-					value.old.type
-				].create = false;
-
 				data[value.startNode].connections[value.endNode][
 					value.old.type
 				].delete = true;
@@ -286,11 +289,6 @@ export const jsonToCypher_graphView = ({
 				// @ts-ignore
 				data[connection.startNode].connections[connection.endNode][
 					connection.type
-				].create = false;
-
-				// @ts-ignore
-				data[connection.startNode].connections[connection.endNode][
-					connection.type
 				].delete = true;
 			}
 		},
@@ -298,10 +296,10 @@ export const jsonToCypher_graphView = ({
 			changeNodeVisuals(transaction);
 		},
 		NODE_ICON: (transaction: Action) => {
-			changeNodeVisuals(transaction);
+			changeNodeProperties(transaction);
 		},
 		NODE_COLOR: (transaction: Action) => {
-			changeNodeVisuals(transaction);
+			changeNodeProperties(transaction);
 		},
 		NODE_TITLE: (transaction: Action) => {
 			changeNodeProperties(transaction);
@@ -323,7 +321,7 @@ export const jsonToCypher_graphView = ({
 	const setPropertiesCypher = (node: any) => {
 		if (node.set && Object.values(node.set).length > 0) {
 			let out = '';
-			out += 'ON CREATE SET';
+			out += 'SET';
 			for (const property in node.set) {
 				out += ' n.' + property + ' = "' + node.set[property] + '",';
 			}
@@ -337,6 +335,7 @@ export const jsonToCypher_graphView = ({
 	const setVisualDataCypher = (node: any) => {
 		if (node.visualData) {
 			let out = `
+			// merge to graph view 
 			MERGE (g: GRAPH_VIEW {id: "${graphViewId}"})
 			MERGE (g)-[r:HAS]->(n)
 			`;
@@ -374,7 +373,6 @@ export const jsonToCypher_graphView = ({
 		MERGE (n: Node {id: "${nodeKey}"})
 		${setPropertiesCypher(node)}
 
-		// merge to graph view 
 		${setVisualDataCypher(node)}
 		`;
 
@@ -401,17 +399,39 @@ export const jsonToCypher_graphView = ({
 		if (node.connections) {
 			for (const endNode in node.connections) {
 				for (const type in node.connections[endNode]) {
-					if (node.set) {
-					}
+					// const endNode =
+					// 	node.connections[connectedNode][type].endNode;
 
-					if (node.create) {
-					}
+					// Right now, since we aren't editing any relationships we only do anything if a relationship is created
+					// So we put the entire function into relationship.create
 
-					if (node.delete) {
+					if (node.connections[endNode][type].delete) {
+						if (!node.connections[endNode][type].create) {
+							cypher += `
+							MERGE (endNode:Node {id: "${endNode}"})
+							MERGE (n)-[rel:${type}]->(endNode)
+							DELETE rel
+							WITH count(*) as dummy`;
+						}
+					} else if (node.connections[endNode][type].create) {
+						cypher += `
+						// Merge Connection
+						MERGE (endNode:Node {id: "${endNode}"})
+						MERGE (n)-[rel:${type}]->(endNode)
+						WITH count(*) as dummy`;
+
+						if ('content' in node.connections[endNode]) {
+							// No saving connection details
+						}
+					} else {
+						cypher += `
+						`;
 					}
 				}
 			}
 		}
+
+		cypher = cypher.replace(/\n.*$/, '');
 
 		cypher += `
 		WITH count(*) as dummy`;

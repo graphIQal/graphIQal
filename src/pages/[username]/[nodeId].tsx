@@ -75,10 +75,6 @@ const Home: React.FC = () => {
 	useEffect(() => {
 		if (currNodeId) {
 			getNodeData(currNodeId, username as string).then((res) => {
-				console.log('result');
-				console.log(currNodeId);
-				console.log(username);
-				console.log(res);
 				if (res.length > 0) setcurrNode_data(res[0]);
 			});
 		}
@@ -103,6 +99,7 @@ const Home: React.FC = () => {
 
 	useEffect(() => {
 		if (!data) return;
+
 		if (!isLoading) {
 			if (data) {
 				let includedIDs: { [key: string]: boolean } = {};

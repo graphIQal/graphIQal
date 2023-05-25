@@ -73,20 +73,22 @@ const Home: React.FC = () => {
   }, [nodeId]);
 
   useEffect(() => {
+    console.log('curr node ' + currNodeId);
     if (currNodeId) {
       getNodeData(currNodeId, username as string).then((res) => {
+        console.log('curr node data ' + JSON.stringify(res));
         if (res.length > 0) setcurrNode_data(res[0]);
       });
     }
   }, [currNodeId]);
 
   let newTabs: MainTabProps[] = [
-    {
-      label: 'Home',
-      viewId: '',
-      viewType: 'document',
-      component: <SplitPaneWrapper viewId={''} />,
-    },
+    // {
+    //   label: 'Home',
+    //   viewId: '',
+    //   viewType: 'document',
+    //   component: <SplitPaneWrapper viewId={''} />,
+    // },
     //temp
     // {
     //   label: 'Graph View',
@@ -104,6 +106,7 @@ const Home: React.FC = () => {
         let includedIDs: { [key: string]: boolean } = {};
         data.map((record: any, index: number) => {
           if (!includedIDs[record.g.properties.id]) {
+            console.log('tabs ' + JSON.stringify(record.g));
             includedIDs[record.g.properties.id] = true;
 
             newTabs.push({
@@ -123,7 +126,7 @@ const Home: React.FC = () => {
     }
     console.log('changing tabs');
     setTabs(newTabs);
-  }, [data]);
+  }, [data, nodeId]);
 
   const [currTab, setCurrTab] = useState(0);
 

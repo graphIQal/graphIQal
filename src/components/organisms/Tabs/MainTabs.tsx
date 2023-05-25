@@ -47,6 +47,7 @@ const MainTabs: React.FC<{
   useEffect(() => {
     // if (router.query.tab) return;
     if (!username) return;
+    if (mainViewTabs.length == 0) return;
     router.push(
       {
         pathname: '/' + username + '/' + nodeId,
@@ -59,7 +60,7 @@ const MainTabs: React.FC<{
       undefined,
       { shallow: true }
     );
-  }, [nodeId]);
+  }, [nodeId, mainViewTabs]);
 
   return (
     <div>

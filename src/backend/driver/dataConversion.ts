@@ -17,11 +17,6 @@ type graphViewInput = {
 	pointer: React.MutableRefObject<Number>;
 };
 
-const nodeAdd_cypher = (action: Action) => {
-	console.log(action);
-	return action;
-};
-
 export const jsonToCypher_graphView = ({
 	graphViewData,
 	nodeData,
@@ -92,6 +87,21 @@ export const jsonToCypher_graphView = ({
 			}
 
 			data[transaction.id].create = true;
+			data[transaction.id].set = { ...nodeData[transaction.id] };
+			delete data[transaction.id].set.connections;
+			data[transaction.id].visualData = {
+				...graphViewData[transaction.id],
+			};
+		},
+		NODE_ADD_EXISTING: (transaction: Action) => {
+			if (!(transaction.id in data)) {
+				data[transaction.id] = {};
+			}
+
+			if (data[transaction.id].delete) {
+				delete data[transaction.id].delete;
+			}
+
 			data[transaction.id].set = { ...nodeData[transaction.id] };
 			delete data[transaction.id].set.connections;
 			data[transaction.id].visualData = {

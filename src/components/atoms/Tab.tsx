@@ -73,7 +73,7 @@ export const Tab: React.FC<TabProps> = ({
         {isEditing ? (
           <input
             className='outline-none border-none'
-            onChange={(e: any) =>
+            onBlur={(e: any) =>
               updateView('TAB_NAME', {
                 tabs: tabs,
                 setTabs: setTabs,

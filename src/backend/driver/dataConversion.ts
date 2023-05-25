@@ -116,6 +116,10 @@ export const jsonToCypher_graphView = ({
 			};
 		},
 		NODE_DELETE: (transaction: Action) => {
+			if (!(transaction.id in data)) {
+				data[transaction.id] = {};
+			}
+
 			if (data[transaction.id].create) {
 				delete data[transaction.id].create;
 			}
@@ -390,6 +394,7 @@ export const jsonToCypher_graphView = ({
 			MERGE (b)-[:BLOCK_CHILD]->(p)
 			`;
 		} else if (node.delete) {
+			// no delete
 			cypher += `
 			
 			`;

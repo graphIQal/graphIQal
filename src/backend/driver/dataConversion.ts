@@ -363,6 +363,13 @@ export const jsonToCypher_graphView = ({
 			}
 			out = out.slice(0, out.length - 1);
 			return out;
+		} else if (node.delete) {
+			let out = `
+			MERGE (g: GRAPH_VIEW {id: "${graphViewId}"})
+			MERGE (g)-[r:HAS]->(n)
+			DELETE r
+			`;
+			return out;
 		} else {
 			return '';
 		}

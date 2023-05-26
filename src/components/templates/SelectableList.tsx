@@ -5,13 +5,15 @@ import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
 type SelectableListProps = {
   listItems: any[];
   onEnter: () => any;
+  activeIndex?: number;
 };
 
 export const SelectableList: React.FC<SelectableListProps> = ({
   listItems,
   onEnter,
+  activeIndex,
 }) => {
-  const [highlighted, setHighlighted] = useState(0);
+  const [highlighted, setHighlighted] = useState(activeIndex ? activeIndex : 0);
   const { documentVar, username } = useContext(
     ViewContext
   ) as ViewContextInterface;
@@ -76,7 +78,9 @@ export const SelectableList: React.FC<SelectableListProps> = ({
           <div
             onKeyDown={handleKeys}
             onMouseOver={() => setHighlighted(i)}
-            className={highlighted == i ? 'bg-selected_white' : ''}
+            className={
+              highlighted == i || activeIndex == i ? 'bg-selected_white' : ''
+            }
           >
             {item}
           </div>

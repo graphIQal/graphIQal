@@ -82,7 +82,6 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
   };
 
   useEffect(() => {
-    console.log('in here');
     if (!nodeInFocus_data) return;
     console.log('nodeInFocus_data');
     console.log(nodeInFocus_data);
@@ -111,12 +110,15 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
           nodeInFocus_data.n.title
         }
       >
-        {renderConnections(
-          nodeInFocus_data.connectedNodes.filter(
-            ({ r, connected_node }: any) =>
-              connected_node.id in mainNodeConnections
-          )
-        )}
+        <SelectableList
+          onEnter={() => null}
+          listItems={renderConnections(
+            nodeInFocus_data.connectedNodes.filter(
+              ({ r, connected_node }: any) =>
+                connected_node.id in mainNodeConnections
+            )
+          )}
+        />
       </SidePanel>
     );
 

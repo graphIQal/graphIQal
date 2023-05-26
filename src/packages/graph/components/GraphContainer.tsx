@@ -27,6 +27,7 @@ import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
 import { useToggle } from '../../../helpers/hooks/useToggle';
+import { addNode } from '../../../helpers/backend/addNode';
 
 export const GraphContainer: React.FC<{}> = () => {
   const { windowVar, documentVar } = useContext(
@@ -76,11 +77,11 @@ export const GraphContainer: React.FC<{}> = () => {
   // Wheel event: panning and zooming
   useEffect(() => {
     documentVar
-      .getElementById('parent')
+      .getElementById('parent' + graphViewContext.graphViewId)
       ?.addEventListener('wheel', onWheel, { passive: false });
     return () => {
       documentVar
-        .getElementById('parent')
+        .getElementById('parent' + graphViewContext.graphViewId)
         ?.removeEventListener('wheel', onWheel);
     };
   });
@@ -167,7 +168,11 @@ export const GraphContainer: React.FC<{}> = () => {
         updateSize: updateSize,
       }}
     >
-      <div className='h-full w-full' id='parent' ref={drop}>
+      <div
+        className='h-full w-full'
+        id={'parent' + graphViewContext.graphViewId}
+        ref={drop}
+      >
         <Filtering
           xCategory={xCategory}
           yCategory={yCategory}

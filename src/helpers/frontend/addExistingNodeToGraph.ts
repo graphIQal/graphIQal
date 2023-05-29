@@ -18,8 +18,11 @@ export const addExistingNodeToGraph = async (
     ...nodeToAdd,
     color: 'black',
     icon: 'block',
-    connections: await fetch(`/api/${username}/${nodeToAdd.id}`).then(
-      (result: any) => {
+    connections: await fetch(`/api/${username}/${nodeToAdd.id}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((result: any) => {
         let connections: { [key: string]: ConnectionData } = {};
         result[0].connectedNodes.map((connection: any) => {
           if (connection.connected_node) {
@@ -32,8 +35,7 @@ export const addExistingNodeToGraph = async (
           }
         });
         return connections;
-      }
-    ),
+      }),
   };
 
   let newNodes = { ...graphContext.nodeData_Graph };

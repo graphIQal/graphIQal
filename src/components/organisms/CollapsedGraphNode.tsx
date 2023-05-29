@@ -1,6 +1,6 @@
 //Node with just its title
 
-import { useContext } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { updateNode } from '../../helpers/backend/updateNode';
 import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
 import GraphNodeContext, {
@@ -12,6 +12,8 @@ import GraphViewContext, {
 import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 import IconCircleButton from '../molecules/IconCircleButton';
 import { ItemProps } from './Dropdown';
+import useSWR from 'swr';
+import { fetcher } from '../../backend/driver/fetcher';
 
 const CollapsedGraphNode: React.FC<{
   toggleDropdown: () => void;
@@ -34,6 +36,37 @@ const CollapsedGraphNode: React.FC<{
 
   const viewContext = useContext(ViewContext) as ViewContextInterface;
 
+  const [searchVal, setSearchVal] = useState<string>('');
+  const { data: searchResult } = useSWR(
+    searchVal.length > 0
+      ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
+      : null,
+    fetcher
+  );
+
+  const formRef = useRef<any>(null);
+  useEffect(() => {
+    if (searchResult) {
+      const items: ItemProps[] = searchResult.map((result: any, i: number) => {
+        return {
+          text: result.n.title,
+          onPress: () => {
+            formRef.current.value = result.n.title;
+            addExistingNodeToGraph(
+              graphViewContext,
+              viewContext.username,
+              id,
+              result.n
+            );
+          },
+        };
+      });
+      setResults(items);
+    } else {
+      setResults([]);
+    }
+  }, [searchResult]);
+
   return (
     <>
       <div
@@ -55,6 +88,7 @@ const CollapsedGraphNode: React.FC<{
               placeholder='Type title or press /'
               // defaultValue={title}
               value={title}
+              ref={formRef}
               autoComplete='off'
               onChange={async (newVal: any) => {
                 updateNode('title', newVal.target.value, id, graphViewContext);
@@ -62,33 +96,9 @@ const CollapsedGraphNode: React.FC<{
                   setShowSearchDropdown(true);
                 }
                 if (showSearchDropdown) {
+                  console.log('showing');
                   if (newVal.target.value.length > 0) {
-                    // jesse
-                    await fetch(
-                      `/api/general/search?username=${
-                        viewContext.username
-                      }&search=${newVal.target.value.substring(1)}`
-                    ).then((res) => {
-                      res.json().then((json) => {
-                        const items: ItemProps[] = json.map(
-                          (result: any, i: number) => {
-                            return {
-                              text: result.n.title,
-                              onPress: () => {
-                                newVal.target.value = result.n.title;
-                                addExistingNodeToGraph(
-                                  graphViewContext,
-                                  viewContext.username,
-                                  id,
-                                  result.n
-                                );
-                              },
-                            };
-                          }
-                        );
-                        setResults(items);
-                      });
-                    });
+                    setSearchVal(newVal.target.value);
                   }
                 }
               }}

@@ -11,7 +11,6 @@ import GraphViewContext, {
 } from '../../../packages/graph/context/GraphViewContext';
 import { SidePanel } from '../../templates/SidePanel';
 
-import { addNodeToGraph } from '../../../helpers/frontend/addNodeToGraph';
 import ConnectionListItem from '../ConnectionListItem';
 import {
   connectedNode_type,

@@ -23,6 +23,7 @@ import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
+import SearchBar from '../../../components/organisms/SearchBar';
 
 const GraphSplitPaneWrapper: React.FC<{
   viewId: string;
@@ -186,6 +187,7 @@ const GraphSplitPaneWrapper: React.FC<{
               ref={containerRef}
             >
               <GraphContainer />
+              <SearchBar />
               <Alert />
             </div>
             {/* <BoxDragLayer parentRef={containerRef} /> */}

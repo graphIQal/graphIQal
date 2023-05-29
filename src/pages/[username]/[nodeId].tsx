@@ -151,7 +151,6 @@ const Home: React.FC = () => {
       }}
     >
       <MainTabs mainViewTabs={tabs} setMainViewTabs={setTabs} />
-      <SearchBar />
     </ViewContext.Provider>
     // </NavigationContext.Provider>
   );

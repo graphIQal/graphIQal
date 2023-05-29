@@ -28,6 +28,7 @@ import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
 import { useToggle } from '../../../helpers/hooks/useToggle';
 import { addNode } from '../../../helpers/backend/addNode';
+import SearchBar from '../../../components/organisms/SearchBar';
 
 export const GraphContainer: React.FC<{}> = () => {
   const { windowVar, documentVar } = useContext(

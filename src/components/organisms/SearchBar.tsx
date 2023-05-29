@@ -1,13 +1,18 @@
-import router from 'next/router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
-import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
+import IconTitle from '../molecules/IconTitle';
+import TextButton from '../molecules/TextButton';
+import IconCircleButton from '../molecules/IconCircleButton';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../packages/graph/context/GraphViewContext';
-import ViewContext, { ViewContextInterface } from '../context/ViewContext';
-import IconCircleButton from '../molecules/IconCircleButton';
+import { GraphNode } from '../../packages/graph/components/GraphNode';
+import CollapsedGraphNode from './CollapsedGraphNode';
 import { OnHoverMenu } from './OnHoverMenu';
+import ViewContext, { ViewContextInterface } from '../context/ViewContext';
+import router from 'next/router';
+import { NodeData } from '../../packages/graph/graphTypes';
+import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
+import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
 import { fetcher } from '../../backend/driver/fetcher';
 import useSWR from 'swr';
 
@@ -33,7 +38,6 @@ const SearchBar: React.FC = () => {
   const graphViewContext = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
-  console.log('graph context ' + graphViewContext);
   const viewContext = useContext(ViewContext) as ViewContextInterface;
   const { documentVar } = viewContext;
   const getButtonItems = (result: any) => {
@@ -153,7 +157,7 @@ const SearchBar: React.FC = () => {
     }
   };
 
-  const [searchVal, setSearchVal] = useState('');
+  const [searchVal, setSearchVal] = useState<string>('');
   const { data: searchResult } = useSWR(
     searchVal.length > 0
       ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
@@ -164,6 +168,8 @@ const SearchBar: React.FC = () => {
   useEffect(() => {
     if (searchResult) {
       setResults(searchResult);
+    } else {
+      setResults([]);
     }
   }, [searchResult]);
 
@@ -191,18 +197,7 @@ const SearchBar: React.FC = () => {
               id='search_bar'
               placeholder='Search for a node...'
               className='bg-base_white w-full outline-none border-none'
-              onChange={(newVal: any) => {
-                setSearchVal(newVal.target.value);
-              }}
-              // if (newVal.target.value.length > 0)
-              //   // jesse
-              //   await fetch(
-              //     `/api/general/search?username=${viewContext.username}&search=${newVal.target.value}`
-              //   ).then((res) => {
-              //     res.json().then((json) => {
-              //       setResults(json);
-              //     });
-              //   });
+              onChange={(newVal: any) => setSearchVal(newVal.target.value)}
             />
           </form>
           <IconCircleButton

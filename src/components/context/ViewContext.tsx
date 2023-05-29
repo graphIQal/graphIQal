@@ -3,7 +3,7 @@
  */
 
 import { createContext } from 'react';
-import { getNodeData_type } from '../../backend/functions/node/query/getNodeData';
+import { getNodeData_type } from '../../backend/functions/node/query/useGetNodeData';
 
 export type ViewContextInterface = {
   username: string;

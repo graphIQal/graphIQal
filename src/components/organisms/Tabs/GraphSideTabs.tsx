@@ -16,7 +16,7 @@ import ConnectionListItem from '../ConnectionListItem';
 import {
   connectedNode_type,
   getNodeData_type,
-} from '../../../backend/functions/node/query/getNodeData';
+} from '../../../backend/functions/node/query/useGetNodeData';
 import { SelectableList } from '../../templates/SelectableList';
 import { addExistingNodeToGraph } from '../../../helpers/frontend/addExistingNodeToGraph';
 

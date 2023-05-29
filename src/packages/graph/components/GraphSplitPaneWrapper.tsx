@@ -21,7 +21,8 @@ import GraphViewContext from '../context/GraphViewContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
-import SearchBar from '../../../components/organisms/SearchBar';
+import useSWR from 'swr';
+import { fetcher } from '../../../backend/driver/fetcher';
 
 const GraphSplitPaneWrapper: React.FC<{
   viewId: string;
@@ -42,32 +43,38 @@ const GraphSplitPaneWrapper: React.FC<{
   const [nodeData_Graph, setnodeData_Graph] = useState(nodeData);
   const [nodeVisualData_Graph, setnodeVisualData_Graph] = useState(visualData);
 
-  useEffect(() => {
-    if (nodeId) {
-      console.log('fetching ');
-      fetch(`/api/${username}/${nodeId}/graph/${viewId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          for (let node in data) {
-            let nodeConnections: { [key: string]: ConnectionData } = {};
-            for (let connection in data[node].connections) {
-              nodeConnections[data[node].connections[connection].endNode] = {
-                ...data[node].connections[connection],
-                content: [],
-              };
-            }
-            nodeData[data[node].node.id] = {
-              ...data[node].node,
-              connections: nodeConnections,
-            };
+  const {
+    data: nodeDataResponse,
+    error: nodeError,
+    isLoading: nodeDataLoading,
+  } = useSWR(
+    viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
+    fetcher
+  );
 
-            visualData[data[node].node.id] = data[node].relationship;
-          }
-        });
-      setnodeData_Graph(nodeData);
-      setnodeVisualData_Graph(visualData);
+  useEffect(() => {
+    if (!nodeDataResponse) return;
+    for (let node in nodeDataResponse) {
+      let nodeConnections: { [key: string]: ConnectionData } = {};
+      for (let connection in nodeDataResponse[node].connections) {
+        nodeConnections[
+          nodeDataResponse[node].connections[connection].endNode
+        ] = {
+          ...nodeDataResponse[node].connections[connection],
+          content: [],
+        };
+      }
+      nodeData[nodeDataResponse[node].node.id] = {
+        ...nodeDataResponse[node].node,
+        connections: nodeConnections,
+      };
+
+      visualData[nodeDataResponse[node].node.id] =
+        nodeDataResponse[node].relationship;
     }
-  }, [nodeId, viewId]);
+    setnodeData_Graph(nodeData);
+    setnodeVisualData_Graph(visualData);
+  }, [nodeDataResponse]);
 
   //   console.log(nodeData_Graph);
   //   console.log('visualData');
@@ -98,14 +105,20 @@ const GraphSplitPaneWrapper: React.FC<{
   }>({ n: {}, connectedNodes: [] });
 
   // get the connected nodes of seleced node
+  const {
+    data: nodeInFocusDataResponse,
+    error: nodeInFocusError,
+    isLoading: nodeInFocusLoading,
+  } = useSWR(
+    nodeInFocusId ? `/api/${username}/${nodeInFocusId}` : null,
+    fetcher
+  );
+
   useEffect(() => {
-    if (nodeInFocusId)
-      fetch(`/api/${username}/${nodeInFocusId}`)
-        .then((res) => res.json())
-        .then((json) => {
-          setnodeInFocus_data(json[0]);
-        });
-  }, [nodeInFocusId]);
+    if (nodeInFocusDataResponse) {
+      setnodeInFocus_data(nodeInFocusDataResponse[0]);
+    }
+  }, [nodeInFocusDataResponse]);
 
   // set NodeId once it changes
   useEffect(() => {

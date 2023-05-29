@@ -1,19 +1,15 @@
+import router from 'next/router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import IconTitle from '../molecules/IconTitle';
-import TextButton from '../molecules/TextButton';
-import IconCircleButton from '../molecules/IconCircleButton';
+import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
+import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
 import GraphViewContext, {
   GraphViewContextInterface,
 } from '../../packages/graph/context/GraphViewContext';
-import { GraphNode } from '../../packages/graph/components/GraphNode';
-import CollapsedGraphNode from './CollapsedGraphNode';
-import { OnHoverMenu } from './OnHoverMenu';
 import ViewContext, { ViewContextInterface } from '../context/ViewContext';
-import router from 'next/router';
-import { addNodeToGraph } from '../../helpers/frontend/addNodeToGraph';
-import { NodeData } from '../../packages/graph/graphTypes';
-import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
-import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
+import IconCircleButton from '../molecules/IconCircleButton';
+import { OnHoverMenu } from './OnHoverMenu';
+import { fetcher } from '../../backend/driver/fetcher';
+import useSWR from 'swr';
 
 const SearchBar: React.FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -156,6 +152,20 @@ const SearchBar: React.FC = () => {
     }
   };
 
+  const [searchVal, setSearchVal] = useState('');
+  const { data: searchResult } = useSWR(
+    searchVal.length > 0
+      ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
+      : null,
+    fetcher
+  );
+
+  useEffect(() => {
+    if (searchResult) {
+      setResults(searchResult);
+    }
+  }, [searchResult]);
+
   if (!showSearchBar) return <></>;
 
   return (
@@ -180,17 +190,18 @@ const SearchBar: React.FC = () => {
               id='search_bar'
               placeholder='Search for a node...'
               className='bg-base_white w-full outline-none border-none'
-              onChange={async (newVal: any) => {
-                if (newVal.target.value.length > 0)
-                  // jesse
-                  await fetch(
-                    `/api/general/search?username=${viewContext.username}&search=${newVal.target.value}`
-                  ).then((res) => {
-                    res.json().then((json) => {
-                      setResults(json);
-                    });
-                  });
+              onChange={(newVal: any) => {
+                setSearchVal(newVal.target.value);
               }}
+              // if (newVal.target.value.length > 0)
+              //   // jesse
+              //   await fetch(
+              //     `/api/general/search?username=${viewContext.username}&search=${newVal.target.value}`
+              //   ).then((res) => {
+              //     res.json().then((json) => {
+              //       setResults(json);
+              //     });
+              //   });
             />
           </form>
           <IconCircleButton
@@ -232,7 +243,7 @@ const SearchBar: React.FC = () => {
 
       <div
         onClick={() => setShowSearchBar(false)}
-        className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
+        className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30 z-[99]'
       ></div>
     </div>
   );

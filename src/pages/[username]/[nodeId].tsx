@@ -6,13 +6,14 @@ import ViewContext from '../../components/context/ViewContext';
 import { useRouter, withRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../backend/driver/fetcher';
-import {
-  getNodeData,
-  getNodeData_type,
-} from '../../backend/functions/node/query/getNodeData';
+
 import SearchBar from '../../components/organisms/SearchBar';
 import Graph from '../../packages/graph/Graph';
 import SplitPaneWrapper from '../../packages/dnd-editor/Document';
+import {
+  getNodeData_type,
+  useGetNodeData,
+} from '../../backend/functions/node/query/useGetNodeData';
 
 const Home: React.FC = () => {
   const [windowVar, setWindow] = useState<any>();
@@ -70,22 +71,26 @@ const Home: React.FC = () => {
   useEffect(() => {
     setCurrNodeId(nodeId as string);
   }, [nodeId]);
+  const res = useGetNodeData(currNodeId, username as string);
 
   useEffect(() => {
-    if (currNodeId) {
-      getNodeData(currNodeId, username as string).then((res) => {
-        if (res.length > 0) setcurrNode_data(res[0]);
-      });
+    if (res) {
+      setcurrNode_data(res);
     }
-  }, [currNodeId]);
+  }, [res]);
+
+  // useEffect(() => {
+  //   const res = useGetNodeData(currNodeId, username as string);
+  //   setcurrNode_data(res);
+  // }, [currNodeId]);
 
   let newTabs: MainTabProps[] = [
-    {
-      label: 'Home',
-      viewId: '',
-      viewType: 'document',
-      component: <SplitPaneWrapper viewId={''} />,
-    },
+    // {
+    //   label: 'Home',
+    //   viewId: '',
+    //   viewType: 'document',
+    //   component: <SplitPaneWrapper viewId={''} />,
+    // },
     //temp
     // {
     //   label: 'Graph View',

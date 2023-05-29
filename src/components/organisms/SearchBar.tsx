@@ -15,6 +15,7 @@ import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
 import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
 import { fetcher } from '../../backend/driver/fetcher';
 import useSWR from 'swr';
+import { useSuspenseSWR } from '../../backend/hooks/useSuspenseSWR';
 
 const SearchBar: React.FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -164,6 +165,11 @@ const SearchBar: React.FC = () => {
       : null,
     fetcher
   );
+  // const { data: searchResult } = useSuspenseSWR(
+  //   searchVal.length > 0
+  //     ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
+  //     : null
+  // );
 
   useEffect(() => {
     if (searchResult) {

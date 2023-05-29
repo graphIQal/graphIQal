@@ -24,6 +24,7 @@ import { GraphContainer } from './GraphContainer';
 import useSWR from 'swr';
 import { fetcher } from '../../../backend/driver/fetcher';
 import SearchBar from '../../../components/organisms/SearchBar';
+import { useSuspenseSWR } from '../../../backend/hooks/useSuspenseSWR';
 
 const GraphSplitPaneWrapper: React.FC<{
   viewId: string;
@@ -52,6 +53,15 @@ const GraphSplitPaneWrapper: React.FC<{
     viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
     fetcher
   );
+  // useSuspenseSWR(
+  //   viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null
+  // );
+
+  useEffect(() => {
+    console.log('is oading ' + nodeDataLoading);
+  }),
+    [nodeDataLoading];
+  //;
 
   useEffect(() => {
     if (!nodeDataResponse) return;

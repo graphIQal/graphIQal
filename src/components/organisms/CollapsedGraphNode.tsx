@@ -37,6 +37,7 @@ const CollapsedGraphNode: React.FC<{
   const viewContext = useContext(ViewContext) as ViewContextInterface;
 
   const [searchVal, setSearchVal] = useState<string>('');
+
   const { data: searchResult } = useSWR(
     searchVal.length > 0
       ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
@@ -96,9 +97,8 @@ const CollapsedGraphNode: React.FC<{
                   setShowSearchDropdown(true);
                 }
                 if (showSearchDropdown) {
-                  console.log('showing');
                   if (newVal.target.value.length > 0) {
-                    setSearchVal(newVal.target.value);
+                    setSearchVal(newVal.target.value.substring(1));
                   }
                 }
               }}

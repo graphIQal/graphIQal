@@ -1,4 +1,3 @@
-import { getNodeData } from '../../backend/functions/node/query/getNodeData';
 import { ViewContextInterface } from '../../components/context/ViewContext';
 import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
 import {
@@ -19,20 +18,22 @@ export const addExistingNodeToGraph = async (
     ...nodeToAdd,
     color: 'black',
     icon: 'block',
-    connections: await getNodeData(nodeToAdd.id, username).then((result) => {
-      let connections: { [key: string]: ConnectionData } = {};
-      result[0].connectedNodes.map((connection: any) => {
-        if (connection.connected_node) {
-          connections[connection.connected_node.id] = {
-            type: connection.r.type,
-            startNode: nodeToAdd.id,
-            endNode: connection.connected_node.id,
-            content: [],
-          };
-        }
-      });
-      return connections;
-    }),
+    connections: await fetch(`/api/${username}/${nodeToAdd.id}`).then(
+      (result: any) => {
+        let connections: { [key: string]: ConnectionData } = {};
+        result[0].connectedNodes.map((connection: any) => {
+          if (connection.connected_node) {
+            connections[connection.connected_node.id] = {
+              type: connection.r.type,
+              startNode: nodeToAdd.id,
+              endNode: connection.connected_node.id,
+              content: [],
+            };
+          }
+        });
+        return connections;
+      }
+    ),
   };
 
   let newNodes = { ...graphContext.nodeData_Graph };

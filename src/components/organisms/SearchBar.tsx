@@ -33,6 +33,7 @@ const SearchBar: React.FC = () => {
   const graphViewContext = useContext(
     GraphViewContext
   ) as GraphViewContextInterface;
+  console.log('graph context ' + graphViewContext);
   const viewContext = useContext(ViewContext) as ViewContextInterface;
   const { documentVar } = viewContext;
   const getButtonItems = (result: any) => {

@@ -97,7 +97,6 @@ const SearchBar: React.FC = () => {
       plusKeyPressed.current = true;
     }
     if (event.code == 'KeyP') {
-      event.preventDefault();
       pKeyPressed.current = true;
     }
     if (

@@ -4,7 +4,6 @@ import IconCircleButton from '../molecules/IconCircleButton';
 import Link from 'next/link';
 import { SideTabProps } from '../organisms/Tabs/GraphSideTabs';
 import { SideTabPropsDoc } from '../organisms/Tabs/DocumentSideTabs';
-import { MainTabProps } from '../context/ViewContext';
 import { updateView } from '../../helpers/backend/updateView';
 import { useToggle } from '../../helpers/hooks/useToggle';
 
@@ -18,7 +17,7 @@ type TabProps = {
   setTabs: (val: any) => void;
   onClick?: (val: number) => void;
 };
-export const Tab: React.FC<TabProps> = ({
+const Tab: React.FC<TabProps> = ({
   label,
   selected,
   index,
@@ -30,6 +29,7 @@ export const Tab: React.FC<TabProps> = ({
     setCurrTab(index);
   },
 }) => {
+  console.log('tab rendering');
   // const [showDel, setShowDel] = useState(false);
 
   const onClose = (index: number) => {
@@ -98,3 +98,4 @@ export const Tab: React.FC<TabProps> = ({
     </div>
   );
 };
+export default Tab;

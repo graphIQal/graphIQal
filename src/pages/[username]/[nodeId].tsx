@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import MainTabs from '../../components/organisms/Tabs/MainTabs';
-import ViewContext, {
-  ViewContextInterface,
+import MainTabs, {
   MainTabProps,
-} from '../../components/context/ViewContext';
+} from '../../components/organisms/Tabs/MainTabs';
+import ViewContext from '../../components/context/ViewContext';
 import { useRouter, withRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../backend/driver/fetcher';
@@ -122,7 +121,6 @@ const Home: React.FC = () => {
         });
       }
     }
-    console.log('changing tabs');
     setTabs(newTabs);
   }, [data]);
 
@@ -132,14 +130,10 @@ const Home: React.FC = () => {
     setCurrTab(0);
   }, [nodeId]);
 
-  const [showSearchBar, setShowSearchBar] = useState(false);
-
   return (
     // <NavigationContext.Provider value={}>
     <ViewContext.Provider
       value={{
-        mainViewTabs: tabs,
-        setMainViewTabs: setTabs,
         username: username as string,
         nodeId: currNodeId,
         setNodeId: setCurrNodeId,
@@ -149,11 +143,10 @@ const Home: React.FC = () => {
         setCurrTab: setCurrTab,
         windowVar: windowVar,
         documentVar: documentVar,
-        showSearchBar: showSearchBar,
-        setShowSearchBar: setShowSearchBar,
       }}
     >
-      <MainTabs />
+      <MainTabs mainViewTabs={tabs} setMainViewTabs={setTabs} />
+      <SearchBar />
     </ViewContext.Provider>
     // </NavigationContext.Provider>
   );

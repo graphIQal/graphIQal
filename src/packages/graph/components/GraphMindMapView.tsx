@@ -2,7 +2,7 @@
  * Display of nodes and lines connecting them in "mind map" style
  */
 import React, { useContext } from 'react';
-import LineTo from '../lineto/LineTo';
+import { LineTo } from '../lineto/LineTo';
 
 import { ItemProps } from '../../../components/organisms/Dropdown';
 import {

@@ -33,9 +33,7 @@ const GraphSplitPaneWrapper: React.FC<{
   let window = windowVar;
   if (!document || !window) return <div></div>;
 
-  const { nodeId, username, showSearchBar, setShowSearchBar } = useContext(
-    ViewContext
-  ) as ViewContextInterface;
+  const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
 
   // node data on screen
   let nodeData: { [key: string]: NodeData } = {};
@@ -184,13 +182,6 @@ const GraphSplitPaneWrapper: React.FC<{
             <GraphSideTabs nodeInFocus_data={nodeInFocus_data} />
           </SplitPaneRight>
         </SplitPane>
-        {showSearchBar && <SearchBar />}
-        {showSearchBar && (
-          <div
-            onClick={() => setShowSearchBar(false)}
-            className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
-          ></div>
-        )}
       </GraphViewContext.Provider>
     </DrawingContext.Provider>
   );

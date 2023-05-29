@@ -235,7 +235,6 @@ export const Arrow = ({
   );
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showConnectionButton, setShowConnectionButton] = useState(true);
 
   useEffect(() => {
     var path = document.getElementById('line' + id) as HTMLElement &
@@ -255,36 +254,32 @@ export const Arrow = ({
 
   return (
     <div className='relative'>
-      {showConnectionButton && (
-        <div
-          className='absolute w-max z-30'
-          style={{
-            left: (p1.x + p4.x) / 2 + canvasXOffset - 15,
-            top: (p1.y + p4.y) / 2 + canvasYOffset - 15,
+      <div
+        className='absolute w-max z-30'
+        style={{
+          left: (p1.x + p4.x) / 2 + canvasXOffset - 15,
+          top: (p1.y + p4.y) / 2 + canvasYOffset - 15,
+        }}
+      >
+        <IconCircleButton
+          selected={showDropdown}
+          onClick={() => {
+            setShowDropdown(!showDropdown);
           }}
-        >
-          <IconCircleButton
-            selected={showDropdown}
-            onClick={() => {
-              setShowDropdown(!showDropdown);
-            }}
-            src='connection'
+          src='connection'
+        />
+        {showDropdown && (
+          <Dropdown
+            showDropdown={showDropdown}
+            items={getDropdownItems().items}
+            activeIndex={getDropdownItems().activeIndex}
+            windowVar={windowVar}
+            setShowDropdown={setShowDropdown}
           />
-          {showDropdown && (
-            <Dropdown
-              showDropdown={showDropdown}
-              items={getDropdownItems().items}
-              activeIndex={getDropdownItems().activeIndex}
-              windowVar={windowVar}
-              setShowDropdown={setShowDropdown}
-            />
-          )}
-        </div>
-      )}
+        )}
+      </div>
 
       <svg
-        onMouseEnter={() => setShowConnectionButton(true)}
-        onMouseLeave={() => setShowConnectionButton(false)}
         width={canvasWidth}
         id='svg'
         height={canvasHeight}

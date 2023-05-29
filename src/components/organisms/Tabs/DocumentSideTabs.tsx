@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import ShelfEditor from '../../../packages/shelf-editor/ShelfEditor';
-import { Tab } from '../../atoms/Tab';
+import Tab from '../../atoms/Tab';
 import { Tabs } from './Tabs';
 
 export type SideTabPropsDoc = {

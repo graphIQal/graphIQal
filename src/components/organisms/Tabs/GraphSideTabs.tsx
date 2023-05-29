@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import EditorComponent from '../../../packages/editor/EditorComponent';
 import Graph from '../../../packages/graph/components/GraphSplitPaneWrapper';
-import { Tab } from '../../atoms/Tab';
+import Tab from '../../atoms/Tab';
 import { Tabs } from './Tabs';
 import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
 import SearchBar from '../SearchBar';

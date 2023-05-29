@@ -81,12 +81,12 @@ const Home: React.FC = () => {
   }, [currNodeId]);
 
   let newTabs: MainTabProps[] = [
-    // {
-    //   label: 'Home',
-    //   viewId: '',
-    //   viewType: 'document',
-    //   component: <SplitPaneWrapper viewId={''} />,
-    // },
+    {
+      label: 'Home',
+      viewId: '',
+      viewType: 'document',
+      component: <SplitPaneWrapper viewId={''} />,
+    },
     //temp
     // {
     //   label: 'Graph View',

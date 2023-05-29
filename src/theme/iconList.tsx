@@ -12,4 +12,7 @@ export const iconList = [
   'block',
   'angleRight',
   'angleDown',
+  'checklist',
+  'algo',
+  'data',
 ];

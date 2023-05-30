@@ -11,7 +11,8 @@ export default async function handler(
 	DETACH DELETE n
 	`;
 
-	const result: any = await write(cypher as string);
+	// const result: any = await write(cypher as string);
 
-	res.status(200).json({ ...result });
+	// res.status(200).json({ ...result });
+	res.status(400);
 }

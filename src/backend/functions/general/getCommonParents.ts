@@ -19,14 +19,13 @@ export const getCommonParents = async (nodeIDs: string[]) => {
   RETURN i {.*}, collect(DISTINCT {r: r {.*, type: type(r)}, u: u1 {.*}}) AS connections,  count(i)
   ORDER BY count(i) DESC`;
 
-	console.log(cypher);
+	// console.log(cypher);
 
 	const res = await fetch(`/api/general/nodes/query/getCommonParentsAPI`, {
 		method: 'POST',
 		body: cypher,
 	})
 		.then((res) => {
-			console.log(res);
 			return res.json();
 		})
 		.then((json) => {
@@ -34,8 +33,8 @@ export const getCommonParents = async (nodeIDs: string[]) => {
 			return json;
 		});
 
-	console.log('res');
-	console.log(res);
+	// console.log('res');
+	// console.log(res);
 
 	return res;
 };

@@ -77,10 +77,10 @@ const GraphSplitPaneWrapper: React.FC<{
 		}
 	}, [nodeId]);
 
-	console.log('nodeData');
-	console.log(nodeData_Graph);
-	console.log('visualData');
-	console.log(nodeVisualData_Graph);
+	// console.log('nodeData');
+	// console.log(nodeData_Graph);
+	// console.log('visualData');
+	// console.log(nodeVisualData_Graph);
 
 	//alert message
 	const [alert, setAlert] = useState('');
@@ -94,10 +94,10 @@ const GraphSplitPaneWrapper: React.FC<{
 		setAlert
 	);
 
-	useEffect(() => {
-		console.log('history: ', pointer);
-		console.log(history.current);
-	}, [history.current, pointer.current]);
+	// useEffect(() => {
+	// 	console.log('history: ', pointer);
+	// 	console.log(history.current);
+	// }, [history.current, pointer.current]);
 
 	//Graph in view of one node, keep the id.
 	const [nodeInFocusId, setnodeInFocusId] = useState(nodeId);

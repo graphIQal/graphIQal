@@ -11,5 +11,5 @@ export default async function handler(
 
 	const result: any = await read(body as string);
 
-	res.status(200).json({ ...result });
+	res.status(200).json(result);
 }

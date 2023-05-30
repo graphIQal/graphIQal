@@ -16,7 +16,7 @@ export const getCommonParents = async (nodeIDs: string[]) => {
   WHERE u1.id in ${JSON.stringify(nodeIDs)} AND u2.id in ${JSON.stringify(
 		nodeIDs
 	)}
-  RETURN i {.*}, collect(DISTINCT {r: r {.*, type: type(r)}, u: u1 {.*}}) AS connections,  count(i)
+  RETURN i {.*} AS parentNode, collect(DISTINCT {r: r {.*, type: type(r)}, u: u1 {.*}}) AS connections,  count(i)
   ORDER BY count(i) DESC`;
 
 	// console.log(cypher);

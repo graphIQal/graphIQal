@@ -94,7 +94,7 @@ export default function Home() {
 						);
 					}}
 				/>
-				<TextButton
+				{/* <TextButton
 					text={'Delete resources'}
 					onClick={async () => {
 						console.log('add resources');
@@ -106,7 +106,7 @@ export default function Home() {
 							}
 						);
 					}}
-				/>
+				/> */}
 				{/* <TextButton text={'Delete ALL NODES'} onClick={() => deleteAll()} /> */}
 			</div>
 		</ul>

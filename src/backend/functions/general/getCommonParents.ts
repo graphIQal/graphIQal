@@ -3,21 +3,39 @@
 import { NodeData } from '../../../packages/graph/graphTypes';
 
 // if possible, sort by the ones that are the parent of the most nodes in nodeIDs
-export const getCommonParents = (nodeIDs: string[]): NodeData[] => {
-  return [
-    {
-      id: 'f3403c06-c449-4c3e-b376-a8f1d38a961d',
-      title: 'Homework',
-      icon: 'block',
-      color: 'blue',
-      connections: {
-        'cce198e8-6c92-44e5-a7b7-7f1a4d75ba18': {
-          content: [],
-          startNode: 'f3403c06-c449-4c3e-b376-a8f1d38a961d',
-          endNode: 'cce198e8-6c92-44e5-a7b7-7f1a4d75ba18',
-          type: 'HAS',
-        },
-      },
-    },
-  ];
+export const getCommonParents = async (nodeIDs: string[]) => {
+	// const cypher = `
+	// WITH ['Keanu Reeves', 'Hugo Weaving', 'Emil Eifrem'] as names
+	// MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+	// WHERE p.name in names
+	// RETURN m
+	// `
+
+	const cypher = `
+  MATCH (u1:Node)<-[r:HAS]-(i:Node)-[r2:HAS]->(u2:Node)
+  WHERE u1.id in ${JSON.stringify(nodeIDs)} AND u2.id in ${JSON.stringify(
+		nodeIDs
+	)}
+  RETURN i {.*}, collect(DISTINCT {r: r {.*, type: type(r)}, u: u1 {.*}}) AS connections,  count(i)
+  ORDER BY count(i) DESC`;
+
+	console.log(cypher);
+
+	const res = await fetch(`/api/general/nodes/query/getCommonParentsAPI`, {
+		method: 'POST',
+		body: cypher,
+	})
+		.then((res) => {
+			console.log(res);
+			return res.json();
+		})
+		.then((json) => {
+			console.log(json);
+			return json;
+		});
+
+	console.log('res');
+	console.log(res);
+
+	return res;
 };

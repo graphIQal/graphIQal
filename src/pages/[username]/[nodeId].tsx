@@ -5,7 +5,7 @@ import MainTabs, {
 import ViewContext from '../../components/context/ViewContext';
 import { useRouter, withRouter } from 'next/router';
 import useSWR from 'swr';
-import { fetcher } from '../../backend/driver/fetcher';
+import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
 
 import SearchBar from '../../components/organisms/SearchBar';
 import Graph from '../../packages/graph/Graph';
@@ -34,8 +34,8 @@ const Home: React.FC = () => {
   });
 
   const { data, error, isLoading } = useSWR(
-    nodeId ? `/api/${username}/${nodeId}/document` : null,
-    fetcher
+    [nodeId ? `/api/${username}/${nodeId}/document` : null],
+    fetcherAll
   );
 
   // useEffect(() => {
@@ -102,12 +102,13 @@ const Home: React.FC = () => {
   const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || !data[0]) return;
 
     if (!isLoading) {
-      if (data) {
+      console.log('data returned', data);
+      if (data[0]) {
         let includedIDs: { [key: string]: boolean } = {};
-        data.map((record: any, index: number) => {
+        data[0].map((record: any, index: number) => {
           if (!includedIDs[record.g.properties.id]) {
             includedIDs[record.g.properties.id] = true;
 
@@ -127,7 +128,7 @@ const Home: React.FC = () => {
       }
     }
     setTabs(newTabs);
-  }, [data]);
+  }, [data && data[0]]);
 
   const [currTab, setCurrTab] = useState(0);
 

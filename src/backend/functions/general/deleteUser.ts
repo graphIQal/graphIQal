@@ -1,33 +1,32 @@
-import useSWR from 'swr';
 import { fetcher } from '../../driver/fetcher';
 import { jsonToCypher_graphView } from '../../driver/dataConversion';
 import { GraphNodeData, NodeData } from '../../../packages/graph/graphTypes';
 
 type saveGraphViewInput = {
-	username: string;
-	email: string;
-	password: string;
+  username: string;
+  email: string;
+  password: string;
 };
 
 export const deleteUser = async ({
-	username,
-	email,
-	password,
+  username,
+  email,
+  password,
 }: saveGraphViewInput) => {
-	const res = await fetch(
-		`/api/general/deleteUser?email=${email}&username=${username}&password=${password}&`,
-		{
-			method: 'POST',
-		}
-	)
-		.then((res) => {
-			console.log('res ', res);
-			return res.json();
-		})
-		.then((json) => {
-			console.log('json: ', json);
-			return json;
-		});
+  const res = await fetch(
+    `/api/general/deleteUser?email=${email}&username=${username}&password=${password}&`,
+    {
+      method: 'POST',
+    }
+  )
+    .then((res) => {
+      console.log('res ', res);
+      return res.json();
+    })
+    .then((json) => {
+      console.log('json: ', json);
+      return json;
+    });
 
-	return res;
+  return res;
 };

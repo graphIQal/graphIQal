@@ -1,4 +1,4 @@
-import { fetcher } from '../../../driver/fetcher';
+import { fetcher, fetcherAll } from '../../../driver/fetcher';
 import useSWR from 'swr';
 
 export type getNodeData_type = {
@@ -13,8 +13,8 @@ export type connectedNode_type = {
 
 export const useGetNodeData = (nodeId: string, username: string) => {
   const { data: res } = useSWR(
-    nodeId ? `/api/${username}/${nodeId}` : null,
-    fetcher
+    [nodeId ? `/api/${username}/${nodeId}` : null],
+    fetcherAll
   );
   // const res = await fetch(`/api/${username}/${nodeId}`)
   // 	.then((res) => {
@@ -24,5 +24,5 @@ export const useGetNodeData = (nodeId: string, username: string) => {
   // 		return json;
   // 	});
 
-  return res ? res[0] : null;
+  return res && res[0] ? res[0][0] : null;
 };

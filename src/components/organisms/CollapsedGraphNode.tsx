@@ -13,7 +13,7 @@ import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 import IconCircleButton from '../molecules/IconCircleButton';
 import { ItemProps } from './Dropdown';
 import useSWR from 'swr';
-import { fetcher } from '../../backend/driver/fetcher';
+import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
 
 const CollapsedGraphNode: React.FC<{
   toggleDropdown: () => void;
@@ -39,34 +39,38 @@ const CollapsedGraphNode: React.FC<{
   const [searchVal, setSearchVal] = useState<string>('');
 
   const { data: searchResult } = useSWR(
-    searchVal.length > 0
-      ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
-      : null,
-    fetcher
+    [
+      searchVal.length > 0
+        ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
+        : null,
+    ],
+    fetcherAll
   );
 
   const formRef = useRef<any>(null);
   useEffect(() => {
-    if (searchResult) {
-      const items: ItemProps[] = searchResult.map((result: any, i: number) => {
-        return {
-          text: result.n.title,
-          onPress: () => {
-            formRef.current.value = result.n.title;
-            addExistingNodeToGraph(
-              graphViewContext,
-              viewContext.username,
-              id,
-              result.n
-            );
-          },
-        };
-      });
+    if (searchResult && searchResult[0]) {
+      const items: ItemProps[] = searchResult[0].map(
+        (result: any, i: number) => {
+          return {
+            text: result.n.title,
+            onPress: () => {
+              formRef.current.value = result.n.title;
+              addExistingNodeToGraph(
+                graphViewContext,
+                viewContext.username,
+                id,
+                result.n
+              );
+            },
+          };
+        }
+      );
       setResults(items);
     } else {
       setResults([]);
     }
-  }, [searchResult]);
+  }, [searchResult && searchResult[0]]);
 
   return (
     <>

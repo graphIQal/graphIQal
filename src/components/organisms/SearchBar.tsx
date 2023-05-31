@@ -13,9 +13,8 @@ import router from 'next/router';
 import { NodeData } from '../../packages/graph/graphTypes';
 import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
 import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
-import { fetcher } from '../../backend/driver/fetcher';
+import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
 import useSWR from 'swr';
-import { useSuspenseSWR } from '../../backend/hooks/useSuspenseSWR';
 
 const SearchBar: React.FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -160,10 +159,12 @@ const SearchBar: React.FC = () => {
 
   const [searchVal, setSearchVal] = useState<string>('');
   const { data: searchResult } = useSWR(
-    searchVal.length > 0
-      ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
-      : null,
-    fetcher
+    [
+      searchVal.length > 0
+        ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
+        : null,
+    ],
+    fetcherAll
   );
   // const { data: searchResult } = useSuspenseSWR(
   //   searchVal.length > 0
@@ -172,12 +173,12 @@ const SearchBar: React.FC = () => {
   // );
 
   useEffect(() => {
-    if (searchResult) {
-      setResults(searchResult);
+    if (searchResult && searchResult[0]) {
+      setResults(searchResult[0]);
     } else {
       setResults([]);
     }
-  }, [searchResult]);
+  }, [searchResult && searchResult[0]]);
 
   if (!showSearchBar) return <></>;
 

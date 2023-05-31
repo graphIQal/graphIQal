@@ -150,9 +150,25 @@ const GraphSplitPaneWrapper: React.FC<{
   let numPointsInTriangleFuncs = useRef<any>({});
 
   //graph view tags default
-  const [tags, setTags] = useState(
-    getCommonParents(Object.keys(nodeData_Graph))
-  );
+  const [tags, setTags] = useState<any>([
+    {
+      id: 'f3403c06-c449-4c3e-b376-a8f1d38a961d',
+      title: 'Homework',
+      icon: 'block',
+      color: 'blue',
+      connections: {
+        'cce198e8-6c92-44e5-a7b7-7f1a4d75ba18': {
+          content: [],
+          startNode: 'f3403c06-c449-4c3e-b376-a8f1d38a961d',
+          endNode: 'cce198e8-6c92-44e5-a7b7-7f1a4d75ba18',
+          type: 'HAS',
+        },
+      },
+    },
+  ]);
+  getCommonParents(Object.keys(nodeData_Graph)).then((res) => {
+    console.log(res);
+  });
 
   return (
     <DrawingContext.Provider

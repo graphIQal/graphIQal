@@ -10,18 +10,18 @@ import ViewContext, {
 	ViewContextInterface,
 } from '../../../components/context/ViewContext';
 import { Alert } from '../../../components/organisms/Alert';
+import SearchBar from '../../../components/organisms/SearchBar';
 import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
 import SplitPane, {
+	Divider,
 	SplitPaneLeft,
 	SplitPaneRight,
-	Divider,
 } from '../../../components/organisms/split-pane/SplitPane';
 import DrawingContext from '../context/GraphDrawingContext';
 import GraphViewContext from '../context/GraphViewContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
-import SearchBar from '../../../components/organisms/SearchBar';
 
 const GraphSplitPaneWrapper: React.FC<{
 	viewId: string;
@@ -77,10 +77,10 @@ const GraphSplitPaneWrapper: React.FC<{
 		}
 	}, [nodeId]);
 
-	// console.log('nodeData');
-	// console.log(nodeData_Graph);
-	// console.log('visualData');
-	// console.log(nodeVisualData_Graph);
+	console.log('nodeData');
+	console.log(nodeData_Graph);
+	console.log('visualData');
+	console.log(nodeVisualData_Graph);
 
 	//alert message
 	const [alert, setAlert] = useState('');

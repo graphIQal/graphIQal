@@ -77,10 +77,10 @@ const GraphSplitPaneWrapper: React.FC<{
 		}
 	}, [nodeId]);
 
-	console.log('nodeData');
-	console.log(nodeData_Graph);
-	console.log('visualData');
-	console.log(nodeVisualData_Graph);
+	// console.log('nodeData');
+	// console.log(nodeData_Graph);
+	// console.log('visualData');
+	// console.log(nodeVisualData_Graph);
 
 	//alert message
 	const [alert, setAlert] = useState('');

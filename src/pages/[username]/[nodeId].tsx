@@ -132,7 +132,7 @@ const Home: React.FC = () => {
 		setCurrTab(0);
 	}, [nodeId]);
 
-	const [showSearchBar, setShowSearchBar] = useState(false);
+	const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
 
 	return (
 		// <NavigationContext.Provider value={}>

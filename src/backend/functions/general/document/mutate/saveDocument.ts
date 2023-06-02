@@ -8,6 +8,8 @@ export const saveDocument = async ({
 	console.log('saveDocumentDocument');
 	console.log(nodeId, username);
 
+	console.log(JSON.stringify(document));
+
 	const res = await fetch(`/api/${username}/${nodeId}/document/save`, {
 		method: 'POST',
 		body: JSON.stringify(document),

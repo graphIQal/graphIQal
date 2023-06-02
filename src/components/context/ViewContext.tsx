@@ -6,26 +6,26 @@ import { createContext } from 'react';
 import { getNodeData_type } from '../../backend/functions/node/query/getNodeData';
 
 export type MainTabProps = {
-  label: string;
-  viewId: string;
-  viewType: 'document' | 'graph';
-  component?: any;
+	label: string;
+	viewId: string;
+	viewType: 'document' | 'graph';
+	component?: any;
 };
 
 export type ViewContextInterface = {
-  mainViewTabs: MainTabProps[];
-  setMainViewTabs: (val: MainTabProps[]) => void;
-  username: string;
-  nodeId: string;
-  setNodeId: (val: string) => void;
-  currNode_data: getNodeData_type;
-  setcurrNode_data: (val: getNodeData_type) => void;
-  currTab: number;
-  setCurrTab: (val: number) => void;
-  windowVar: Window;
-  documentVar: Document;
-  showSearchBar: boolean;
-  setShowSearchBar: (val: boolean) => void;
+	mainViewTabs: MainTabProps[];
+	setMainViewTabs: (val: MainTabProps[]) => void;
+	username: string;
+	nodeId: string;
+	setNodeId: (val: string) => void;
+	currNode_data: getNodeData_type;
+	setcurrNode_data: (val: getNodeData_type) => void;
+	currTab: number;
+	setCurrTab: (val: number) => void;
+	windowVar: Window;
+	documentVar: Document;
+	showSearchBar: boolean;
+	setShowSearchBar: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ViewContext = createContext<ViewContextInterface | null>(null);

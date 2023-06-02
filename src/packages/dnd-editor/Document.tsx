@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import SplitPane, {
@@ -37,17 +37,21 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 	const {
 		nodeId,
 		username,
+		currNode_data,
 		showSearchBar,
 		setShowSearchBar,
 		documentVar,
 		windowVar,
 	} = useContext(ViewContext) as ViewContextInterface;
 
+	console.log('currNode_data');
+	console.log(currNode_data);
+
 	const [value, setValue] = useState([
 		{
 			type: ELEMENT_H1,
 			id: 'asdkj123123a',
-			children: [{ text: '' }],
+			children: [{ text: 'dummy title' }],
 		} as MyH1Element,
 		{
 			type: 'block',
@@ -67,12 +71,21 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 		} as MyBlockElement,
 	]);
 
+	useEffect(() => {
+		if (currNode_data.n.content) {
+			setValue(JSON.parse(currNode_data.n.content));
+		}
+	}, [currNode_data]);
+
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
-					<EditorComponent value={value} />
+					{currNode_data.n.content && (
+						<EditorComponent value={value} />
+					)}
 				</SplitPaneLeft>
+				<Divider className='separator-col' />
 				<SplitPaneRight>
 					{/* <TextButton
 						text='Create new graph view'

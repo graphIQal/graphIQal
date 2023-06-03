@@ -27,22 +27,11 @@ import {
 	MyH1Element,
 	MyParagraphElement,
 } from '../editor/plateTypes';
+import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
-	const router = useRouter();
-	// const { username, nodeId } = router.query;
-	const {
-		nodeId,
-		username,
-		currNode_data,
-		showSearchBar,
-		setShowSearchBar,
-		documentVar,
-		windowVar,
-	} = useContext(ViewContext) as ViewContextInterface;
-
-	console.log('currNode_data');
-	console.log(currNode_data);
+	const { nodeId, username, currNode_data, documentVar, windowVar } =
+		useContext(ViewContext) as ViewContextInterface;
 
 	const [value, setValue] = useState([
 		{
@@ -68,18 +57,20 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 		} as MyBlockElement,
 	]);
 
-	useEffect(() => {
-		if (currNode_data.n.content) {
-			setValue(JSON.parse(currNode_data.n.content));
-		}
-	}, [currNode_data]);
+	if (currNode_data.n && !currNode_data.n.content) {
+		console.log('hmm');
+		// send a request to create content
+		saveDocument({ nodeId, username, document: value });
+	}
 
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
 					{currNode_data.n.content && (
-						<EditorComponent value={value} />
+						<EditorComponent
+							value={JSON.parse(currNode_data.n.content)}
+						/>
 					)}
 				</SplitPaneLeft>
 				<Divider className='separator-col' />

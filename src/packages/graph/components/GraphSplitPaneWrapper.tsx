@@ -114,10 +114,10 @@ const GraphSplitPaneWrapper: React.FC<{
 		setAlert
 	);
 
-	useEffect(() => {
-		console.log('history: ', pointer);
-		console.log(history.current);
-	}, [history.current, pointer.current]);
+	// useEffect(() => {
+	// 	console.log('history: ', pointer);
+	// 	console.log(history.current);
+	// }, [history.current, pointer.current]);
 
 	// get the connected nodes of seleced node
 	// const {
@@ -172,7 +172,7 @@ const GraphSplitPaneWrapper: React.FC<{
 		},
 	]);
 	getCommonParents(Object.keys(nodeData_Graph)).then((res) => {
-		console.log(res);
+		// console.log(res);
 	});
 
 	return (

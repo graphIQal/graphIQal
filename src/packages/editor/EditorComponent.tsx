@@ -36,6 +36,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { withReact } from 'slate-react';
 import { createEditor } from 'slate-hyperscript';
 import { withHistory } from 'slate-history';
+import useUnload from '../../helpers/hooks/useUnload';
 
 const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 	// const router = useRouter();
@@ -43,9 +44,11 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 		ViewContext
 	) as ViewContextInterface;
 
-	console.log('hmmm');
-
 	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 5000));
+
+	useUnload(() => {
+		saveDocument({ nodeId, username, document: value });
+	});
 
 	const plugins = useMemo(
 		() =>
@@ -69,6 +72,12 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 		[]
 	);
 
+	// useEffect(() => {
+	// 	window.onbeforeunload(
+	// 		saveDocument({ nodeId, username, document: value })
+	// 	);
+	// }, []);
+
 	// `useCallback` here to memoize the function for subsequent renders.
 	// const renderElement = useCallback((props: any) => {
 	// 	return <Block {...props} />;
@@ -81,7 +90,7 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 				value={value}
 				onChange={(value) => {
 					console.log(value);
-					console.log(intervalRef.current);
+					// console.log(intervalRef.current);
 					clearTimeout(intervalRef.current);
 					intervalRef.current = setTimeout(() => {
 						saveDocument({ nodeId, username, document: value });

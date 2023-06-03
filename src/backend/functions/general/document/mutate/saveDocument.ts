@@ -6,9 +6,8 @@ export const saveDocument = async ({
 	document,
 }: SaveDocumentInput) => {
 	console.log('saveDocumentDocument');
-	// console.log(nodeId, username);
-
-	// console.log(JSON.stringify(document));
+	console.log(nodeId, username);
+	console.log(JSON.stringify(document));
 
 	const res = await fetch(`/api/${username}/${nodeId}/document/save`, {
 		method: 'POST',

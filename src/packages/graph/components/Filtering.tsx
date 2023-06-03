@@ -108,7 +108,9 @@ export const Filtering: React.FC<FilteringProps> = ({
 							},
 							i: number
 						) => {
-							return <Tag tag={tag.title} id={tag.id} />;
+							return (
+								<Tag tag={tag.title} id={tag.id} key={tag.id} />
+							);
 						}
 					)}
 					<TextButton

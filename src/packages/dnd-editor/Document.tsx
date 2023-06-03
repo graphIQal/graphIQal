@@ -10,9 +10,11 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // } from '../../src/components/organisms/split-pane/SplitPane';
 // import Document from '../../src/pages/document/Document';
 
+import { ELEMENT_H1 } from '@udecode/plate';
 import { useRouter } from 'next/router';
-import { createGraphView } from '../../backend/functions/graph/mutate/createGraphView';
-import TextButton from '../../components/molecules/TextButton';
+import ViewContext, {
+	ViewContextInterface,
+} from '../../components/context/ViewContext';
 import DocumentSideTabs from '../../components/organisms/Tabs/DocumentSideTabs';
 import SplitPane, {
 	Divider,
@@ -20,15 +22,10 @@ import SplitPane, {
 	SplitPaneRight,
 } from '../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../editor/EditorComponent';
-import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
-import ViewContext, {
-	ViewContextInterface,
-} from '../../components/context/ViewContext';
-import { ELEMENT_H1 } from '@udecode/plate';
 import {
+	MyBlockElement,
 	MyH1Element,
 	MyParagraphElement,
-	MyBlockElement,
 } from '../editor/plateTypes';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
@@ -96,12 +93,12 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 							)
 						}
 					/> */}
-					<TextButton
+					{/* <TextButton
 						text='Save Document'
 						onClick={() =>
 							saveDocument({ nodeId, username, document: value })
 						}
-					/>
+					/> */}
 					<DocumentSideTabs />
 				</SplitPaneRight>
 			</SplitPane>

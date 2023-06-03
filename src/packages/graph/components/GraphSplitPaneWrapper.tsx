@@ -153,6 +153,7 @@ const GraphSplitPaneWrapper: React.FC<{
 			},
 		},
 	]);
+
 	getCommonParents(Object.keys(nodeData_Graph)).then((res) => {
 		console.log(res);
 	});

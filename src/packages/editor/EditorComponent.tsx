@@ -1,10 +1,11 @@
 import {
 	createComboboxPlugin,
+	createHistoryPlugin,
 	createNodeIdPlugin,
 	ELEMENT_H1,
 	Plate,
 } from '@udecode/plate';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
@@ -31,8 +32,20 @@ import ViewContext, {
 	ViewContextInterface,
 } from '../../components/context/ViewContext';
 
+import { v4 as uuidv4 } from 'uuid';
+import { withReact } from 'slate-react';
+import { createEditor } from 'slate-hyperscript';
+import { withHistory } from 'slate-history';
+
 const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 	// const router = useRouter();
+	const { nodeId, username } = useContext(
+		ViewContext
+	) as ViewContextInterface;
+
+	console.log('hmmm');
+
+	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 5000));
 
 	const plugins = useMemo(
 		() =>
@@ -46,10 +59,16 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 				...FormatPlugins,
 				createBlockPlugin(),
 				createComboboxPlugin(),
-				createNodeIdPlugin(),
+				// createHistoryPlugin(),
+				createNodeIdPlugin({
+					options: {
+						idCreator: uuidv4,
+					},
+				}),
 			]),
 		[]
 	);
+
 	// `useCallback` here to memoize the function for subsequent renders.
 	// const renderElement = useCallback((props: any) => {
 	// 	return <Block {...props} />;
@@ -62,6 +81,11 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 				value={value}
 				onChange={(value) => {
 					console.log(value);
+					console.log(intervalRef.current);
+					clearTimeout(intervalRef.current);
+					intervalRef.current = setTimeout(() => {
+						saveDocument({ nodeId, username, document: value });
+					}, 5000);
 				}}
 				plugins={plugins}
 				id='editor'

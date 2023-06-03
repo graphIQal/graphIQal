@@ -35,11 +35,6 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 
 	const [value, setValue] = useState([
 		{
-			type: ELEMENT_H1,
-			id: 'asdkj123123a',
-			children: [{ text: 'dummy title' }],
-		} as MyH1Element,
-		{
 			type: 'block',
 			id: '123123990asdf',
 			children: [
@@ -50,17 +45,22 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 						{
 							text: '',
 						},
-						// { type: 'p', id: 'bbbbb', children: [{ text: 'hmm' }] },
 					],
 				} as MyParagraphElement,
 			],
 		} as MyBlockElement,
 	]);
 
-	if (currNode_data.n && !currNode_data.n.content) {
+	if (currNode_data.n && currNode_data.n.content === null) {
 		console.log('hmm');
 		// send a request to create content
 		saveDocument({ nodeId, username, document: value });
+	}
+
+	if (currNode_data.n.content) {
+		console.log('...JSON.parse(currNode_data.n.content)');
+		console.log(currNode_data.n);
+		console.log([...JSON.parse(currNode_data.n.content)]);
 	}
 
 	return (
@@ -69,7 +69,14 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 				<SplitPaneLeft>
 					{currNode_data.n.content && (
 						<EditorComponent
-							value={JSON.parse(currNode_data.n.content)}
+							value={[
+								{
+									type: ELEMENT_H1,
+									id: 'Node Title',
+									children: [{ text: currNode_data.n.title }],
+								} as MyH1Element,
+								...JSON.parse(currNode_data.n.content),
+							]}
 						/>
 					)}
 				</SplitPaneLeft>

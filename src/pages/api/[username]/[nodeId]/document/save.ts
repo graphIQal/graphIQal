@@ -10,12 +10,13 @@ export default async function handler(
 
 	const cypher: string = `
 	MATCH (n:Node {id: $nodeId})
-	SET n.content = '${body}'
+	SET n.content = $body
 	RETURN n
 	`;
+
 	// RETURN r, b { .*, parentNodeId: $nodeId}
 
-	const result = await write(cypher, params);
+	const result = await write(cypher, { ...params, body: body });
 
 	res.status(200).json(result);
 }

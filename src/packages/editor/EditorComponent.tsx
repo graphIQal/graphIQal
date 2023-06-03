@@ -47,7 +47,9 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 5000));
 
 	useUnload(() => {
-		saveDocument({ nodeId, username, document: value });
+		console.log('unload');
+		console.log(value.slice(1));
+		// 	saveDocument({ nodeId, username, document: value.slice(1) });
 	});
 
 	const plugins = useMemo(
@@ -93,7 +95,11 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 					// console.log(intervalRef.current);
 					clearTimeout(intervalRef.current);
 					intervalRef.current = setTimeout(() => {
-						saveDocument({ nodeId, username, document: value });
+						saveDocument({
+							nodeId,
+							username,
+							document: value.slice(1),
+						});
 					}, 5000);
 				}}
 				plugins={plugins}

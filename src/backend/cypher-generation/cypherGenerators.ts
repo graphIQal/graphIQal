@@ -104,7 +104,6 @@ export const deleteNodeCypher = (node: createNewNodeCypher_Input): string => {
 		cypher += '\nDETACH DELETE n';
 	}
 
-	console.log(cypher);
 	return cypher;
 };
 

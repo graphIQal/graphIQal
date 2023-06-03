@@ -223,8 +223,6 @@ export const jsonToCypher_graphView = ({
 					data[value.startNode].connections[value.endNode]
 				)
 			) {
-				console.log('hmm');
-				console.log(data[value.startNode].connections[value.endNode]);
 				// @ts-ignore
 				data[value.startNode].connections[value.endNode][
 					value.old.type
@@ -315,12 +313,9 @@ export const jsonToCypher_graphView = ({
 
 	for (let i = 0; i <= Number(pointer.current); i++) {
 		const transaction = history.current[i];
-		console.log(transaction);
 
 		transactionToData[transaction.type](transaction);
 	}
-
-	console.log(data);
 
 	const setPropertiesCypher = (node: any) => {
 		if (node.set && Object.values(node.set).length > 0) {
@@ -487,7 +482,7 @@ export const jsonToCypher_graphView = ({
 	// Adding relationships
 	// for (const key in nodeData) {
 	// 	for (const connectionKey in nodeData[key].connections) {
-	// 		// console.log(nodeData[key].connections[connectionKey]);
+
 	// 		const connection = nodeData[key].connections[connectionKey];
 	// 		if (connection.startNode === nodeId) continue;
 

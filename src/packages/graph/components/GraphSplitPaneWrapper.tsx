@@ -10,18 +10,20 @@ import ViewContext, {
 	ViewContextInterface,
 } from '../../../components/context/ViewContext';
 import { Alert } from '../../../components/organisms/Alert';
-import SearchBar from '../../../components/organisms/SearchBar';
 import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
 import SplitPane, {
-	Divider,
 	SplitPaneLeft,
 	SplitPaneRight,
+	Divider,
 } from '../../../components/organisms/split-pane/SplitPane';
 import DrawingContext from '../context/GraphDrawingContext';
 import GraphViewContext from '../context/GraphViewContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
+import useSWR from 'swr';
+import { fetcher, fetcherAll } from '../../../backend/driver/fetcher';
+import SearchBar from '../../../components/organisms/SearchBar';
 
 const GraphSplitPaneWrapper: React.FC<{
 	viewId: string;
@@ -33,7 +35,7 @@ const GraphSplitPaneWrapper: React.FC<{
 	let window = windowVar;
 	if (!document || !window) return <div></div>;
 
-	const { nodeId, username, showSearchBar, setShowSearchBar } = useContext(
+	const { nodeId, username } = useContext(
 		ViewContext
 	) as ViewContextInterface;
 
@@ -45,42 +47,60 @@ const GraphSplitPaneWrapper: React.FC<{
 	const [nodeVisualData_Graph, setnodeVisualData_Graph] =
 		useState(visualData);
 
+	//Graph in view of one node, keep the id.
+	const [nodeInFocusId, setnodeInFocusId] = useState(nodeId);
+	const [nodeInFocus_data, setnodeInFocus_data] = useState<{
+		n: any;
+		connectedNodes: any[];
+	}>({ n: {}, connectedNodes: [] });
+
+	const {
+		data,
+		error: nodeError,
+		isLoading: nodeDataLoading,
+	} = useSWR(
+		[
+			viewId && nodeId
+				? `/api/${username}/${nodeId}/graph/${viewId}`
+				: null,
+			nodeInFocusId ? `/api/${username}/${nodeInFocusId}` : null,
+		],
+		fetcherAll
+	);
+	// useSuspenseSWR(
+	//   viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null
+	// );
+
+	//;
+
 	useEffect(() => {
-		if (nodeId) {
-			fetch(`/api/${username}/${nodeId}/graph/${viewId}`)
-				.then((res) => res.json())
-				.then((data) => {
-					for (let node in data) {
-						let nodeConnections: { [key: string]: ConnectionData } =
-							{};
-						for (let connection in data[node].connections) {
-							nodeConnections[
-								data[node].connections[connection].endNode
-							] = {
-								...data[node].connections[connection],
-								content: [],
-							};
-						}
-						nodeData[data[node].node.id] = {
-							...data[node].node,
-							connections: nodeConnections,
-							icon: 'block',
-							color: 'black',
-						};
+		if (!data || !data[0]) return;
+		for (let node in data[0]) {
+			const nodeDataResponse = data[0];
+			let nodeConnections: { [key: string]: ConnectionData } = {};
+			for (let connection in nodeDataResponse[node].connections) {
+				nodeConnections[
+					nodeDataResponse[node].connections[connection].endNode
+				] = {
+					...nodeDataResponse[node].connections[connection],
+					content: [],
+				};
+			}
+			nodeData[nodeDataResponse[node].node.id] = {
+				...nodeDataResponse[node].node,
+				connections: nodeConnections,
+			};
 
-						visualData[data[node].node.id] =
-							data[node].relationship;
-					}
-				});
-			setnodeData_Graph(nodeData);
-			setnodeVisualData_Graph(visualData);
+			visualData[nodeDataResponse[node].node.id] =
+				nodeDataResponse[node].relationship;
 		}
-	}, [nodeId]);
+		setnodeData_Graph(nodeData);
+		setnodeVisualData_Graph(visualData);
+	}, [data && data[0]]);
 
-	// console.log('nodeData');
-	// console.log(nodeData_Graph);
-	// console.log('visualData');
-	// console.log(nodeVisualData_Graph);
+	//   console.log(nodeData_Graph);
+	//   console.log('visualData');
+	//   console.log(nodeVisualData_Graph);
 
 	//alert message
 	const [alert, setAlert] = useState('');
@@ -94,33 +114,31 @@ const GraphSplitPaneWrapper: React.FC<{
 		setAlert
 	);
 
-	// useEffect(() => {
-	// 	console.log('history: ', pointer);
-	// 	console.log(history.current);
-	// }, [history.current, pointer.current]);
-
-	//Graph in view of one node, keep the id.
-	const [nodeInFocusId, setnodeInFocusId] = useState(nodeId);
-	const [nodeInFocus_data, setnodeInFocus_data] = useState<{
-		n: any;
-		connectedNodes: any[];
-	}>({ n: {}, connectedNodes: [] });
+	useEffect(() => {
+		console.log('history: ', pointer);
+		console.log(history.current);
+	}, [history.current, pointer.current]);
 
 	// get the connected nodes of seleced node
+	// const {
+	//   data: nodeInFocusDataResponse,
+	//   error: nodeInFocusError,
+	//   isLoading: nodeInFocusLoading,
+	// } = useSWR(
+	//   nodeInFocusId ? `/api/${username}/${nodeInFocusId}` : null,
+	//   fetcher
+	// );
+
 	useEffect(() => {
-		if (nodeInFocusId)
-			fetch(`/api/${username}/${nodeInFocusId}`)
-				.then((res) => res.json())
-				.then((json) => {
-					setnodeInFocus_data(json[0]);
-				});
-	}, [nodeInFocusId]);
+		if (data && data[1]) {
+			setnodeInFocus_data(data[1][0]);
+		}
+	}, [data && data[1]]);
 
 	// set NodeId once it changes
 	useEffect(() => {
 		setnodeInFocusId(nodeId);
 	}, [nodeId]);
-	// const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
 	const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
 
 	//Drawing states
@@ -137,7 +155,7 @@ const GraphSplitPaneWrapper: React.FC<{
 	let numPointsInTriangleFuncs = useRef<any>({});
 
 	//graph view tags default
-	const [tags, setTags] = useState([
+	const [tags, setTags] = useState<any>([
 		{
 			id: 'f3403c06-c449-4c3e-b376-a8f1d38a961d',
 			title: 'Homework',
@@ -153,7 +171,6 @@ const GraphSplitPaneWrapper: React.FC<{
 			},
 		},
 	]);
-
 	getCommonParents(Object.keys(nodeData_Graph)).then((res) => {
 		console.log(res);
 	});
@@ -200,6 +217,7 @@ const GraphSplitPaneWrapper: React.FC<{
 							ref={containerRef}
 						>
 							<GraphContainer />
+							<SearchBar />
 							<Alert />
 						</div>
 						{/* <BoxDragLayer parentRef={containerRef} /> */}
@@ -209,13 +227,6 @@ const GraphSplitPaneWrapper: React.FC<{
 						<GraphSideTabs nodeInFocus_data={nodeInFocus_data} />
 					</SplitPaneRight>
 				</SplitPane>
-				{showSearchBar && <SearchBar />}
-				{showSearchBar && (
-					<div
-						onClick={() => setShowSearchBar(false)}
-						className='absolute w-screen h-screen bg-black top-0 left-0 opacity-30'
-					></div>
-				)}
 			</GraphViewContext.Provider>
 		</DrawingContext.Provider>
 	);

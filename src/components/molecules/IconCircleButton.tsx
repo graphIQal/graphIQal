@@ -16,6 +16,9 @@ import { AngleDown } from '@styled-icons/fa-solid/AngleDown';
 import { AngleRight } from '@styled-icons/fa-solid/AngleRight';
 import { AngleLeft } from '@styled-icons/fa-solid/AngleLeft';
 import { Save } from '@styled-icons/boxicons-regular/Save';
+import { Data } from '@styled-icons/boxicons-solid/Data';
+import { Thealgorithms } from '@styled-icons/simple-icons/Thealgorithms';
+import { CardChecklist } from '@styled-icons/bootstrap/CardChecklist';
 
 type NodeButtonProps = {
   onClick: () => void;
@@ -143,6 +146,27 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
     ),
     save: (
       <Save
+        size={'1em'}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
+      />
+    ),
+    data: (
+      <Data
+        size={'1em'}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
+      />
+    ),
+    algo: (
+      <Thealgorithms
+        size={'1em'}
+        color={!selected ? color : 'white'}
+        onClick={handleClick}
+      />
+    ),
+    checklist: (
+      <CardChecklist
         size={'1em'}
         color={!selected ? color : 'white'}
         onClick={handleClick}

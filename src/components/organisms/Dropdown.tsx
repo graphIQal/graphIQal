@@ -43,6 +43,7 @@ export const Dropdown: React.FC<{
       {list && items && (
         <SelectableList
           onEnter={() => null}
+          activeIndex={activeIndex}
           listItems={items.map((item, i) => {
             return (
               <div

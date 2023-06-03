@@ -1,4 +1,3 @@
-import { getNodeData } from '../../backend/functions/node/query/getNodeData';
 // import { getNodeData } from '../../backend/functions/node/query/getNodeData';
 import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
 import { GraphNodeData, NodeData } from '../../packages/graph/graphTypes';

@@ -1,19 +1,19 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import MainTabs from '../../components/organisms/Tabs/MainTabs';
-import ViewContext, {
-	ViewContextInterface,
+import MainTabs, {
 	MainTabProps,
-} from '../../components/context/ViewContext';
+} from '../../components/organisms/Tabs/MainTabs';
+import ViewContext from '../../components/context/ViewContext';
 import { useRouter, withRouter } from 'next/router';
 import useSWR from 'swr';
-import { fetcher } from '../../backend/driver/fetcher';
-import {
-	getNodeData,
-	getNodeData_type,
-} from '../../backend/functions/node/query/getNodeData';
+import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
+
 import SearchBar from '../../components/organisms/SearchBar';
 import Graph from '../../packages/graph/Graph';
 import SplitPaneWrapper from '../../packages/dnd-editor/Document';
+import {
+	getNodeData_type,
+	useGetNodeData,
+} from '../../backend/functions/node/query/useGetNodeData';
 
 const Home: React.FC = () => {
 	const [windowVar, setWindow] = useState<any>();
@@ -34,8 +34,8 @@ const Home: React.FC = () => {
 	});
 
 	const { data, error, isLoading } = useSWR(
-		nodeId ? `/api/${username}/${nodeId}/document` : null,
-		fetcher
+		[nodeId ? `/api/${username}/${nodeId}/document` : null],
+		fetcherAll
 	);
 
 	// useEffect(() => {
@@ -71,14 +71,18 @@ const Home: React.FC = () => {
 	useEffect(() => {
 		setCurrNodeId(nodeId as string);
 	}, [nodeId]);
+	const res = useGetNodeData(currNodeId, username as string);
 
 	useEffect(() => {
-		if (currNodeId) {
-			getNodeData(currNodeId, username as string).then((res) => {
-				if (res.length > 0) setcurrNode_data(res[0]);
-			});
+		if (res) {
+			setcurrNode_data(res);
 		}
-	}, [currNodeId]);
+	}, [res]);
+
+	// useEffect(() => {
+	//   const res = useGetNodeData(currNodeId, username as string);
+	//   setcurrNode_data(res);
+	// }, [currNodeId]);
 
 	let newTabs: MainTabProps[] = [
 		{
@@ -98,12 +102,13 @@ const Home: React.FC = () => {
 	const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
 	useEffect(() => {
-		if (!data) return;
+		if (!data || !data[0]) return;
 
 		if (!isLoading) {
-			if (data) {
+			console.log('data returned', data);
+			if (data[0]) {
 				let includedIDs: { [key: string]: boolean } = {};
-				data.map((record: any, index: number) => {
+				data[0].map((record: any, index: number) => {
 					if (!includedIDs[record.g.properties.id]) {
 						includedIDs[record.g.properties.id] = true;
 
@@ -122,9 +127,8 @@ const Home: React.FC = () => {
 				});
 			}
 		}
-		console.log('changing tabs');
 		setTabs(newTabs);
-	}, [data]);
+	}, [data && data[0]]);
 
 	const [currTab, setCurrTab] = useState(0);
 
@@ -132,14 +136,10 @@ const Home: React.FC = () => {
 		setCurrTab(0);
 	}, [nodeId]);
 
-	const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
-
 	return (
 		// <NavigationContext.Provider value={}>
 		<ViewContext.Provider
 			value={{
-				mainViewTabs: tabs,
-				setMainViewTabs: setTabs,
 				username: username as string,
 				nodeId: currNodeId,
 				setNodeId: setCurrNodeId,
@@ -149,11 +149,9 @@ const Home: React.FC = () => {
 				setCurrTab: setCurrTab,
 				windowVar: windowVar,
 				documentVar: documentVar,
-				showSearchBar: showSearchBar,
-				setShowSearchBar: setShowSearchBar,
 			}}
 		>
-			<MainTabs />
+			<MainTabs mainViewTabs={tabs} setMainViewTabs={setTabs} />
 		</ViewContext.Provider>
 		// </NavigationContext.Provider>
 	);

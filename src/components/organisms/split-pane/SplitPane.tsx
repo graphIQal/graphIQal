@@ -143,13 +143,13 @@ export const SplitPaneTop = (props: any) => {
     topRef.current.style.maxHeight = clientHeight + 'px';
   }, [clientHeight]);
 
-  const { currTab } = useContext(ViewContext) as ViewContextInterface;
+  // const { currTab } = useContext(ViewContext) as ViewContextInterface;
 
-  useEffect(() => {
-    if (!clientHeight || clientHeight == 0) {
-      setClientHeight(1.5 * topRef.current.clientWidth);
-    }
-  }, [currTab]);
+  // useEffect(() => {
+  //   if (!clientHeight || clientHeight == 0) {
+  //     setClientHeight(1.5 * topRef.current.clientWidth);
+  //   }
+  // }, [currTab]);
 
   useEffect(() => {
     if (!clientHeight) {

@@ -1,48 +1,31 @@
 import {
 	createComboboxPlugin,
-	createHistoryPlugin,
 	createNodeIdPlugin,
-	ELEMENT_H1,
 	Plate,
 } from '@udecode/plate';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
+import ViewContext, {
+	ViewContextInterface,
+} from '../../components/context/ViewContext';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
-import {
-	createMyPlugins,
-	MyBlockElement,
-	MyH1Element,
-	MyParagraphElement,
-	MyValue,
-} from './plateTypes';
+import { createMyPlugins, MyValue, useMyEditorRef } from './plateTypes';
 import { BlockPlugins } from './Plugins/BlockPlugins';
 import { CommandPlugins } from './Plugins/CommandPlugins';
 import { FormatPlugins } from './Plugins/FormatPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
-import SplitPane, {
-	SplitPaneLeft,
-	SplitPaneRight,
-} from '../../components/organisms/split-pane/SplitPane';
-import TextButton from '../../components/molecules/TextButton';
-import DocumentSideTabs from '../../components/organisms/Tabs/DocumentSideTabs';
-import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
-import ViewContext, {
-	ViewContextInterface,
-} from '../../components/context/ViewContext';
 
 import { v4 as uuidv4 } from 'uuid';
-import { withReact } from 'slate-react';
-import { createEditor } from 'slate-hyperscript';
-import { withHistory } from 'slate-history';
-import useUnload from '../../helpers/hooks/useUnload';
 
 const EditorComponent: React.FC<{
 	value: any[];
 	setValue: Function;
 	initialValue: any[];
-}> = ({ initialValue, value, setValue }) => {
+	id: string;
+}> = ({ initialValue, value, setValue, id = uuidv4() }) => {
 	// const router = useRouter();
 	const { nodeId, username } = useContext(
 		ViewContext
@@ -59,11 +42,13 @@ const EditorComponent: React.FC<{
 	const onUnload = () => {
 		console.log('INSIDE handleUnload: ', value);
 		// code to save progress to local storage....
-		saveDocument({
-			nodeId,
-			username,
-			document: value.slice(1),
-		});
+		if (value.length > 0)
+			saveDocument({
+				nodeId,
+				username,
+				document: value.slice(1),
+				title: value[0].children[0].text as string,
+			});
 	};
 
 	const plugins = useMemo(
@@ -93,12 +78,14 @@ const EditorComponent: React.FC<{
 	// 	return <Block {...props} />;
 	// }, []);
 
+	// get editor instance
+	// const editor =
+
 	return (
 		<div>
 			<Plate<MyValue>
 				editableProps={editableProps}
 				initialValue={initialValue}
-				// value={value}
 				onChange={(docValue) => {
 					// console.log('doc value');
 					console.log(docValue);
@@ -109,11 +96,12 @@ const EditorComponent: React.FC<{
 							nodeId,
 							username,
 							document: docValue.slice(1),
+							title: docValue[0].children[0].text as string,
 						});
 					}, 5000);
 				}}
 				plugins={plugins}
-				id='editor'
+				id={id}
 			>
 				<EditorFloatingMenu />
 				<EditorSlashMenu />

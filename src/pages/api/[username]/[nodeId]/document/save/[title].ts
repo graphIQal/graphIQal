@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { read, write } from '../../../../../backend/driver/helpers';
+import { read, write } from '../../../../../../backend/driver/helpers';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -11,6 +11,7 @@ export default async function handler(
 	const cypher: string = `
 	MATCH (n:Node {id: $nodeId})
 	SET n.content = $body
+	SET n.title = $title
 	RETURN n
 	`;
 

@@ -412,6 +412,8 @@ export const jsonToCypher_graphView = ({
 					// Right now, since we aren't editing any relationships we only do anything if a relationship is created
 					// So we put the entire function into relationship.create
 
+					// instead of deleting and recreating, we could maybe invert. But idk
+					// https://neo4j.com/docs/apoc/5/overview/apoc.refactor/apoc.refactor.invert/
 					if (node.connections[endNode][type].delete) {
 						if (!node.connections[endNode][type].create) {
 							cypher += `

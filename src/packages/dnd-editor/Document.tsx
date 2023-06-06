@@ -78,6 +78,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 							]}
 							value={value}
 							setValue={setValue}
+							id={'documentId'}
 						/>
 					)}
 				</SplitPaneLeft>

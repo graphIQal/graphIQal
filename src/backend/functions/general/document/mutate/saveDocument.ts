@@ -5,20 +5,19 @@ export const saveDocument = async ({
 	username,
 	document,
 }: SaveDocumentInput) => {
-	console.log('saveDocumentDocument');
-	console.log(nodeId, username);
-	console.log(JSON.stringify(document));
+	// console.log('saveDocumentDocument');
+	// console.log(nodeId, username);
+	// console.log(JSON.stringify(document));
 
 	const res = await fetch(`/api/${username}/${nodeId}/document/save`, {
 		method: 'POST',
 		body: JSON.stringify(document),
 	})
 		.then((res) => {
-			console.log('res ', res);
+			console.log('saveDocument ', res);
 			return res.json();
 		})
 		.then((json) => {
-			console.log('json: ', json);
 			return json;
 		});
 

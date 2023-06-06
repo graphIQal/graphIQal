@@ -52,16 +52,15 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 	]);
 
 	if (currNode_data.n && currNode_data.n.content === null) {
-		console.log('hmm');
 		// send a request to create content
 		saveDocument({ nodeId, username, document: value });
 	}
 
-	if (currNode_data.n.content) {
-		console.log('...JSON.parse(currNode_data.n.content)');
-		console.log(currNode_data.n);
-		console.log([...JSON.parse(currNode_data.n.content)]);
-	}
+	// if (currNode_data.n.content) {
+	// 	console.log('...JSON.parse(currNode_data.n.content)');
+	// 	console.log(currNode_data.n);
+	// 	console.log([...JSON.parse(currNode_data.n.content)]);
+	// }
 
 	return (
 		<DndProvider backend={HTML5Backend}>
@@ -69,7 +68,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 				<SplitPaneLeft>
 					{currNode_data.n.content && (
 						<EditorComponent
-							value={[
+							initialValue={[
 								{
 									type: ELEMENT_H1,
 									id: 'Node Title',
@@ -77,6 +76,8 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 								} as MyH1Element,
 								...JSON.parse(currNode_data.n.content),
 							]}
+							value={value}
+							setValue={setValue}
 						/>
 					)}
 				</SplitPaneLeft>

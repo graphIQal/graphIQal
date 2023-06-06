@@ -38,7 +38,11 @@ import { createEditor } from 'slate-hyperscript';
 import { withHistory } from 'slate-history';
 import useUnload from '../../helpers/hooks/useUnload';
 
-const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
+const EditorComponent: React.FC<{
+	value: any[];
+	setValue: Function;
+	initialValue: any[];
+}> = ({ initialValue, value, setValue }) => {
 	// const router = useRouter();
 	const { nodeId, username } = useContext(
 		ViewContext
@@ -46,11 +50,21 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 
 	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 5000));
 
-	useUnload(() => {
-		console.log('unload');
-		console.log(value.slice(1));
-		// 	saveDocument({ nodeId, username, document: value.slice(1) });
-	});
+	useEffect(() => {
+		window.addEventListener('beforeunload', onUnload);
+
+		return () => window.removeEventListener('beforeunload', onUnload);
+	}, [value]);
+
+	const onUnload = () => {
+		console.log('INSIDE handleUnload: ', value);
+		// code to save progress to local storage....
+		saveDocument({
+			nodeId,
+			username,
+			document: value.slice(1),
+		});
+	};
 
 	const plugins = useMemo(
 		() =>
@@ -74,12 +88,6 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 		[]
 	);
 
-	// useEffect(() => {
-	// 	window.onbeforeunload(
-	// 		saveDocument({ nodeId, username, document: value })
-	// 	);
-	// }, []);
-
 	// `useCallback` here to memoize the function for subsequent renders.
 	// const renderElement = useCallback((props: any) => {
 	// 	return <Block {...props} />;
@@ -89,16 +97,18 @@ const EditorComponent: React.FC<{ value: any[] }> = ({ value }) => {
 		<div>
 			<Plate<MyValue>
 				editableProps={editableProps}
-				value={value}
-				onChange={(value) => {
-					console.log(value);
-					// console.log(intervalRef.current);
+				initialValue={initialValue}
+				// value={value}
+				onChange={(docValue) => {
+					// console.log('doc value');
+					console.log(docValue);
+					setValue(docValue);
 					clearTimeout(intervalRef.current);
 					intervalRef.current = setTimeout(() => {
 						saveDocument({
 							nodeId,
 							username,
-							document: value.slice(1),
+							document: docValue.slice(1),
 						});
 					}, 5000);
 				}}

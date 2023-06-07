@@ -3,15 +3,13 @@
  */
 import { useCallback, useContext } from 'react';
 import { updateNode } from '../../../helpers/backend/updateNode';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
+import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
 
 //When box is resized
 export const useResize = () => {
-  const context = useContext(GraphViewContext);
-  const { nodeVisualData_Graph, setnodeVisualData_Graph } =
-    context as GraphViewContextInterface;
+  const { nodeVisualData_Graph, nodeData_Graph, addAction } =
+    useGraphViewData();
+  const { changeNodeData_Graph, changeVisualData_Graph } = useGraphViewAPI();
   let updateSize = useCallback(
     (
       id: string,
@@ -30,10 +28,16 @@ export const useResize = () => {
           done: done,
         },
         id,
-        context
+        {
+          addAction,
+          changeVisualData_Graph,
+          nodeVisualData_Graph,
+          nodeData_Graph,
+          changeNodeData_Graph,
+        }
       );
     },
-    [nodeVisualData_Graph, setnodeVisualData_Graph]
+    [nodeVisualData_Graph, changeVisualData_Graph]
   );
 
   return updateSize;

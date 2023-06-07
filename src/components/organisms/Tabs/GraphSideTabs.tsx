@@ -3,12 +3,8 @@ import EditorComponent from '../../../packages/editor/EditorComponent';
 import Graph from '../../../packages/graph/components/GraphSplitPaneWrapper';
 import Tab from '../../atoms/Tab';
 import { Tabs } from './Tabs';
-import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
 import SearchBar from '../SearchBar';
 import router from 'next/router';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../../../packages/graph/context/GraphViewContext';
 import { SidePanel } from '../../templates/SidePanel';
 
 import ConnectionListItem from '../ConnectionListItem';
@@ -18,6 +14,11 @@ import {
 } from '../../../backend/functions/node/query/useGetNodeData';
 import { SelectableList } from '../../templates/SelectableList';
 import { addExistingNodeToGraph } from '../../../helpers/frontend/addExistingNodeToGraph';
+import { useViewData } from '../../context/ViewContext';
+import {
+  useGraphViewAPI,
+  useGraphViewData,
+} from '../../../packages/graph/context/GraphViewContext';
 
 export type SideTabProps = {
   label: string;
@@ -28,12 +29,15 @@ export type SideTabProps = {
 const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
   nodeInFocus_data,
 }) => {
-  const viewContext = useContext(ViewContext) as ViewContextInterface;
-  const { username, currNode_data, nodeId } = viewContext;
-
-  const graphViewContext = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+  const { username, currNode_data, nodeId } = useViewData();
+  const { nodeData_Graph, nodeVisualData_Graph, addAction, nodeInFocusId } =
+    useGraphViewData();
+  const {
+    changeNodeData_Graph,
+    changeVisualData_Graph,
+    changeAlert,
+    changeNodeInFocusId,
+  } = useGraphViewAPI();
 
   const getButtonItems = (result: any) => {
     return [
@@ -41,24 +45,36 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
         //this button should navigate to the views of the clicked node
         src: 'navigation',
         onClick: () => {
-          router.push(`/${viewContext.username}/${result.id}`, undefined);
+          router.push(`/${username}/${result.id}`, undefined);
         },
       },
       {
         //this button should add the selected node to the graph
         src: 'plus',
         onClick: () => {
-          addExistingNodeToGraph(graphViewContext, viewContext.username, '', {
-            id: result.id,
-            title: result.title,
-          });
+          addExistingNodeToGraph(
+            {
+              nodeData_Graph,
+              nodeVisualData_Graph,
+              changeNodeData_Graph,
+              changeVisualData_Graph,
+              changeAlert,
+              addAction,
+            },
+            username,
+            '',
+            {
+              id: result.id,
+              title: result.title,
+            }
+          );
         },
       },
       {
         //this button should put the selected node in focus
         src: 'spotlight',
         onClick: () => {
-          graphViewContext.setnodeInFocusId(result.id);
+          changeNodeInFocusId(result.id);
         },
       },
     ];
@@ -122,12 +138,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
     );
 
     setTabs(newTabs);
-  }, [
-    nodeInFocus_data,
-    currNode_data,
-    graphViewContext.nodeData_Graph,
-    graphViewContext.nodeInFocusId,
-  ]);
+  }, [nodeInFocus_data, currNode_data, nodeData_Graph, nodeInFocusId]);
 
   const [tabs, setTabs] = useState<SideTabProps[]>([
     {

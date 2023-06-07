@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import IconCircleButton from './IconCircleButton';
 import { useRouter } from 'next/navigation';
-import ViewContext, { ViewContextInterface } from '../context/ViewContext';
+import { useViewData } from '../context/ViewContext';
 
 export const TitleWithNavigation: React.FC = () => {
   const router = useRouter();
 
-  const { currNode_data } = useContext(ViewContext) as ViewContextInterface;
+  const { currNode_data } = useViewData();
   return (
     <div className='flex flex-row gap-x-2 align-middle items-center'>
       <div className='flex flex-row gap-x-1'>

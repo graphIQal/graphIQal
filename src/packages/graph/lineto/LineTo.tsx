@@ -25,9 +25,7 @@ import { Coord } from '../hooks/drawing/useDrawingEnd';
 import { useVerticalOffset } from '../hooks/useVerticalOffset';
 import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
-import ViewContext, {
-  ViewContextInterface,
-} from '../../../components/context/ViewContext';
+
 import {
   calculateCanvasDimensions,
   useIsPointInCanvas,
@@ -37,9 +35,7 @@ import {
   findElement,
   calcAnchor,
 } from './helpers/linePositionHelpers';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
+import { useViewData } from '../../../components/context/ViewContext';
 
 // Default styling stuff
 const defaultAnchor = { x: 0.5, y: 0.5 };
@@ -159,10 +155,8 @@ export const Arrow = ({
   deleteConnection,
 }: ArrowProps) => {
   const offset = useVerticalOffset();
-  const { windowVar, documentVar } = useContext(
-    ViewContext
-  ) as ViewContextInterface;
-
+  const { windowVar, documentVar } = useViewData();
+  if (!windowVar || !documentVar) return <div></div>;
   const { isPointInCanvasFuncs, numPointsInTriangleFuncs } = useContext(
     DrawingContext
   ) as DrawingContextInterface;

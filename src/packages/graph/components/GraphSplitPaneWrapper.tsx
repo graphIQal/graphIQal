@@ -6,9 +6,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { getCommonParents } from '../../../backend/functions/general/getCommonParents';
-import ViewContext, {
-  ViewContextInterface,
-} from '../../../components/context/ViewContext';
+
 import { Alert } from '../../../components/organisms/Alert';
 import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
 import SplitPane, {
@@ -17,35 +15,43 @@ import SplitPane, {
   Divider,
 } from '../../../components/organisms/split-pane/SplitPane';
 import DrawingContext from '../context/GraphDrawingContext';
-import GraphViewContext from '../context/GraphViewContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
 import useSWR from 'swr';
 import { fetcher, fetcherAll } from '../../../backend/driver/fetcher';
 import SearchBar from '../../../components/organisms/SearchBar';
+import { useViewData } from '../../../components/context/ViewContext';
+import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
 
 const GraphSplitPaneWrapper: React.FC<{
   viewId: string;
 }> = ({ viewId }) => {
-  const { documentVar, windowVar } = useContext(
-    ViewContext
-  ) as ViewContextInterface;
+  console.log('rerendering graph pane wrapper');
+
+  const { nodeId, username, documentVar, windowVar } = useViewData();
+  const { nodeInFocusId } = useGraphViewData();
+  const {
+    changeNodeInFocusId,
+    changeNodeData_Graph,
+    changeVisualData_Graph,
+    changeGraphViewId,
+    changeAlert,
+    changeHistory,
+    setHistoryFunctions,
+  } = useGraphViewAPI();
+
   let document = documentVar;
   let window = windowVar;
+
   if (!document || !window) return <div></div>;
 
-  const { nodeId, username } = useContext(ViewContext) as ViewContextInterface;
-
-  // node data on screen
-  let nodeData: { [key: string]: NodeData } = {};
-  let visualData: { [key: string]: GraphNodeData } = {};
-
-  const [nodeData_Graph, setnodeData_Graph] = useState(nodeData);
-  const [nodeVisualData_Graph, setnodeVisualData_Graph] = useState(visualData);
-
   //Graph in view of one node, keep the id.
-  const [nodeInFocusId, setnodeInFocusId] = useState(nodeId);
+
+  useEffect(() => {
+    changeNodeInFocusId(nodeId);
+  }, []);
+
   const [nodeInFocus_data, setnodeInFocus_data] = useState<{
     n: any;
     connectedNodes: any[];
@@ -69,6 +75,8 @@ const GraphSplitPaneWrapper: React.FC<{
   //;
 
   useEffect(() => {
+    let nodeData = {} as { [key: string]: NodeData };
+    let visualData = {} as { [key: string]: GraphNodeData };
     if (!data || !data[0]) return;
     for (let node in data[0]) {
       const nodeDataResponse = data[0];
@@ -89,40 +97,9 @@ const GraphSplitPaneWrapper: React.FC<{
       visualData[nodeDataResponse[node].node.id] =
         nodeDataResponse[node].relationship;
     }
-    setnodeData_Graph(nodeData);
-    setnodeVisualData_Graph(visualData);
+    changeNodeData_Graph(nodeData);
+    changeVisualData_Graph(visualData);
   }, [data && data[0]]);
-
-  //   console.log(nodeData_Graph);
-  //   console.log('visualData');
-  //   console.log(nodeVisualData_Graph);
-
-  //alert message
-  const [alert, setAlert] = useState('');
-
-  //History
-  const { addAction, undo, redo, history, pointer } = useHistoryState(
-    nodeData_Graph,
-    setnodeData_Graph,
-    nodeVisualData_Graph,
-    setnodeVisualData_Graph,
-    setAlert
-  );
-
-  useEffect(() => {
-    console.log('history: ', pointer);
-    console.log(history.current);
-  }, [history.current, pointer.current]);
-
-  // get the connected nodes of seleced node
-  // const {
-  //   data: nodeInFocusDataResponse,
-  //   error: nodeInFocusError,
-  //   isLoading: nodeInFocusLoading,
-  // } = useSWR(
-  //   nodeInFocusId ? `/api/${username}/${nodeInFocusId}` : null,
-  //   fetcher
-  // );
 
   useEffect(() => {
     if (data && data[1]) {
@@ -132,9 +109,12 @@ const GraphSplitPaneWrapper: React.FC<{
 
   // set NodeId once it changes
   useEffect(() => {
-    setnodeInFocusId(nodeId);
+    changeNodeInFocusId(nodeId);
   }, [nodeId]);
-  const [currGraphViewId, setCurrGraphViewId] = useState(viewId);
+
+  useEffect(() => {
+    changeGraphViewId(viewId);
+  }, [viewId]);
 
   //Drawing states
   const containerRef = useRef<HTMLDivElement>(null);
@@ -150,25 +130,25 @@ const GraphSplitPaneWrapper: React.FC<{
   let numPointsInTriangleFuncs = useRef<any>({});
 
   //graph view tags default
-  const [tags, setTags] = useState<any>([
-    {
-      id: 'f3403c06-c449-4c3e-b376-a8f1d38a961d',
-      title: 'Homework',
-      icon: 'block',
-      color: 'blue',
-      connections: {
-        'cce198e8-6c92-44e5-a7b7-7f1a4d75ba18': {
-          content: [],
-          startNode: 'f3403c06-c449-4c3e-b376-a8f1d38a961d',
-          endNode: 'cce198e8-6c92-44e5-a7b7-7f1a4d75ba18',
-          type: 'HAS',
-        },
-      },
-    },
-  ]);
-  getCommonParents(Object.keys(nodeData_Graph)).then((res) => {
-    console.log(res);
-  });
+  // const [tags, setTags] = useState<any>([
+  //   {
+  //     id: 'f3403c06-c449-4c3e-b376-a8f1d38a961d',
+  //     title: 'Homework',
+  //     icon: 'block',
+  //     color: 'blue',
+  //     connections: {
+  //       'cce198e8-6c92-44e5-a7b7-7f1a4d75ba18': {
+  //         content: [],
+  //         startNode: 'f3403c06-c449-4c3e-b376-a8f1d38a961d',
+  //         endNode: 'cce198e8-6c92-44e5-a7b7-7f1a4d75ba18',
+  //         type: 'HAS',
+  //       },
+  //     },
+  //   },
+  // ]);
+  // getCommonParents(Object.keys(nodeData_Graph)).then((res) => {
+  //   console.log('common parents ', res);
+  // });
 
   return (
     <DrawingContext.Provider
@@ -183,46 +163,24 @@ const GraphSplitPaneWrapper: React.FC<{
         setIsDrawing: setIsDrawing,
       }}
     >
-      <GraphViewContext.Provider
-        value={{
-          setnodeInFocusId: setnodeInFocusId,
-          nodeData_Graph: nodeData_Graph,
-          setnodeData_Graph: setnodeData_Graph,
-          nodeVisualData_Graph: nodeVisualData_Graph,
-          setnodeVisualData_Graph: setnodeVisualData_Graph,
-          nodeInFocusId: nodeInFocusId,
-          graphViewId: currGraphViewId as string,
-          setGraphViewId: setCurrGraphViewId,
-          tags: tags,
-          setTags: setTags,
-          alert: alert,
-          setAlert: setAlert,
-          addAction: addAction,
-          undo: undo,
-          redo: redo,
-          history: history,
-          pointer: pointer,
-        }}
-      >
-        <SplitPane className='split-pane-row '>
-          <SplitPaneLeft>
-            <div
-              className='outline-none border-none'
-              tabIndex={-1}
-              ref={containerRef}
-            >
-              <GraphContainer />
-              <SearchBar />
-              <Alert />
-            </div>
-            {/* <BoxDragLayer parentRef={containerRef} /> */}
-          </SplitPaneLeft>
-          <Divider className='separator-col' />
-          <SplitPaneRight>
-            <GraphSideTabs nodeInFocus_data={nodeInFocus_data} />
-          </SplitPaneRight>
-        </SplitPane>
-      </GraphViewContext.Provider>
+      <SplitPane className='split-pane-row '>
+        <SplitPaneLeft>
+          <div
+            className='outline-none border-none'
+            tabIndex={-1}
+            ref={containerRef}
+          >
+            <GraphContainer />
+            <SearchBar />
+            <Alert />
+          </div>
+          {/* <BoxDragLayer parentRef={containerRef} /> */}
+        </SplitPaneLeft>
+        <Divider className='separator-col' />
+        <SplitPaneRight>
+          <GraphSideTabs nodeInFocus_data={nodeInFocus_data} />
+        </SplitPaneRight>
+      </SplitPane>
     </DrawingContext.Provider>
   );
 };

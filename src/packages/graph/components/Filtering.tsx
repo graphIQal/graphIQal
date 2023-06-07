@@ -5,19 +5,15 @@
 import React, { useContext } from 'react';
 import { PillMenu } from '../../../components/molecules/PillMenu';
 import { ItemProps } from '../../../components/organisms/Dropdown';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
 import { Tag } from '../../../components/molecules/Tag';
 import TextButton from '../../../components/molecules/TextButton';
 import { createNode } from '@udecode/plate';
 import { saveGraphView } from '../../../backend/functions/graph/mutate/saveGraphView';
 import { applyTags } from '../helpers/Filtering/applyTags';
-import ViewContext, {
-  ViewContextInterface,
-} from '../../../components/context/ViewContext';
+import { useViewData } from '../../../components/context/ViewContext';
 import { TitleWithNavigation } from '../../../components/molecules/TitleWithNavigation';
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
+import { useGraphViewData } from '../context/GraphViewContext';
 
 type FilteringProps = {
   xCategory: string;
@@ -33,7 +29,6 @@ export const Filtering: React.FC<FilteringProps> = ({
   getDropdownItemsX,
   getDropdownItemsY,
 }) => {
-  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
   const {
     tags,
     graphViewId,
@@ -41,12 +36,11 @@ export const Filtering: React.FC<FilteringProps> = ({
     nodeData_Graph,
     history,
     pointer,
-  } = viewContext;
+    undo,
+    redo,
+  } = useGraphViewData();
 
-  const { username, nodeId } = useContext(ViewContext) as ViewContextInterface;
-  const { undo, redo } = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+  const { username, nodeId } = useViewData();
 
   return (
     <div className=' relative flex flex-row p-3 justify-between mb-3 w-full align-middle items-center'>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import ViewContext, { ViewContextInterface } from '../context/ViewContext';
+import { useViewData } from '../context/ViewContext';
 import { SelectableList } from '../templates/SelectableList';
 
 export type ItemProps = {
@@ -24,15 +24,13 @@ export const Dropdown: React.FC<{
   showDropdown,
   setShowDropdown,
 }) => {
-  const { windowVar } = useContext(ViewContext) as ViewContextInterface;
-
   useEffect(() => {
-    windowVar.addEventListener('click', (e: any) => {
+    window.addEventListener('click', (e: any) => {
       e.stopPropagation();
       setShowDropdown(false);
     });
 
-    return windowVar.removeEventListener('click', () => (e: any) => {
+    return window.removeEventListener('click', () => (e: any) => {
       e.stopPropagation();
       setShowDropdown(false);
     });

@@ -1,14 +1,13 @@
 import React, { useContext, useState } from 'react';
 import IconCircleButton from '../../molecules/IconCircleButton';
 import { Dropdown, ItemProps } from '../Dropdown';
-import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
 import { createGraphView } from '../../../backend/functions/graph/mutate/createGraphView';
 import { useToggle } from '../../../helpers/hooks/useToggle';
+import { useViewData } from '../../context/ViewContext';
 
 export const Tabs: React.FC<{ children: any }> = ({ children }) => {
-  const { windowVar, username, nodeId } = useContext(
-    ViewContext
-  ) as ViewContextInterface;
+  const { windowVar, username, nodeId } = useViewData();
+  if (!windowVar) return <div></div>;
   const { value: showDropdown, toggle: setShowDropdown } = useToggle();
 
   const items: ItemProps[] = [

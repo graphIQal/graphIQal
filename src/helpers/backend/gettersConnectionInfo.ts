@@ -1,5 +1,5 @@
 import { getCommonParents } from '../../backend/functions/general/getCommonParents';
-import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
+import { API, State } from '../../packages/graph/context/GraphViewContext';
 import {
   NodeData,
   ConnectionData,
@@ -8,15 +8,17 @@ import {
 import { resources } from '../../schemas/Data_structures/DS_schema';
 
 export const getLineEndpointData = (
-  context: GraphViewContextInterface | null,
+  context: Partial<State & API>,
   lineID: string
 ) => {
+  const { nodeVisualData_Graph } = context;
+  if (!nodeVisualData_Graph) return {};
   const nodes = lineID.split('_');
   const node1 = nodes[0];
-  const data1 = context?.nodeVisualData_Graph[node1];
+  const data1 = nodeVisualData_Graph[node1];
 
   const node2 = nodes[1];
-  const data2 = context?.nodeVisualData_Graph[node2];
+  const data2 = nodeVisualData_Graph[node2];
 
   return {
     x1: data1?.x,
@@ -51,32 +53,36 @@ export const isLineDirectional = (connection: ConnectionData) => {
 export const getConnectionType = (
   from: string,
   to: string,
-  context: GraphViewContextInterface
+  context: Partial<State & API>
 ) => {
-  return context.nodeData_Graph[from].connections[to].type;
+  const { nodeData_Graph } = context;
+  if (!nodeData_Graph) return;
+  return nodeData_Graph[from].connections[to].type;
 };
 
 export const getIconAndColor = (
-  viewContext: GraphViewContextInterface,
+  viewContext: Partial<State & API>,
   node: string
 ) => {
+  const { nodeVisualData_Graph, nodeData_Graph, tags } = viewContext;
+  if (!nodeVisualData_Graph || !nodeData_Graph || !tags)
+    return { icon: '', color: '' };
   let color = '';
   let icon = '';
-  let categorizing_node =
-    viewContext.nodeVisualData_Graph[node].categorizing_node;
+  let categorizing_node = nodeVisualData_Graph[node].categorizing_node;
   if (!categorizing_node) {
-    icon = viewContext.nodeData_Graph[node].icon;
-    color = viewContext.nodeData_Graph[node].color;
+    icon = nodeData_Graph[node].icon;
+    color = nodeData_Graph[node].color;
   } else if (categorizing_node != node) {
     for (node in viewContext.tags) {
-      if (viewContext.tags[node].id == categorizing_node) {
-        icon = viewContext.tags[node].icon;
-        color = viewContext.tags[node].color;
+      if (tags[node as any].id == categorizing_node) {
+        icon = tags[node as any].icon;
+        color = tags[node as any].color;
       }
     }
   } else {
-    icon = viewContext.nodeData_Graph[node].icon;
-    color = viewContext.nodeData_Graph[node].color;
+    icon = nodeData_Graph[node].icon;
+    color = nodeData_Graph[node].color;
   }
 
   return {
@@ -89,14 +95,16 @@ export const getIconAndColor = (
 export const getConnectionInfo = (
   nodeInView: string,
   currNode: string,
-  context: GraphViewContextInterface | null
+  context: Partial<State & API>
 ) => {
+  const { nodeData_Graph } = context;
+  if (!nodeData_Graph) return;
   let content = '';
-  let queryNodes = context?.nodeData_Graph[nodeInView].connections;
+  let queryNodes = nodeData_Graph[nodeInView].connections;
   if (!queryNodes) return;
   if (queryNodes[currNode] == undefined) return '';
   let nodeContentToShow = queryNodes[currNode].content;
-  let nodeData = context?.nodeData_Graph[currNode];
+  let nodeData = nodeData_Graph[currNode];
   //who does the content belong to?
   //It's stored in arraylist, but homework is trying to render it
   for (let item in nodeContentToShow) {

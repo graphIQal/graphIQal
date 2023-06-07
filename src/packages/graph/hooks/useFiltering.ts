@@ -5,17 +5,14 @@
 
 import { useContext, useState } from 'react';
 import { nodesData, titles } from '../../../schemas/Data_structures/DS_schema';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
+import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
 
 export const useFiltering = () => {
   const [xCategory, setXCategory] = useState('study_categories');
   const [yCategory, setYCategory] = useState('data_structures');
 
-  const { setNodeInView, nodeData_Graph } = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+  const { nodeData_Graph } = useGraphViewData();
+  const { changeNodeInFocusId } = useGraphViewAPI();
 
   const getDropdownItems = () => {
     let items = [];
@@ -23,7 +20,7 @@ export const useFiltering = () => {
       items.push({
         text: nodeData_Graph[node].title,
         onPress: () => {
-          setNodeInView(node);
+          changeNodeInFocusId(node);
         },
       });
     }

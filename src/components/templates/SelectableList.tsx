@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
+import { useViewData } from '../context/ViewContext';
 
 type SelectableListProps = {
   listItems: any[];
@@ -14,9 +14,8 @@ export const SelectableList: React.FC<SelectableListProps> = ({
   activeIndex,
 }) => {
   const [highlighted, setHighlighted] = useState(activeIndex ? activeIndex : 0);
-  const { documentVar, username } = useContext(
-    ViewContext
-  ) as ViewContextInterface;
+  const { documentVar, username } = useViewData();
+  if (!documentVar) return <div></div>;
 
   const checkAndScroll = () => {
     const result = checkIfVisible(

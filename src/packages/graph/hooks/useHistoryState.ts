@@ -4,12 +4,6 @@
 
 import { useContext, useEffect, useRef } from 'react';
 import { GraphNodeData, LineRefs, NodeData } from '../graphTypes';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
-import ViewContext, {
-  ViewContextInterface,
-} from '../../../components/context/ViewContext';
 
 export type Action = {
   type: ActionChanges;
@@ -34,11 +28,11 @@ export type ActionChanges =
   | 'NODE_SIZE';
 
 export const useHistoryState = (
-  nodeData_Graph: { [key: string]: NodeData }, //The data of the nodes that are shown on the screen
   setnodeData_Graph: any,
-  nodeVisualData_Graph: { [key: string]: GraphNodeData },
   setnodeVisualData_Graph: any,
-  setAlert: (val: string) => void
+  setAlert: (val: string) => void,
+  nodeData_Graph: { [key: string]: NodeData },
+  nodeVisualData_Graph: { [key: string]: GraphNodeData }
 ) => {
   const history = useRef<Action[]>([]);
   const pointer = useRef<number>(-1);
@@ -69,6 +63,7 @@ export const useHistoryState = (
       return;
     }
     const { id, value, type } = history.current[pointer.current];
+
     switch (type) {
       case 'NODE_SIZE':
         setnodeVisualData_Graph(
@@ -86,19 +81,13 @@ export const useHistoryState = (
 
         break;
       case 'NODE_ADD':
-        setnodeData_Graph((prevState: { [key: string]: NodeData }) => {
-          let newState = { ...prevState };
-          delete newState[id];
-          return newState;
-        });
-        setnodeVisualData_Graph(
-          (prevState: { [key: string]: GraphNodeData }) => {
-            let newState = { ...prevState };
-            delete newState[id];
-            return newState;
-          }
-        );
-
+        console.log('in undoing', nodeData_Graph);
+        let newState = { ...nodeData_Graph };
+        delete newState[id];
+        setnodeData_Graph(newState);
+        let newVisualState = { ...nodeVisualData_Graph };
+        delete newState[id];
+        setnodeVisualData_Graph(newVisualState);
         break;
       case 'NODE_ADD_EXISTING':
         setnodeData_Graph((prevState: { [key: string]: NodeData }) => {

@@ -1,5 +1,4 @@
-import { ViewContextInterface } from '../../components/context/ViewContext';
-import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
+import { API, State } from '../../packages/graph/context/GraphViewContext';
 import {
   ConnectionData,
   GraphNodeData,
@@ -7,12 +6,30 @@ import {
 } from '../../packages/graph/graphTypes';
 
 export const addExistingNodeToGraph = async (
-  graphContext: GraphViewContextInterface,
+  graphContext: Partial<State & API>,
   username: string,
   id: string,
   nodeToAdd: { id: string; title: string }
 ) => {
-  if (nodeToAdd.id in graphContext.nodeData_Graph) return;
+  const {
+    nodeData_Graph,
+    nodeVisualData_Graph,
+    changeNodeData_Graph,
+    changeVisualData_Graph,
+    changeAlert,
+    addAction,
+  } = graphContext;
+  if (
+    !nodeData_Graph ||
+    !nodeVisualData_Graph ||
+    !changeNodeData_Graph ||
+    !changeVisualData_Graph ||
+    !changeAlert ||
+    !addAction
+  )
+    return;
+
+  if (nodeToAdd.id in nodeData_Graph) return;
   const node: NodeData = {
     //node is the node that you get from the database with the given ID
     ...nodeToAdd,
@@ -38,13 +55,13 @@ export const addExistingNodeToGraph = async (
       }),
   };
 
-  let newNodes = { ...graphContext.nodeData_Graph };
+  let newNodes = { ...nodeData_Graph };
 
   let oldData = newNodes[id];
   delete newNodes[id];
   newNodes[nodeToAdd.id] = node;
 
-  let newVisualNodes = { ...graphContext.nodeVisualData_Graph };
+  let newVisualNodes = { ...nodeVisualData_Graph };
 
   if (id == '') {
     newVisualNodes[nodeToAdd.id] = {
@@ -65,10 +82,10 @@ export const addExistingNodeToGraph = async (
   delete newVisualNodes[id];
   // console.log('data nodes ' + JSON.stringify(newNodes));
   // console.log('visual nodes ' + JSON.stringify(newVisualNodes));
-  graphContext.setnodeData_Graph(newNodes);
-  graphContext.setnodeVisualData_Graph(newVisualNodes);
-  graphContext.setAlert('Added node: ' + nodeToAdd.title);
-  graphContext.addAction(nodeToAdd.id, 'NODE_ADD_EXISTING', {
+  changeNodeData_Graph(newNodes);
+  changeVisualData_Graph(newVisualNodes);
+  changeAlert('Added node: ' + nodeToAdd.title);
+  addAction(nodeToAdd.id, 'NODE_ADD_EXISTING', {
     new: {
       node_data: newNodes[nodeToAdd.id],
       node_visual: newVisualNodes[nodeToAdd.id],

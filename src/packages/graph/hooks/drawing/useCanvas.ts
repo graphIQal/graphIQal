@@ -3,11 +3,10 @@
  */
 
 import { MutableRefObject, useContext, useEffect, useState } from 'react';
-import ViewContext, {
-  ViewContextInterface,
-} from '../../../../components/context/ViewContext';
+
 import { GRID_X_SIZE, GRID_Y_SIZE } from '../../helpers/snapToGrid';
 import { useVerticalOffset } from '../useVerticalOffset';
+import { useViewData } from '../../../../components/context/ViewContext';
 
 export function drawLine(
   ctx: any,
@@ -42,7 +41,7 @@ export const useCanvas = (
     y: number;
   };
 
-  const { currTab } = useContext(ViewContext) as ViewContextInterface;
+  const { currTab } = useViewData();
   useEffect(() => {
     if (canvasWidth == 0) {
       canvasWidth = window.innerWidth;

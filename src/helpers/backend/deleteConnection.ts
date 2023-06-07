@@ -1,19 +1,23 @@
-import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
+import { API, State } from '../../packages/graph/context/GraphViewContext';
 
 export const deleteConnection = (
   start: string,
   end: string,
-  viewContext: GraphViewContextInterface
+  viewContext: Partial<State & API>
 ) => {
-  viewContext.setAlert(
+  const { changeAlert, nodeData_Graph, addAction, changeNodeData_Graph } =
+    viewContext;
+  if (!changeAlert || !nodeData_Graph || !addAction || !changeNodeData_Graph)
+    return;
+  changeAlert(
     'Deleted connection from ' +
-      viewContext.nodeData_Graph[start].title +
+      nodeData_Graph[start].title +
       ' to ' +
-      viewContext.nodeData_Graph[end].title
+      nodeData_Graph[end].title
   );
   let newNodes = { ...viewContext.nodeData_Graph };
 
-  viewContext.addAction(start, 'CONNECTION_DELETE', {
+  addAction(start, 'CONNECTION_DELETE', {
     endNode: end,
     connection: newNodes[start].connections[end],
   });
@@ -21,5 +25,5 @@ export const deleteConnection = (
   delete newNodes[start].connections[end];
   delete newNodes[end].connections[start];
 
-  viewContext.setnodeData_Graph(newNodes);
+  changeNodeData_Graph(newNodes);
 };

@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { Router, withRouter } from 'next/router';
+import { Router, useRouter, withRouter } from 'next/router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Tab from '../../atoms/Tab';
-import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
 import { Tabs } from './Tabs';
+import { useViewAPI, useViewData } from '../../context/ViewContext';
+import { useGetNodeData } from '../../../backend/functions/node/query/useGetNodeData';
 
 type MainTabsProps = {
   mainViewTabs: MainTabProps[];
@@ -18,18 +19,42 @@ export type MainTabProps = {
   component?: any;
 };
 const MainTabs: React.FC<MainTabsProps> = ({
-  router,
   mainViewTabs,
   setMainViewTabs,
 }) => {
-  const { username, nodeId, currTab, setCurrTab } = useContext(
-    ViewContext
-  ) as ViewContextInterface;
+  console.log('rerendering main tabs');
+  const {
+    changeWindowVar,
+    changeDocumentVar,
+    changeUsername,
+    changeNodeId,
+    changeNodeData,
+    changeCurrTab,
+  } = useViewAPI();
+
+  const { currTab } = useViewData();
 
   useEffect(() => {
-    if (!router.query.tab) return;
-    setCurrTab(parseInt(router.query.tab as string));
-  }, [router.query.tab]);
+    changeWindowVar(window);
+    changeDocumentVar(document);
+  }, []);
+
+  const router = useRouter();
+  const { username, nodeId, tab } = router.query;
+
+  useEffect(() => {
+    if (!tab) return;
+    changeCurrTab(parseInt(router.query.tab as string));
+  }, [tab]);
+
+  useEffect(() => {
+    changeUsername(username as string);
+  }, [username]);
+
+  useEffect(() => {
+    changeNodeId(nodeId as string);
+    changeCurrTab(0);
+  }, [nodeId]);
 
   useEffect(() => {
     // if (router.query.tab) return;
@@ -48,6 +73,14 @@ const MainTabs: React.FC<MainTabsProps> = ({
       { shallow: true }
     );
   }, [nodeId, mainViewTabs]);
+
+  const res = useGetNodeData(nodeId as string, username as string);
+
+  useEffect(() => {
+    if (res) {
+      changeNodeData(res);
+    }
+  }, [res]);
 
   return (
     <div>
@@ -70,7 +103,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
                   selected={mainViewTabs[currTab].viewId === tab.viewId}
                   index={index}
                   currTab={currTab}
-                  setCurrTab={setCurrTab}
+                  setCurrTab={changeCurrTab}
                   tabs={mainViewTabs}
                   setTabs={setMainViewTabs}
                   onClick={() => null}

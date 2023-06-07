@@ -1,20 +1,10 @@
+import { ELEMENT_PARAGRAPH, wrapNodes } from '@udecode/plate';
 import {
-	ELEMENT_H1,
-	ELEMENT_H2,
-	ELEMENT_H3,
-	ELEMENT_PARAGRAPH,
-	liftNodes,
-	wrapNodes,
-} from '@udecode/plate';
-import {
-	getChildren,
-	getPluginType,
-	isElement,
-	PlateEditor,
-	setNodes,
 	TElement,
 	TNodeEntry,
-	Value,
+	getChildren,
+	getPluginType,
+	setNodes,
 } from '@udecode/plate-core';
 import {
 	BlockwrappedElements,

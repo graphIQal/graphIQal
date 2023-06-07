@@ -21,6 +21,7 @@ import {
 	createMyPluginFactory,
 	createMyPlugins,
 	ELEMENT_NODE,
+	ELEMENT_TITLE,
 } from '../plateTypes';
 
 // I can try adding a plugin for the fricking paragraph that makes it an inline plugin? I'm not sure
@@ -32,7 +33,7 @@ const resetBlockTypesCommonRule = {
 export const FormatPlugins = createMyPlugins([
 	createSoftBreakPlugin(),
 	createNormalizeTypesPlugin({
-		options: { rules: [{ path: [0], strictType: ELEMENT_H1 }] },
+		options: { rules: [{ path: [0], strictType: 'title' }] },
 	}),
 	// createTrailingBlockPlugin(),
 	createResetNodePlugin({

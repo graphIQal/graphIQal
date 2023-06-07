@@ -11,9 +11,9 @@ export const saveDocument = async ({
 	document,
 	title = 'untitled',
 }: SaveDocumentInput) => {
-	console.log('saveDocument');
-	console.log(JSON.stringify(document));
-	console.log(title);
+	// console.log('saveDocument');
+	// console.log(JSON.stringify(document));
+	// console.log(title);
 
 	if (title === '') title = 'untitled';
 
@@ -29,7 +29,7 @@ export const saveDocument = async ({
 			return res.json();
 		})
 		.then((json) => {
-			console.log(json);
+			// console.log(json);
 			return json;
 		});
 

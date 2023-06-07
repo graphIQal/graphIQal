@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import SplitPane, {
@@ -11,8 +11,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // import Document from '../../src/pages/document/Document';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ELEMENT_H1 } from '@udecode/plate';
-import { useRouter } from 'next/router';
+import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
 import ViewContext, {
 	ViewContextInterface,
 } from '../../components/context/ViewContext';
@@ -23,12 +22,7 @@ import SplitPane, {
 	SplitPaneRight,
 } from '../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../editor/EditorComponent';
-import {
-	MyBlockElement,
-	MyH1Element,
-	MyParagraphElement,
-} from '../editor/plateTypes';
-import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
+import { ELEMENT_TITLE, MyTitleElement } from '../editor/plateTypes';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 	const { nodeId, username, currNode_data, documentVar, windowVar } =
@@ -45,10 +39,10 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 			username,
 			document: [
 				{
-					type: ELEMENT_H1,
+					type: ELEMENT_TITLE,
 					id: 'Node Title',
 					children: [{ text: currNode_data.n.title }],
-				} as MyH1Element,
+				} as MyTitleElement,
 				{
 					type: 'block',
 					id: uuidv4(),
@@ -69,10 +63,10 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 						<EditorComponent
 							initialValue={[
 								{
-									type: ELEMENT_H1,
+									type: 'title',
 									id: 'Node Title',
 									children: [{ text: currNode_data.n.title }],
-								} as MyH1Element,
+								} as MyTitleElement,
 								...JSON.parse(currNode_data.n.content),
 							]}
 							value={value}

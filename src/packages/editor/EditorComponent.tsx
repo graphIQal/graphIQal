@@ -42,7 +42,7 @@ const EditorComponent: React.FC<{
 	const onUnload = () => {
 		// code to save progress to local storage....
 		if (value.length > 0) {
-			console.log('unloading', JSON.stringify(value));
+			// console.log('unloading', JSON.stringify(value));
 			saveDocument({
 				nodeId,
 				username,

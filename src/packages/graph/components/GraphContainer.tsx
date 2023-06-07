@@ -2,7 +2,7 @@
  * Container for Graph; renders either "Mind map" view or "Axis" view
  * Sets information for Context wrapper that deals with actions like dragging, undo/redo, resize
  */
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import GraphActionContext from '../context/GraphActionContext';
 import DrawingContext, {
   DrawingContextInterface,
@@ -28,8 +28,6 @@ import { addConnection } from '../../../helpers/backend/addConnection';
 import { ActionChanges, useHistoryState } from '../hooks/useHistoryState';
 
 export const GraphContainer: React.FC<{}> = () => {
-  console.log('rerendering graph container');
-
   const { windowVar, documentVar } = useViewData();
   if (!windowVar || !documentVar) return <div></div>;
 
@@ -54,16 +52,23 @@ export const GraphContainer: React.FC<{}> = () => {
     changeHistory,
   } = useGraphViewAPI();
 
+  const nodeDataRef = useRef(nodeData_Graph);
+  const visualDataRef = useRef(nodeVisualData_Graph);
+
+  useEffect(() => {
+    nodeDataRef.current = nodeData_Graph;
+    visualDataRef.current = nodeVisualData_Graph;
+  }, [nodeData_Graph, nodeVisualData_Graph]);
+
   const { undo, redo, history, addAction, pointer } = useHistoryState(
     changeNodeData_Graph,
     changeVisualData_Graph,
     changeAlert,
-    nodeData_Graph,
-    nodeVisualData_Graph
+    nodeDataRef,
+    visualDataRef
   );
 
   useEffect(() => {
-    console.log('in effect ' + JSON.stringify(history));
     setHistoryFunctions(addAction, undo, redo);
   }, []);
 
@@ -74,7 +79,6 @@ export const GraphContainer: React.FC<{}> = () => {
   //key events: undo, redo, escaping drawing
   useEffect(() => {
     const listenerFunc = (evt: any) => {
-      console.log('undo ', undo);
       if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
         evt.stopPropagation();
         evt.stopImmediatePropagation();

@@ -35,10 +35,10 @@ const createTitlePlugin = createMyPluginFactory<HotkeyPlugin>({
 	isElement: true,
 	isLeaf: false,
 	options: {},
-	withOverrides: (editor) => {
-		editor.addMark = () => {};
-		return editor;
-	},
+	// withOverrides: (editor) => {
+	// 	editor.addMark = () => {};
+	// 	return editor;
+	// },
 });
 
 // I can try adding a plugin for the fricking paragraph that makes it an inline plugin? I'm not sure

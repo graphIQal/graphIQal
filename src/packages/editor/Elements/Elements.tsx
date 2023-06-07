@@ -39,31 +39,23 @@ export const NodeBlock = (props: any) => {
 export const TitleElement = (props: any) => {
 	console.log('title rendered ');
 
-	return <h1 className='text-xl font-bold'>{props.children}</h1>;
+	return (
+		<div className='ml-[14px]'>
+			<h1 className='ml-1 text-3xl font-extrabold'>{props.children}</h1>
+		</div>
+	);
 };
 
 export const H1 = (props: any) => {
-	// const plateUI = createPlateUI({})[ELEMENT_H1];
-	// return plateUI[ELEMENT_H1];
-
-	console.log('h1');
-	return <h1 className='text-lg'>{props.children}</h1>;
+	return <h1 className='text-xl font-bold'>{props.children}</h1>;
 };
 
 export const H2 = (props: any) => {
-	// return createPlateUI({})[ELEMENT_H2];
-	// return plateUI[ELEMENT_H2];
-
-	console.log('h2');
-	return <h2 className='text-md'>{props.children}</h2>;
+	return <h2 className='text-lg font-bold'>{props.children}</h2>;
 };
 
 export const H3 = (props: any) => {
-	const plateUI = createPlateUI({})[ELEMENT_H3];
-	// return plateUI[ELEMENT_H1];
-
-	console.log('h3');
-	return <h3 className='text-md'>{props.children}</h3>;
+	return <h3 className='text-md font-semibold'>{props.children}</h3>;
 };
 
 export const Leaf = (props: any) => {

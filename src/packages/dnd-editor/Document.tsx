@@ -59,21 +59,25 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 		<DndProvider backend={HTML5Backend}>
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
-					{currNode_data.n.content && (
-						<EditorComponent
-							initialValue={[
-								{
-									type: 'title',
-									id: 'Node Title',
-									children: [{ text: currNode_data.n.title }],
-								} as MyTitleElement,
-								...JSON.parse(currNode_data.n.content),
-							]}
-							value={value}
-							setValue={setValue}
-							id={'documentId'}
-						/>
-					)}
+					<div className='px-3 py-3'>
+						{currNode_data.n.content && (
+							<EditorComponent
+								initialValue={[
+									{
+										type: 'title',
+										id: 'Node Title',
+										children: [
+											{ text: currNode_data.n.title },
+										],
+									} as MyTitleElement,
+									...JSON.parse(currNode_data.n.content),
+								]}
+								value={value}
+								setValue={setValue}
+								id={'documentId'}
+							/>
+						)}
+					</div>
 				</SplitPaneLeft>
 				<Divider className='separator-col' />
 				<SplitPaneRight>

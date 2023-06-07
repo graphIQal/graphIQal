@@ -9,6 +9,7 @@ export default async function handler(
 	const params = req.query;
 
 	params.hometitle = params.username + "'s Home Node";
+	params.homeless = params.username + "'s Homeless Node";
 
 	// Add Hash for password
 	const cypher = `
@@ -21,6 +22,10 @@ export default async function handler(
 	MERGE (n:Node {title: $hometitle})
 	ON CREATE SET n.id = randomUuid()
 	MERGE (u)-[r:HAS]->(n)
+
+	MERGE (h:Node {title: $homeless})
+	ON CREATE SET h.id = randomUuid()
+	MERGE (n)-[:RELATED]-(h)
 	
 	MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
 	MERGE (n)-[:NEXT_BLOCK]->(b)
@@ -35,5 +40,5 @@ export default async function handler(
 
 	const result: any = await write(cypher as string, params);
 
-	res.status(200).json({ ...result, ...params });
+	res.status(200).json({ ...result, ...params, cypher });
 }

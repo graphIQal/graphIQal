@@ -40,15 +40,16 @@ const EditorComponent: React.FC<{
 	}, [value]);
 
 	const onUnload = () => {
-		console.log('INSIDE handleUnload: ', value);
 		// code to save progress to local storage....
-		if (value.length > 0)
+		if (value.length > 0) {
+			console.log('unloading', JSON.stringify(value));
 			saveDocument({
 				nodeId,
 				username,
 				document: value.slice(1),
 				title: value[0].children[0].text as string,
 			});
+		}
 	};
 
 	const plugins = useMemo(

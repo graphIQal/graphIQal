@@ -9,6 +9,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // 	SplitPaneTop,
 // } from '../../src/components/organisms/split-pane/SplitPane';
 // import Document from '../../src/pages/document/Document';
+import { v4 as uuidv4 } from 'uuid';
 
 import { ELEMENT_H1 } from '@udecode/plate';
 import { useRouter } from 'next/router';
@@ -33,34 +34,32 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 	const { nodeId, username, currNode_data, documentVar, windowVar } =
 		useContext(ViewContext) as ViewContextInterface;
 
-	const [value, setValue] = useState([
-		{
-			type: 'block',
-			id: '123123990asdf',
-			children: [
-				{
-					type: 'p',
-					id: '33333',
-					children: [
-						{
-							text: '',
-						},
-					],
-				} as MyParagraphElement,
-			],
-		} as MyBlockElement,
-	]);
+	const [value, setValue] = useState([]);
 
-	if (currNode_data.n && currNode_data.n.content === null) {
+	console.log(currNode_data);
+
+	if (currNode_data.n.title && !currNode_data.n.content) {
 		// send a request to create content
-		saveDocument({ nodeId, username, document: value });
+		saveDocument({
+			nodeId,
+			username,
+			document: [
+				{
+					type: ELEMENT_H1,
+					id: 'Node Title',
+					children: [{ text: currNode_data.n.title }],
+				} as MyH1Element,
+				{
+					type: 'block',
+					id: uuidv4(),
+					children: [
+						{ type: 'p', id: uuidv4(), children: [{ text: '' }] },
+					],
+				},
+			],
+			title: currNode_data.n.title,
+		});
 	}
-
-	// if (currNode_data.n.content) {
-	// 	console.log('...JSON.parse(currNode_data.n.content)');
-	// 	console.log(currNode_data.n);
-	// 	console.log([...JSON.parse(currNode_data.n.content)]);
-	// }
 
 	return (
 		<DndProvider backend={HTML5Backend}>

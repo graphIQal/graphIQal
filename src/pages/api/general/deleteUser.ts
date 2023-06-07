@@ -16,4 +16,6 @@ export default async function handler(
 	const result: any = await write(cypher as string);
 
 	res.status(200).json({ ...result });
+
+	// res.status(400);
 }

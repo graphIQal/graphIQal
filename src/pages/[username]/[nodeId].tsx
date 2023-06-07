@@ -71,6 +71,7 @@ const Home: React.FC = () => {
 	useEffect(() => {
 		setCurrNodeId(nodeId as string);
 	}, [nodeId]);
+
 	const res = useGetNodeData(currNodeId, username as string);
 
 	useEffect(() => {

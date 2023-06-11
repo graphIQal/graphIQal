@@ -63,7 +63,9 @@ const EditorComponent: React.FC<{
 				...CommandPlugins,
 				...FormatPlugins,
 				createBlockPlugin(),
-				createComboboxPlugin(),
+				createComboboxPlugin({
+					options: {},
+				}),
 				// createHistoryPlugin(),
 				createNodeIdPlugin({
 					options: {

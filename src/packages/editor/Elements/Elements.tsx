@@ -37,11 +37,24 @@ export const NodeBlock = (props: any) => {
 };
 
 export const TitleElement = (props: any) => {
-	console.log('title rendered ');
+	// if (
+	// 	props.element.children[0].text.length === 0 ||
+	// 	props.element.children[0].text === 'Untitled'
+	// ) {
+	// 	return (
+	// 		<div className='ml-[14px]'>
+	// 			<h1 className='ml-1 text-3xl font-extrabold opacity-80'>
+	// 				Untitled
+	// 			</h1>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className='ml-[14px]'>
-			<h1 className='ml-1 text-3xl font-extrabold'>{props.children}</h1>
+			<h1 className='ml-1 text-3xl font-extrabold mb-3'>
+				{props.children}
+			</h1>
 		</div>
 	);
 };

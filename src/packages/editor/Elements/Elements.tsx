@@ -28,27 +28,31 @@ export const Block = (props: any) => {
 	return <div className='' /**{...props.attributes}**/>{props.children}</div>;
 };
 
+export const NodeLink = (props: any) => {
+	return <div>{props.children}</div>;
+};
+
 export const NodeBlock = (props: any) => {
 	return (
 		<Block>
-			<div className=''>{props.children}</div>
+			<div>{props.children}</div>
 		</Block>
 	);
 };
 
 export const TitleElement = (props: any) => {
-	// if (
-	// 	props.element.children[0].text.length === 0 ||
-	// 	props.element.children[0].text === 'Untitled'
-	// ) {
-	// 	return (
-	// 		<div className='ml-[14px]'>
-	// 			<h1 className='ml-1 text-3xl font-extrabold opacity-80'>
-	// 				Untitled
-	// 			</h1>
-	// 		</div>
-	// 	);
-	// }
+	// Showing untitled if title is empty.
+
+	if (props.element.children[0].text.length === 0) {
+		return (
+			<div className='ml-[14px]'>
+				<h1 className='ml-1 text-3xl font-extrabold opacity-80'>
+					<div className='inline-block'>{props.children}</div>
+					<span>Untitled</span>
+				</h1>
+			</div>
+		);
+	}
 
 	return (
 		<div className='ml-[14px]'>

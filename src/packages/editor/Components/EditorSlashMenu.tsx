@@ -48,7 +48,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	const items: item[] = [
 		{
 			key: '1',
-			text: 'Create',
+			text: 'Create Node',
 			data: {
 				searchFunction: (search) => {
 					if ('create'.startsWith(search)) {
@@ -65,7 +65,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 		},
 		{
 			key: 'HAScreate',
-			text: 'Create with Connection: HAS',
+			text: 'Create Node with Connection: HAS',
 			data: {
 				searchFunction: (search) => {
 					const connectionType = search.split(':')[1];
@@ -87,7 +87,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 		},
 		{
 			key: 'IScreate',
-			text: 'Create with Connection: IS',
+			text: 'Create Node with Connection: IS',
 			data: {
 				searchFunction: (search) => {
 					if (

@@ -2,20 +2,12 @@
  * Container for Graph; renders either "Mind map" view or "Axis" view
  * Sets information for Context wrapper that deals with actions like dragging, undo/redo, resize
  */
-import { useContext, useEffect, useRef, useState } from 'react';
-import { addConnection } from '../../../helpers/backend/addConnection';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import GraphActionContext from '../context/GraphActionContext';
 import DrawingContext, {
   DrawingContextInterface,
 } from '../context/GraphDrawingContext';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
 import { useDropNode } from '../hooks/dragging/useDropNode';
-
-import ViewContext, {
-  ViewContextInterface,
-} from '../../../components/context/ViewContext';
 import { handleEscapeDrawing } from '../helpers/handleKeyPress';
 import { useCanvas } from '../hooks/drawing/useCanvas';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
@@ -29,11 +21,15 @@ import { GraphMindMapView } from './GraphMindMapView';
 import { useToggle } from '../../../helpers/hooks/useToggle';
 import { addNode } from '../../../helpers/backend/addNode';
 import SearchBar from '../../../components/organisms/SearchBar';
+import { useViewData } from '../../../components/context/ViewContext';
+import { useGraphViewAPI } from '../context/GraphViewContext';
+import { useGraphViewData } from '../context/GraphViewContext';
+import { addConnection } from '../../../helpers/backend/addConnection';
+import { ActionChanges, useHistoryState } from '../hooks/useHistoryState';
 
 export const GraphContainer: React.FC<{}> = () => {
-  const { windowVar, documentVar } = useContext(
-    ViewContext
-  ) as ViewContextInterface;
+  const { windowVar, documentVar } = useViewData();
+  if (!windowVar || !documentVar) return <div></div>;
 
   //For drawing
   const drawingContext = useContext(DrawingContext) as DrawingContextInterface;
@@ -46,9 +42,39 @@ export const GraphContainer: React.FC<{}> = () => {
     isDrawing,
   } = drawingContext;
 
-  const graphViewContext = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+  const { graphViewId, nodeData_Graph, nodeVisualData_Graph } =
+    useGraphViewData();
+  const {
+    changeNodeData_Graph,
+    changeAlert,
+    changeVisualData_Graph,
+    setHistoryFunctions,
+    changeHistory,
+  } = useGraphViewAPI();
+
+  const nodeDataRef = useRef(nodeData_Graph);
+  const visualDataRef = useRef(nodeVisualData_Graph);
+
+  useEffect(() => {
+    nodeDataRef.current = nodeData_Graph;
+    visualDataRef.current = nodeVisualData_Graph;
+  }, [nodeData_Graph, nodeVisualData_Graph]);
+
+  const { undo, redo, history, addAction, pointer } = useHistoryState(
+    changeNodeData_Graph,
+    changeVisualData_Graph,
+    changeAlert,
+    nodeDataRef,
+    visualDataRef
+  );
+
+  useEffect(() => {
+    setHistoryFunctions(addAction, undo, redo);
+  }, []);
+
+  useEffect(() => {
+    changeHistory(history, pointer);
+  }, [history, pointer]);
 
   //key events: undo, redo, escaping drawing
   useEffect(() => {
@@ -57,11 +83,11 @@ export const GraphContainer: React.FC<{}> = () => {
         evt.stopPropagation();
         evt.stopImmediatePropagation();
         evt.preventDefault();
-        graphViewContext.redo();
+        redo();
       } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
         evt.stopImmediatePropagation();
         evt.preventDefault();
-        graphViewContext.undo();
+        undo();
       } else if (evt.keyCode == 27) {
         evt.stopImmediatePropagation();
         //escape key
@@ -78,11 +104,11 @@ export const GraphContainer: React.FC<{}> = () => {
   // Wheel event: panning and zooming
   useEffect(() => {
     documentVar
-      .getElementById('parent' + graphViewContext.graphViewId)
+      .getElementById('parent' + graphViewId)
       ?.addEventListener('wheel', onWheel, { passive: false });
     return () => {
       documentVar
-        .getElementById('parent' + graphViewContext.graphViewId)
+        .getElementById('parent' + graphViewId)
         ?.removeEventListener('wheel', onWheel);
     };
   });
@@ -98,8 +124,6 @@ export const GraphContainer: React.FC<{}> = () => {
   if (!Number.isFinite(translateY)) {
     translateY = 0;
   }
-
-  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
 
   //DND
   const startPos = useRef<{ left: number; top: number }>();
@@ -140,7 +164,12 @@ export const GraphContainer: React.FC<{}> = () => {
       endNode.current !== '' &&
       startNode.current != endNode.current
     ) {
-      addConnection(startNode.current, endNode.current, viewContext);
+      addConnection(startNode.current, endNode.current, {
+        addAction,
+        nodeData_Graph,
+        changeAlert,
+        changeNodeData_Graph,
+      });
     }
   }, [endNode.current]);
 
@@ -169,11 +198,7 @@ export const GraphContainer: React.FC<{}> = () => {
         updateSize: updateSize,
       }}
     >
-      <div
-        className='h-full w-full'
-        id={'parent' + graphViewContext.graphViewId}
-        ref={drop}
-      >
+      <div className='h-full w-full' id={'parent' + graphViewId} ref={drop}>
         <Filtering
           xCategory={xCategory}
           yCategory={yCategory}

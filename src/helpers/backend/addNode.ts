@@ -1,16 +1,30 @@
 import { v4 as uuidv4 } from 'uuid';
-import { GraphViewContextInterface } from '../../packages/graph/context/GraphViewContext';
+import { API, State } from '../../packages/graph/context/GraphViewContext';
 
 export const addNode = (
-  context: GraphViewContextInterface | null,
+  context: Partial<State & API>,
   size: number[],
   x: number,
   y: number
 ) => {
-  if (context == null) {
+  const {
+    nodeVisualData_Graph,
+    changeAlert,
+    changeVisualData_Graph,
+    addAction,
+    changeNodeData_Graph,
+    nodeData_Graph,
+  } = context;
+  if (
+    !nodeVisualData_Graph ||
+    !changeAlert ||
+    !changeVisualData_Graph ||
+    !addAction ||
+    !changeNodeData_Graph ||
+    !nodeData_Graph
+  )
     return;
-  }
-  let newNodes = { ...context.nodeVisualData_Graph };
+  let newNodes = { ...nodeVisualData_Graph };
   let id = uuidv4();
 
   newNodes[id] = {
@@ -22,7 +36,7 @@ export const addNode = (
     categorizing_node: id,
   };
 
-  let newnodeData_Graph = { ...context.nodeData_Graph };
+  let newnodeData_Graph = { ...nodeData_Graph };
   newnodeData_Graph[id] = {
     id: id,
     title: '',
@@ -31,11 +45,11 @@ export const addNode = (
     color: 'black',
   };
 
-  context.setAlert('Created new node');
+  changeAlert('Created new node');
 
-  context.setnodeVisualData_Graph(newNodes);
-  context.setnodeData_Graph(newnodeData_Graph);
-  context.addAction(id, 'NODE_ADD', {
+  changeVisualData_Graph(newNodes);
+  changeNodeData_Graph(newnodeData_Graph);
+  addAction(id, 'NODE_ADD', {
     new: {
       node_data: newnodeData_Graph[id],
       node_visual: newNodes[id],

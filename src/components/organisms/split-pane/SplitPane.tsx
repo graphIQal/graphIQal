@@ -9,7 +9,7 @@ import IconTitle from '../../molecules/IconTitle';
 import SplitPaneContext, {
   SplitPaneContextInterface,
 } from './SplitPaneContext';
-import ViewContext, { ViewContextInterface } from '../../context/ViewContext';
+import { useViewData } from '../../context/ViewContext';
 
 type SplitPaneProps = {
   children: any;
@@ -201,7 +201,7 @@ export const SplitPaneLeft = (props: any) => {
   const { clientWidth, setClientWidth } = useContext(
     SplitPaneContext
   ) as SplitPaneContextInterface;
-  const { currTab } = useContext(ViewContext) as ViewContextInterface;
+  const { currTab } = useViewData();
 
   useEffect(() => {
     if (!clientWidth || clientWidth == 0) {

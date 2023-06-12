@@ -4,9 +4,7 @@
 
 import { useRouter } from 'next/router';
 import { FC, ReactNode, useContext, useEffect, useState } from 'react';
-import ViewContext, {
-  ViewContextInterface,
-} from '../../../components/context/ViewContext';
+
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode';
 import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
@@ -27,13 +25,12 @@ import DrawingContext, {
 import GraphNodeContext, {
   GraphNodeContextInterface,
 } from '../context/GraphNodeContext';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../context/GraphViewContext';
 import { ConnectionTypes } from '../graphTypes';
 import { useDragNode } from '../hooks/dragging/useDragNode';
 import { OFFSET } from '../hooks/drawing/useDrawingEnd';
 import { useToggle } from '../../../helpers/hooks/useToggle';
+import { useViewData } from '../../../components/context/ViewContext';
+import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
 
 export interface NodeProps {
   children: ReactNode;
@@ -53,12 +50,17 @@ export const GraphNode: FC<NodeProps> = ({
     DrawingContext
   ) as DrawingContextInterface;
 
-  const { windowVar, documentVar, username, nodeId } = useContext(
-    ViewContext
-  ) as ViewContextInterface;
+  const { windowVar, documentVar, username, nodeId } = useViewData();
+  if (!windowVar || !documentVar) return <div></div>;
 
-  const viewContext = useContext(GraphViewContext) as GraphViewContextInterface;
-  const { nodeInFocusId } = viewContext;
+  const { nodeInFocusId, nodeVisualData_Graph, addAction, nodeData_Graph } =
+    useGraphViewData();
+  const {
+    changeNodeInFocusId,
+    changeAlert,
+    changeNodeData_Graph,
+    changeVisualData_Graph,
+  } = useGraphViewAPI();
 
   const [showEditDropdown, setshowEditDropdown] = useState(false);
 
@@ -67,7 +69,7 @@ export const GraphNode: FC<NodeProps> = ({
     nodeInFocusId == nodeInfo.id
       ? 'bg-opacity-30 bg-' + nodeInfo.color
       : 'bg-base_white';
-  const collapsed = viewContext.nodeVisualData_Graph[nodeInfo.id].collapsed;
+  const collapsed = nodeVisualData_Graph[nodeInfo.id].collapsed;
 
   //disables dragging if we're drawing
   useEffect(() => {
@@ -98,13 +100,21 @@ export const GraphNode: FC<NodeProps> = ({
     {
       src: 'spotlight',
       onClick: () =>
-        viewContext.setnodeInFocusId(
-          viewContext.nodeInFocusId == nodeInfo.id ? nodeId : nodeInfo.id
+        changeNodeInFocusId(
+          nodeInFocusId == nodeInfo.id ? nodeId : nodeInfo.id
         ),
     },
     {
       src: 'remove',
-      onClick: () => deleteNode(nodeInfo.id, viewContext),
+      onClick: () =>
+        deleteNode(nodeInfo.id, {
+          changeAlert,
+          addAction,
+          changeNodeData_Graph,
+          changeVisualData_Graph,
+          nodeVisualData_Graph,
+          nodeData_Graph,
+        }),
     },
   ];
 
@@ -296,7 +306,13 @@ export const GraphNode: FC<NodeProps> = ({
                       }
                       style={{ backgroundColor: color }}
                       onClick={() =>
-                        updateNode('color', color, nodeInfo.id, viewContext)
+                        updateNode('color', color, nodeInfo.id, {
+                          addAction,
+                          changeVisualData_Graph,
+                          nodeVisualData_Graph,
+                          nodeData_Graph,
+                          changeNodeData_Graph,
+                        })
                       }
                     ></div>
                   );
@@ -311,7 +327,13 @@ export const GraphNode: FC<NodeProps> = ({
                         circle={false}
                         size={40}
                         onClick={() =>
-                          updateNode('icon', icon, nodeInfo.id, viewContext)
+                          updateNode('icon', icon, nodeInfo.id, {
+                            addAction,
+                            changeVisualData_Graph,
+                            nodeVisualData_Graph,
+                            nodeData_Graph,
+                            changeNodeData_Graph,
+                          })
                         }
                       />
                     </div>

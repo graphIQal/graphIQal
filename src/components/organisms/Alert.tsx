@@ -1,17 +1,18 @@
 import React, { useContext, useEffect } from 'react';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../../packages/graph/context/GraphViewContext';
+
 import IconCircleButton from '../molecules/IconCircleButton';
+import {
+  useGraphViewAPI,
+  useGraphViewData,
+} from '../../packages/graph/context/GraphViewContext';
 
 export const Alert: React.FC = () => {
-  const { alert, setAlert, undo } = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+  const { alert, undo } = useGraphViewData();
+  const { changeAlert } = useGraphViewAPI();
 
   useEffect(() => {
     setTimeout(() => {
-      setAlert('');
+      changeAlert('');
     }, 15000);
   }, [alert]);
 
@@ -22,14 +23,14 @@ export const Alert: React.FC = () => {
         className='underline text-sm cursor-pointer'
         onClick={() => {
           undo();
-          setAlert('');
+          changeAlert('');
         }}
       >
         Undo
       </div>
       {/* <IconCircleButton
         src='close'
-        onClick={() => setAlert('')}
+        onClick={() => changeAlert('')}
         circle={false}
         color='white'
       /> */}

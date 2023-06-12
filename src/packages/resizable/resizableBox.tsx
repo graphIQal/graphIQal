@@ -3,15 +3,16 @@
  */
 
 import React, { useContext, useEffect, useRef } from 'react';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../graph/context/GraphViewContext';
 import GraphActionContext, {
   GraphActionContextInterface,
 } from '../graph/context/GraphActionContext';
 import DrawingContext, {
   DrawingContextInterface,
 } from '../graph/context/GraphDrawingContext';
+import {
+  useGraphViewAPI,
+  useGraphViewData,
+} from '../graph/context/GraphViewContext';
 
 const ResizableBox: React.FC<{
   children: any;
@@ -19,8 +20,7 @@ const ResizableBox: React.FC<{
   style?: any;
   id: string | number;
 }> = ({ children, classes, style, id }) => {
-  const { nodeVisualData_Graph, nodeData_Graph, setnodeVisualData_Graph } =
-    useContext(GraphViewContext) as GraphViewContextInterface;
+  const { nodeVisualData_Graph } = useGraphViewData();
 
   const startWidth = useRef<number>();
   const startHeight = useRef<number>();

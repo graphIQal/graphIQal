@@ -2,23 +2,32 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import IconTitle from '../molecules/IconTitle';
 import TextButton from '../molecules/TextButton';
 import IconCircleButton from '../molecules/IconCircleButton';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../../packages/graph/context/GraphViewContext';
 import { GraphNode } from '../../packages/graph/components/GraphNode';
 import CollapsedGraphNode from './CollapsedGraphNode';
 import { OnHoverMenu } from './OnHoverMenu';
-import ViewContext, { ViewContextInterface } from '../context/ViewContext';
 import router from 'next/router';
 import { NodeData } from '../../packages/graph/graphTypes';
 import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
 import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
 import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
 import useSWR from 'swr';
+import { useViewData } from '../context/ViewContext';
+import {
+  useGraphViewAPI,
+  useGraphViewData,
+} from '../../packages/graph/context/GraphViewContext';
 
 const SearchBar: React.FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
 
+  const { nodeData_Graph, nodeVisualData_Graph, addAction } =
+    useGraphViewData();
+  const {
+    changeNodeData_Graph,
+    changeVisualData_Graph,
+    changeAlert,
+    changeNodeInFocusId,
+  } = useGraphViewAPI();
   useEffect(() => {
     const listenerFunc = (evt: any) => {
       evt.stopImmediatePropagation();
@@ -35,11 +44,9 @@ const SearchBar: React.FC = () => {
     );
   }, []);
 
-  const graphViewContext = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
-  const viewContext = useContext(ViewContext) as ViewContextInterface;
-  const { documentVar } = viewContext;
+  const { username, documentVar } = useViewData();
+  if (!documentVar) return <div></div>;
+
   const getButtonItems = (result: any) => {
     return [
       {
@@ -47,7 +54,7 @@ const SearchBar: React.FC = () => {
         src: 'navigation',
         onClick: () => {
           console.log('result of query ' + JSON.stringify(result));
-          router.push(`/${viewContext.username}/${result.id}`, undefined);
+          router.push(`/${username}/${result.id}`, undefined);
           setShowSearchBar(false);
         },
       },
@@ -55,10 +62,22 @@ const SearchBar: React.FC = () => {
         //this button should add the selected node to the graph
         src: 'plus',
         onClick: () => {
-          addExistingNodeToGraph(graphViewContext, viewContext.username, '', {
-            id: result.id,
-            title: result.title,
-          });
+          addExistingNodeToGraph(
+            {
+              nodeData_Graph,
+              nodeVisualData_Graph,
+              changeNodeData_Graph,
+              changeVisualData_Graph,
+              changeAlert,
+              addAction,
+            },
+            username,
+            '',
+            {
+              id: result.id,
+              title: result.title,
+            }
+          );
           setShowSearchBar(false);
         },
       },
@@ -66,7 +85,7 @@ const SearchBar: React.FC = () => {
         //this button should put the selected node in focus
         src: 'spotlight',
         onClick: () => {
-          graphViewContext.setnodeInFocusId(result.id);
+          changeNodeInFocusId(result.id);
           setShowSearchBar(false);
         },
       },
@@ -147,10 +166,7 @@ const SearchBar: React.FC = () => {
         setHighlighted(results.length - 1);
       }
     } else if (event.code == 'Enter') {
-      router.push(
-        `/${viewContext.username}/${results[highlighted].n.id}`,
-        undefined
-      );
+      router.push(`/${username}/${results[highlighted].n.id}`, undefined);
       setShowSearchBar(false);
     } else if (event.keyCode == 27) {
       setShowSearchBar(false);
@@ -161,7 +177,7 @@ const SearchBar: React.FC = () => {
   const { data: searchResult } = useSWR(
     [
       searchVal.length > 0
-        ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
+        ? `/api/general/search?username=${username}&search=${searchVal}`
         : null,
     ],
     fetcherAll

@@ -6,14 +6,15 @@ import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeTo
 import GraphNodeContext, {
   GraphNodeContextInterface,
 } from '../../packages/graph/context/GraphNodeContext';
-import GraphViewContext, {
-  GraphViewContextInterface,
-} from '../../packages/graph/context/GraphViewContext';
-import ViewContext, { ViewContextInterface } from '../context/ViewContext';
+import { useViewData } from '../context/ViewContext';
 import IconCircleButton from '../molecules/IconCircleButton';
 import { ItemProps } from './Dropdown';
 import useSWR from 'swr';
 import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
+import {
+  useGraphViewAPI,
+  useGraphViewData,
+} from '../../packages/graph/context/GraphViewContext';
 
 const CollapsedGraphNode: React.FC<{
   toggleDropdown: () => void;
@@ -30,18 +31,19 @@ const CollapsedGraphNode: React.FC<{
     GraphNodeContext
   ) as GraphNodeContextInterface;
 
-  const graphViewContext = useContext(
-    GraphViewContext
-  ) as GraphViewContextInterface;
+  const { username } = useViewData();
 
-  const viewContext = useContext(ViewContext) as ViewContextInterface;
+  const { nodeData_Graph, nodeVisualData_Graph, addAction } =
+    useGraphViewData();
+  const { changeNodeData_Graph, changeVisualData_Graph, changeAlert } =
+    useGraphViewAPI();
 
   const [searchVal, setSearchVal] = useState<string>('');
 
   const { data: searchResult } = useSWR(
     [
       searchVal.length > 0
-        ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
+        ? `/api/general/search?username=${username}&search=${searchVal}`
         : null,
     ],
     fetcherAll
@@ -57,8 +59,15 @@ const CollapsedGraphNode: React.FC<{
             onPress: () => {
               formRef.current.value = result.n.title;
               addExistingNodeToGraph(
-                graphViewContext,
-                viewContext.username,
+                {
+                  nodeData_Graph,
+                  nodeVisualData_Graph,
+                  changeNodeData_Graph,
+                  changeVisualData_Graph,
+                  changeAlert,
+                  addAction,
+                },
+                username,
                 id,
                 result.n
               );
@@ -96,7 +105,13 @@ const CollapsedGraphNode: React.FC<{
               ref={formRef}
               autoComplete='off'
               onChange={async (newVal: any) => {
-                updateNode('title', newVal.target.value, id, graphViewContext);
+                updateNode('title', newVal.target.value, id, {
+                  addAction,
+                  changeVisualData_Graph,
+                  nodeVisualData_Graph,
+                  nodeData_Graph,
+                  changeNodeData_Graph,
+                });
                 if (newVal.target.value[0] == '/' && !showSearchDropdown) {
                   setShowSearchDropdown(true);
                 }

@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import IconCircleButton from '../molecules/IconCircleButton';
 import { OnHoverMenu } from './OnHoverMenu';
 import { title } from 'process';
-import ViewContext, { ViewContextInterface } from '../context/ViewContext';
+import { useViewData } from '../context/ViewContext';
 
 type ConnectionListItemProps = {
   title: string;
@@ -21,7 +21,8 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
   buttonItems,
   url,
 }) => {
-  const { windowVar } = useContext(ViewContext) as ViewContextInterface;
+  const { windowVar } = useViewData();
+  if (!windowVar) return <div></div>;
   return (
     <div
       key={index}

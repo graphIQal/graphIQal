@@ -112,6 +112,8 @@ export const GraphNode: FC<NodeProps> = ({
           addAction,
           changeNodeData_Graph,
           changeVisualData_Graph,
+          nodeVisualData_Graph,
+          nodeData_Graph,
         }),
     },
   ];

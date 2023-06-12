@@ -15,9 +15,11 @@ import { ReactNode } from 'react';
 import { Transforms } from 'slate';
 import BlockMenu from '../../../components/organisms/BlockMenu';
 import {
+	ELEMENT_NODELINK,
 	MyH1Element,
 	MyH2Element,
 	MyH3Element,
+	MyNodeLinkElement,
 	useMyPlateEditorRef,
 } from '../plateTypes';
 
@@ -58,8 +60,15 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				},
 				onPress: () => {
 					console.log('okay');
-					// Create new page
-					// If there is a connection type, add
+					// Add to backend
+
+					// Create new page in frontend
+					insertNodes(editor, {
+						type: getPluginType(editor, ELEMENT_NODELINK),
+						children: [{ text: '' }],
+					} as MyNodeLinkElement);
+
+					// Navigate to backend
 				},
 			},
 		},
@@ -80,8 +89,15 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				},
 				onPress: () => {
 					console.log('okay');
-					// Create new page
-					// If there is a connection type, add
+					// Add to backend
+
+					// Create new page in frontend
+					insertNodes(editor, {
+						type: getPluginType(editor, ELEMENT_NODELINK),
+						children: [{ text: '' }],
+					} as MyNodeLinkElement);
+
+					// Navigate to backend
 				},
 			},
 		},
@@ -100,8 +116,16 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				},
 				onPress: () => {
 					console.log('okay');
-					// Create new page
-					// If there is a connection type, add
+
+					// Add to backend
+
+					// Create new page in frontend
+					insertNodes(editor, {
+						type: getPluginType(editor, ELEMENT_NODELINK),
+						children: [{ text: '' }],
+					} as MyNodeLinkElement);
+
+					// Navigate to backend
 				},
 			},
 		},

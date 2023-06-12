@@ -29,7 +29,12 @@ export const Block = (props: any) => {
 };
 
 export const NodeLink = (props: any) => {
-	return <div>{props.children}</div>;
+	console.log('rendering nodeLink');
+	return (
+		<div className='bg-node cursor-pointer hover:opacity-80'>
+			{props.children}
+		</div>
+	);
 };
 
 export const NodeBlock = (props: any) => {

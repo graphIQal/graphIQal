@@ -62,6 +62,7 @@ import { CSSProperties } from 'styled-components';
 
 export const ELEMENT_BLOCK = 'block';
 export const ELEMENT_TITLE = 'title';
+export const ELEMENT_NODELINK = 'nodelink';
 export const ELEMENT_NODE = 'node';
 export const ELEMENT_CONNECTION = 'connection';
 
@@ -162,6 +163,11 @@ export interface MyTitleElement extends BlockElements {
 	children: InlineElements[];
 }
 
+export interface MyNodeLinkElement extends BlockElements {
+	type: typeof ELEMENT_NODELINK;
+	children: InlineElements[];
+}
+
 // Everything below
 
 export interface MyParagraphElement extends BlockElements {
@@ -201,6 +207,7 @@ export type MyBlockEntry = TNodeEntry<MyBlock>;
 export type Block =
 	| MyBlockElement
 	| MyTitleElement
+	| MyNodeLinkElement
 	| MyNodeElement
 	| MyConnectionElement
 	| MyParagraphElement

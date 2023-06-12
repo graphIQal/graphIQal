@@ -2,22 +2,16 @@
  * Hooks and helper for drawing event handling.
  */
 
-import { MutableRefObject, useCallback, useContext } from 'react';
+import { MutableRefObject, useCallback } from 'react';
 import { addNode } from '../../../../helpers/backend/addNode';
 import { updateConnection } from '../../../../helpers/backend/updateConnection';
-import DrawingContext, {
-  DrawingContextInterface,
-} from '../../context/GraphDrawingContext';
-import { calcArrowStart, isArrow, isCircle } from '../../helpers/drawingEvents';
-import { snapToGrid } from '../../helpers/snapToGrid';
-import GraphActionContext, {
-  GraphActionContextInterface,
-} from '../../context/GraphActionContext';
-import { useVerticalOffset } from '../useVerticalOffset';
 import {
   useGraphViewAPI,
   useGraphViewData,
 } from '../../context/GraphViewContext';
+import { calcArrowStart, isArrow, isCircle } from '../../helpers/drawingEvents';
+import { snapToGrid } from '../../helpers/snapToGrid';
+import { useVerticalOffset } from '../useVerticalOffset';
 
 export type Coord = {
   x: number;
@@ -31,15 +25,16 @@ export const OFFSET = 50;
 export const useDrawingEnd = (
   translateX: number,
   translateY: number,
-  scale: number
+  scale: number,
+  setIsDrawing: (val: boolean) => void,
+  isPointInCanvasFuncs: any,
+  numPointsInTriangleFuncs: any
 ) => {
   const { nodeData_Graph, addAction, nodeVisualData_Graph } =
     useGraphViewData();
   const { changeAlert, changeVisualData_Graph, changeNodeData_Graph } =
     useGraphViewAPI();
   const offset = useVerticalOffset();
-  const { setIsDrawing, isPointInCanvasFuncs, numPointsInTriangleFuncs } =
-    useContext(DrawingContext) as DrawingContextInterface;
 
   return useCallback(
     (points: Coord[], setPoints: (val: Coord[]) => void) => {

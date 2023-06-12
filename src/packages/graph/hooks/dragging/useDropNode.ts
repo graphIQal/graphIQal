@@ -3,9 +3,6 @@
  */
 import { useCallback, useContext } from 'react';
 import { useDrop, XYCoord } from 'react-dnd';
-import DrawingContext, {
-  DrawingContextInterface,
-} from '../../context/GraphDrawingContext';
 import { DragItemGraph } from '../../graphTypes';
 import { moveNodeCallback } from '../../helpers/moveNodeCallback';
 import { snapToGrid } from '../../helpers/snapToGrid';
@@ -16,6 +13,7 @@ import {
 
 export const useDropNode = (
   setIsDrawing: (val: boolean) => void,
+  setDrawingMode: (val: boolean) => void,
   translateX: number,
   translateY: number,
   scale: number
@@ -25,9 +23,6 @@ export const useDropNode = (
 
   const { changeNodeData_Graph, changeVisualData_Graph } = useGraphViewAPI();
 
-  const { setDrawingMode } = useContext(
-    DrawingContext
-  ) as DrawingContextInterface;
   const moveNode = useCallback(moveNodeCallback, [
     nodeVisualData_Graph,
     changeVisualData_Graph,

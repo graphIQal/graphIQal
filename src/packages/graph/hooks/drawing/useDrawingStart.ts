@@ -1,14 +1,10 @@
-import { useContext, useCallback } from 'react';
-import DrawingContext, {
-  DrawingContextInterface,
-} from '../../context/GraphDrawingContext';
-import { Coord } from './useDrawingEnd';
+import { useCallback, MutableRefObject } from 'react';
 
 //When user starts drawing
-export const useDrawingStart = () => {
-  const { startNode, setIsDrawing } = useContext(
-    DrawingContext
-  ) as DrawingContextInterface;
+export const useDrawingStart = (
+  startNode: MutableRefObject<any>,
+  setIsDrawing: (val: boolean) => void
+) => {
   return useCallback((lineID: string) => {
     startNode.current = lineID;
     setIsDrawing(true);

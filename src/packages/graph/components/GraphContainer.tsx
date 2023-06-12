@@ -32,15 +32,16 @@ export const GraphContainer: React.FC<{}> = () => {
   if (!windowVar || !documentVar) return <div></div>;
 
   //For drawing
-  const drawingContext = useContext(DrawingContext) as DrawingContextInterface;
-  const {
-    startNode,
-    endNode,
-    drawingMode,
-    setDrawingMode,
-    setIsDrawing,
-    isDrawing,
-  } = drawingContext;
+  const [drawingMode, setDrawingMode] = useState(true);
+  const [isDrawing, setIsDrawing] = useState<boolean>(false);
+
+  //Drawing line data
+  const startNode = useRef<string>('');
+  const endNode = useRef<string>('');
+
+  //Line functions for detecting arrows
+  let isPointInCanvasFuncs = useRef<any>({});
+  let numPointsInTriangleFuncs = useRef<any>({});
 
   const { graphViewId, nodeData_Graph, nodeVisualData_Graph } =
     useGraphViewData();
@@ -91,7 +92,7 @@ export const GraphContainer: React.FC<{}> = () => {
       } else if (evt.keyCode == 27) {
         evt.stopImmediatePropagation();
         //escape key
-        handleEscapeDrawing(drawingContext, setPoints);
+        handleEscapeDrawing(setIsDrawing, setPoints);
       }
     };
 
@@ -111,7 +112,7 @@ export const GraphContainer: React.FC<{}> = () => {
         .getElementById('parent' + graphViewId)
         ?.removeEventListener('wheel', onWheel);
     };
-  });
+  }, []);
 
   //Pan and zoom
   const ref = useRef(null);
@@ -124,11 +125,6 @@ export const GraphContainer: React.FC<{}> = () => {
   if (!Number.isFinite(translateY)) {
     translateY = 0;
   }
-
-  //DND
-  const startPos = useRef<{ left: number; top: number }>();
-  const [, drop] = useDropNode(setIsDrawing, translateX, translateY, scale);
-  const { value: canDrag, toggle: setCanDrag } = useToggle(false);
 
   //Drawing
   const canvas = useRef<any>();
@@ -173,9 +169,16 @@ export const GraphContainer: React.FC<{}> = () => {
     }
   }, [endNode.current]);
 
-  const handleStartPoint = useDrawingStart();
+  const handleStartPoint = useDrawingStart(startNode, setIsDrawing);
   const handleDrawing = useDrawingCanvas();
-  const handleDrawingEnd = useDrawingEnd(translateX, translateY, scale);
+  const handleDrawingEnd = useDrawingEnd(
+    translateX,
+    translateY,
+    scale,
+    setIsDrawing,
+    isPointInCanvasFuncs,
+    numPointsInTriangleFuncs
+  );
 
   //Pill menu information for centered node
   const {
@@ -186,36 +189,37 @@ export const GraphContainer: React.FC<{}> = () => {
     getDropdownItems,
   } = useFiltering();
 
-  //Resizing
-  const updateSize = useResize();
-
   return (
-    <GraphActionContext.Provider
-      value={{
-        hideSourceOnDrag: true,
-        canDrag: canDrag,
-        setCanDrag: setCanDrag,
-        updateSize: updateSize,
-      }}
-    >
-      <div className='h-full w-full' id={'parent' + graphViewId} ref={drop}>
-        <Filtering
-          xCategory={xCategory}
-          yCategory={yCategory}
-          getDropdownItems={getDropdownItems}
-          getDropdownItemsX={getDropdownItemsX}
-          getDropdownItemsY={getDropdownItemsY}
-        />
+    <div className='h-full w-full' id={'parent' + graphViewId}>
+      <Filtering
+        xCategory={xCategory}
+        yCategory={yCategory}
+        getDropdownItems={getDropdownItems}
+        getDropdownItemsX={getDropdownItemsX}
+        getDropdownItemsY={getDropdownItemsY}
+      />
+      <DrawingContext.Provider
+        value={{
+          startNode: startNode,
+          endNode: endNode,
+          isPointInCanvasFuncs: isPointInCanvasFuncs,
+          numPointsInTriangleFuncs: numPointsInTriangleFuncs,
+          drawingMode: drawingMode,
+          setDrawingMode: setDrawingMode,
+          isDrawing: isDrawing,
+          setIsDrawing: setIsDrawing,
+        }}
+      >
         <GraphMindMapView
           points={points}
           setPoints={setPoints}
-          startPos={startPos}
           translateX={translateX}
           translateY={translateY}
           scale={scale}
         />
-        {/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
-        {/* <div className=' absolute  flex-row w-10'>
+      </DrawingContext.Provider>
+      {/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
+      {/* <div className=' absolute  flex-row w-10'>
         <IconCircleButton
           src='draw'
           onClick={() => setDrawingMode(!drawingMode)}
@@ -225,44 +229,43 @@ export const GraphContainer: React.FC<{}> = () => {
         <IconCircleButton src='redo' onClick={() => {}} selected={false} />
       </div> */}
 
-        <div
-          onMouseDown={
-            drawingMode
-              ? (event: any) => {
-                  handleStartPoint('');
-                }
-              : () => {
-                  return null;
-                }
-          }
-          onMouseMove={
-            isDrawing && drawingMode
-              ? (event: any) => {
-                  handleDrawing(event, points, setPoints);
-                }
-              : () => {
-                  return null;
-                }
-          }
-          onMouseUp={
-            isDrawing && drawingMode
-              ? (event: any) => {
-                  handleDrawingEnd(points, setPoints);
-                }
-              : () => {
-                  if (!drawingMode) setDrawingMode(true);
-                }
-          }
-        >
-          <canvas
-            ref={ref}
-            width={canvasWidth}
-            height={canvasHeight}
-            id='canvas'
-            className='overflow-auto'
-          />
-        </div>
+      <div
+        onMouseDown={
+          drawingMode
+            ? (event: any) => {
+                handleStartPoint('');
+              }
+            : () => {
+                return null;
+              }
+        }
+        onMouseMove={
+          isDrawing && drawingMode
+            ? (event: any) => {
+                handleDrawing(event, points, setPoints);
+              }
+            : () => {
+                return null;
+              }
+        }
+        onMouseUp={
+          isDrawing && drawingMode
+            ? (event: any) => {
+                handleDrawingEnd(points, setPoints);
+              }
+            : () => {
+                if (!drawingMode) setDrawingMode(true);
+              }
+        }
+      >
+        <canvas
+          ref={ref}
+          width={canvasWidth}
+          height={canvasHeight}
+          id='canvas'
+          className='overflow-auto'
+        />
       </div>
-    </GraphActionContext.Provider>
+    </div>
   );
 };

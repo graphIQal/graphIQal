@@ -1,7 +1,7 @@
 /**
  * Display of nodes and lines connecting them in "mind map" style
  */
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { LineTo } from '../lineto/LineTo';
 
 import { ItemProps } from '../../../components/organisms/Dropdown';
@@ -24,11 +24,14 @@ import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
 import { ConnectionTypes } from '../graphTypes';
 import GraphNodeContext from '../context/GraphNodeContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
+import { useToggle } from '../../../helpers/hooks/useToggle';
+import { useResize } from '../hooks/useResize';
+import GraphActionContext from '../context/GraphActionContext';
+import { useDropNode } from '../hooks/dragging/useDropNode';
 
 type MindMapProps = {
   points: any;
   setPoints: (val: any) => void;
-  startPos: any;
   translateX: number;
   translateY: number;
   scale: number;
@@ -36,15 +39,22 @@ type MindMapProps = {
 export const GraphMindMapView: React.FC<MindMapProps> = ({
   points,
   setPoints,
-  startPos,
   translateX,
   translateY,
   scale,
 }) => {
   console.log('rerendering graph mind map');
 
+  const {
+    endNode,
+    drawingMode,
+    isDrawing,
+    setIsDrawing,
+    startNode,
+    setDrawingMode,
+  } = useContext(DrawingContext) as DrawingContextInterface;
   const handleDrawing = useDrawingCanvas();
-  const handleStartPoint = useDrawingStart();
+  const handleStartPoint = useDrawingStart(startNode, setIsDrawing);
 
   const { nodeData_Graph, nodeVisualData_Graph, addAction, graphViewId, tags } =
     useGraphViewData();
@@ -106,103 +116,125 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
     return { items, activeIndex };
   };
 
-  const { endNode, drawingMode, isDrawing, setIsDrawing } = useContext(
-    DrawingContext
-  ) as DrawingContextInterface;
+  //DND
+  const startPos = useRef<{ left: number; top: number }>();
+  const { value: canDrag, toggle: setCanDrag } = useToggle(false);
+  const [, drop] = useDropNode(
+    setIsDrawing,
+    setDrawingMode,
+    translateX,
+    translateY,
+    scale
+  );
+  //Resizing
+  const updateSize = useResize();
 
   return (
-    <div className='relative' id={'container' + graphViewId}>
-      {Object.keys(nodeData_Graph).map(function (node, i) {
-        return Object.keys(nodeData_Graph[node].connections).map((line, j) => {
-          return (
-            <div key={j}>
-              <LineTo
-                key={j}
-                from={node}
-                to={line}
-                id={node + '_' + line}
-                arrow={isLineDirectional(
-                  nodeData_Graph[node].connections[line]
-                )}
-                getDropDownItems={getDropdownItems}
-                deleteConnection={(from: string, to: string) =>
-                  deleteConnection(from, to, {
-                    changeAlert,
-                    nodeData_Graph,
-                    addAction,
-                    changeNodeData_Graph,
-                  })
-                }
-              />
-            </div>
-          );
-        });
-      })}
-      {Object.keys(nodeVisualData_Graph).map((node) => {
-        const title = nodeData_Graph[node].title;
-        const x = nodeVisualData_Graph[node].x;
-        const y = nodeVisualData_Graph[node].y;
-        const width = nodeVisualData_Graph[node].width;
-        const height = nodeVisualData_Graph[node].height;
+    <div className='absolute w-full h-full' ref={drop}>
+      <GraphActionContext.Provider
+        value={{
+          hideSourceOnDrag: true,
+          canDrag: canDrag,
+          setCanDrag: setCanDrag,
+          updateSize: updateSize,
+        }}
+      >
+        <div className='relative' id={'container' + graphViewId}>
+          {Object.keys(nodeData_Graph).map(function (node, i) {
+            return Object.keys(nodeData_Graph[node].connections).map(
+              (line, j) => {
+                return (
+                  <div key={j}>
+                    <LineTo
+                      key={j}
+                      from={node}
+                      to={line}
+                      id={node + '_' + line}
+                      arrow={isLineDirectional(
+                        nodeData_Graph[node].connections[line]
+                      )}
+                      getDropDownItems={getDropdownItems}
+                      deleteConnection={(from: string, to: string) =>
+                        deleteConnection(from, to, {
+                          changeAlert,
+                          nodeData_Graph,
+                          addAction,
+                          changeNodeData_Graph,
+                        })
+                      }
+                    />
+                  </div>
+                );
+              }
+            );
+          })}
+          {Object.keys(nodeVisualData_Graph).map((node) => {
+            const title = nodeData_Graph[node].title;
+            const x = nodeVisualData_Graph[node].x;
+            const y = nodeVisualData_Graph[node].y;
+            const width = nodeVisualData_Graph[node].width;
+            const height = nodeVisualData_Graph[node].height;
 
-        const { icon, color } = getIconAndColor(
-          { nodeVisualData_Graph, nodeData_Graph, tags },
-          node
-        );
-        return (
-          <div
-            className={node}
-            key={node}
-            onMouseDown={
-              drawingMode
-                ? (event: any) => handleStartPoint(node)
-                : () => {
-                    return null;
-                  }
-            }
-            onMouseMove={
-              isDrawing && drawingMode
-                ? (event: any) => {
-                    handleDrawing(event, points, setPoints);
-                  }
-                : () => {
-                    return null;
-                  }
-            }
-            onMouseUp={
-              isDrawing && drawingMode
-                ? (event: any) =>
-                    handleEndPoint(
-                      event,
-                      node,
-                      endNode,
-                      setIsDrawing,
-                      setPoints
-                    )
-                : () => {
-                    return null;
-                  }
-            }
-          >
-            <GraphNodeContext.Provider
-              value={{
-                title: title,
-                id: node,
-                icon: icon,
-                color: color,
-                left: (x - translateX) * scale,
-                top: (y - translateY) * scale,
-                width: width * scale,
-                height: height * scale,
-              }}
-            >
-              <GraphNode updateStartPos={(val) => (startPos.current = val)}>
-                <GraphEditor />
-              </GraphNode>
-            </GraphNodeContext.Provider>
-          </div>
-        );
-      })}
+            const { icon, color } = getIconAndColor(
+              { nodeVisualData_Graph, nodeData_Graph, tags },
+              node
+            );
+            return (
+              <div
+                className={node}
+                key={node}
+                onMouseDown={
+                  drawingMode
+                    ? (event: any) => handleStartPoint(node)
+                    : () => {
+                        return null;
+                      }
+                }
+                onMouseMove={
+                  isDrawing && drawingMode
+                    ? (event: any) => {
+                        handleDrawing(event, points, setPoints);
+                      }
+                    : () => {
+                        return null;
+                      }
+                }
+                onMouseUp={
+                  isDrawing && drawingMode
+                    ? (event: any) =>
+                        handleEndPoint(
+                          event,
+                          node,
+                          endNode,
+                          setIsDrawing,
+                          setPoints
+                        )
+                    : () => {
+                        return null;
+                      }
+                }
+              >
+                <GraphNodeContext.Provider
+                  value={{
+                    title: title,
+                    id: node,
+                    icon: icon,
+                    color: color,
+                    left: (x - translateX) * scale,
+                    top: (y - translateY) * scale,
+                    width: width * scale,
+                    height: height * scale,
+                  }}
+                >
+                  <GraphNode updateStartPos={(val) => (startPos.current = val)}>
+                    <GraphEditor />
+                  </GraphNode>
+                </GraphNodeContext.Provider>
+              </div>
+            );
+          })}
+        </div>
+      </GraphActionContext.Provider>
     </div>
   );
 };

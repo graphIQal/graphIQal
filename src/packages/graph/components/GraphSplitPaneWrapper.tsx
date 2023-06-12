@@ -13,7 +13,6 @@ import SplitPane, {
   SplitPaneRight,
   Divider,
 } from '../../../components/organisms/split-pane/SplitPane';
-import DrawingContext from '../context/GraphDrawingContext';
 import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { GraphContainer } from './GraphContainer';
@@ -117,16 +116,6 @@ const GraphSplitPaneWrapper: React.FC<{
 
   //Drawing states
   const containerRef = useRef<HTMLDivElement>(null);
-  const [drawingMode, setDrawingMode] = useState(true);
-  const [isDrawing, setIsDrawing] = useState<boolean>(false);
-
-  //Drawing line data
-  const startNode = useRef<string>('');
-  const endNode = useRef<string>('');
-
-  //Line functions for detecting arrows
-  let isPointInCanvasFuncs = useRef<any>({});
-  let numPointsInTriangleFuncs = useRef<any>({});
 
   //graph view tags default
   // const [tags, setTags] = useState<any>([
@@ -150,37 +139,24 @@ const GraphSplitPaneWrapper: React.FC<{
   // });
 
   return (
-    <DrawingContext.Provider
-      value={{
-        startNode: startNode,
-        endNode: endNode,
-        isPointInCanvasFuncs: isPointInCanvasFuncs,
-        numPointsInTriangleFuncs: numPointsInTriangleFuncs,
-        drawingMode: drawingMode,
-        setDrawingMode: setDrawingMode,
-        isDrawing: isDrawing,
-        setIsDrawing: setIsDrawing,
-      }}
-    >
-      <SplitPane className='split-pane-row '>
-        <SplitPaneLeft>
-          <div
-            className='outline-none border-none'
-            tabIndex={-1}
-            ref={containerRef}
-          >
-            <GraphContainer />
-            <SearchBar />
-            <Alert />
-          </div>
-          {/* <BoxDragLayer parentRef={containerRef} /> */}
-        </SplitPaneLeft>
-        <Divider className='separator-col' />
-        <SplitPaneRight>
-          <GraphSideTabs nodeInFocus_data={nodeInFocus_data} />
-        </SplitPaneRight>
-      </SplitPane>
-    </DrawingContext.Provider>
+    <SplitPane className='split-pane-row '>
+      <SplitPaneLeft>
+        <div
+          className='outline-none border-none'
+          tabIndex={-1}
+          ref={containerRef}
+        >
+          <GraphContainer />
+          <SearchBar />
+          <Alert />
+        </div>
+        {/* <BoxDragLayer parentRef={containerRef} /> */}
+      </SplitPaneLeft>
+      <Divider className='separator-col' />
+      <SplitPaneRight>
+        <GraphSideTabs nodeInFocus_data={nodeInFocus_data} />
+      </SplitPaneRight>
+    </SplitPane>
   );
 };
 

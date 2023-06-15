@@ -9,11 +9,19 @@ import {
 import {
 	BlockwrappedElements,
 	ELEMENT_BLOCK,
+	ELEMENT_TITLE,
 	MyEditor,
 	MyParagraphElement,
 	MyValue,
+	NoMarkElements,
 } from '../../../plateTypes';
 import { outdent } from '../transforms/outdent';
+import {
+	getBlockAbove,
+	isMarkActive,
+	removeMark,
+	removeEditorMark,
+} from '@udecode/plate';
 
 // I will normalise the block by setting the first block to text and all future blocks as children
 export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
@@ -76,6 +84,20 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 					);
 				}
 			}
+		}
+
+		console.log(path);
+		console.log(getBlockAbove(editor));
+
+		if (
+			getBlockAbove(editor) &&
+			getBlockAbove(editor)[0].type in NoMarkElements
+		) {
+			console.log(getBlockAbove(editor) && getBlockAbove(editor)[0].type);
+			if (isMarkActive(editor, 'bold')) removeEditorMark(editor, 'bold');
+
+			if (isMarkActive(editor, 'italic'))
+				removeEditorMark(editor, 'italic');
 		}
 
 		// normalizeNode([node, path]);

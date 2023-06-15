@@ -26,8 +26,6 @@ export const jsonToCypher_graphView = ({
 	pointer,
 }: graphViewInput) => {
 	let cypher = '';
-	let relationship = 'r';
-	let node = 'n';
 
 	// Original
 	// for (const key in graphViewData) {

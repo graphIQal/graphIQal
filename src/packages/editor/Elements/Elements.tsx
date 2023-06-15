@@ -3,20 +3,22 @@ import {
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
+	PlateRenderElementProps,
 	useEditorRef,
 } from '@udecode/plate';
 import { CSSProperties, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import Handle from '../../../components/atoms/Handle';
 import { DropLineDirection, ItemTypes } from '../../dnd-editor/types';
-import { useMyEditorRef } from '../plateTypes';
+import { MyTitleElement, MyValue, useMyEditorRef } from '../plateTypes';
 import { Draggable } from '../../dnd-editor/components/Draggable';
+import { useRouter } from 'next/router';
 
 // ELEMENTS
 // Define a React component renderer for our code blocks.
 
 //Question: do we want to drag multiple blocks at the same time?
-export const CodeElement = (props: any) => {
+export const CodeElement = (props: PlateRenderElementProps) => {
 	return (
 		<pre {...props.attributes}>
 			<code>{props.children}</code>
@@ -24,20 +26,30 @@ export const CodeElement = (props: any) => {
 	);
 };
 
-export const Block = (props: any) => {
+export const Block = (props: PlateRenderElementProps) => {
 	return <div className='' /**{...props.attributes}**/>{props.children}</div>;
 };
 
 export const NodeLink = (props: any) => {
-	console.log('rendering nodeLink');
+	// console.log('rendering nodeLink');
+	// console.log(props);
+
+	const router = useRouter();
+
 	return (
-		<div className='bg-node cursor-pointer hover:opacity-80'>
+		<div
+			className='bg-node cursor-pointer hover:opacity-80'
+			onClick={() => {
+				// Navigate to node
+				router.push(props.element.routeString, undefined);
+			}}
+		>
 			{props.children}
 		</div>
 	);
 };
 
-export const NodeBlock = (props: any) => {
+export const NodeBlock = (props: PlateRenderElementProps) => {
 	return (
 		<Block>
 			<div>{props.children}</div>
@@ -68,42 +80,14 @@ export const TitleElement = (props: any) => {
 	);
 };
 
-export const H1 = (props: any) => {
+export const H1 = (props: PlateRenderElementProps) => {
 	return <h1 className='text-xl font-bold'>{props.children}</h1>;
 };
 
-export const H2 = (props: any) => {
+export const H2 = (props: PlateRenderElementProps) => {
 	return <h2 className='text-lg font-bold'>{props.children}</h2>;
 };
 
-export const H3 = (props: any) => {
+export const H3 = (props: PlateRenderElementProps) => {
 	return <h3 className='text-md font-semibold'>{props.children}</h3>;
-};
-
-export const Leaf = (props: any) => {
-	if (props.leaf.italics) {
-		return (
-			<span
-				{...props.attributes}
-				className={
-					props.leaf.text_type + ' ' + props.leaf.bold
-						? 'font-bold'
-						: ''
-				}
-			>
-				<em>{props.children}</em>
-			</span>
-		);
-	}
-
-	return (
-		<span
-			{...props.attributes}
-			className={
-				props.leaf.text_type + ' ' + props.leaf.bold ? 'font-bold' : ''
-			}
-		>
-			{props.children}
-		</span>
-	);
 };

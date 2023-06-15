@@ -1,4 +1,3 @@
-import { createStyles } from '@udecode/plate';
 import { MyValue } from '../../editor/plateTypes';
 import { BlockStyleProps } from './Draggable.types';
 

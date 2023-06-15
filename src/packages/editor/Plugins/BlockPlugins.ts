@@ -16,6 +16,8 @@ import {
 	ELEMENT_NODELINK,
 	ELEMENT_TITLE,
 } from '../plateTypes';
+import { normalizeNodeLink } from './NodeLinkPlugin/normalisenodeLink';
+import { withNodeLink } from './NodeLinkPlugin/withNodeLink';
 
 const plateUI = createPlateUI({});
 
@@ -46,6 +48,7 @@ const createNodeLinkPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODELINK,
 	isElement: true,
 	isLeaf: false,
+	withOverrides: withNodeLink,
 	options: {},
 });
 

@@ -12,6 +12,7 @@ export type ToolbarButtonProps = {
 //Button for formatting/adding stuff for toolbars
 const ToolbarButton: React.FC<ToolbarButtonProps> = ({ item, className }) => {
 	const { onPress, buttonText, icon } = item;
+
 	return (
 		<div className={className} onClick={onPress}>
 			<p className='button_text'>{buttonText}</p>

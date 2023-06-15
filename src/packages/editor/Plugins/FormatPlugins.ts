@@ -1,4 +1,5 @@
 import {
+	createAutoformatPlugin,
 	createExitBreakPlugin,
 	createNormalizeTypesPlugin,
 	createResetNodePlugin,
@@ -20,11 +21,12 @@ import {
 	BlockwrappedElements,
 	createMyPluginFactory,
 	createMyPlugins,
+	ELEMENT_BLOCK,
 	ELEMENT_NODE,
+	ELEMENT_NODELINK,
 	ELEMENT_TITLE,
 } from '../plateTypes';
 
-// I can try adding a plugin for the fricking paragraph that makes it an inline plugin? I'm not sure
 const resetBlockTypesCommonRule = {
 	types: [ELEMENT_BLOCKQUOTE, ELEMENT_TODO_LI],
 	defaultType: ELEMENT_PARAGRAPH,
@@ -68,7 +70,11 @@ export const FormatPlugins = createMyPlugins([
 					query: {
 						start: true,
 						end: true,
-						allow: KEYS_HEADING,
+						allow: [
+							...KEYS_HEADING,
+							ELEMENT_TITLE,
+							ELEMENT_NODELINK,
+						],
 					},
 					// relative: true,
 					level: 1,
@@ -76,4 +82,6 @@ export const FormatPlugins = createMyPlugins([
 			],
 		},
 	}),
+	createAutoformatPlugin({}),
+	createTrailingBlockPlugin({ options: { type: ELEMENT_BLOCK } }),
 ]);

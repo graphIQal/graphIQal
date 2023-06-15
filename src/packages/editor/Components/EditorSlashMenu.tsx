@@ -22,6 +22,10 @@ import {
 	MyNodeLinkElement,
 	useMyPlateEditorRef,
 } from '../plateTypes';
+import { createNodeInDocument } from '../../../backend/functions/node/mutate/createNodeInDocument';
+import { useViewData } from '../../../components/context/ViewContext';
+import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from 'next/router';
 
 export const markTooltip: TippyProps = {
 	arrow: true,
@@ -45,7 +49,9 @@ type item = {
 };
 
 export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
+	const router = useRouter();
 	const editor = useMyPlateEditorRef();
+	const { nodeId, username } = useViewData();
 
 	const items: item[] = [
 		{
@@ -58,74 +64,26 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					}
 					return false;
 				},
-				onPress: () => {
-					console.log('okay');
+				onPress: async () => {
 					// Add to backend
+					const newId = uuidv4();
 
 					// Create new page in frontend
 					insertNodes(editor, {
 						type: getPluginType(editor, ELEMENT_NODELINK),
+						nodeId: newId,
+						routeString: `/${username}/${newId}`,
 						children: [{ text: '' }],
 					} as MyNodeLinkElement);
 
-					// Navigate to backend
-				},
-			},
-		},
-		{
-			key: 'HAScreate',
-			text: 'Create Node with Connection: HAS',
-			data: {
-				searchFunction: (search) => {
-					const connectionType = search.split(':')[1];
-
-					if (
-						'create:has'.startsWith(search) ||
-						'has'.startsWith(connectionType)
-					) {
-						return true;
-					}
-					return false;
-				},
-				onPress: () => {
-					console.log('okay');
-					// Add to backend
-
-					// Create new page in frontend
-					insertNodes(editor, {
-						type: getPluginType(editor, ELEMENT_NODELINK),
-						children: [{ text: '' }],
-					} as MyNodeLinkElement);
-
-					// Navigate to backend
-				},
-			},
-		},
-		{
-			key: 'IScreate',
-			text: 'Create Node with Connection: IS',
-			data: {
-				searchFunction: (search) => {
-					if (
-						'create:is'.startsWith(search) ||
-						search.endsWith('is')
-					) {
-						return true;
-					}
-					return false;
-				},
-				onPress: () => {
-					console.log('okay');
-
-					// Add to backend
-
-					// Create new page in frontend
-					insertNodes(editor, {
-						type: getPluginType(editor, ELEMENT_NODELINK),
-						children: [{ text: '' }],
-					} as MyNodeLinkElement);
-
-					// Navigate to backend
+					const res = await createNodeInDocument(
+						nodeId,
+						username,
+						'HAS',
+						newId
+					);
+					// Navigate to node
+					router.push(`/${username}/${newId}`, undefined);
 				},
 			},
 		},
@@ -225,6 +183,83 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							children: [{ text: '' }],
 						});
 					}
+				},
+			},
+		},
+		{
+			key: 'HAScreate',
+			text: 'Create Node with Connection: HAS',
+			data: {
+				searchFunction: (search) => {
+					const connectionType = search.split(':')[1];
+
+					if (
+						'create:has'.startsWith(search) ||
+						'has'.startsWith(connectionType)
+					) {
+						return true;
+					}
+					return false;
+				},
+				onPress: () => {
+					console.log('okay');
+					// Add to backend
+
+					// Create new page in frontend
+					insertNodes(editor, {
+						type: getPluginType(editor, ELEMENT_NODELINK),
+						children: [{ text: '' }],
+					} as MyNodeLinkElement);
+
+					// Navigate to backend
+				},
+			},
+		},
+		{
+			key: 'IScreate',
+			text: 'Create Node with Connection: IS',
+			data: {
+				searchFunction: (search) => {
+					if (
+						'create:is'.startsWith(search) ||
+						search.endsWith('is')
+					) {
+						return true;
+					}
+					return false;
+				},
+				onPress: () => {
+					console.log('okay');
+
+					// Add to backend
+
+					// Create new page in frontend
+					insertNodes(editor, {
+						type: getPluginType(editor, ELEMENT_NODELINK),
+						children: [{ text: '' }],
+					} as MyNodeLinkElement);
+
+					// Navigate to backend
+				},
+			},
+		},
+		{
+			key: 'ISconnect',
+			text: 'IS : ',
+			data: {
+				searchFunction: (search) => {
+					if (
+						'connect:is'.startsWith(search) ||
+						'is:'.startsWith(search)
+					) {
+						return true;
+					}
+					return false;
+				},
+				onPress: () => {
+					console.log('okay');
+
+					// Add to backend
 				},
 			},
 		},

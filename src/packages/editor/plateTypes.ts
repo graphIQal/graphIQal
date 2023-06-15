@@ -165,6 +165,8 @@ export interface MyTitleElement extends BlockElements {
 
 export interface MyNodeLinkElement extends BlockElements {
 	type: typeof ELEMENT_NODELINK;
+	nodeId: string;
+	routeString: string;
 	children: InlineElements[];
 }
 
@@ -223,6 +225,14 @@ export const BlockwrappedElements = {
 	[ELEMENT_BLOCKQUOTE]: true,
 	[ELEMENT_LI]: true,
 	[ELEMENT_TODO_LI]: true,
+};
+
+export const NoMarkElements = {
+	[ELEMENT_H1]: true,
+	[ELEMENT_H2]: true,
+	[ELEMENT_H3]: true,
+	[ELEMENT_TITLE]: true,
+	[ELEMENT_NODELINK]: true,
 };
 
 export type MyValue = Block[];

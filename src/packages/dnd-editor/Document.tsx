@@ -38,20 +38,16 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 
 	// send a request to create content
 	if ('title' in currNode_data.n && !currNode_data.n.content) {
-		saveDocument({
-			nodeId,
-			username,
-			document: [
-				{
-					type: 'block',
-					id: uuidv4(),
-					children: [
-						{ type: 'p', id: uuidv4(), children: [{ text: '' }] },
-					],
-				},
-			],
-			title: currNode_data.n.title,
-		});
+		currNode_data.n.content = `
+		[
+			{
+				"type": "block",
+				"id": "${uuidv4()}",
+				"children": [
+					{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
+				]
+			}
+		]`;
 	}
 
 	//key events: undo, redo, escaping drawing
@@ -101,7 +97,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 						{
 							text: connectionMap[value.nodeId as string]
 								? connectionMap[value.nodeId as string].title
-								: '',
+								: 'Untitled',
 							underline: true,
 						},
 					];

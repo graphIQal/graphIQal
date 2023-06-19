@@ -64,21 +64,18 @@ export const NodeBlock = (props: PlateRenderElementProps) => {
 export const TitleElement = (props: any) => {
 	// Showing untitled if title is empty.
 
-	if (props.element.children[0].text.length === 0) {
-		return (
-			<div className='ml-[14px]'>
-				<h1 className='ml-1 text-3xl font-extrabold opacity-80'>
-					<div className='inline-block'>{props.children}</div>
-					<span>Untitled</span>
-				</h1>
-			</div>
-		);
-	}
-
 	return (
 		<div className='ml-[14px]'>
-			<h1 className='ml-1 text-3xl font-extrabold mb-3'>
-				{props.children}
+			<h1 className={'ml-1 text-3xl font-extrabold mb -3'}>
+				<div
+					className={
+						props.element.children[0].text.length === 0
+							? 'before:content-["Untitled"] before:ml-0.5 before:block before:absolute before:cursor-text before:opacity-80'
+							: ''
+					}
+				>
+					{props.children}
+				</div>
 			</h1>
 		</div>
 	);

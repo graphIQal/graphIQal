@@ -236,6 +236,12 @@ export const NoMarkElements = {
 	[ELEMENT_NODELINK]: true,
 };
 
+export const HeaderElements = {
+	[ELEMENT_H1]: true,
+	[ELEMENT_H2]: true,
+	[ELEMENT_H3]: true,
+};
+
 export type MyValue = Block[];
 
 /**

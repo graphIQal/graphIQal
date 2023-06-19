@@ -28,7 +28,13 @@ import {
 } from '../plateTypes';
 
 const resetBlockTypesCommonRule = {
-	types: [ELEMENT_BLOCKQUOTE, ELEMENT_TODO_LI],
+	types: [
+		ELEMENT_BLOCKQUOTE,
+		ELEMENT_TODO_LI,
+		ELEMENT_H1,
+		ELEMENT_H2,
+		ELEMENT_H3,
+	],
 	defaultType: ELEMENT_PARAGRAPH,
 };
 

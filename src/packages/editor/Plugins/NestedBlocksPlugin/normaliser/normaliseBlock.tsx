@@ -95,7 +95,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			getBlockAbove(editor) &&
 			getBlockAbove(editor)[0].type in NoMarkElements
 		) {
-			console.log(getBlockAbove(editor) && getBlockAbove(editor)[0].type);
 			if (isMarkActive(editor, 'bold')) removeEditorMark(editor, 'bold');
 
 			if (isMarkActive(editor, 'italic'))

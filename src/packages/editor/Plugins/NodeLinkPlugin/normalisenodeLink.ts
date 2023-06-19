@@ -33,7 +33,7 @@ export const normalizeNodeLink = <V extends MyValue>(editor: MyEditor) => {
 				isCollapsed(editor.selection) &&
 				editor.selection?.anchor.path
 			) {
-				console.log(node, path);
+				// console.log(node, path);
 			}
 		}
 

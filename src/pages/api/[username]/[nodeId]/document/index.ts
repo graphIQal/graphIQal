@@ -15,8 +15,7 @@ export default async function handler(
 	// `;
 
 	const cypher: string = `
-	MATCH (n:Node {id: $nodeId})
-	OPTIONAL MATCH (n)-[r:NEXT_BLOCK|BLOCK_CHILD*0..]->(b:BLOCK_ELEMENT|BLOCK_INLINE)
+	MATCH (n:Node {id: $nodeId})-[r:NEXT_BLOCK|BLOCK_CHILD*0..]->(b:BLOCK_ELEMENT|BLOCK_INLINE)
 	MATCH (n)-[:VIEW]-(g: GRAPH_VIEW)
 	RETURN r, b, g
 	`;

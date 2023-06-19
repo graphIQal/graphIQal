@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import SplitPane, {
@@ -11,7 +11,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // import Document from '../../src/pages/document/Document';
 import { v4 as uuidv4 } from 'uuid';
 
-import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
+import { useViewData } from '../../components/context/ViewContext';
 import DocumentSideTabs from '../../components/organisms/Tabs/DocumentSideTabs';
 import SplitPane, {
 	Divider,
@@ -23,12 +23,8 @@ import {
 	BlockElements,
 	ELEMENT_BLOCK,
 	ELEMENT_NODELINK,
-	ELEMENT_TITLE,
-	MyBlockElement,
 	MyTitleElement,
 } from '../editor/plateTypes';
-import { useViewData } from '../../components/context/ViewContext';
-import { PlateProvider } from '@udecode/plate';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 	const { nodeId, username, currNode_data, documentVar, windowVar } =
@@ -142,21 +138,6 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 				</SplitPaneLeft>
 				<Divider className='separator-col' />
 				<SplitPaneRight>
-					{/* <TextButton
-						text='Create new graph view'
-						onClick={() =>
-							createGraphView(
-								username as string,
-								nodeId as string
-							)
-						}
-					/> */}
-					{/* <TextButton
-						text='Save Document'
-						onClick={() =>
-							saveDocument({ nodeId, username, document: value })
-						}
-					/> */}
 					<DocumentSideTabs />
 				</SplitPaneRight>
 			</SplitPane>

@@ -28,14 +28,12 @@ export const normalizeNodeLink = <V extends MyValue>(editor: MyEditor) => {
 
 		const isNodeLink = node.type === nodeLinkType;
 
-		// console.log('editor.selection', path);
-		// console.log(editor.selection);
-
 		if (isNodeLink) {
 			if (
 				isCollapsed(editor.selection) &&
 				editor.selection?.anchor.path
 			) {
+				console.log(node, path);
 			}
 		}
 

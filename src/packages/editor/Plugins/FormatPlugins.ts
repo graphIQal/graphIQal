@@ -33,6 +33,7 @@ const resetBlockTypesCommonRule = {
 };
 
 export const FormatPlugins = createMyPlugins([
+	// createTrailingBlockPlugin({ options: { type: ELEMENT_PARAGRAPH } }),
 	createSoftBreakPlugin(),
 	createNormalizeTypesPlugin({
 		options: { rules: [{ path: [0], strictType: 'title' }] },
@@ -83,5 +84,4 @@ export const FormatPlugins = createMyPlugins([
 		},
 	}),
 	createAutoformatPlugin({}),
-	createTrailingBlockPlugin({ options: { type: ELEMENT_BLOCK } }),
 ]);

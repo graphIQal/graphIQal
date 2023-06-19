@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import SplitPane, {
@@ -19,8 +19,16 @@ import SplitPane, {
 	SplitPaneRight,
 } from '../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../editor/EditorComponent';
-import { ELEMENT_TITLE, MyTitleElement } from '../editor/plateTypes';
+import {
+	BlockElements,
+	ELEMENT_BLOCK,
+	ELEMENT_NODELINK,
+	ELEMENT_TITLE,
+	MyBlockElement,
+	MyTitleElement,
+} from '../editor/plateTypes';
 import { useViewData } from '../../components/context/ViewContext';
+import { PlateProvider } from '@udecode/plate';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 	const { nodeId, username, currNode_data, documentVar, windowVar } =
@@ -35,11 +43,6 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 			username,
 			document: [
 				{
-					type: ELEMENT_TITLE,
-					id: 'Node Title',
-					children: [{ text: currNode_data.n.title }],
-				} as MyTitleElement,
-				{
 					type: 'block',
 					id: uuidv4(),
 					children: [
@@ -51,12 +54,79 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 		});
 	}
 
+	//key events: undo, redo, escaping drawing
+	useEffect(() => {
+		const listenerFunc = (evt: any) => {
+			if (
+				evt.code === 'KeyZ' &&
+				(evt.ctrlKey || evt.metaKey) &&
+				evt.shiftKey
+			) {
+				evt.stopPropagation();
+				evt.stopImmediatePropagation();
+				evt.preventDefault();
+				console.log('redo()');
+			} else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+				evt.stopImmediatePropagation();
+				evt.preventDefault();
+				console.log('undo()');
+			}
+		};
+
+		document.addEventListener('keydown', (event) => listenerFunc(event));
+		return document.removeEventListener('keydown', (event) =>
+			listenerFunc(event)
+		);
+	}, []);
+
+	const connectionMap: any = {};
+
+	currNode_data.connectedNodes.forEach((row) => {
+		connectionMap[row.connected_node.id] = {
+			r: row.r,
+			...row.connected_node,
+		};
+	});
+
+	const createInitialValue = (content: string) => {
+		const value = JSON.parse(content);
+
+		console.log('value');
+
+		function traverse(obj: BlockElements[]) {
+			console.log(typeof obj);
+
+			if (typeof obj !== 'object' || obj === null) return;
+
+			Object.entries(obj).forEach(([key, value]) => {
+				console.log(value);
+				// Key is either an array index or object key
+				if (value.type === ELEMENT_NODELINK) {
+					console.log('nodeLink!');
+					console.log(value);
+					console.log(connectionMap);
+
+					value.children = [
+						{ text: connectionMap[value.nodeId as string].title },
+					];
+				} else if (value.type === ELEMENT_BLOCK) {
+					traverse(value.children as BlockElements[]);
+				}
+			});
+		}
+
+		traverse(value);
+
+		return value;
+	};
+
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
 					<div className='px-3 py-3'>
 						{currNode_data.n.content && (
+							// <PlateProvider>
 							<EditorComponent
 								initialValue={[
 									{
@@ -66,12 +136,15 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 											{ text: currNode_data.n.title },
 										],
 									} as MyTitleElement,
-									...JSON.parse(currNode_data.n.content),
+									...createInitialValue(
+										currNode_data.n.content
+									),
 								]}
 								value={value}
 								setValue={setValue}
 								id={'documentId'}
 							/>
+							// </PlateProvider>
 						)}
 					</div>
 				</SplitPaneLeft>

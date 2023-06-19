@@ -41,6 +41,7 @@ export const indent = <V extends MyValue>(editor: PlateEditor<V>) => {
 			'children' in destNode &&
 			Array.isArray(destNode.children)
 		) {
+			console.log('indenting node');
 			const length = destNode.children.length;
 			moveNodes(editor, {
 				to: [...destNodePath, length],

@@ -22,8 +22,5 @@ export const TextMarkPlugins = createMyPlugins(
 	],
 	{
 		components: createPlateUI({}),
-		overrideByKey: {
-			[ELEMENT_TITLE]: {},
-		},
 	}
 );

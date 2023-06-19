@@ -8,7 +8,12 @@ import { saveDocument } from '../../backend/functions/general/document/mutate/sa
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
-import { createMyPlugins, MyValue } from './plateTypes';
+import {
+	createMyEditor,
+	createMyPlugins,
+	MyValue,
+	useMyEditorState,
+} from './plateTypes';
 import { BlockPlugins } from './Plugins/BlockPlugins';
 import { CommandPlugins } from './Plugins/CommandPlugins';
 import { FormatPlugins } from './Plugins/FormatPlugins';
@@ -17,6 +22,7 @@ import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 
 import { v4 as uuidv4 } from 'uuid';
 import { useViewData } from '../../components/context/ViewContext';
+import { createMyPlateEditor } from './plateTypes';
 
 const EditorComponent: React.FC<{
 	value: any[];
@@ -72,6 +78,11 @@ const EditorComponent: React.FC<{
 		[]
 	);
 
+	// const editorOnly = createMyEditor();
+	// const editor = createMyPlateEditor({
+	// 	plugins: plugins,
+	// });
+
 	// `useCallback` here to memoize the function for subsequent renders.
 	// const renderElement = useCallback((props: any) => {
 	// 	return <Block {...props} />;
@@ -85,8 +96,8 @@ const EditorComponent: React.FC<{
 			<Plate<MyValue>
 				editableProps={editableProps}
 				initialValue={initialValue}
+				// editor={editor}
 				onChange={(docValue) => {
-					// console.log('doc value');
 					console.log(docValue);
 					setValue(docValue);
 					clearTimeout(intervalRef.current);

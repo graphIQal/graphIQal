@@ -11,11 +11,8 @@ export const saveDocument = async ({
 	document,
 	title = 'untitled',
 }: SaveDocumentInput) => {
-	// console.log('saveDocument');
-	// console.log(JSON.stringify(document));
-	// console.log(title);
-
-	if (title === '') title = 'untitled';
+	console.log('saveDocument');
+	console.log(JSON.stringify(document));
 
 	const res = await fetch(
 		`/api/${username}/${nodeId}/document/save/${title}`,

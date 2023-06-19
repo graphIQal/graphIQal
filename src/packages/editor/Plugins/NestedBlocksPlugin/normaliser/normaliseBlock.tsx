@@ -9,6 +9,7 @@ import {
 import {
 	BlockwrappedElements,
 	ELEMENT_BLOCK,
+	ELEMENT_NODELINK,
 	ELEMENT_TITLE,
 	MyEditor,
 	MyParagraphElement,
@@ -22,9 +23,12 @@ import {
 	removeMark,
 	removeEditorMark,
 } from '@udecode/plate';
+import { useViewData } from '../../../../../components/context/ViewContext';
 
 // I will normalise the block by setting the first block to text and all future blocks as children
 export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
+	const { currNode_data } = useViewData();
+
 	const blockType = getPluginType(editor, ELEMENT_BLOCK);
 
 	const { normalizeNode } = editor;
@@ -85,9 +89,9 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 				}
 			}
 		}
+		// else if(node.type === ELEMENT_NODELINK) {
 
-		console.log(path);
-		console.log(getBlockAbove(editor));
+		// }
 
 		if (
 			getBlockAbove(editor) &&
@@ -98,6 +102,12 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 			if (isMarkActive(editor, 'italic'))
 				removeEditorMark(editor, 'italic');
+
+			if (isMarkActive(editor, 'underline'))
+				removeEditorMark(editor, 'underline');
+
+			if (isMarkActive(editor, 'strikethrough'))
+				removeEditorMark(editor, 'strikethrough');
 		}
 
 		// normalizeNode([node, path]);

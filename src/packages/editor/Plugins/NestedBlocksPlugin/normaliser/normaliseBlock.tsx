@@ -27,8 +27,6 @@ import { useViewData } from '../../../../../components/context/ViewContext';
 
 // I will normalise the block by setting the first block to text and all future blocks as children
 export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
-	const { currNode_data } = useViewData();
-
 	const blockType = getPluginType(editor, ELEMENT_BLOCK);
 
 	const { normalizeNode } = editor;

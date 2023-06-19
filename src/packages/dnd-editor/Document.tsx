@@ -99,7 +99,9 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 				if (value.type === ELEMENT_NODELINK) {
 					value.children = [
 						{
-							text: connectionMap[value.nodeId as string].title,
+							text: connectionMap[value.nodeId as string]
+								? connectionMap[value.nodeId as string].title
+								: '',
 							underline: true,
 						},
 					];

@@ -225,6 +225,7 @@ export const BlockwrappedElements = {
 	[ELEMENT_BLOCKQUOTE]: true,
 	[ELEMENT_LI]: true,
 	[ELEMENT_TODO_LI]: true,
+	[ELEMENT_NODELINK]: true,
 };
 
 export const NoMarkElements = {

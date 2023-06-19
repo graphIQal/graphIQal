@@ -27,7 +27,11 @@ export const CodeElement = (props: PlateRenderElementProps) => {
 };
 
 export const Block = (props: PlateRenderElementProps) => {
-	return <div className='' /**{...props.attributes}**/>{props.children}</div>;
+	return (
+		<div className='decoration-[0.1px] ' /**{...props.attributes}**/>
+			{props.children}
+		</div>
+	);
 };
 
 export const NodeLink = (props: any) => {
@@ -38,7 +42,7 @@ export const NodeLink = (props: any) => {
 
 	return (
 		<div
-			className='bg-node cursor-pointer hover:opacity-80'
+			className='bg-node cursor-pointer hover:opacity-80 font-semibold underline-offset-2 decoration-lining'
 			onClick={() => {
 				// Navigate to node
 				router.push(props.element.routeString, undefined);

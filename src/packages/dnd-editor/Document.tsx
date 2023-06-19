@@ -91,23 +91,17 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 	const createInitialValue = (content: string) => {
 		const value = JSON.parse(content);
 
-		console.log('value');
-
 		function traverse(obj: BlockElements[]) {
-			console.log(typeof obj);
-
 			if (typeof obj !== 'object' || obj === null) return;
 
 			Object.entries(obj).forEach(([key, value]) => {
-				console.log(value);
 				// Key is either an array index or object key
 				if (value.type === ELEMENT_NODELINK) {
-					console.log('nodeLink!');
-					console.log(value);
-					console.log(connectionMap);
-
 					value.children = [
-						{ text: connectionMap[value.nodeId as string].title },
+						{
+							text: connectionMap[value.nodeId as string].title,
+							underline: true,
+						},
 					];
 				} else if (value.type === ELEMENT_BLOCK) {
 					traverse(value.children as BlockElements[]);

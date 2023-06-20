@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import SplitPane, {
@@ -26,50 +26,27 @@ import {
 	MyTitleElement,
 } from '../editor/plateTypes';
 
-const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
+const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 	const { nodeId, username, currNode_data, documentVar, windowVar } =
 		useViewData();
 
 	const [value, setValue] = useState([]);
+	const [content, setcontent] = useState([]);
+	console.log(currNode_data);
 
-	// send a request to create content
+	// useEffect(() => {
 	if ('title' in currNode_data.n && !currNode_data.n.content) {
 		currNode_data.n.content = `
-		[
-			{
-				"type": "block",
-				"id": "${uuidv4()}",
-				"children": [
-					{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
-				]
-			}
-		]`;
+			[
+				{
+					"type": "block",
+					"id": "${uuidv4()}",
+					"children": [
+						{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
+					]
+				}
+			]`;
 	}
-
-	//key events: undo, redo, escaping drawing
-	useEffect(() => {
-		const listenerFunc = (evt: any) => {
-			if (
-				evt.code === 'KeyZ' &&
-				(evt.ctrlKey || evt.metaKey) &&
-				evt.shiftKey
-			) {
-				evt.stopPropagation();
-				evt.stopImmediatePropagation();
-				evt.preventDefault();
-				console.log('redo()');
-			} else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
-				evt.stopImmediatePropagation();
-				evt.preventDefault();
-				console.log('undo()');
-			}
-		};
-
-		document.addEventListener('keydown', (event) => listenerFunc(event));
-		return document.removeEventListener('keydown', (event) =>
-			listenerFunc(event)
-		);
-	}, []);
 
 	const connectionMap: any = {};
 
@@ -79,6 +56,32 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 			...row.connected_node,
 		};
 	});
+	// }, [currNode_data]);
+
+	//key events: undo, redo, escaping drawing
+	// useEffect(() => {
+	// 	const listenerFunc = (evt: any) => {
+	// 		if (
+	// 			evt.code === 'KeyZ' &&
+	// 			(evt.ctrlKey || evt.metaKey) &&
+	// 			evt.shiftKey
+	// 		) {
+	// 			evt.stopPropagation();
+	// 			evt.stopImmediatePropagation();
+	// 			evt.preventDefault();
+	// 			console.log('redo()');
+	// 		} else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+	// 			evt.stopImmediatePropagation();
+	// 			evt.preventDefault();
+	// 			console.log('undo()');
+	// 		}
+	// 	};
+
+	// 	document.addEventListener('keydown', (event) => listenerFunc(event));
+	// 	return document.removeEventListener('keydown', (event) =>
+	// 		listenerFunc(event)
+	// 	);
+	// }, []);
 
 	const createInitialValue = (content: string) => {
 		const value = JSON.parse(content);
@@ -116,6 +119,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = ({ viewId }) => {
 						{currNode_data.n.content && (
 							// <PlateProvider>
 							<EditorComponent
+								key={currNode_data.n.id}
 								initialValue={[
 									{
 										type: 'title',

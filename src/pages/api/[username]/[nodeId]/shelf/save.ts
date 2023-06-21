@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { write } from '../../../../../../backend/driver/helpers';
+import { write } from '../../../../../backend/driver/helpers';
 // import { write } from '../../../../../backend/driver/helpers';
 
 export default async function handler(
@@ -11,8 +11,7 @@ export default async function handler(
 
 	const cypher: string = `
 	MATCH (n:Node {id: $nodeId})
-	SET n.document = $body
-	SET n.title = ""
+	SET n.shelf = $body
 	RETURN n
 	`;
 

@@ -1,4 +1,4 @@
-type SaveDocumentInput = {
+export type SaveDocumentInput = {
 	nodeId: string;
 	username: string;
 	document: any[];
@@ -11,7 +11,7 @@ export const saveDocument = async ({
 	document,
 	title = 'untitled',
 }: SaveDocumentInput) => {
-	// console.log('saveDocument');
+	console.log('saveDocument');
 	// console.log(title);
 	// console.log(JSON.stringify(document));
 
@@ -19,7 +19,7 @@ export const saveDocument = async ({
 		`/api/${username}/${nodeId}/document/save/${title}`,
 		{
 			method: 'POST',
-			body: JSON.stringify(document),
+			body: JSON.stringify(document.slice(1)),
 		}
 	)
 		.then((res) => {

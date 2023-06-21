@@ -25,18 +25,24 @@ import {
 	ELEMENT_NODELINK,
 	MyTitleElement,
 } from '../editor/plateTypes';
+import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
+import { saveShelf } from '../../backend/functions/general/document/mutate/saveShelf';
+import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
+import { Block } from '../editor/Elements/Elements';
+import { createNormalizeTypesPlugin } from '@udecode/plate';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 	const { nodeId, username, currNode_data, documentVar, windowVar } =
 		useViewData();
 
-	const [value, setValue] = useState([]);
-	const [content, setcontent] = useState([]);
+	const [document, setdocument] = useState([]);
+	const [shelf, setshelf] = useState([]);
+
 	console.log(currNode_data);
 
 	// useEffect(() => {
-	if ('title' in currNode_data.n && !currNode_data.n.content) {
-		currNode_data.n.content = `
+	if ('title' in currNode_data.n && !currNode_data.n.document) {
+		currNode_data.n.document = `
 			[
 				{
 					"type": "block",
@@ -46,6 +52,20 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 					]
 				}
 			]`;
+	}
+
+	// useEffect(() => {
+	if ('title' in currNode_data.n && !currNode_data.n.shelf) {
+		currNode_data.n.shelf = `
+					[
+						{
+							"type": "block",
+							"id": "${uuidv4()}",
+							"children": [
+								{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
+							]
+						}
+					]`;
 	}
 
 	const connectionMap: any = {};
@@ -69,11 +89,9 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 	// 			evt.stopPropagation();
 	// 			evt.stopImmediatePropagation();
 	// 			evt.preventDefault();
-	// 			console.log('redo()');
 	// 		} else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
 	// 			evt.stopImmediatePropagation();
 	// 			evt.preventDefault();
-	// 			console.log('undo()');
 	// 		}
 	// 	};
 
@@ -116,7 +134,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
 					<div className='px-3 py-3'>
-						{currNode_data.n.content && (
+						{currNode_data.n.document && (
 							// <PlateProvider>
 							<EditorComponent
 								key={currNode_data.n.id}
@@ -129,12 +147,26 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 										],
 									} as MyTitleElement,
 									...createInitialValue(
-										currNode_data.n.content
+										currNode_data.n.document
 									),
 								]}
-								value={value}
-								setValue={setValue}
+								value={document}
+								setValue={setdocument}
 								id={'documentId'}
+								save={saveDocument}
+								blockElement={Block}
+								customPlugins={[
+									createNormalizeTypesPlugin({
+										options: {
+											rules: [
+												{
+													path: [0],
+													strictType: 'title',
+												},
+											],
+										},
+									}),
+								]}
 							/>
 							// </PlateProvider>
 						)}
@@ -142,7 +174,50 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 				</SplitPaneLeft>
 				<Divider className='separator-col' />
 				<SplitPaneRight>
-					<DocumentSideTabs />
+					<DocumentSideTabs
+						editorComponent={
+							currNode_data.n.shelf ? (
+								<EditorComponent
+									key={currNode_data.n.id + 'shelf'}
+									initialValue={[
+										...createInitialValue(
+											currNode_data.n.shelf
+										),
+									]}
+									value={shelf}
+									setValue={setshelf}
+									id={'shelfDocument'}
+									save={saveShelf}
+									blockElement={ShelfBlock}
+								/>
+							) : (
+								<></>
+							)
+						}
+					/>
+					{/* If I put shelf inside documentSideTabs it has issues with setting state and I'm not sure why tbh */}
+					{/* I suspect this might be because it gets rendered in tabs afterthe fact. */}
+					<Divider className='separator-row' />
+					<div className='py-4 px-2 '>
+						<div className='ml-[14px]'>
+							<h2 className='font-bold ml-1 text-md'>Shelf</h2>
+						</div>
+						{currNode_data.n.shelf && (
+							<EditorComponent
+								key={currNode_data.n.id + 'shelf'}
+								initialValue={[
+									...createInitialValue(
+										currNode_data.n.shelf
+									),
+								]}
+								value={shelf}
+								setValue={setshelf}
+								id={'shelfDocument'}
+								save={saveShelf}
+								blockElement={ShelfBlock}
+							/>
+						)}
+					</div>
 				</SplitPaneRight>
 			</SplitPane>
 		</DndProvider>

@@ -16,7 +16,13 @@ export type SideTabPropsDoc = {
 	component: any;
 };
 
-const DocumentSideTabs: React.FC = () => {
+type DocumentSideTabsInput = {
+	editorComponent: JSX.Element;
+};
+
+const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
+	editorComponent,
+}) => {
 	const { username, currNode_data, nodeId } = useViewData();
 	const router = useRouter();
 
@@ -60,14 +66,15 @@ const DocumentSideTabs: React.FC = () => {
 		let newTabs = [...tabs];
 		newTabs[0].component = (
 			<div>
-				<SelectableList
-					onEnter={() => {}}
-					listItems={renderConnections(currNode_data.connectedNodes)}
-				></SelectableList>
-				<Divider className='separator-row' />
-				<div className='py-4 px-2'>
-					<ShelfEditor />
-				</div>
+				{renderConnections(currNode_data.connectedNodes)}
+				{/* <Divider className='separator-row' /> */}
+				{/* <div className='py-4 px-2 '>
+					<div className='ml-[14px]'>
+						<h2 className='font-bold ml-1 text-md'>Shelf</h2>
+					</div> */}
+				{/* <ShelfEditor /> */}
+				{/* {editorComponent} */}
+				{/* </div> */}
 			</div>
 		);
 
@@ -83,9 +90,9 @@ const DocumentSideTabs: React.FC = () => {
 
 	const [tabs, setTabs] = useState<SideTabPropsDoc[]>([
 		{
-			label: 'Connections/Shelf',
+			label: 'Connections',
 			viewType: 'connections',
-			component: <div></div>,
+			component: <div>{editorComponent}</div>,
 		},
 		// {
 		// 	label: 'Content',

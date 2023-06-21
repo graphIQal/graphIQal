@@ -10,7 +10,7 @@ export default async function handler(
 
 	const cypher: string = `
 	MATCH (n:Node {id: $nodeId})
-	SET n.content = $body
+	SET n.document = $body
 	SET n.title = $title
 	RETURN n
 	`;

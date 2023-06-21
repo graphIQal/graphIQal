@@ -66,7 +66,7 @@ export const TitleElement = (props: any) => {
 
 	return (
 		<div className='ml-[14px]'>
-			<h1 className={'ml-1 text-3xl font-extrabold mb -3'}>
+			<h1 className={'ml-1 text-3xl font-extrabold mb-3'}>
 				<div
 					className={
 						props.element.children[0].text.length === 0

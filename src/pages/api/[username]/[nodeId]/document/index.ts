@@ -14,14 +14,22 @@ export default async function handler(
 	// RETURN n, r, b, children, text
 	// `;
 
+	// const cypher: string = `
+	// MATCH (n:Node {id: $nodeId})-[r:NEXT_BLOCK|BLOCK_CHILD*0..]->(b:BLOCK_ELEMENT|BLOCK_INLINE)
+	// MATCH (n)-[:VIEW]-(g: GRAPH_VIEW)
+	// RETURN r, b, g
+	// `;
+
 	const cypher: string = `
-	MATCH (n:Node {id: $nodeId})-[r:NEXT_BLOCK|BLOCK_CHILD*0..]->(b:BLOCK_ELEMENT|BLOCK_INLINE)
-	MATCH (n)-[:VIEW]-(g: GRAPH_VIEW)
-	RETURN r, b, g
+	MATCH (n:Node {id: $nodeId})-[:VIEW]-(g: GRAPH_VIEW)
+	RETURN g
 	`;
+
 	// RETURN r, b { .*, parentNodeId: $nodeId}
 
 	const result = await read(cypher, params);
+
+	console.log(result);
 
 	// if (result.length === 0) {
 	// 	res.status(404);

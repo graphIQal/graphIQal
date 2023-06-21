@@ -82,7 +82,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 	}, [res]);
 
 	return (
-		<div>
+		<div className='h-screen overflow-y-auto max-h-full'>
 			<Tabs>
 				{mainViewTabs.map((tab, index) => {
 					return (
@@ -118,6 +118,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 			{mainViewTabs.map((tab, i) => {
 				return (
 					<div
+						className='pt-10 h-screen'
 						key={i}
 						style={{
 							display:

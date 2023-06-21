@@ -133,7 +133,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 		<DndProvider backend={HTML5Backend}>
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
-					<div className='px-3 py-3'>
+					<div className='pl-10 pr-3 py-3'>
 						{currNode_data.n.document && (
 							// <PlateProvider>
 							<EditorComponent

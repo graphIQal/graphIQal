@@ -9,6 +9,7 @@ import MainTabs, {
 import { ViewDataProvider } from '../../components/context/ViewContext';
 import Graph from '../../packages/graph/Graph';
 import SplitPaneWrapper from '../../packages/dnd-editor/Document';
+import { SideBar } from '../../components/organisms/sidebar-navigator';
 
 const Home: React.FC = () => {
 	let newTabs: MainTabProps[] = [
@@ -36,6 +37,9 @@ const Home: React.FC = () => {
 	const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
 	useEffect(() => {
+		console.log('data');
+		console.log(data);
+
 		if (!data || !data[0]) return;
 
 		if (!isLoading) {
@@ -65,6 +69,7 @@ const Home: React.FC = () => {
 
 	return (
 		<ViewDataProvider>
+			<SideBar />
 			<MainTabs mainViewTabs={tabs} setMainViewTabs={setTabs} />
 		</ViewDataProvider>
 	);

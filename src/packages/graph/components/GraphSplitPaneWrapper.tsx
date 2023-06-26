@@ -22,28 +22,31 @@ import { fetcher, fetcherAll } from '../../../backend/driver/fetcher';
 import SearchBar from '../../../components/organisms/SearchBar';
 import { useViewData } from '../../../components/context/ViewContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
+import { Loading } from '../../../components/layouts/Loading';
+import { LoadingGraph } from '../../../components/layouts/LoadingGraph';
 
 const GraphSplitPaneWrapper: React.FC<{
   viewId: string;
 }> = ({ viewId }) => {
   console.log('rerendering graph pane wrapper');
 
-  const { nodeId, username, documentVar, windowVar } = useViewData();
-  const { nodeInFocusId } = useGraphViewData();
+  const { nodeId, username, documentVar, windowVar, currTab } = useViewData();
+  const { nodeInFocusId, nodeVisualData_Graph } = useGraphViewData();
   const {
     changeNodeInFocusId,
     changeNodeData_Graph,
     changeVisualData_Graph,
     changeGraphViewId,
-    changeAlert,
-    changeHistory,
-    setHistoryFunctions,
   } = useGraphViewAPI();
 
   let document = documentVar;
   let window = windowVar;
 
   if (!document || !window) return <div></div>;
+
+  useEffect(() => {
+    changeVisualData_Graph({ ...nodeVisualData_Graph });
+  }, [currTab]);
 
   //Graph in view of one node, keep the id.
 
@@ -56,22 +59,13 @@ const GraphSplitPaneWrapper: React.FC<{
     connectedNodes: any[];
   }>({ n: {}, connectedNodes: [] });
 
-  const {
-    data,
-    error: nodeError,
-    isLoading: nodeDataLoading,
-  } = useSWR(
+  const { data, error, isLoading } = useSWR(
     [
       viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
       nodeInFocusId ? `/api/${username}/${nodeInFocusId}` : null,
     ],
     fetcherAll
   );
-  // useSuspenseSWR(
-  //   viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null
-  // );
-
-  //;
 
   useEffect(() => {
     let nodeData = {} as { [key: string]: NodeData };
@@ -165,11 +159,12 @@ const GraphSplitPaneWrapper: React.FC<{
       <SplitPane className='split-pane-row '>
         <SplitPaneLeft>
           <div
-            className='outline-none border-none'
+            className='outline-none border-none h-full'
             tabIndex={-1}
             ref={containerRef}
           >
-            <GraphContainer />
+            <GraphContainer loadingNodes={isLoading} />
+
             <SearchBar />
             <Alert />
           </div>

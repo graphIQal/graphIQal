@@ -16,6 +16,7 @@ import {
   useGraphViewAPI,
   useGraphViewData,
 } from '../../packages/graph/context/GraphViewContext';
+import { LoadingSpinner } from '../layouts/LoadingSpinner';
 
 const SearchBar: React.FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -174,7 +175,11 @@ const SearchBar: React.FC = () => {
   };
 
   const [searchVal, setSearchVal] = useState<string>('');
-  const { data: searchResult } = useSWR(
+  const {
+    data: searchResult,
+    error,
+    isLoading,
+  } = useSWR(
     [
       searchVal.length > 0
         ? `/api/general/search?username=${username}&search=${searchVal}`
@@ -234,29 +239,33 @@ const SearchBar: React.FC = () => {
           id='result_container'
           className='overflow-scroll max-h-[70vh] scroll'
         >
-          {results.map((result, i) => {
-            return (
-              <div
-                key={i}
-                id={'result' + i}
-                className={
-                  'flex flex-row gap-x-3 justify-between items-center align-middle hover:cursor-pointer p-2 border-y-[0.5px]  border-base_black border-opacity-10 ' +
-                  (i == highlighted ? 'bg-selected_white' : '')
-                }
-                onMouseOver={() => setHighlighted(i)}
-              >
-                <div className='flex flex-row items-center align-middle'>
-                  <IconCircleButton
-                    circle={false}
-                    src='block'
-                    onClick={() => null}
-                  />
-                  <h4 className='text-sm'>{result.n.title}</h4>
+          {!isLoading ? (
+            results.map((result, i) => {
+              return (
+                <div
+                  key={i}
+                  id={'result' + i}
+                  className={
+                    'flex flex-row gap-x-3 justify-between items-center align-middle hover:cursor-pointer p-2 border-y-[0.5px]  border-base_black border-opacity-10 ' +
+                    (i == highlighted ? 'bg-selected_white' : '')
+                  }
+                  onMouseOver={() => setHighlighted(i)}
+                >
+                  <div className='flex flex-row items-center align-middle'>
+                    <IconCircleButton
+                      circle={false}
+                      src='block'
+                      onClick={() => null}
+                    />
+                    <h4 className='text-sm'>{result.n.title}</h4>
+                  </div>
+                  <OnHoverMenu buttonItems={getButtonItems(result.n)} />
                 </div>
-                <OnHoverMenu buttonItems={getButtonItems(result.n)} />
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <LoadingSpinner />
+          )}
         </div>
       </div>
 

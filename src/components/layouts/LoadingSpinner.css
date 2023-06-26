@@ -1,0 +1,21 @@
+@config '../../../tailwind.config.js';
+.loader {
+  @apply w-lg;
+  @apply h-lg;
+  border: 5px solid;
+  @apply border-selected_white;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

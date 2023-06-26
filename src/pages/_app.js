@@ -18,6 +18,8 @@ import '../components/organisms/split-pane/pane.css';
 import '../packages/editor/editor.css';
 import '../components/atoms/atoms.css';
 import '../components/organisms/organisms.css';
+import '../components/layouts/Loading.css';
+import '../components/layouts/LoadingSpinner.css';
 
 import View from '../components/layouts/View';
 import Window from '../components/layouts/Window';

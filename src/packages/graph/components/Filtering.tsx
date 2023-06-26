@@ -14,6 +14,10 @@ import { useViewData } from '../../../components/context/ViewContext';
 import { TitleWithNavigation } from '../../../components/molecules/TitleWithNavigation';
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import { useGraphViewData } from '../context/GraphViewContext';
+import LoadingContext, {
+  LoadingContextInterface,
+} from '../../../components/context/LoadingContext';
+import { LoadingSpinner } from '../../../components/layouts/LoadingSpinner';
 
 type FilteringProps = {
   xCategory: string;
@@ -42,6 +46,8 @@ export const Filtering: React.FC<FilteringProps> = ({
 
   const { username, nodeId } = useViewData();
 
+  const { loading } = useContext(LoadingContext) as LoadingContextInterface;
+
   return (
     <div className=' relative flex flex-row p-3 justify-between mb-3 w-full align-middle items-center'>
       <div className='flex flex-row gap-x-5'>
@@ -66,6 +72,7 @@ export const Filtering: React.FC<FilteringProps> = ({
             <IconCircleButton src='redo' onClick={redo} />
           </div>
         </div>
+
         {/* <TextButton
 				text='Create Node'
 				onClick={() => {
@@ -111,7 +118,7 @@ export const Filtering: React.FC<FilteringProps> = ({
 					></TextButton>
 				</div> */}
       </div>
-      <TitleWithNavigation />
+      {loading ? <LoadingSpinner /> : <TitleWithNavigation />}
     </div>
   );
 };

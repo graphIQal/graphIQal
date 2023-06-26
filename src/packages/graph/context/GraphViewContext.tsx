@@ -75,8 +75,6 @@ const reducer = (state: State, action: Actions): State => {
     case 'changeGraphViewId':
       return { ...state, graphViewId: action.id };
     case 'changeNodeData_Graph':
-      console.log('before undoing', state.nodeData_Graph);
-      console.log('undoing', action.nodeData_Graph);
       return { ...state, nodeData_Graph: action.nodeData_Graph };
     case 'changeVisualData_Graph':
       return { ...state, nodeVisualData_Graph: action.nodeVisualData_Graph };

@@ -117,21 +117,25 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
     newTabs[1].component = (
       <SidePanel
         title={
-          'Focused Connections between ' +
-          currNode_data.n.title +
-          ' and ' +
-          nodeInFocus_data.n.title
+          currNode_data
+            ? 'Focused Connections between ' +
+              currNode_data.n.title +
+              ' and ' +
+              nodeInFocus_data.n.title
+            : 'loading'
         }
       >
-        <SelectableList
-          onEnter={() => null}
-          listItems={renderConnections(
-            nodeInFocus_data.connectedNodes.filter(
-              ({ r, connected_node }: any) =>
-                connected_node.id in mainNodeConnections
-            )
-          )}
-        />
+        {currNode_data && (
+          <SelectableList
+            onEnter={() => null}
+            listItems={renderConnections(
+              nodeInFocus_data.connectedNodes.filter(
+                ({ r, connected_node }: any) =>
+                  connected_node.id in mainNodeConnections
+              )
+            )}
+          />
+        )}
       </SidePanel>
     );
 

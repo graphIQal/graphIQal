@@ -27,7 +27,9 @@ import { useGraphViewData } from '../context/GraphViewContext';
 import { addConnection } from '../../../helpers/backend/addConnection';
 import { ActionChanges, useHistoryState } from '../hooks/useHistoryState';
 
-export const GraphContainer: React.FC<{}> = () => {
+export const GraphContainer: React.FC<{ loadingNodes: boolean }> = ({
+  loadingNodes,
+}) => {
   const { windowVar, documentVar } = useViewData();
   if (!windowVar || !documentVar) return <div></div>;
 
@@ -213,6 +215,7 @@ export const GraphContainer: React.FC<{}> = () => {
           translateX={translateX}
           translateY={translateY}
           scale={scale}
+          loadingNodes={loadingNodes}
         />
         {/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
         {/* <div className=' absolute  flex-row w-10'>

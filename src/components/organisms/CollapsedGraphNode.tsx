@@ -40,7 +40,11 @@ const CollapsedGraphNode: React.FC<{
 
   const [searchVal, setSearchVal] = useState<string>('');
 
-  const { data: searchResult } = useSWR(
+  const {
+    data: searchResult,
+    error,
+    isLoading,
+  } = useSWR(
     [
       searchVal.length > 0
         ? `/api/general/search?username=${username}&search=${searchVal}`

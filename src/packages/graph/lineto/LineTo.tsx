@@ -77,6 +77,7 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
 
     const a = findElement(from)?.nextElementSibling;
     const b = findElement(to)?.nextElementSibling;
+
     if (!a || !b) {
       return false;
     }
@@ -108,6 +109,7 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
   };
 
   let points = detect();
+
   if (!points) {
     return <div></div>;
   }

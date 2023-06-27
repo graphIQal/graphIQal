@@ -20,13 +20,13 @@ export default async function handler(
 
 	const result: any = await read(cypher, params);
 
-	if (result.length === 0) {
-		res.status(404);
-	} else if (result.length > 1) {
-		// Handle 2 accounts having the same email and same username
-		// res.status(200).json(result[0].u.properties.username);
-	}
-	// res.redirect('/' + result[0].u.properties.username);
+	// if (result.length === 0) {
+	// 	res.status(404);
+	// } else if (result.length > 1) {
+	// 	// Handle 2 accounts having the same email and same username
+	// 	// res.status(200).json(result[0].u.properties.username);
+	// }
+	// // res.redirect('/' + result[0].u.properties.username);
 
-	res.status(200).json(result[0]);
+	res.status(200).json(result);
 }

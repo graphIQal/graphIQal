@@ -5,6 +5,7 @@ import Tab from '../../atoms/Tab';
 import { Tabs } from './Tabs';
 import { useViewAPI, useViewData } from '../../context/ViewContext';
 import { useGetNodeData } from '../../../backend/functions/node/query/useGetNodeData';
+import IconCircleButton from '../../molecules/IconCircleButton';
 
 type MainTabsProps = {
 	mainViewTabs: MainTabProps[];
@@ -86,7 +87,15 @@ const MainTabs: React.FC<MainTabsProps> = ({
 			<div className='h-10 flex flex-row bg-blue-50 w-full items-center align-middle absolute top-0 z-10 justify-between'>
 				<div>breadcrumb</div>
 				<div>
-					<div>favourite</div>
+					<IconCircleButton
+						onClick={() => {
+							console.log('favourite');
+						}}
+						src='star'
+						circle={false}
+						color={'#FFCB45'}
+						selected={false}
+					/>
 				</div>
 			</div>
 			<Tabs>

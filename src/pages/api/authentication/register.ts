@@ -18,7 +18,7 @@ export default async function handler(
 	  password: $password,
 	  username: $username
 	})
-	ON CREATE SET u.id = randomUuid()
+	ON CREATE SET u.id = randomUuid(), u.favourites = []
 	MERGE (n:Node {title: $hometitle})
 	ON CREATE SET n.id = randomUuid()
 	MERGE (u)-[r:HAS]->(n)

@@ -47,7 +47,7 @@ const EditorComponent: React.FC<{
 	// const router = useRouter();
 	const { nodeId, username, currNode_data } = useViewData();
 
-	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 5000));
+	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 3000));
 
 	useEffect(() => {
 		window.addEventListener('beforeunload', onUnload);

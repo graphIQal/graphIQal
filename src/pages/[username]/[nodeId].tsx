@@ -37,6 +37,13 @@ const Home: React.FC = () => {
 	const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
 	useEffect(() => {
+		if (sessionStorage.getItem('favourites')) {
+		} else {
+			sessionStorage.setItem('favourites', 'peepee');
+		}
+	}, []);
+
+	useEffect(() => {
 		console.log('data');
 		console.log(data);
 

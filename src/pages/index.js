@@ -54,7 +54,22 @@ export default function Home() {
 					onClick={async () => {
 						const res = await login(email, username, password);
 						console.log('result', res);
-						router.push('/' + username + '/' + res.n.properties.id);
+						if (res.length > 0) {
+							// router.push(
+							// 	'/' + username + '/' + res[0].n.properties.id
+							// );
+							localStorage.setItem(
+								'homenodeId',
+								res[0].n.properties.id
+							);
+							localStorage.setItem(
+								'userId authentication',
+								res[0].u.properties.id
+							);
+						} else {
+							console.log('unexisting user');
+						}
+						//  localStorage.setItem('user', response.data)
 					}}
 				/>
 				<TextButton

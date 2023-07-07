@@ -15,19 +15,11 @@ export default async function handler(
 		password: $password,
 		email: $email
 	})
-	MATCH (u)-[r:HAS]->(n)
-	RETURN u,r,n;
+	SET u.favourites = []
+	RETURN u
 	`;
 
 	const result: any = await write(cypher, params);
-
-	if (result.length === 0) {
-		res.status(404);
-	} else if (result.length > 1) {
-		// Handle 2 accounts having the same email and same username
-		// res.status(200).json(result[0].u.properties.username);
-	}
-	// res.redirect('/' + result[0].u.properties.username);
 
 	res.status(200).json(result[0]);
 }

@@ -6,6 +6,9 @@ import { Tabs } from './Tabs';
 import { useViewAPI, useViewData } from '../../context/ViewContext';
 import { useGetNodeData } from '../../../backend/functions/node/query/useGetNodeData';
 import IconCircleButton from '../../molecules/IconCircleButton';
+import Modal from '../../layouts/Modal';
+import SettingsPanel from '../Settings';
+import IconButton from '../../atoms/IconButton';
 
 type MainTabsProps = {
 	mainViewTabs: MainTabProps[];
@@ -82,15 +85,44 @@ const MainTabs: React.FC<MainTabsProps> = ({
 		}
 	}, [res]);
 
+	const [isSettingsOpen, setisSettingsOpen] = useState(false);
+
 	return (
 		<div className='h-screen overflow-y-auto max-h-full max-x-full overflow-x-hidden'>
+			<Modal open={isSettingsOpen} setOpen={setisSettingsOpen}>
+				<SettingsPanel />
+			</Modal>
 			<div className='h-10 flex flex-row bg-blue-50 w-full items-center align-middle absolute top-0 z-10 justify-between'>
-				<div>breadcrumb</div>
-				<div>
+				<div className='flex flex-row'>
+					<IconCircleButton
+						onClick={() => {
+							console.log('hover on left side for favourites');
+						}}
+						size={35}
+						src='menu'
+						circle={false}
+						// color={'#FFCB45'}
+						selected={false}
+					/>
+					<IconCircleButton
+						onClick={() => {
+							console.log('openSettings');
+							setisSettingsOpen(true);
+						}}
+						size={35}
+						src='settings'
+						circle={false}
+						// color={'#FFCB45'}
+						selected={false}
+					/>
+					<div>breadcrumb</div>
+				</div>
+				<div className='flex flex-row'>
 					<IconCircleButton
 						onClick={() => {
 							console.log('favourite');
 						}}
+						size={40}
 						src='star'
 						circle={false}
 						color={'#FFCB45'}

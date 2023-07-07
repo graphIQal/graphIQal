@@ -8,7 +8,8 @@ export const fetcherAll = (urls: string[]) =>
 	Promise.all(
 		urls.map((url) =>
 			fetch(url).then(async (res) => {
-				// console.log('in fetcher');
+				console.log('in fetcher');
+				console.log(res);
 				const json = await res.json();
 				return json;
 			})

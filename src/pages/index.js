@@ -18,7 +18,6 @@ export default function Home() {
 	const [email, setemail] = useState('1332@gatech.edu');
 	const [username, setusername] = useState('1332');
 	const [password, setpassword] = useState('password');
-	const [viewType, setViewType] = useState('graph');
 
 	const router = useRouter();
 
@@ -55,17 +54,21 @@ export default function Home() {
 						const res = await login(email, username, password);
 						console.log('result', res);
 						if (res.length > 0) {
-							// router.push(
-							// 	'/' + username + '/' + res[0].n.properties.id
-							// );
-							localStorage.setItem(
-								'homenodeId',
-								res[0].n.properties.id
+							router.push(
+								'/' + username + '/' + res[0].n.properties.id
 							);
-							localStorage.setItem(
-								'userId authentication',
-								res[0].u.properties.id
-							);
+							localStorage.setItem('authentication', {
+								id: res[0].u.properties.id,
+								username: res[0].u.properties.username,
+								time: new Date(),
+								homenodeId: res[0].n.properties.id,
+							});
+							// res[0].u.properties.favourites
+							// 	? localStorage.setItem(
+							// 			'favourites',
+							// 			res[0].u.properties.favourites
+							// 	  )
+							// 	: localStorage.setItem('favourites', []);
 						} else {
 							console.log('unexisting user');
 						}

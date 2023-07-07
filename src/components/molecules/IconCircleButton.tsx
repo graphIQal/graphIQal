@@ -20,6 +20,8 @@ import { Save } from '@styled-icons/boxicons-regular/Save';
 import { Data } from '@styled-icons/boxicons-solid/Data';
 import { Thealgorithms } from '@styled-icons/simple-icons/Thealgorithms';
 import { CardChecklist } from '@styled-icons/bootstrap/CardChecklist';
+import { MenuOutline } from '@styled-icons/evaicons-outline/MenuOutline';
+import { Settings } from '@styled-icons/material/Settings';
 
 type NodeButtonProps = {
 	onClick: () => void;
@@ -175,6 +177,20 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		),
 		star: (
 			<Star
+				size={'1em'}
+				color={!selected ? color : 'white'}
+				onClick={handleClick}
+			/>
+		),
+		menu: (
+			<MenuOutline
+				size={'1em'}
+				color={!selected ? color : 'white'}
+				onClick={handleClick}
+			/>
+		),
+		settings: (
+			<Settings
 				size={'1em'}
 				color={!selected ? color : 'white'}
 				onClick={handleClick}

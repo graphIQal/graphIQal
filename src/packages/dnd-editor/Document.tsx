@@ -134,7 +134,6 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
   };
 
   const { loading } = useContext(LoadingContext) as LoadingContextInterface;
-  console.log('loading ', loading);
 
   return (
     <DndProvider backend={HTML5Backend}>

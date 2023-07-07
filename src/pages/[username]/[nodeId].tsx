@@ -10,15 +10,16 @@ import { ViewDataProvider } from '../../components/context/ViewContext';
 import Graph from '../../packages/graph/Graph';
 import SplitPaneWrapper from '../../packages/dnd-editor/Document';
 import { SideBar } from '../../components/organisms/sidebar-navigator';
+import { LoadingSpinner } from '../../components/layouts/LoadingSpinner';
 
 const Home: React.FC = () => {
   let newTabs: MainTabProps[] = [
-    // {
-    //   label: 'Home',
-    //   viewId: '',
-    //   viewType: 'document',
-    //   component: <SplitPaneWrapper viewId={''} />,
-    // },
+    {
+      label: 'Home',
+      viewId: '',
+      viewType: 'document',
+      component: <SplitPaneWrapper viewId={''} />,
+    },
     //temp
     // {
     //   label: 'Graph View',
@@ -68,7 +69,7 @@ const Home: React.FC = () => {
   }, [data && data[0]]);
 
   if (error) return <div>error</div>;
-  if (isLoading) return <div>loading</div>;
+  if (isLoading) return <div />;
 
   return (
     <ViewDataProvider>

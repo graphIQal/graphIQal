@@ -136,14 +136,17 @@ export const jsonToCypher_graphView = ({
 			}
 
 			if (
+				// @ts-ignore
 				!(connection.endNode in data[connection.startNode].connections)
 			) {
+				// @ts-ignore
 				data[connection.startNode].connections[connection.endNode] = {};
 			}
 
 			if (
 				!(
 					connection.type in
+					// @ts-ignore
 					data[connection.startNode].connections[connection.endNode]
 				)
 			) {
@@ -165,14 +168,17 @@ export const jsonToCypher_graphView = ({
 			}
 
 			if (
+				// @ts-ignore
 				!(connection.endNode in data[connection.startNode].connections)
 			) {
+				// @ts-ignore
 				data[connection.startNode].connections[connection.endNode] = {};
 			}
 
 			if (
 				!(
 					connection.type in
+					// @ts-ignore
 					data[connection.startNode].connections[connection.endNode]
 				)
 			) {
@@ -198,14 +204,16 @@ export const jsonToCypher_graphView = ({
 			if (!('connections' in data[value.startNode])) {
 				data[value.startNode].connections = {};
 			}
-
+			// @ts-ignore
 			if (!(value.endNode in data[value.startNode].connections)) {
+				// @ts-ignore
 				data[value.startNode].connections[value.endNode] = {};
 			}
 
 			if (
 				!(
 					value.new.type in
+					// @ts-ignore
 					data[value.startNode].connections[value.endNode]
 				)
 			) {
@@ -218,6 +226,7 @@ export const jsonToCypher_graphView = ({
 			if (
 				!(
 					value.old.type in
+					// @ts-ignore
 					data[value.startNode].connections[value.endNode]
 				)
 			) {
@@ -226,6 +235,7 @@ export const jsonToCypher_graphView = ({
 					value.old.type
 				] = { create: false, delete: true };
 			} else {
+				// @ts-ignore
 				data[value.startNode].connections[value.endNode][
 					value.old.type
 				].delete = true;
@@ -243,14 +253,17 @@ export const jsonToCypher_graphView = ({
 			}
 
 			if (
+				// @ts-ignore
 				!(connection.startNode in data[connection.endNode].connections)
 			) {
+				// @ts-ignore
 				data[connection.endNode].connections[connection.startNode] = {};
 			}
 
 			if (
 				!(
 					connection.type in
+					// @ts-ignore
 					data[connection.endNode].connections[connection.startNode]
 				)
 			) {
@@ -270,15 +283,23 @@ export const jsonToCypher_graphView = ({
 			}
 
 			if (
+				// @ts-ignore
 				!(connection.endNode in data[connection.startNode].connections)
 			) {
+				// @ts-ignore
 				data[connection.startNode].connections[connection.endNode] = {};
 			}
 
 			if (
 				!(
-					connection.type in
-					data[connection.startNode].connections[connection.endNode]
+					// @ts-ignore
+					(
+						connection.type in
+						// @ts-ignore
+						data[connection.startNode].connections[
+							connection.endNode
+						]
+					)
 				)
 			) {
 				// @ts-ignore

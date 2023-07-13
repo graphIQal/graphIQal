@@ -84,6 +84,13 @@ export const TitleElement = (props: any) => {
 export const H1 = (props: PlateRenderElementProps) => {
 	return <h1 className='text-xl font-bold'>{props.children}</h1>;
 };
+export const BULLET_LIST = (props: PlateRenderElementProps) => {
+	return (
+		<ul className='list-disc'>
+			<li>{props.children}</li>
+		</ul>
+	);
+};
 
 export const H2 = (props: PlateRenderElementProps) => {
 	return <h2 className='text-lg font-bold'>{props.children}</h2>;

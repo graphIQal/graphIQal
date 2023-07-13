@@ -95,12 +95,12 @@ const Home: React.FC = () => {
 		console.log('data');
 		console.log(data);
 
-		if (!data || !data[0]) return;
+		if (!data || !data[0] || data[0].err) return;
 
 		if (!isLoading) {
-			console.log('!isLoading data');
-			console.log(data);
 			if (data[0]) {
+				console.log('!isLoading data');
+				console.log(data);
 				let includedIDs: { [key: string]: boolean } = {};
 				data[0].map((record: any, index: number) => {
 					if (!includedIDs[record.g.properties.id]) {

@@ -36,7 +36,7 @@ type createNewNodeCypher_Input = {
 	};
 	connections?: {
 		connectionNodeProperties: { [key: string]: string };
-		type: ConnectionTypes;
+		type: typeof ConnectionTypes;
 		properties?: {
 			[key: string]: string | number | boolean;
 		};

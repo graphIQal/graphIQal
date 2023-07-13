@@ -5,6 +5,7 @@ import {
 	createMyPlugins,
 } from '../plateTypes';
 import { onKeyDownTab } from './NestedBlocksPlugin/onKeyDownTab';
+import { createTestCommandPlugin } from './TestCommand/TestCommand';
 
 const createNestedBlocksPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: COMMAND_NEST,

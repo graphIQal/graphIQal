@@ -124,7 +124,7 @@ const EditorComponent: React.FC<{
 					setValue(docValue);
 					clearTimeout(intervalRef.current);
 					intervalRef.current = setTimeout(() => {
-						console.log('accessing save');
+						// console.log('accessing save');
 						save({
 							nodeId,
 							username,

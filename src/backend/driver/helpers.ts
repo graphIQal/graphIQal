@@ -30,7 +30,7 @@ export async function read(cypher: string, params = {}) {
 
 		return values;
 	} catch (e) {
-		return e;
+		return { e, err: true };
 	} finally {
 		// 4. Close the session
 		await session.close();

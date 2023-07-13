@@ -1,14 +1,24 @@
 import {
 	createHeadingPlugin,
+	createListPlugin,
 	createParagraphPlugin,
 	createPlateUI,
+	createTodoListPlugin,
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
+	ELEMENT_LI,
 	HotkeyPlugin,
 	onKeyDownToggleElement,
 } from '@udecode/plate';
-import { H1, H2, H3, NodeLink, TitleElement } from '../Elements/Elements';
+import {
+	BULLET_LIST,
+	H1,
+	H2,
+	H3,
+	NodeLink,
+	TitleElement,
+} from '../Elements/Elements';
 import {
 	createMyPluginFactory,
 	createMyPlugins,
@@ -61,6 +71,8 @@ export const BlockPlugins = createMyPlugins(
 		createNodePlugin(),
 		createTitlePlugin(),
 		createNodeLinkPlugin(),
+		createListPlugin(),
+		createTodoListPlugin(),
 	],
 	{
 		components: {
@@ -70,6 +82,7 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_H1]: H1,
 			[ELEMENT_H2]: H2,
 			[ELEMENT_H3]: H3,
+			[ELEMENT_LI]: BULLET_LIST,
 		},
 	}
 );

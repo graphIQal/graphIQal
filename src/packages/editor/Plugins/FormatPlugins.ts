@@ -1,4 +1,11 @@
 import {
+	autoformatArrow,
+	autoformatEquality,
+	autoformatLegal,
+	autoformatLegalHtml,
+	autoformatPunctuation,
+	autoformatSmartQuotes,
+	autoformatSubscriptNumbers,
 	createAutoformatPlugin,
 	createExitBreakPlugin,
 	createNormalizeTypesPlugin,
@@ -26,6 +33,7 @@ import {
 	ELEMENT_NODELINK,
 	ELEMENT_TITLE,
 } from '../plateTypes';
+import { autoformatLists } from './Autoformat/autoformatLists';
 
 const resetBlockTypesCommonRule = {
 	types: [
@@ -86,5 +94,22 @@ export const FormatPlugins = createMyPlugins([
 			],
 		},
 	}),
-	createAutoformatPlugin({}),
+	createAutoformatPlugin({
+		options: {
+			rules: [
+				...autoformatSmartQuotes,
+				...autoformatPunctuation,
+				...autoformatArrow,
+				...autoformatSubscriptNumbers,
+				...autoformatSubscriptNumbers,
+				...autoformatEquality,
+				...autoformatEquality,
+				...autoformatLegal,
+				...autoformatLegalHtml,
+				// custom
+				...autoformatLists,
+			],
+			enableUndoOnDelete: true,
+		},
+	}),
 ]);

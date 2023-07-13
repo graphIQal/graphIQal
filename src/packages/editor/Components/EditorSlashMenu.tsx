@@ -6,10 +6,12 @@ import {
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
+	ELEMENT_LI,
 	getPluginType,
 	insertNodes,
 	isSelectionAtBlockStart,
 	setNodes,
+	toggleList,
 } from '@udecode/plate';
 import { ReactNode } from 'react';
 import { Transforms } from 'slate';
@@ -99,6 +101,22 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				},
 				onPress: () => {
 					console.log('okay');
+					toggleList(editor, { type: ELEMENT_LI });
+				},
+			},
+		},
+		{
+			key: '2',
+			text: 'Bullet List',
+			data: {
+				searchFunction: (search) => {
+					if ('Bullet List'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+				onPress: () => {
+					toggleList(editor, { type: ELEMENT_LI });
 				},
 			},
 		},

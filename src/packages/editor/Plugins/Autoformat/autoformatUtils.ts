@@ -4,6 +4,7 @@ import {
 	ELEMENT_CODE_BLOCK,
 	ELEMENT_CODE_LINE,
 	isElement,
+	setNodes,
 } from '@udecode/plate';
 import { AutoformatBlockRule } from '@udecode/plate-autoformat';
 // import {
@@ -41,7 +42,10 @@ export const format = (editor: PlateEditor, customFormatting: any) => {
 
 export const formatList = (editor: PlateEditor, elementType: string) => {
 	format(editor, () =>
-		toggleList(editor, {
+		// toggleList(editor, {
+		// 	type: elementType,
+		// })
+		setNodes(editor, {
 			type: elementType,
 		})
 	);

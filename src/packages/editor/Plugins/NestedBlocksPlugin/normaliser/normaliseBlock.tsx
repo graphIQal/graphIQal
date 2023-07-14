@@ -1,4 +1,4 @@
-import { ELEMENT_PARAGRAPH, wrapNodes } from '@udecode/plate';
+import { ELEMENT_PARAGRAPH, unwrapNodes, wrapNodes } from '@udecode/plate';
 import {
 	TElement,
 	TNodeEntry,
@@ -22,6 +22,7 @@ import {
 	isMarkActive,
 	removeMark,
 	removeEditorMark,
+	isElement,
 } from '@udecode/plate';
 import { useViewData } from '../../../../../components/context/ViewContext';
 
@@ -33,6 +34,8 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 	return ([node, path]: TNodeEntry) => {
 		normalizeNode([node, path]);
+		console.log('[node, path]');
+		console.log([node, path]);
 		// if (!isElement(node)) {
 		// 	normalizeNode([node, path]);
 		// 	return;
@@ -46,22 +49,36 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 			// Check if it's the first item in a block. If so ignore.
 			if (path[path.length - 1] === 0) return;
-
+			console.log('lifting ', node.type);
 			// // Wrap in block
-			wrapNodes(editor, {
-				type: ELEMENT_BLOCK,
-				id: '',
-				children: [],
-			});
 
+			// if (node.type === 'li') {
+			// 	unwrapNodes(editor, { at: getFirstNode });
+			// }
+
+			wrapNodes(
+				editor,
+				{
+					type: ELEMENT_BLOCK,
+					id: '',
+					children: [],
+				}
+				// { at: path }
+			);
+
+			console.log(editor.children);
 			// outdent node to carry all children nodes.
+
 			outdent(editor);
+
+			console.log(editor.children);
 		} else if (isBlock) {
+			console.log('isBlock');
 			// Children should all be code lines
 			const children = getChildren([node, path]);
 
 			// children returns array of tuples [child, path]
-			// gets data of first child, makes sure it's paragraph
+			// gets data of first child, makes sure it's blockwrapped element
 			const firstChildType = children[0][0].type as string;
 
 			if (!(firstChildType in BlockwrappedElements)) {

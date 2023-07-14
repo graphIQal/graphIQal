@@ -86,8 +86,8 @@ export const H1 = (props: PlateRenderElementProps) => {
 };
 export const BULLET_LIST = (props: PlateRenderElementProps) => {
 	return (
-		<ul className='list-disc'>
-			<li>{props.children}</li>
+		<ul className='list-disc list-outside pl-4'>
+			<li className=''>{props.children}</li>
 		</ul>
 	);
 };

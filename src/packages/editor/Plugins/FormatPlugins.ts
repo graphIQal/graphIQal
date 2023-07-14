@@ -16,6 +16,8 @@ import {
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
+	ELEMENT_LI,
+	ELEMENT_OL,
 	ELEMENT_PARAGRAPH,
 	ELEMENT_TODO_LI,
 	HotkeyPlugin,
@@ -38,6 +40,8 @@ import { autoformatLists } from './Autoformat/autoformatLists';
 const resetBlockTypesCommonRule = {
 	types: [
 		ELEMENT_BLOCKQUOTE,
+		ELEMENT_LI,
+		ELEMENT_OL,
 		ELEMENT_TODO_LI,
 		ELEMENT_H1,
 		ELEMENT_H2,

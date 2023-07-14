@@ -18,6 +18,7 @@ import {
 	ELEMENT_LINK,
 	ELEMENT_MENTION,
 	ELEMENT_MENTION_INPUT,
+	ELEMENT_OL,
 	ELEMENT_PARAGRAPH,
 	ELEMENT_TODO_LI,
 	EMarks,
@@ -226,6 +227,7 @@ export const BlockwrappedElements = {
 	[ELEMENT_BLOCKQUOTE]: true,
 	// [ELEMENT_LIC]: true,
 	[ELEMENT_LI]: true,
+	[ELEMENT_OL]: true,
 	[ELEMENT_TODO_LI]: true,
 	[ELEMENT_NODELINK]: true,
 };

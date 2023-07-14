@@ -9,6 +9,7 @@ import {
 	ELEMENT_H3,
 	ELEMENT_LI,
 	ELEMENT_LIC,
+	ELEMENT_OL,
 	HotkeyPlugin,
 	onKeyDownToggleElement,
 } from '@udecode/plate';
@@ -18,6 +19,7 @@ import {
 	H3,
 	LI,
 	NodeLink,
+	OL,
 	TitleElement,
 	UL,
 } from '../Elements/Elements';
@@ -72,6 +74,14 @@ const createListPlugin = createMyPluginFactory<HotkeyPlugin>({
 	options: {},
 });
 
+const createNumberedListPlugin = createMyPluginFactory<HotkeyPlugin>({
+	key: ELEMENT_OL,
+	isElement: true,
+	isLeaf: false,
+	// withOverrides: withNodeLink,
+	options: {},
+});
+
 // I can try adding a plugin for the fricking paragraph that makes it an inline plugin? I'm not sure
 
 export const BlockPlugins = createMyPlugins(
@@ -82,6 +92,7 @@ export const BlockPlugins = createMyPlugins(
 		createTitlePlugin(),
 		createNodeLinkPlugin(),
 		createListPlugin(),
+		createNumberedListPlugin(),
 		// createTodoListPlugin(),
 	],
 	{
@@ -93,6 +104,7 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_H2]: H2,
 			[ELEMENT_H3]: H3,
 			[ELEMENT_LI]: UL,
+			[ELEMENT_OL]: OL,
 			// [ELEMENT_LIC]: LI,
 		},
 	}

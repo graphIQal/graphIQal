@@ -85,14 +85,6 @@ export const H1 = (props: PlateRenderElementProps) => {
 	return <h1 className='text-xl font-bold'>{props.children}</h1>;
 };
 
-export const UL = (props: PlateRenderElementProps) => {
-	return (
-		<ul className='list-disc list-outside pl-4'>
-			<li className=''>{props.children}</li>
-		</ul>
-	);
-};
-
 export const LI = (props: PlateRenderElementProps) => {
 	return <li className=''>{props.children}</li>;
 };
@@ -103,4 +95,19 @@ export const H2 = (props: PlateRenderElementProps) => {
 
 export const H3 = (props: PlateRenderElementProps) => {
 	return <h3 className='text-md font-semibold'>{props.children}</h3>;
+};
+
+export const OL = (props: PlateRenderElementProps) => {
+	return (
+		<ol className='list-decimal list-outside pl-4'>
+			<li className=''>{props.children}</li>
+		</ol>
+	);
+};
+export const UL = (props: PlateRenderElementProps) => {
+	return (
+		<ul className='list-disc list-outside pl-4'>
+			<li className=''>{props.children}</li>
+		</ul>
+	);
 };

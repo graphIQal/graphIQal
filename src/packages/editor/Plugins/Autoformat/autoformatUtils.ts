@@ -19,11 +19,7 @@ export const preFormat: AutoformatBlockRule['preFormat'] = (editor) =>
 
 export const format = (editor: PlateEditor, customFormatting: any) => {
 	if (editor.selection) {
-		console.log('custom formatting part 1');
-
 		const parentEntry = getParentNode(editor, editor.selection);
-		console.log('parentEntry');
-		console.log(parentEntry);
 		if (!parentEntry) return;
 
 		console.log('hmmm');
@@ -34,7 +30,6 @@ export const format = (editor: PlateEditor, customFormatting: any) => {
 			//   !isType(editor, node, ELEMENT_CODE_BLOCK) &&
 			//   !isType(editor, node, ELEMENT_CODE_LINE)
 		) {
-			console.log('custom formatting');
 			customFormatting();
 		}
 	}

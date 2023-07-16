@@ -36,6 +36,13 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 				},
 			},
 			{
+				//this button should navigate to the views of the clicked node
+				src: 'plus',
+				onClick: () => {
+					router.push(`/${username}/${result.id}`, undefined);
+				},
+			},
+			{
 				//this button should put the selected node in focus
 				src: 'spotlight',
 				onClick: () => {
@@ -47,17 +54,35 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 
 	const renderConnections = (connectedNodes: connectedNode_type[]) => {
 		const items: any[] = [];
-		connectedNodes.map((connection: any, i: number) => {
-			items.push(
-				<ConnectionListItem
-					title={connection.connected_node.title}
-					id={connection.connected_node.id}
-					index={i}
-					buttonItems={getButtonItems(connection.connected_node)}
-					url={connection.connected_node.url}
-				/>
-			);
-		});
+		const relationshipOrder = [
+			'HAS',
+			'IS',
+			'NEEDS',
+			'FOLLOWS',
+			'RELATED',
+			'CUSTOM',
+		];
+
+		connectedNodes
+			.sort(
+				(a, b) =>
+					relationshipOrder.indexOf(a.r.type) -
+					relationshipOrder.indexOf(b.r.type)
+			)
+			.map((connectedNode: connectedNode_type, i: number) => {
+				items.push(
+					<ConnectionListItem
+						connection={connectedNode.r}
+						title={connectedNode.connected_node.title}
+						id={connectedNode.connected_node.id}
+						index={i}
+						buttonItems={getButtonItems(
+							connectedNode.connected_node
+						)}
+						url={connectedNode.connected_node.url}
+					/>
+				);
+			});
 		return items;
 	};
 

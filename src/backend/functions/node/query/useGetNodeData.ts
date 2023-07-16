@@ -1,3 +1,4 @@
+import { type } from 'os';
 import { fetcher, fetcherAll } from '../../../driver/fetcher';
 import useSWR from 'swr';
 
@@ -6,8 +7,10 @@ export type getNodeData_type = {
 	connectedNodes: connectedNode_type[];
 };
 
+export type Connection = { type: string; [key: string]: string };
+
 export type connectedNode_type = {
-	r: { type: string; [key: string]: string };
+	r: Connection;
 	connected_node: { [key: string]: string };
 };
 

@@ -19,13 +19,13 @@ export const autoformatLists: AutoformatRule[] = [
 		// preFormat,
 		format: (editor) => formatList(editor, ELEMENT_LI),
 	},
-	{
-		mode: 'block',
-		type: ELEMENT_OL,
-		match: ['1. ', '1) '],
-		// preFormat,
-		format: (editor) => formatList(editor, ELEMENT_OL),
-	},
+	// {
+	// 	mode: 'block',
+	// 	type: ELEMENT_OL,
+	// 	match: ['1. ', '1) '],
+	// 	// preFormat,
+	// 	format: (editor) => formatList(editor, ELEMENT_OL),
+	// },
 	{
 		mode: 'block',
 		type: ELEMENT_TODO_LI,

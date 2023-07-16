@@ -114,7 +114,7 @@ const EditorComponent: React.FC<{
 	// const editor =
 
 	return (
-		<div>
+		<div className='pb-[50%]'>
 			<Plate<MyValue>
 				editableProps={editableProps}
 				initialValue={initialValue}

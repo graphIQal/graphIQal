@@ -90,11 +90,27 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			},
 		},
 		{
-			key: '2',
+			key: 'Connect',
 			text: 'Connect',
 			data: {
 				searchFunction: (search) => {
 					if ('connect'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+				onPress: () => {
+					console.log('okay');
+					toggleList(editor, { type: ELEMENT_LI });
+				},
+			},
+		},
+		{
+			key: 'nodelink',
+			text: 'NodeLink',
+			data: {
+				searchFunction: (search) => {
+					if ('nodelink'.startsWith(search)) {
 						return true;
 					}
 					return false;

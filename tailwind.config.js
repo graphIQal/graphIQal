@@ -19,7 +19,7 @@ module.exports = {
 		'./pages/**/*.{js,jsx,ts,tsx}',
 		'./node_modules/tw-elements/dist/js/**/*.js',
 	],
-	plugins: [],
+	plugins: [require('@tailwindcss/typography')],
 	theme: {
 		screens: {
 			sm: '480px',

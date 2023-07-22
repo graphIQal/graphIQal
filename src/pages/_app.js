@@ -23,21 +23,30 @@ import View from '../components/layouts/View';
 import Window from '../components/layouts/Window';
 import TabContext from '../components/context/ViewContext';
 import { useRouter } from 'next/router';
+import { SessionProvider } from 'next-auth/react';
 
-export default function MyApp({ Component, pageProps }) {
-  return (
-    <>
-      <Head>
-        <title>graphIQal</title>
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-      </Head>
-      <main>
-        <Window>
-          <View>
-            <Component {...pageProps} />
-          </View>
-        </Window>
-      </main>
-    </>
-  );
+export default function MyApp({
+	Component,
+	pageProps: { session, ...pageProps },
+}) {
+	return (
+		<>
+			<Head>
+				<title>graphIQal</title>
+				<meta
+					name='viewport'
+					content='width=device-width, initial-scale=1'
+				/>
+			</Head>
+			<main>
+				<SessionProvider>
+					<Window>
+						<View>
+							<Component {...pageProps} />
+						</View>
+					</Window>
+				</SessionProvider>
+			</main>
+		</>
+	);
 }

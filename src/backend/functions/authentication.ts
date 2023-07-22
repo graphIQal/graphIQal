@@ -21,15 +21,11 @@ export const register = async (
 		});
 };
 
-export const login = async (
-	email: string,
-	username: string,
-	password: string
-) => {
+export const login = async (email: string, password: string) => {
 	console.log('login attempted ');
 
 	const res = await fetch(
-		`/api/authentication/login?username=${username}&password=${password}&email=${email}`
+		`/api/authentication/login?password=${password}&email=${email}`
 	)
 		.then((res) => {
 			console.log('res ', res);

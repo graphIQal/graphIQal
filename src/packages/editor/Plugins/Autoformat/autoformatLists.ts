@@ -30,6 +30,8 @@ export const autoformatLists: AutoformatRule[] = [
 		mode: 'block',
 		type: ELEMENT_TODO_LI,
 		match: '[] ',
+		format: (editor) =>
+			formatList(editor, ELEMENT_TODO_LI, { checked: false }),
 	},
 	{
 		mode: 'block',

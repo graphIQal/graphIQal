@@ -7,6 +7,7 @@ import {
 	ELEMENT_H2,
 	ELEMENT_H3,
 	ELEMENT_LI,
+	ELEMENT_TODO_LI,
 	getPluginType,
 	insertNodes,
 	isSelectionAtBlockStart,
@@ -28,6 +29,7 @@ import { createNodeInDocument } from '../../../backend/functions/node/mutate/cre
 import { useViewData } from '../../../components/context/ViewContext';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/router';
+import { formatList } from '../Plugins/Autoformat/autoformatUtils';
 
 export const markTooltip: TippyProps = {
 	arrow: true,
@@ -122,7 +124,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			},
 		},
 		{
-			key: '2',
+			key: 'blist',
 			text: 'Bullet List',
 			data: {
 				searchFunction: (search) => {
@@ -132,7 +134,25 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					return false;
 				},
 				onPress: () => {
-					toggleList(editor, { type: ELEMENT_LI });
+					formatList(editor, ELEMENT_LI);
+				},
+			},
+		},
+		{
+			key: 'tlist',
+			text: 'Todo List',
+			data: {
+				searchFunction: (search) => {
+					if (
+						'checkbox'.startsWith(search) ||
+						'todo list'.startsWith(search)
+					) {
+						return true;
+					}
+					return false;
+				},
+				onPress: () => {
+					formatList(editor, ELEMENT_TODO_LI);
 				},
 			},
 		},

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface TextButtonProps {
 	onClick: () => void;
@@ -11,10 +11,21 @@ const TextButton: React.FC<TextButtonProps> = ({
 	text,
 	className,
 }) => {
+	const [effect, setEffect] = useState(false);
+
 	return (
-		<div className='text-sm' onClick={onClick}>
+		<div
+			className='text-sm'
+			onClick={() => {
+				onClick();
+				setEffect(true);
+			}}
+		>
 			<div
-				className={`text-base_black border-base_black hover:text-lining font-semibold border transition-transform transform-gpu hover:scale-105 rounded-full px-4 py-2 focus:outline-none ${className}`}
+				onAnimationEnd={() => setEffect(false)}
+				className={`${
+					effect && 'animate-wiggle '
+				} text-base_black border-base_black hover:text-lining font-semibold border transition-transform transform-gpu hover:scale-105 rounded-full px-4 py-2 focus:outline-none ${className}`}
 			>
 				{text}
 			</div>

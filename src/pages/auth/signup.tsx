@@ -10,21 +10,17 @@ import {
 // import register from '../api/authentication/register';
 import deleteUser from '../api/general/deleteUser';
 import { login } from '../../backend/functions/authentication';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import Divider from '../../components/atoms/Divider';
 import Link from 'next/link';
 
 //used for dragging
-const SignIn: React.FC = () => {
-	const [email, setemail] = useState('icejes8@gmail.com');
-	const [password, setpassword] = useState('password');
+const SignUp: React.FC = () => {
+	const [email, setemail] = useState('');
+	const [name, setname] = useState('');
+	const [password, setpassword] = useState('');
 
 	const router = useRouter();
-
-	const { data: session, status } = useSession();
-
-	console.log('session, status');
-	console.log(session, status);
 
 	// const login = () => {
 	// 	console.log('login');
@@ -34,8 +30,14 @@ const SignIn: React.FC = () => {
 		<div>
 			<div className='flex flex-col justify-center items-center h-screen gap-4'>
 				<div className='title text-xl font-extrabold'>
-					Login to GraphIQal
+					Sign Up for GraphIQal!
 				</div>
+				<input
+					className='border rounded py-2 px-3 leading-tight focus:outline-none focus:shadow-outline text-sm'
+					placeholder='name'
+					value={name}
+					onChange={(e) => setname(e.target.value)}
+				/>
 				<input
 					className='border rounded py-2 px-3 leading-tight focus:outline-none focus:shadow-outline text-sm'
 					placeholder='email'
@@ -49,14 +51,14 @@ const SignIn: React.FC = () => {
 					onChange={(e) => setpassword(e.target.value)}
 				/>
 				<TextButton
-					text={'Login'}
+					text={'Sign Up'}
 					onClick={async () => {
 						signIn('credentials', {
 							redirect: false,
+							name: name,
 							password: password,
 							email: email,
 						});
-
 						// const res = await login(email, username, password);
 						// console.log('result', res);
 						// if (res.length > 0) {
@@ -76,7 +78,7 @@ const SignIn: React.FC = () => {
 					}}
 				/>
 				<TextButton
-					text={'Google Login'}
+					text={'Signup using Google'}
 					// onClick={() => register(email, username, password)}
 					onClick={() => {
 						signIn('google');
@@ -84,12 +86,12 @@ const SignIn: React.FC = () => {
 				/>
 				<Divider widthCSS='w-10' />
 				<p className='text-sm text-lining'>
-					Don't have an account?{' '}
+					Already have an account?{' '}
 					<Link
-						href='/auth/signup'
+						href='/auth/signin'
 						className='underline hover:text-base_black'
 					>
-						Sign Up
+						Log In
 					</Link>
 				</p>
 			</div>
@@ -98,4 +100,4 @@ const SignIn: React.FC = () => {
 	);
 };
 
-export default SignIn;
+export default SignUp;

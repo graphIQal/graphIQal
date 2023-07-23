@@ -13,35 +13,28 @@ import {
 } from '../backend/cypher-generation/cypherGenerators';
 import { useRouter } from 'next/router';
 import { deleteUser } from '../backend/functions/general/deleteUser';
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
 	const [email, setemail] = useState('1332@gatech.edu');
-	const [username, setusername] = useState('1332');
 	const [password, setpassword] = useState('password');
 
 	const router = useRouter();
+	const { session, status } = useSession();
+
+	console.log('session, status');
+	console.log(session, status);
 
 	return (
 		<ul>
 			<li>
-				<Link href='/'>Home</Link>
-			</li>
-			<li>
-				<Link href='/username/SplitPaneWrapper'>Document</Link>
-			</li>
-			<li>
-				<Link href='/username/graph'>Blog Post</Link>
+				<Link href='/auth/signin'>Real Signin</Link>
 			</li>
 			<div className='flex flex-col bg-blue-400 '>
 				<input
 					placeholder='email'
 					value={email}
 					onChange={(e) => setemail(e.target.value)}
-				/>
-				<input
-					placeholder='username'
-					value={username}
-					onChange={(e) => setusername(e.target.value)}
 				/>
 				<input
 					placeholder='password'
@@ -51,7 +44,7 @@ export default function Home() {
 				<TextButton
 					text={'Login'}
 					onClick={async () => {
-						const res = await login(email, username, password);
+						const res = await login(email, password);
 						console.log('result', res);
 						if (res.length > 0) {
 							router.push(
@@ -75,10 +68,10 @@ export default function Home() {
 						//  localStorage.setItem('user', response.data)
 					}}
 				/>
-				<TextButton
+				{/* <TextButton
 					text={'Create Account'}
-					onClick={() => register(email, username, password)}
-				/>
+					onClick={() => register(email, password)}
+				/> */}
 				<TextButton
 					text={'Test Button'}
 					onClick={async () => {

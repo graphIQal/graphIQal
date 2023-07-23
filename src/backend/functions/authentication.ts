@@ -24,17 +24,21 @@ export const register = async (
 export const login = async (email: string, password: string) => {
 	console.log('login attempted ');
 
-	const res = await fetch(
-		`/api/authentication/login?password=${password}&email=${email}`
-	)
-		.then((res) => {
-			console.log('res ', res);
-			return res.json();
-		})
-		.then((json) => {
-			console.log('json: ', json);
-			return json;
-		});
+	try {
+		const res = await fetch(
+			`/api/authentication/login?password=${password}&email=${email}`
+		)
+			.then((res) => {
+				console.log('res ', res);
+				return res.json();
+			})
+			.then((json) => {
+				console.log('json: ', json);
+				return json;
+			});
 
-	return res;
+		return res;
+	} catch (e) {
+		console.log(e);
+	}
 };

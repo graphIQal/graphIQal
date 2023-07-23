@@ -19,7 +19,7 @@ module.exports = {
 		'./pages/**/*.{js,jsx,ts,tsx}',
 		'./node_modules/tw-elements/dist/js/**/*.js',
 	],
-	plugins: [require('@tailwindcss/typography')],
+	plugins: [],
 	theme: {
 		screens: {
 			sm: '480px',
@@ -105,6 +105,15 @@ module.exports = {
 					'"Courier New"',
 					'monospace',
 				],
+			},
+			keyframes: {
+				wiggle: {
+					'0%, 100%': { transform: 'rotate(-3deg)' },
+					'50%': { transform: 'rotate(3deg)' },
+				},
+			},
+			animation: {
+				wiggle: 'wiggle 200ms ease-in-out',
 			},
 		},
 	},

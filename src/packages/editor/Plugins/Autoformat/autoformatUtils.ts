@@ -40,7 +40,7 @@ export const format = (
 };
 
 export const formatList = (
-	editor: MyEditor,
+	editor: MyEditor | PlateEditor,
 	elementType: string,
 	additionalParams?: Object
 ) => {

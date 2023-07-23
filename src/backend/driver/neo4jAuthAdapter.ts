@@ -112,9 +112,8 @@ export function Neo4jAdapter(session: Session): Adapter {
 				? user.name + "'s Homeless Nodes"
 				: 'Homeless Node';
 
-			console.log(
-				await write(
-					`CREATE (u:User $data)
+			await write(
+				`CREATE (u:User $data)
 
                 MERGE (n:Node {title: "${homenodeName}"})
                 ON CREATE SET n.id = "${homenodeId}"
@@ -134,26 +133,28 @@ export function Neo4jAdapter(session: Session): Adapter {
                 ON CREATE SET g.id = randomUuid()
                 RETURN u, n, b
             `,
-					user
-				)
+				user
 			);
 
 			return user;
 		},
 
 		async getUser(id) {
+			console.log('getUser');
 			return await read(`MATCH (u:User { id: $id }) RETURN u{.*}`, {
 				id,
 			});
 		},
 
 		async getUserByEmail(email) {
+			console.log('getuserbyemail');
 			return await read(`MATCH (u:User { email: $email }) RETURN u{.*}`, {
 				email,
 			});
 		},
 
 		async getUserByAccount(provider_providerAccountId) {
+			console.log('getuserbyaccount');
 			return await read(
 				`MATCH (u:User)-[:HAS_ACCOUNT]->(a:Account {
                     provider: $provider,
@@ -165,6 +166,7 @@ export function Neo4jAdapter(session: Session): Adapter {
 		},
 
 		async updateUser(data) {
+			console.log('updateUser');
 			return (
 				await write(
 					`MATCH (u:User { id: $data.id })

@@ -45,14 +45,15 @@ export default function Home() {
 					text={'Login'}
 					onClick={async () => {
 						const res = await login(email, password);
+
 						console.log('result', res);
 						if (res.length > 0) {
 							router.push(
-								'/' + username + '/' + res[0].n.properties.id
+								'/' + 'username' + '/' + res[0].n.properties.id
 							);
 							localStorage.setItem('authentication', {
 								id: res[0].u.properties.id,
-								username: res[0].u.properties.username,
+								// username: res[0].u.properties.username,
 								time: new Date(),
 								homenodeId: res[0].n.properties.id,
 							});

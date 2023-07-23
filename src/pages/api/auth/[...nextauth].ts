@@ -2,18 +2,38 @@ import neo4j from 'neo4j-driver';
 // import { Neo4jAdapter } from '@auth/neo4j-adapter';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { driver } from '../../../backend/driver/helpers';
+import { driver, read } from '../../../backend/driver/helpers';
 import NextAuth from 'next-auth/next';
 // import { Neo4jAdapter } from '@next-auth/neo4j-adapter';
 import { login } from '../../../backend/functions/authentication';
 import { redirect } from 'next/navigation';
 import { Neo4jAdapter } from '../../../backend/driver/neo4jAuthAdapter';
+import { DefaultSession } from 'next-auth';
 require('dotenv').config();
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
 
 const neo4jSession = driver.session();
+
+declare module 'next-auth' {
+	interface User {
+		homelessnodeId: string;
+		homenodeId: string;
+		favourites: string[];
+	}
+
+	interface Session extends DefaultSession {
+		user?: User;
+	}
+}
+
+// declare module "next-auth/jwt" {
+// 	interface JWT {
+// 	  role?: Role;
+// 	  subscribed: boolean;
+// 	}
+//   }
 
 // For more information on each option (and a full list of options) go to
 // https://authjs.dev/reference/configuration/auth-options
@@ -45,12 +65,28 @@ export default NextAuth({
 
 				if (!credentials) return null;
 
-				const res = await login(
-					credentials.email,
-					credentials.password
-				);
+				const params = {
+					email: credentials.email,
+					password: credentials.password,
+				};
 
-				console.log('result', res);
+				const cypher: string = `
+					MATCH (u:User {
+						password: $password,
+						email: $email
+					})
+					MATCH (u)-[r:HAS]->(n)
+					RETURN u,r,n;
+					`;
+
+				const result: any = await read(cypher, params);
+
+				// const res = await login(
+				// 	credentials.email,
+				// 	credentials.password
+				// );
+
+				console.log('result', result);
 
 				return {
 					id: '1',
@@ -116,6 +152,7 @@ export default NextAuth({
 			console.log('session');
 			console.log(token);
 			console.log(user);
+
 			// Send properties to the client, like an access_token and user id from a provider.
 			// session.accessToken = token.accessToken;
 			session.user = user;

@@ -1,18 +1,10 @@
-import React, { useState } from 'react';
-import CustomIconCircleButton from '../../components/molecules/CustomIconCircleButton';
-import { Plus } from '@styled-icons/fa-solid/Plus';
-import TextButton from '../../components/molecules/TextButton';
 import { useRouter } from 'next/router';
-import {
-	GenerateCypher,
-	returnCypher,
-} from '../../backend/cypher-generation/cypherGenerators';
+import React, { useState } from 'react';
+import TextButton from '../../components/molecules/TextButton';
 // import register from '../api/authentication/register';
-import deleteUser from '../api/general/deleteUser';
-import { login } from '../../backend/functions/authentication';
 import { signIn, useSession } from 'next-auth/react';
-import Divider from '../../components/atoms/Divider';
 import Link from 'next/link';
+import Divider from '../../components/atoms/Divider';
 
 //used for dragging
 const SignIn: React.FC = () => {
@@ -25,6 +17,15 @@ const SignIn: React.FC = () => {
 
 	console.log('session, status');
 	console.log(session, status);
+
+	if (status === 'authenticated' && session.user && session.user.homenodeId) {
+		router.push(
+			'/' +
+				(session.user.name ? session.user?.name : 'username') +
+				'/' +
+				session.user.homenodeId
+		);
+	}
 
 	// const login = () => {
 	// 	console.log('login');

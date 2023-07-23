@@ -94,13 +94,15 @@ export function Neo4jAdapter(session: Session): Adapter {
 
 	return {
 		async createUser(data) {
-			const homelessNodeId = crypto.randomUUID();
-			const homeNodeId = crypto.randomUUID();
+			console.log('create User');
+			const homelessnodeId = crypto.randomUUID();
+			const homenodeId = crypto.randomUUID();
 			const user = {
 				id: crypto.randomUUID(),
 				...data,
-				homeNodeId,
-				homelessNodeId,
+				homenodeId,
+				homelessnodeId,
+				favourites: [],
 			};
 
 			const homenodeName = user.name
@@ -110,16 +112,16 @@ export function Neo4jAdapter(session: Session): Adapter {
 				? user.name + "'s Homeless Nodes"
 				: 'Homeless Node';
 
-			await write(
-				`MERGE (u:User $data)
-                ON CREATE SET u.favourites = [], u.homenodeId = "${homeNodeId}", u.homelessnodeId = "${homelessNodeId}"
+			console.log(
+				await write(
+					`CREATE (u:User $data)
 
                 MERGE (n:Node {title: "${homenodeName}"})
-                ON CREATE SET n.id = "${homeNodeId}"
+                ON CREATE SET n.id = "${homenodeId}"
                 MERGE (u)-[r:HAS]->(n)
 
                 MERGE (h:Node {title: "${homelessnodeName}"})
-                ON CREATE SET h.id = "${homeNodeId}"
+                ON CREATE SET h.id = "${homelessnodeId}"
                 MERGE (n)-[:RELATED]-(h)
 
                 MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
@@ -132,7 +134,8 @@ export function Neo4jAdapter(session: Session): Adapter {
                 ON CREATE SET g.id = randomUuid()
                 RETURN u, n, b
             `,
-				user
+					user
+				)
 			);
 
 			return user;
@@ -173,26 +176,31 @@ export function Neo4jAdapter(session: Session): Adapter {
 		},
 
 		async deleteUser(id) {
-			return await write(
-				`MATCH (u:User { id: $data.id })
-         WITH u, u{.*} AS properties
-         DETACH DELETE u
-         RETURN properties`,
-				{ id }
-			);
+			// return await write(
+			// 	`MATCH (u:User { id: $data.id })
+			// 	WITH u, u{.*} AS properties
+			// 	DETACH DELETE u
+			// 	RETURN properties`,
+			// 	{ id }
+			// );
 		},
 
 		async linkAccount(data) {
+			console.log('link account attempted');
+			console.log('data');
+			console.log(data);
 			const { userId, ...a } = data;
-			await write(
-				`MATCH (u:User { id: $data.userId })
+			console.log(
+				await write(
+					`MATCH (u:User { id: $data.userId })
                 MERGE (a:Account {
                 providerAccountId: $data.a.providerAccountId,
                 provider: $data.a.provider
                 }) 
                 SET a += $data.a
                 MERGE (u)-[:HAS_ACCOUNT]->(a)`,
-				{ userId, a }
+					{ userId, a }
+				)
 			);
 			return data;
 		},
@@ -211,18 +219,23 @@ export function Neo4jAdapter(session: Session): Adapter {
 		},
 
 		async createSession(data) {
+			console.log('create session');
+			console.log(data);
 			const { userId, ...s } = format.to(data);
-			await write(
-				`MATCH (u:User { id: $data.userId })
+			console.log(
+				await write(
+					`MATCH (u:User { id: $data.userId })
                 CREATE (s:Session)
                 SET s = $data.s
                 CREATE (u)-[:HAS_SESSION]->(s)`,
-				{ userId, s }
+					{ userId, s }
+				)
 			);
 			return data;
 		},
 
 		async getSessionAndUser(sessionToken) {
+			console.log('getsessionanduser');
 			const result = await write(
 				`OPTIONAL MATCH (u:User)-[:HAS_SESSION]->(s:Session { sessionToken: $data.sessionToken })
                 WHERE s.expires <= datetime($data.now)

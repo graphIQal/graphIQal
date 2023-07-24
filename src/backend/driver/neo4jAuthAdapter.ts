@@ -248,7 +248,12 @@ export function Neo4jAdapter(session: Session): Adapter {
 				{ sessionToken, now: new Date().toISOString() }
 			);
 
+			console.log(result);
+
 			if (!result?.session || !result?.user) return null;
+
+			console.log('getsession and user return');
+			console.log({ session: result.session, user: result.user });
 
 			return {
 				session: format.from<any>(result.session),
@@ -257,6 +262,7 @@ export function Neo4jAdapter(session: Session): Adapter {
 		},
 
 		async updateSession(data) {
+			console.log('updateSession');
 			return await write(
 				`MATCH (u:User)-[:HAS_SESSION]->(s:Session { sessionToken: $data.sessionToken })
                 SET s += $data
@@ -276,6 +282,7 @@ export function Neo4jAdapter(session: Session): Adapter {
 		},
 
 		async createVerificationToken(data) {
+			console.log('create verification token ');
 			await write(
 				`MERGE (v:VerificationToken {
            identifier: $data.identifier,
@@ -288,6 +295,7 @@ export function Neo4jAdapter(session: Session): Adapter {
 		},
 
 		async useVerificationToken(data) {
+			console.log('use verification token ');
 			const result = await write(
 				`MATCH (v:VerificationToken {
            identifier: $data.identifier,

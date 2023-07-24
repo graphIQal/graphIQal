@@ -9,7 +9,7 @@ import {
 } from '../../backend/cypher-generation/cypherGenerators';
 // import register from '../api/authentication/register';
 import deleteUser from '../api/general/deleteUser';
-import { login } from '../../backend/functions/authentication';
+import { login, register } from '../../backend/functions/authentication';
 import { signIn } from 'next-auth/react';
 import Divider from '../../components/atoms/Divider';
 import Link from 'next/link';
@@ -53,12 +53,18 @@ const SignUp: React.FC = () => {
 				<TextButton
 					text={'Sign Up'}
 					onClick={async () => {
+						// Add register information
+						// const res = register(password, email);
+
 						signIn('credentials', {
 							redirect: false,
 							name: name,
 							password: password,
 							email: email,
+							newUser: true,
 						});
+
+						console.log('signin results');
 						// const res = await login(email, username, password);
 						// console.log('result', res);
 						// if (res.length > 0) {

@@ -1,16 +1,10 @@
 import { Router } from 'next/router';
 import { write } from '../driver/helpers';
 
-export const register = async (
-	email: string,
-	username: string,
-	password: string
-) => {
+export const register = async (email: string, password: string) => {
 	console.log('register');
 
-	fetch(
-		`/api/authentication/register?username=${username}&password=${password}&email=${email}`
-	)
+	fetch(`/api/authentication/register?password=${password}&email=${email}`)
 		.then((res) => {
 			console.log('res ', res);
 			return res.json();

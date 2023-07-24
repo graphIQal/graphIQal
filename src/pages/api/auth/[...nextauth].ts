@@ -6,7 +6,6 @@ import { driver, read } from '../../../backend/driver/helpers';
 import NextAuth from 'next-auth/next';
 // import { Neo4jAdapter } from '@next-auth/neo4j-adapter';
 import { login } from '../../../backend/functions/authentication';
-import { redirect } from 'next/navigation';
 import { Neo4jAdapter } from '../../../backend/driver/neo4jAuthAdapter';
 import { DefaultSession } from 'next-auth';
 require('dotenv').config();
@@ -70,6 +69,8 @@ export default NextAuth({
 					password: credentials.password,
 				};
 
+				// Basically, if these credentials exist -> Signin. Do I have to manage a token? Let's try.
+
 				const cypher: string = `
 					MATCH (u:User {
 						password: $password,
@@ -79,49 +80,15 @@ export default NextAuth({
 					RETURN u,r,n;
 					`;
 
-				const result: any = await read(cypher, params);
+				const res: any = await read(cypher, params);
 
-				// const res = await login(
-				// 	credentials.email,
-				// 	credentials.password
-				// );
-
-				console.log('result', result);
-
-				return {
-					id: '1',
-					email: credentials.email,
-					password: credentials.password,
-				};
-
-				// if (res.length > 0) {
-				// 	router.push('/' + username + '/' + res[0].n.properties.id);
-				// 	localStorage.setItem('authentication', {
-				// 		id: res[0].u.properties.id,
-				// 		username: res[0].u.properties.username,
-				// 		time: new Date(),
-				// 		homenodeId: res[0].n.properties.id,
-				// 	});
-				// } else {
-				// 	console.log('unexisting user');
-				// }
-				// localStorage.setItem('user', response.data);
-
-				// const user = {
-				// 	id: '1',
-				// 	name: 'J Smith',
-				// 	email: 'jsmith@example.com',
-				// };
-
-				// if (user) {
-				// 	// Any object returned will be saved in `user` property of the JWT
-				// 	return user;
-				// } else {
-				// 	// If you return null then an error will be displayed advising the user to check their details.
-				// 	return null;
-
-				// 	// You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
-				// }
+				if (res.length > 0) {
+					console.log('res', res[0].u.properties);
+					return res[0].u.properties;
+				} else {
+					// Signup flow -> Probably from signup.
+					return null;
+				}
 			},
 		}),
 	],
@@ -150,12 +117,14 @@ export default NextAuth({
 		},
 		async session({ session, token, user }) {
 			console.log('session');
+			console.log(session);
 			console.log(token);
 			console.log(user);
 
 			// Send properties to the client, like an access_token and user id from a provider.
 			// session.accessToken = token.accessToken;
 			session.user = user;
+			token = { ...token, ...user };
 
 			// session.user.id = token.id;
 
@@ -180,5 +149,10 @@ export default NextAuth({
 			console.log('create User');
 			console.log(user);
 		},
+	},
+	session: {
+		strategy: 'database',
+		maxAge: 60 * 24 * 60 * 60, // 30 days
+		updateAge: 24 * 60 * 60, // 24 hours
 	},
 });

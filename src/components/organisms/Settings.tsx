@@ -13,6 +13,7 @@ const SettingsPanel: React.FC<SettingsProps> = () => {
 
 	const router = useRouter();
 	console.log(session, status);
+
 	if (status === 'authenticated') {
 		return (
 			<div>
@@ -23,12 +24,15 @@ const SettingsPanel: React.FC<SettingsProps> = () => {
 				<Divider />
 				<TextButton
 					text='Logout'
-					onClick={() => signOut()}
+					onClick={async () => {
+						const res = await signOut();
+						router.push('/auth/signin');
+					}}
 				></TextButton>
 			</div>
 		);
-	} else {
 	}
+
 	return (
 		<div>
 			<div>Not logged in atm</div>

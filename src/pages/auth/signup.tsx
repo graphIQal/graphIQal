@@ -10,7 +10,7 @@ import {
 // import register from '../api/authentication/register';
 import deleteUser from '../api/general/deleteUser';
 import { login, register } from '../../backend/functions/authentication';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Divider from '../../components/atoms/Divider';
 import Link from 'next/link';
 
@@ -19,12 +19,48 @@ const SignUp: React.FC = () => {
 	const [email, setemail] = useState('');
 	const [name, setname] = useState('');
 	const [password, setpassword] = useState('');
+	const [errorMsg, seterrorMsg] = useState('');
 
 	const router = useRouter();
+	const { data: session, status } = useSession();
+
+	if (status === 'authenticated' && session.user && session.user.homenodeId) {
+		router.push(
+			'/' +
+				(session.user.name ? session.user?.name : 'username') +
+				'/' +
+				session.user.homenodeId
+		);
+	}
 
 	// const login = () => {
 	// 	console.log('login');
 	// };
+
+	const invalidEntries = () => {
+		if (name === '' || password === '' || email === '') {
+			seterrorMsg('Empty fields');
+			return true;
+		}
+
+		if (
+			!String(email)
+				.toLowerCase()
+				.match(
+					/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+				)
+		) {
+			seterrorMsg('Invalid email');
+			return true;
+		}
+
+		if (password.length < 8) {
+			seterrorMsg('Password length must be 8 characters');
+			return true;
+		}
+
+		return false;
+	};
 
 	return (
 		<div>
@@ -32,6 +68,9 @@ const SignUp: React.FC = () => {
 				<div className='title text-xl font-extrabold'>
 					Sign Up for GraphIQal!
 				</div>
+				{errorMsg && (
+					<div className='text-sm text-red-400'>{errorMsg}</div>
+				)}
 				<input
 					className='border rounded py-2 px-3 leading-tight focus:outline-none focus:shadow-outline text-sm'
 					placeholder='name'
@@ -54,17 +93,31 @@ const SignUp: React.FC = () => {
 					text={'Sign Up'}
 					onClick={async () => {
 						// Add register information
-						// const res = register(password, email);
 
-						signIn('credentials', {
+						if (invalidEntries()) return null;
+
+						const loginRes = await login(email, password);
+						if (loginRes.length > 0) {
+							seterrorMsg('Email already registered');
+							return;
+						}
+
+						const res = await register(email, password, name);
+
+						// if(res.status === 'registered' && )
+
+						console.log('register', res);
+
+						const signinRes = await signIn('credentials', {
 							redirect: false,
-							name: name,
 							password: password,
 							email: email,
 							newUser: true,
 						});
 
 						console.log('signin results');
+						console.log(signinRes);
+
 						// const res = await login(email, username, password);
 						// console.log('result', res);
 						// if (res.length > 0) {

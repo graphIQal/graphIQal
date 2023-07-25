@@ -61,12 +61,6 @@ const Home: React.FC = () => {
 	// 	fetcherAll
 	// );
 
-	if (typeof window !== 'undefined') {
-		console.log(localStorage.getItem('userId'));
-		console.log(sessionStorage.getItem('userId'));
-		console.log(!sessionStorage.getItem('favourites'));
-	}
-
 	// const { data: user, isLoading: userData } = useSWR(
 	// 	[
 	// 		() =>

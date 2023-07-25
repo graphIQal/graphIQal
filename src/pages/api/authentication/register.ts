@@ -6,26 +6,60 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const params = req.query;
+	let params = req.query;
 
-	params.hometitle = params.username + "'s Home Node";
-	params.homeless = params.username + "'s Homeless Node";
+	// params.homelessnodeId = crypto.randomUUID();
+	// params.homenodeId = crypto.randomUUID();
+
+	// params.hometitle = params.name ? params.name + "'s Home Node" : 'Home Node';
+	// params.homelesstitle = params.name
+	// 	? params.name + "'s Homeless Nodes"
+	// 	: 'Homeless Node';
+
+	const homelessnodeId = crypto.randomUUID();
+	const homenodeId = crypto.randomUUID();
+	const favouritesId = crypto.randomUUID();
+
+	const user = {
+		id: crypto.randomUUID(),
+		name: params.name,
+		email: params.email,
+		password: params.password,
+		homenodeId,
+		homelessnodeId,
+		favouritesId,
+	};
+
+	params.homenodeName = user.name ? user.name + "'s Home Node" : 'Home Node';
+	params.homelessnodeName = user.name
+		? user.name + "'s Homeless Nodes"
+		: 'Homeless Node';
+
+	params = { ...params, ...user };
 
 	// Add Hash for password
 	const cypher = `
 	MERGE (u:User {
-	  email: $email,
-	  password: $password,
-	  username: $username
+		id: $id,
+		email: $email,
+		password: $password,
+		name: $name,
+		homenodeId : $homenodeId,
+		homelessnodeId: $homelessnodeId,
+		favourites: []
 	})
-	ON CREATE SET u.id = randomUuid(), u.favourites = []
-	MERGE (n:Node {title: $hometitle})
-	ON CREATE SET n.id = randomUuid()
+
+	CREATE (n:Node {title: $homenodeName})
+	SET n.id = $homenodeId
 	MERGE (u)-[r:HAS]->(n)
 
-	MERGE (h:Node {title: $homeless})
-	ON CREATE SET h.id = randomUuid()
+	CREATE (h:Node {title: $homelessnodeName})
+	SET h.id = $homelessnodeId
 	MERGE (n)-[:RELATED]-(h)
+
+	CREATE (f:Node {title: "Favourites"})
+	SET f.id = $favouritesId, f.favourites = []
+	MERGE (n)-[:RELATED]-(f)
 	
 	MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
 	MERGE (n)-[:NEXT_BLOCK]->(b)
@@ -40,5 +74,6 @@ export default async function handler(
 
 	const result: any = await write(cypher as string, params);
 
-	res.status(200).json({ ...result, ...params, cypher });
+	// res.status(200).json({ ...result, ...params, cypher });
+	res.status(200).json(result);
 }

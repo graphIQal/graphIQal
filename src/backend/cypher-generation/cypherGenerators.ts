@@ -109,7 +109,8 @@ export const deleteNodeCypher = (node: createNewNodeCypher_Input): string => {
 
 export const getNodeData_cypher = (nodeId: string) => {
 	return `
-	MATCH (n: Node {id: "${nodeId}"})-[r]-(c:Node)
+	MATCH (n: Node {id: "${nodeId}"})
+	OPTIONAL MATCH (n)-[r]-(c:Node)
 	RETURN n {.*}, collect({r:r {.*, type: type(r)}, connected_node:c {.*}}) AS connectedNodes
 	// RETURN r {.*, type: type(r)}, c {.*} 
 	`;

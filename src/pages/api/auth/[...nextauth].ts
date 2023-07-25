@@ -25,6 +25,10 @@ declare module 'next-auth' {
 	interface Session extends DefaultSession {
 		user?: User;
 	}
+
+	interface JWT {
+		user?: User;
+	}
 }
 
 // declare module "next-auth/jwt" {
@@ -73,14 +77,16 @@ export default NextAuth({
 
 				const cypher: string = `
 					MATCH (u:User {
-						password: $password,
-						email: $email
+						email: $email,
+						password: $password
 					})
 					MATCH (u)-[r:HAS]->(n)
 					RETURN u,r,n;
 					`;
 
 				const res: any = await read(cypher, params);
+
+				console.log('res', res);
 
 				if (res.length > 0) {
 					console.log('res', res[0].u.properties);
@@ -100,6 +106,14 @@ export default NextAuth({
 		// newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
 	},
 	callbacks: {
+		async jwt({ token, user, account, profile }) {
+			console.log('jwt');
+			console.log(token);
+			console.log(user);
+
+			token = { ...token, ...user };
+			return token;
+		},
 		async signIn({ user, account, profile, email }) {
 			console.log('sign in');
 			console.log({ user, account, profile, email });
@@ -123,9 +137,11 @@ export default NextAuth({
 
 			// Send properties to the client, like an access_token and user id from a provider.
 			// session.accessToken = token.accessToken;
-			session.user = user;
+			session.user = { ...session.user, ...token, ...user };
 			token = { ...token, ...user };
 
+			console.log('new session');
+			console.log(session);
 			// session.user.id = token.id;
 
 			return session;
@@ -151,7 +167,7 @@ export default NextAuth({
 		},
 	},
 	session: {
-		strategy: 'database',
+		strategy: 'jwt',
 		maxAge: 60 * 24 * 60 * 60, // 30 days
 		updateAge: 24 * 60 * 60, // 24 hours
 	},

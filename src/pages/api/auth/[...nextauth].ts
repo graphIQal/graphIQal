@@ -6,7 +6,10 @@ import { driver, read } from '../../../backend/driver/helpers';
 // import { Neo4jAdapter } from '@next-auth/neo4j-adapter';
 import { DefaultSession } from 'next-auth';
 import { Neo4jAdapter } from '../../../backend/driver/neo4jAuthAdapter';
-import { compareHashPassword } from '../../../backend/functions/authentication';
+import {
+	compareHashPassword,
+	hashPassword,
+} from '../../../backend/functions/authentication';
 require('dotenv').config();
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
@@ -83,14 +86,12 @@ export default NextAuth({
 
 				const res: any = await read(cypher, params);
 
-				console.log('res', res);
-
 				if (
 					res.length > 0 &&
 					compareHashPassword(
 						credentials.password,
 						res[0].u.properties.password
-					)
+					).success
 				) {
 					console.log('res', res[0].u.properties);
 					return res[0].u.properties;

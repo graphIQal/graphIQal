@@ -28,8 +28,6 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
 	const { windowVar } = useViewData();
 	if (!windowVar) return <div></div>;
 
-	console.log('connection, ', connection);
-
 	return (
 		<div
 			key={index}

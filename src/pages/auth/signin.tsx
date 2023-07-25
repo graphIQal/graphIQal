@@ -10,6 +10,7 @@ import Divider from '../../components/atoms/Divider';
 const SignIn: React.FC = () => {
 	const [email, setemail] = useState('icejes8@gmail.com');
 	const [password, setpassword] = useState('password');
+	const [errorMsg, seterrorMsg] = useState('');
 
 	const router = useRouter();
 
@@ -37,6 +38,9 @@ const SignIn: React.FC = () => {
 				<div className='title text-xl font-extrabold'>
 					Login to GraphIQal
 				</div>
+				{errorMsg && (
+					<div className='text-sm text-red-400'>{errorMsg}</div>
+				)}
 				<input
 					className='border rounded py-2 px-3 leading-tight focus:outline-none focus:shadow-outline text-sm'
 					placeholder='email'
@@ -52,11 +56,17 @@ const SignIn: React.FC = () => {
 				<TextButton
 					text={'Login'}
 					onClick={async () => {
-						signIn('credentials', {
+						const res = await signIn('credentials', {
 							redirect: false,
 							password: password,
 							email: email,
 						});
+
+						console.log('login', res);
+
+						if (res?.error) {
+							seterrorMsg('Invalid Credentials');
+						}
 					}}
 				/>
 				<TextButton

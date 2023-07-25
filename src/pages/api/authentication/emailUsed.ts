@@ -10,7 +10,6 @@ export default async function handler(
 
 	const cypher: string = `
 	MATCH (u:User {
-		password: $password,
 		email: $email
 	})
 	MATCH (u)-[r:HAS]->(n)

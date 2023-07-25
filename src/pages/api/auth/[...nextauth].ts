@@ -1,13 +1,12 @@
-import neo4j from 'neo4j-driver';
 // import { Neo4jAdapter } from '@auth/neo4j-adapter';
-import GoogleProvider from 'next-auth/providers/google';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { driver, read } from '../../../backend/driver/helpers';
 import NextAuth from 'next-auth/next';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
+import { driver, read } from '../../../backend/driver/helpers';
 // import { Neo4jAdapter } from '@next-auth/neo4j-adapter';
-import { login } from '../../../backend/functions/authentication';
-import { Neo4jAdapter } from '../../../backend/driver/neo4jAuthAdapter';
 import { DefaultSession } from 'next-auth';
+import { Neo4jAdapter } from '../../../backend/driver/neo4jAuthAdapter';
+import { compareHashPassword } from '../../../backend/functions/authentication';
 require('dotenv').config();
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
@@ -70,15 +69,13 @@ export default NextAuth({
 
 				const params = {
 					email: credentials.email,
-					password: credentials.password,
 				};
 
 				// Basically, if these credentials exist -> Signin. Do I have to manage a token? Let's try.
 
 				const cypher: string = `
 					MATCH (u:User {
-						email: $email,
-						password: $password
+						email: $email
 					})
 					MATCH (u)-[r:HAS]->(n)
 					RETURN u,r,n;
@@ -88,7 +85,13 @@ export default NextAuth({
 
 				console.log('res', res);
 
-				if (res.length > 0) {
+				if (
+					res.length > 0 &&
+					compareHashPassword(
+						credentials.password,
+						res[0].u.properties.password
+					)
+				) {
 					console.log('res', res[0].u.properties);
 					return res[0].u.properties;
 				} else {

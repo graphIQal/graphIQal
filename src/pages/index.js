@@ -25,6 +25,17 @@ export default function Home() {
 	console.log('session, status');
 	console.log(session, status);
 
+	if (status === 'authenticated' && session.user && session.user.homenodeId) {
+		router.push(
+			'/' +
+				(session.user.name ? session.user?.name : 'username') +
+				'/' +
+				session.user.homenodeId
+		);
+	} else if (status === 'unauthenticated') {
+		router.push('/auth/signin');
+	}
+
 	return (
 		<ul>
 			<li>
@@ -44,28 +55,27 @@ export default function Home() {
 				<TextButton
 					text={'Login'}
 					onClick={async () => {
-						const res = await login(email, password);
-
-						console.log('result', res);
-						if (res.length > 0) {
-							router.push(
-								'/' + 'username' + '/' + res[0].n.properties.id
-							);
-							localStorage.setItem('authentication', {
-								id: res[0].u.properties.id,
-								// username: res[0].u.properties.username,
-								time: new Date(),
-								homenodeId: res[0].n.properties.id,
-							});
-							// res[0].u.properties.favourites
-							// 	? localStorage.setItem(
-							// 			'favourites',
-							// 			res[0].u.properties.favourites
-							// 	  )
-							// 	: localStorage.setItem('favourites', []);
-						} else {
-							console.log('unexisting user');
-						}
+						// const res = await login(email, password);
+						// console.log('result', res);
+						// if (res.length > 0) {
+						// 	router.push(
+						// 		'/' + 'username' + '/' + res[0].n.properties.id
+						// 	);
+						// 	localStorage.setItem('authentication', {
+						// 		id: res[0].u.properties.id,
+						// 		// username: res[0].u.properties.username,
+						// 		time: new Date(),
+						// 		homenodeId: res[0].n.properties.id,
+						// 	});
+						// 	// res[0].u.properties.favourites
+						// 	// 	? localStorage.setItem(
+						// 	// 			'favourites',
+						// 	// 			res[0].u.properties.favourites
+						// 	// 	  )
+						// 	// 	: localStorage.setItem('favourites', []);
+						// } else {
+						// 	console.log('unexisting user');
+						// }
 						//  localStorage.setItem('user', response.data)
 					}}
 				/>

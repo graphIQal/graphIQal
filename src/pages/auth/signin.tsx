@@ -57,23 +57,6 @@ const SignIn: React.FC = () => {
 							password: password,
 							email: email,
 						});
-
-						// const res = await login(email, username, password);
-						// console.log('result', res);
-						// if (res.length > 0) {
-						// 	router.push(
-						// 		'/' + username + '/' + res[0].n.properties.id
-						// );
-						// localStorage.setItem('authentication', {
-						// 	id: res[0].u.properties.id,
-						// 	username: res[0].u.properties.username,
-						// 	time: new Date(),
-						// 	homenodeId: res[0].n.properties.id,
-						// });
-						// } else {
-						// 	console.log('unexisting user');
-						// }
-						//  localStorage.setItem('user', response.data)
 					}}
 				/>
 				<TextButton

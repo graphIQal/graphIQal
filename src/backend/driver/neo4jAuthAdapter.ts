@@ -113,9 +113,7 @@ export function Neo4jAdapter(session: Session): Adapter {
 			const homenodeName = user.name
 				? user.name + "'s Home Node"
 				: 'Home Node';
-			const homelessnodeName = user.name
-				? user.name + "'s Homeless Nodes"
-				: 'Homeless Node';
+			const homelessnodeName = 'Homeless Nodes';
 
 			await write(
 				`CREATE (u:User $data)

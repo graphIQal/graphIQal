@@ -25,8 +25,11 @@ const SettingsPanel: React.FC<SettingsProps> = () => {
 				<TextButton
 					text='Logout'
 					onClick={async () => {
-						const res = await signOut();
-						router.push('/auth/signin');
+						signOut({
+							callbackUrl: '/auth/signin',
+							redirect: true,
+						});
+						// router.push('/auth/signin');
 					}}
 				></TextButton>
 			</div>

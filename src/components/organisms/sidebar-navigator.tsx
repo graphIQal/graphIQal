@@ -35,22 +35,42 @@ export const SideBar: React.FC = () => {
 		console.log(data);
 	}, [data]);
 
-	if (status === 'authenticated' && session?.user) {
+	if (status === 'authenticated' && session?.user && data) {
 		const connectionMap = formatNodeConnectionstoMap(data[0]);
 
 		return (
 			<div className='bg-secondary_white  w-52 -translate-x-48 hover:translate-x-0 rounded-r-md border-r-[0.5px] border-y-[0.5px] p-6 border-lining transition-all z-50 opacity-0 hover:opacity-100 absolute left-0 ease-in-out justify-self-center self-center top-1/2 -translate-y-1/2 h-[80vh]'>
 				<div>
 					<div>Your Home Node</div>
-					<NodeLink element={{ routeString: 'peepee' }}>
+					<NodeLink
+						element={{
+							routeString:
+								'/' +
+								(session.user.name
+									? session.user.name
+									: 'username') +
+								'/' +
+								session.user?.homenodeId,
+						}}
+					>
 						{
-							<div>
-								{connectionMap[session.user?.homenodeId].title}{' '}
-							</div>
+							<p className='truncate text-sm font-bold'>
+								{connectionMap[session.user?.homenodeId].title}
+							</p>
 						}
 					</NodeLink>
+					<Divider />
 					<div>Favourites</div>
-					<NodeLink element={{ routeString: 'peepee' }}>
+					<NodeLink
+						element={{
+							routeString:
+								('/' + session.user.name
+									? session.user.name
+									: 'username') +
+								'/' +
+								session.user?.homenodeId,
+						}}
+					>
 						{<div>Node Title 1 </div>}
 					</NodeLink>
 					<NodeLink element={{ routeString: 'peepee' }}>
@@ -61,6 +81,28 @@ export const SideBar: React.FC = () => {
 					</NodeLink>
 					<NodeLink element={{ routeString: 'peepee' }}>
 						{<div>Node Title 4 </div>}
+					</NodeLink>
+					<Divider />
+					<div>Your Homeless Node</div>
+					<NodeLink
+						element={{
+							routeString:
+								'/' +
+								(session.user.name
+									? session.user.name
+									: 'username') +
+								'/' +
+								session.user?.homelessnodeId,
+						}}
+					>
+						{
+							<p className='truncate text-sm font-bold'>
+								{
+									connectionMap[session.user.homelessnodeId]
+										.title
+								}
+							</p>
+						}
 					</NodeLink>
 				</div>
 			</div>

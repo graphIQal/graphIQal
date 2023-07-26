@@ -15,10 +15,12 @@ export type connectedNode_type = {
 };
 
 export const useGetNodeData = (nodeId: string, username: string) => {
-	console.log('usegetNodeData');
+	// console.log('usegetNodeData ', nodeId);
+
 	const { data: res } = useSWR(
 		[nodeId ? `/api/${username}/${nodeId}` : null],
-		fetcherAll
+		fetcherAll,
+		{ dedupingInterval: 4000 }
 	);
 	// const res = await fetch(`/api/${username}/${nodeId}`)
 	// 	.then((res) => {

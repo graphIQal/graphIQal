@@ -40,15 +40,10 @@ const Home: React.FC = () => {
 	const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
 	useEffect(() => {
-		console.log('data');
-		console.log(data);
-
 		if (!data || !data[0] || data[0].err) return;
 
 		if (!isLoading) {
 			if (data[0]) {
-				console.log('!isLoading data');
-				console.log(data);
 				let includedIDs: { [key: string]: boolean } = {};
 				data[0].map((record: any, index: number) => {
 					if (!includedIDs[record.g.properties.id]) {

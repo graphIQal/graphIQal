@@ -78,7 +78,8 @@ const MainTabs: React.FC<MainTabsProps> = ({
 	}, [nodeId, mainViewTabs]);
 
 	// Dude this is launching like 17 times, each re-render calls it once more.
-	const res = useGetNodeData(nodeId as string, username as string);
+	// Maybe it doesn't matter since swr does automatic caching?
+	const res = useGetNodeData(nodeId as string, 'maintab');
 
 	useEffect(() => {
 		if (res) {

@@ -12,7 +12,7 @@ export const addNodeToGraph = async (
 	if (!changeNodeData_Graph || !changeVisualData_Graph) return;
 
 	console.log('addNodetoGraph');
-	// Nahhh you gotta change this. What?
+
 	const node: NodeData = {
 		//node is the node that you get from the database with the given ID
 		id: result.id,
@@ -20,7 +20,7 @@ export const addNodeToGraph = async (
 		color: 'black',
 		icon: 'block',
 		connections: await useGetNodeData(result.id, username).then(
-			(result) => {
+			(result: any) => {
 				return result.map((connection: any) => {
 					return connection.c;
 				});

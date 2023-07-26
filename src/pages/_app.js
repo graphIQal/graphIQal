@@ -6,7 +6,7 @@
 // impoet global styles and layout (you can move global styles to /styles/ directory if you like)
 
 import Head from 'next/head';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 
 import '../App.css';
@@ -24,11 +24,15 @@ import Window from '../components/layouts/Window';
 import TabContext from '../components/context/ViewContext';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
+import { SWRConfig } from 'swr';
+import { useSWRCache } from '../helpers/hooks/useSWRCache';
 
 export default function MyApp({
 	Component,
 	pageProps: { session, ...pageProps },
 }) {
+	useSWRCache();
+
 	return (
 		<>
 			<Head>
@@ -39,13 +43,15 @@ export default function MyApp({
 				/>
 			</Head>
 			<main>
-				<SessionProvider>
-					<Window>
-						<View>
-							<Component {...pageProps} />
-						</View>
-					</Window>
-				</SessionProvider>
+				<SWRConfig>
+					<SessionProvider>
+						<Window>
+							<View>
+								<Component {...pageProps} />
+							</View>
+						</Window>
+					</SessionProvider>
+				</SWRConfig>
 			</main>
 		</>
 	);

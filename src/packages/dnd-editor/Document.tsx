@@ -38,8 +38,6 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 	const [document, setdocument] = useState([]);
 	const [shelf, setshelf] = useState([]);
 
-	console.log(currNode_data);
-
 	// useEffect(() => {
 	if ('title' in currNode_data.n && !currNode_data.n.document) {
 		currNode_data.n.document = `

@@ -121,9 +121,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 				</div>
 				<div className='flex flex-row'>
 					<IconCircleButton
-						onClick={() => {
-							console.log('favourite');
-						}}
+						onClick={() => {}}
 						size={40}
 						src='star'
 						circle={false}

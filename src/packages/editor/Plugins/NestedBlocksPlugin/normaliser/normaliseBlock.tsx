@@ -34,8 +34,9 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 	return ([node, path]: TNodeEntry) => {
 		normalizeNode([node, path]);
-		console.log('[node, path]');
-		console.log([node, path]);
+		// console.log('[node, path]');
+		// console.log([node, path]);
+
 		// if (!isElement(node)) {
 		// 	normalizeNode([node, path]);
 		// 	return;

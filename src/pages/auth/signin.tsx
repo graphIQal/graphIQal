@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import TextButton from '../../components/molecules/TextButton';
 // import register from '../api/authentication/register';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Divider from '../../components/atoms/Divider';
 

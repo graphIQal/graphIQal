@@ -7,36 +7,29 @@ import { Router, useRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcher } from '../../backend/driver/fetcher';
 import { useViewData } from '../context/ViewContext';
-import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
+import {
+	connectionMapType,
+	formatNodeConnectionstoMap,
+} from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
+import { connectedNode_type } from '../../backend/functions/node/query/useGetNodeData';
 
-export const SideBar: React.FC = () => {
+export const SideBar: React.FC<{
+	favData: any;
+	connectionMap: connectionMapType | null;
+}> = ({ connectionMap, favData }) => {
 	const { data: session, status } = useSession();
-
-	const nodeData = useViewData();
-
-	// const { data, error, isLoading } = useSWR(
-	// 	status === 'authenticated' && session?.user?.favouritesId
-	// 		? '/api/general/user/favourites/' + session.user.favouritesId
-	// 		: null,
-	// 	fetcher
-	// );
-
-	const { data, error, isLoading } = useSWR(
-		status === 'authenticated' && session?.user?.favouritesId
-			? '/api/username/' + session.user.favouritesId
-			: null,
-		fetcher
-	);
 
 	const router = useRouter();
 
-	useEffect(() => {
-		console.log('data');
-		console.log(data);
-	}, [data]);
+	console.log(connectionMap);
+	console.log(favData);
 
-	if (status === 'authenticated' && session?.user && data) {
-		const connectionMap = formatNodeConnectionstoMap(data[0]);
+	if (status === 'authenticated' && session?.user && connectionMap) {
+		console.log('favData');
+
+		console.log(session);
+		console.log(favData);
+		console.log(connectionMap);
 
 		return (
 			<div className='bg-secondary_white  w-52 -translate-x-48 hover:translate-x-0 rounded-r-md border-r-[0.5px] border-y-[0.5px] p-6 border-lining transition-all z-50 opacity-0 hover:opacity-100 absolute left-0 ease-in-out justify-self-center self-center top-1/2 -translate-y-1/2 h-[80vh]'>
@@ -60,29 +53,6 @@ export const SideBar: React.FC = () => {
 						}
 					</NodeLink>
 					<Divider />
-					<div>Favourites</div>
-					<NodeLink
-						element={{
-							routeString:
-								('/' + session.user.name
-									? session.user.name
-									: 'username') +
-								'/' +
-								session.user?.homenodeId,
-						}}
-					>
-						{<div>Node Title 1 </div>}
-					</NodeLink>
-					<NodeLink element={{ routeString: 'peepee' }}>
-						{<div>Node Title 2 </div>}
-					</NodeLink>
-					<NodeLink element={{ routeString: 'peepee' }}>
-						{<div>Node Title 3 </div>}
-					</NodeLink>
-					<NodeLink element={{ routeString: 'peepee' }}>
-						{<div>Node Title 4 </div>}
-					</NodeLink>
-					<Divider />
 					<div>Your Homeless Node</div>
 					<NodeLink
 						element={{
@@ -104,6 +74,25 @@ export const SideBar: React.FC = () => {
 							</p>
 						}
 					</NodeLink>
+					<Divider />
+					<div>Favourites</div>
+					{favData[0].n.favourites.map((nodeId: string) => {
+						return (
+							<NodeLink
+								element={{
+									routeString:
+										'/' +
+										(session?.user?.name
+											? session?.user?.name
+											: 'username') +
+										'/' +
+										connectionMap[nodeId].id,
+								}}
+							>
+								<div>{connectionMap[nodeId].title} </div>
+							</NodeLink>
+						);
+					})}
 				</div>
 			</div>
 		);

@@ -178,7 +178,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		star: (
 			<Star
 				size={'1em'}
-				color={!selected ? color : 'white'}
+				color={selected ? color : 'white'}
 				onClick={handleClick}
 			/>
 		),

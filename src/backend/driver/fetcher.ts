@@ -17,6 +17,8 @@ export const fetcherAll = (urls: string[]) =>
 	);
 //
 
+// export const subscribe = () => {};
+
 // ({ url, ids }) =>
 //   Promise.all(
 //     ids.map((id) =>

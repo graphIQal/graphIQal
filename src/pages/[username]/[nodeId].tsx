@@ -1,7 +1,7 @@
 import { useRouter, withRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { fetcherAll } from '../../backend/driver/fetcher';
+import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
 import MainTabs, {
 	MainTabProps,
 } from '../../components/organisms/Tabs/MainTabs';
@@ -10,6 +10,7 @@ import { ViewDataProvider } from '../../components/context/ViewContext';
 import Graph from '../../packages/graph/Graph';
 import SplitPaneWrapper from '../../packages/dnd-editor/Document';
 import { SideBar } from '../../components/organisms/sidebar-navigator';
+import { useSession } from 'next-auth/react';
 
 // ('use client');
 
@@ -69,7 +70,6 @@ const Home: React.FC = () => {
 
 	return (
 		<ViewDataProvider>
-			<SideBar />
 			<MainTabs mainViewTabs={tabs} setMainViewTabs={setTabs} />
 		</ViewDataProvider>
 	);

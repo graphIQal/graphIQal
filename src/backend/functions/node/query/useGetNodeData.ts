@@ -15,6 +15,7 @@ export type connectedNode_type = {
 };
 
 export const useGetNodeData = (nodeId: string, username: string) => {
+	console.log('usegetNodeData');
 	const { data: res } = useSWR(
 		[nodeId ? `/api/${username}/${nodeId}` : null],
 		fetcherAll

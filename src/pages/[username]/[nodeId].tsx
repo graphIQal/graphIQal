@@ -31,59 +31,13 @@ const Home: React.FC = () => {
 	];
 	const router = useRouter();
 	const { nodeId, username } = router.query;
+
 	const { data, error, isLoading } = useSWR(
 		[nodeId ? `/api/${username}/${nodeId}/document` : null],
 		fetcherAll
 	);
 
-	// if (window) {
-	// const userId = localStorage.getItem('userId');
-
-	// if (!userId) {
-	// 	console.log('hmm');
-	// 	router.push('/');
-	// }
-
-	// let shouldFetchUser = false;
-
-	// if (localStorage.getItem('username') !== username || !username) {
-	// 	console.log(username);
-	// 	console.log(localStorage.getItem('username'));
-	// 	router.push('/');
-	// } else {
-	// 	if (!sessionStorage.getItem('favourites')) {
-	// 		shouldFetchUser = true;
-	// 	}
-	// }
-
-	// const { data: user } = useSWR(
-	// 	[shouldFetchUser ? `/api/general/${username}/${userId}` : null],
-	// 	fetcherAll
-	// );
-
-	// const { data: user, isLoading: userData } = useSWR(
-	// 	[
-	// 		() =>
-	// 			!sessionStorage.getItem('favourites') && username
-	// 				? `/api/general/user/` + localStorage.getItem('userId')
-	// 				: null,
-	// 	],
-	// 	fetcherAll
-	// );
-
-	// if (!isLoading) {
-	// 	console.log('data', data);
-	// }
-	// }
-
 	const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
-
-	useEffect(() => {
-		if (sessionStorage.getItem('favourites')) {
-		} else {
-			sessionStorage.setItem('favourites', '[]');
-		}
-	}, []);
 
 	useEffect(() => {
 		console.log('data');

@@ -1,4 +1,6 @@
 export const connectNode_GV = async (username: string, nodeId: string) => {
+	console.log('connectNode_GV');
+
 	const res = await fetch(`/api/${username}/${nodeId}/graph/create`, {
 		method: 'POST',
 	})

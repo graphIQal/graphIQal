@@ -58,7 +58,8 @@ export default async function handler(
 
 	CREATE (f:Node {title: "Favourites"})
 	SET f.id = $favouritesId, f.favourites = []
-	MERGE (n)-[:RELATED]-(f)
+	MERGE (f)-[:HAS]->(n)
+	MERGE (f)-[:HAS]->(h)
 	
 	MERGE (b:BLOCK_ELEMENT {type: "block", id: randomUuid()})
 	MERGE (n)-[:NEXT_BLOCK]->(b)

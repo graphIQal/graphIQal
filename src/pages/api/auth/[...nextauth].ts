@@ -21,7 +21,7 @@ declare module 'next-auth' {
 	interface User {
 		homelessnodeId: string;
 		homenodeId: string;
-		favourites: string[];
+		favouritesId: string;
 	}
 
 	interface Session extends DefaultSession {

@@ -10,18 +10,18 @@ import GraphSplitPaneWrapper from './components/GraphSplitPaneWrapper';
 import { GraphViewDataProvider } from './context/GraphViewContext';
 
 const Graph: React.FC<{ viewId: string; title: string }> = ({
-  title,
-  viewId,
+	title,
+	viewId,
 }) => {
-  console.log('rerendering graph root');
+	// console.log('rerendering graph root');
 
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <GraphViewDataProvider>
-        <GraphSplitPaneWrapper viewId={viewId} />
-      </GraphViewDataProvider>
-    </DndProvider>
-  );
+	return (
+		<DndProvider backend={HTML5Backend}>
+			<GraphViewDataProvider>
+				<GraphSplitPaneWrapper viewId={viewId} />
+			</GraphViewDataProvider>
+		</DndProvider>
+	);
 };
 
 export default Graph;

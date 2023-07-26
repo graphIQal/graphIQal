@@ -33,7 +33,7 @@ export const saveGraphView = async ({
 		pointer,
 	});
 
-	console.log(body);
+	console.log('saveGraphView');
 
 	const res = await fetch(
 		`/api/${username}/${nodeId}/graph/${graphViewId}/save`,

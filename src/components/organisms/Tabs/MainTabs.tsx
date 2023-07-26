@@ -77,6 +77,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 		);
 	}, [nodeId, mainViewTabs]);
 
+	// Dude this is launching like 17 times, each re-render calls it once more.
 	const res = useGetNodeData(nodeId as string, username as string);
 
 	useEffect(() => {

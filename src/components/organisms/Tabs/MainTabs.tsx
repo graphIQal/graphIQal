@@ -112,9 +112,6 @@ const MainTabs: React.FC<MainTabsProps> = ({
 		? formatNodeConnectionstoMap(favData[0])
 		: null;
 
-	console.log('favData maintabs');
-	console.log(favData);
-
 	const [isSettingsOpen, setisSettingsOpen] = useState(false);
 
 	return (

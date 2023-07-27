@@ -21,18 +21,9 @@ export const SideBar: React.FC<{
 
 	const router = useRouter();
 
-	console.log(connectionMap);
-	console.log(favData);
-
 	if (status === 'authenticated' && session?.user && connectionMap) {
-		console.log('favData');
-
-		console.log(session);
-		console.log(favData);
-		console.log(connectionMap);
-
 		return (
-			<div className='bg-secondary_white  w-52 -translate-x-48 hover:translate-x-0 rounded-r-md border-r-[0.5px] border-y-[0.5px] p-6 border-lining transition-all z-50 opacity-0 hover:opacity-100 absolute left-0 ease-in-out justify-self-center self-center top-1/2 -translate-y-1/2 h-[80vh]'>
+			<div className='bg-secondary_white  w-52 -translate-x-48 hover:translate-x-0 rounded-r-md border-r-[0.5px] border-y-[0.5px] p-6 border-lining transition-all z-50 opacity-0 hover:opacity-100 absolute left-0 ease-in-out justify-self-center self-center top-1/2 -translate-y-1/2 h-[60vh] hover:h-[80vh]'>
 				<div>
 					<div>Your Home Node</div>
 					<NodeLink

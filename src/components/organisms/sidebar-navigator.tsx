@@ -47,9 +47,9 @@ export const SideBar: React.FC<{
 						}}
 					>
 						{
-							<p className='truncate text-sm font-bold'>
+							<div className='truncate'>
 								{connectionMap[session.user?.homenodeId].title}
-							</p>
+							</div>
 						}
 					</NodeLink>
 					<Divider />
@@ -66,12 +66,12 @@ export const SideBar: React.FC<{
 						}}
 					>
 						{
-							<p className='truncate text-sm font-bold'>
+							<div className='truncate'>
 								{
 									connectionMap[session.user.homelessnodeId]
 										.title
 								}
-							</p>
+							</div>
 						}
 					</NodeLink>
 					<Divider />
@@ -89,7 +89,9 @@ export const SideBar: React.FC<{
 										connectionMap[nodeId].id,
 								}}
 							>
-								<div>{connectionMap[nodeId].title} </div>
+								<div className='truncate'>
+									{connectionMap[nodeId].title}{' '}
+								</div>
 							</NodeLink>
 						);
 					})}

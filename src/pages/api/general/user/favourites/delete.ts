@@ -10,8 +10,7 @@ export default async function handler(
 
 	const cypher: string = `
 	MATCH (n: Node {id: "${favouritesId}"})-[r:HAS]-(u: Node {id: "${nodeId}"})
-	SET n.array = [x IN n.some_array WHERE x <> "${nodeId}"];
-	MERGE (n)-[r:HAS]->(u)
+	SET n.favourites = coalesce([x IN n.favourites WHERE x <> "${nodeId}"], [])
 	DELETE r
     RETURN n, u;
 	`;

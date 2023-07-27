@@ -72,7 +72,6 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 			.map((connectedNode: connectedNode_type, i: number) => {
 				items.push(
 					<ConnectionListItem
-						connection={connectedNode.r}
 						title={connectedNode.connected_node.title}
 						id={connectedNode.connected_node.id}
 						index={i}

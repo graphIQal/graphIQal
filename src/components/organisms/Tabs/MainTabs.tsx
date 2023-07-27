@@ -4,18 +4,22 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import Tab from '../../atoms/Tab';
 import { Tabs } from './Tabs';
 import { useViewAPI, useViewData } from '../../context/ViewContext';
-import { useGetNodeData } from '../../../backend/functions/node/query/useGetNodeData';
+import {
+	connectedNode_type,
+	useGetNodeData,
+} from '../../../backend/functions/node/query/useGetNodeData';
 import IconCircleButton from '../../molecules/IconCircleButton';
 import Modal from '../../layouts/Modal';
 import SettingsPanel from '../Settings';
 import IconButton from '../../atoms/IconButton';
 import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
-import { fetcher } from '../../../backend/driver/fetcher';
+import { fetcher, fetcherSingleReturn } from '../../../backend/driver/fetcher';
 import { SideBar } from '../sidebar-navigator';
 import { formatNodeConnectionstoMap } from '../../../helpers/frontend/formatNodeConnectionstoMap.ts';
 import { addFavourite } from '../../../backend/functions/general/favourites/add';
 import { deleteFavourite } from '../../../backend/functions/general/favourites/delete';
+import { removeFromArray } from '../../../helpers/general/removeFromArray';
 
 type MainTabsProps = {
 	mainViewTabs: MainTabProps[];
@@ -100,17 +104,19 @@ const MainTabs: React.FC<MainTabsProps> = ({
 		data: favData,
 		error: favError,
 		isLoading: favisLoading,
+		mutate: mutateFav,
 	} = useSWR(
 		status === 'authenticated' && session?.user?.favouritesId
 			? '/api/username/' + session.user.favouritesId
 			: null,
-		fetcher,
-		{ revalidateOnMount: false }
+		fetcherSingleReturn,
+		{ revalidateOnMount: true }
 	);
 
-	const connectionMap = favData
-		? formatNodeConnectionstoMap(favData[0])
-		: null;
+	console.log('favData ', favData);
+
+	const connectionMap = favData ? formatNodeConnectionstoMap(favData) : null;
+	console.log('connectionMap ', connectionMap);
 
 	const [isSettingsOpen, setisSettingsOpen] = useState(false);
 
@@ -147,7 +153,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 				</div>
 				<div className='flex flex-row'>
 					<IconCircleButton
-						onClick={() => {
+						onClick={async () => {
 							// all we need to do is write a function that addes to favourites. Easy money
 							if (
 								nodeId &&
@@ -157,21 +163,92 @@ const MainTabs: React.FC<MainTabsProps> = ({
 								nodeId !== session?.user?.homelessnodeId
 							) {
 								// Not in favourites
+
 								if (
 									nodeId && connectionMap
 										? (nodeId as string) in connectionMap
 										: false
 								) {
-									deleteFavourite({
-										favouritesId: session.user.favouritesId,
-										nodeId: nodeId as string,
-									});
-									//is in favourites
+									const newData = {
+										// n: favData.n,
+										n: {
+											...favData.n,
+											// DUDE WHAT THE FUCK IF I MAKE THIS LENGTH - 1 IT'S INSTANT BUT IF NOT NAH
+											// okay this works idk why idk how idk what im calling it a day. 12:50AM jul 28 2023 i hate my life
+											favourites:
+												favData.n.favourites.filter(
+													(id: string) =>
+														id !==
+														(nodeId as string)
+												),
+											// In fact, if I just copy n it's slow af.
+											// This is the correct code but man idk.
+											// favourites: removeFromArray(
+											// 	favData.n.favourites,
+											// 	nodeId
+											// ),
+											// WHATTT. 2 STrings. Okay, in fact, instant! 3 STRINGS AND IT"S a whole second????
+											// I tested different strings too. 2/3 of any of these will always be fast. 3/3 always slow.
+											// In fact, I tested random strings and they're fast. But these three specific strings and they're slow?
+											// I've found some inconsistencies, I think i'm getting caught up in this.
+											// favourites: [
+											// 	'2ac3cddd-ff9b-4e97-a494-c1f076d431a6',
+											// 	'7276d7d8-d1bb-4016-9f1e-2bce21d88e0f',
+											// 	'8b800581-d8af-408c-9ac7-f3ca7f16ac36',
+											// 	'9e0bc847-25cc-4fb7-a437-f7c956be4958',
+											// ],
+											// For whatever reason, (it's not rendering, or the speed of removeFromArray. Tested w/ whatever)
+											// Inputting favourites here makes the re-render hella slow, like a whole second later.
+										},
+										connectedNodes: removeFromArray(
+											favData.connectedNodes,
+											nodeId,
+											(node: connectedNode_type) =>
+												node.connected_node.id ===
+												nodeId
+										),
+									};
+
+									await mutateFav(
+										deleteFavourite({
+											favouritesId:
+												session.user.favouritesId,
+											nodeId: nodeId as string,
+										}),
+										{
+											optimisticData: newData,
+											populateCache: false,
+										}
+									);
 								} else {
-									addFavourite({
-										favouritesId: session.user.favouritesId,
-										nodeId: nodeId as string,
-									});
+									const newData = {
+										n: {
+											...favData.n,
+											favourites: [
+												...favData.n.favourites,
+												nodeId,
+											],
+										},
+										connectedNodes: [
+											...favData.connectedNodes,
+											{
+												r: { type: 'HAS' },
+												connected_node: res.n,
+											},
+										],
+									};
+
+									await mutateFav(
+										addFavourite({
+											favouritesId:
+												session.user.favouritesId,
+											nodeId: nodeId as string,
+										}),
+										{
+											optimisticData: newData,
+											populateCache: false,
+										}
+									);
 								}
 							}
 						}}

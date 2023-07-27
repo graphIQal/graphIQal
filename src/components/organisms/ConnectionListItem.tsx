@@ -3,10 +3,8 @@ import IconCircleButton from '../molecules/IconCircleButton';
 import { OnHoverMenu } from './OnHoverMenu';
 import { title } from 'process';
 import { useViewData } from '../context/ViewContext';
-import { Connection } from '../../backend/functions/node/query/useGetNodeData';
 
 type ConnectionListItemProps = {
-	connection: Connection;
 	title: string;
 	id: string;
 	index: number;
@@ -16,9 +14,7 @@ type ConnectionListItemProps = {
 	}[];
 	url: string;
 };
-
 const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
-	connection,
 	title,
 	id,
 	index,
@@ -27,7 +23,6 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
 }) => {
 	const { windowVar } = useViewData();
 	if (!windowVar) return <div></div>;
-
 	return (
 		<div
 			key={index}
@@ -39,7 +34,6 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
 				className='flex flex-row items-center align-middle'
 				key={index}
 			>
-				{connection && <div>{connection.type}</div>}
 				<IconCircleButton
 					circle={false}
 					src='block'

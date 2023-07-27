@@ -4,6 +4,20 @@ export const fetcher = (url: string) =>
 		return res.json();
 	});
 
+export const fetcherSingleReturn = (url: string) =>
+	fetch(url)
+		.then((res) => {
+			console.log('res ', res);
+			return res.json();
+		})
+		.then((json) => {
+			console.log('json: ', json);
+
+			if (json.length > 0) return json[0];
+
+			return null;
+		});
+
 export const fetcherAll = (urls: string[]) =>
 	Promise.all(
 		urls.map((url) =>

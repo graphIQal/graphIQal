@@ -4,8 +4,6 @@ export type connectionMapType = {
 	[key: string]: { r: any; [key: string]: any };
 };
 export const formatNodeConnectionstoMap = (nodeData: getNodeData_type) => {
-	console.log('nodeData ', nodeData);
-
 	const connectionMap: connectionMapType = {};
 
 	nodeData.connectedNodes.forEach((row) => {

@@ -50,7 +50,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 			// Check if it's the first item in a block. If so ignore.
 			if (path[path.length - 1] === 0) return;
-			console.log('lifting ', node.type);
 			// // Wrap in block
 
 			// if (node.type === 'li') {
@@ -74,7 +73,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 			console.log(editor.children);
 		} else if (isBlock) {
-			console.log('isBlock');
 			// Children should all be code lines
 			const children = getChildren([node, path]);
 

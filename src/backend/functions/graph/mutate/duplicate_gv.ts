@@ -19,31 +19,18 @@ export const saveGraphView = async ({
 	graphViewData,
 	nodeData,
 }: saveGraphViewInput) => {
-	const body = jsonToCypher_graphView({
-		nodeData,
-		graphViewData,
-		graphViewId,
-		nodeId,
-	});
+	// const body = jsonToCypher_graphView({
+	// 	graphViewData,
+	// 	nodeData,
+	// 	graphViewId,
+	// 	nodeId,
+	// 	history,
+	// 	pointer,
+	// });
+
 	// const body = JSON.stringify({ ...nodeData, ...graphViewData });
 	console.log('duplicateGV');
-	console.log(body);
+	// console.log(body);
 
-	const res = await fetch(
-		`/api/${username}/${nodeId}/graph/${graphViewId}/save`,
-		{
-			method: 'POST',
-			body: body,
-		}
-	)
-		.then((res) => {
-			console.log('res ', res);
-			return res.json();
-		})
-		.then((json) => {
-			console.log('json: ', json);
-			return json;
-		});
-
-	return res;
+	// return res;
 };

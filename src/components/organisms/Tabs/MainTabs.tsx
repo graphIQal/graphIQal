@@ -113,10 +113,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 		{ revalidateOnMount: true }
 	);
 
-	console.log('favData ', favData);
-
 	const connectionMap = favData ? formatNodeConnectionstoMap(favData) : null;
-	console.log('connectionMap ', connectionMap);
 
 	const [isSettingsOpen, setisSettingsOpen] = useState(false);
 

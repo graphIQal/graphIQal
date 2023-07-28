@@ -5,6 +5,7 @@ import { title } from 'process';
 import { useViewData } from '../context/ViewContext';
 
 type ConnectionListItemProps = {
+	type: string;
 	title: string;
 	id: string;
 	index: number;
@@ -15,6 +16,7 @@ type ConnectionListItemProps = {
 	url: string;
 };
 const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
+	type,
 	title,
 	id,
 	index,
@@ -34,6 +36,7 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
 				className='flex flex-row items-center align-middle'
 				key={index}
 			>
+				<div>{type}</div>
 				<IconCircleButton
 					circle={false}
 					src='block'

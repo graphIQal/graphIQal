@@ -26,6 +26,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useViewData } from '../../components/context/ViewContext';
 import { createMyPlateEditor } from './plateTypes';
 import { withDraggable } from '../dnd-editor/components/withDraggable';
+import { useRouter } from 'next/router';
 
 const EditorComponent: React.FC<{
 	value: any[];
@@ -46,13 +47,19 @@ const EditorComponent: React.FC<{
 }) => {
 	// const router = useRouter();
 	const { nodeId, username, currNode_data } = useViewData();
+	const router = useRouter();
 
 	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 3000));
 
 	useEffect(() => {
 		window.addEventListener('beforeunload', onUnload);
+		// router.events.on('routeChangeStart', onUnload);
 
-		return () => window.removeEventListener('beforeunload', onUnload);
+		return () => {
+			clearTimeout(intervalRef.current);
+			window.removeEventListener('beforeunload', onUnload);
+			// router.events.off('routeChangeStart', onUnload);
+		};
 	}, [value]);
 
 	const onUnload = () => {

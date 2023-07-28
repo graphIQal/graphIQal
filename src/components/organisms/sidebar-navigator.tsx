@@ -19,8 +19,6 @@ export const SideBar: React.FC<{
 }> = ({ connectionMap, favData }) => {
 	const { data: session, status } = useSession();
 
-	console.log('rerender sidebar');
-
 	const router = useRouter();
 
 	if (status === 'authenticated' && session?.user && connectionMap) {
@@ -72,6 +70,7 @@ export const SideBar: React.FC<{
 					{favData.n.favourites.map((nodeId: string) => {
 						return (
 							<NodeLink
+								key={nodeId}
 								element={{
 									routeString:
 										'/' +

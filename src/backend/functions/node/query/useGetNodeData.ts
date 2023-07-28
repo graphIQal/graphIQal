@@ -14,11 +14,11 @@ export type connectedNode_type = {
 	connected_node: { [key: string]: string };
 };
 
-export const useGetNodeData = (nodeId: string, username: string) => {
+export const useGetNodeData = (nodeId: string) => {
 	// console.log('usegetNodeData ', nodeId);
 
 	const { data: res } = useSWR(
-		[nodeId ? `/api/${username}/${nodeId}` : null],
+		[nodeId ? `/api/username/${nodeId}` : null],
 		fetcherAll,
 		{ dedupingInterval: 4000 }
 	);

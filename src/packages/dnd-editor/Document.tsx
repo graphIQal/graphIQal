@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import SplitPane, {
@@ -11,6 +11,11 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // import Document from '../../src/pages/document/Document';
 import { v4 as uuidv4 } from 'uuid';
 
+import { createNormalizeTypesPlugin } from '@udecode/plate';
+import useSWR, { mutate } from 'swr';
+import { fetcherSingleReturn } from '../../backend/driver/fetcher';
+import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
+import { saveShelf } from '../../backend/functions/general/document/mutate/saveShelf';
 import { useViewData } from '../../components/context/ViewContext';
 import DocumentSideTabs from '../../components/organisms/Tabs/DocumentSideTabs';
 import SplitPane, {
@@ -19,17 +24,15 @@ import SplitPane, {
 	SplitPaneRight,
 } from '../../components/organisms/split-pane/SplitPane';
 import EditorComponent from '../editor/EditorComponent';
+import { Block } from '../editor/Elements/Elements';
 import {
 	BlockElements,
 	ELEMENT_BLOCK,
 	ELEMENT_NODELINK,
 	MyTitleElement,
 } from '../editor/plateTypes';
-import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
-import { saveShelf } from '../../backend/functions/general/document/mutate/saveShelf';
 import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
-import { Block } from '../editor/Elements/Elements';
-import { createNormalizeTypesPlugin } from '@udecode/plate';
+import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
 
 const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 	const { nodeId, username, currNode_data, documentVar, windowVar } =
@@ -38,9 +41,26 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 	const [document, setdocument] = useState([]);
 	const [shelf, setshelf] = useState([]);
 
+	const {
+		data: nodeDataSWR,
+		isLoading,
+		error,
+		mutate: SWRmutateCurrNode,
+	} = useSWR(
+		[nodeId ? `/api/username/${nodeId}` : null],
+		fetcherSingleReturn,
+		{ revalidateOnMount: true, revalidateOnFocus: false }
+	);
+
+	if (isLoading || nodeDataSWR === null) {
+		return null;
+	}
+
+	console.log(nodeDataSWR);
+
 	// useEffect(() => {
-	if ('title' in currNode_data.n && !currNode_data.n.document) {
-		currNode_data.n.document = `
+	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
+		nodeDataSWR.n.document = `
 			[
 				{
 					"type": "block",
@@ -53,8 +73,8 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 	}
 
 	// useEffect(() => {
-	if ('title' in currNode_data.n && !currNode_data.n.shelf) {
-		currNode_data.n.shelf = `
+	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.shelf) {
+		nodeDataSWR.n.shelf = `
 					[
 						{
 							"type": "block",
@@ -66,38 +86,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 					]`;
 	}
 
-	const connectionMap: any = {};
-
-	currNode_data.connectedNodes.forEach((row) => {
-		connectionMap[row.connected_node.id] = {
-			r: row.r,
-			...row.connected_node,
-		};
-	});
-	// }, [currNode_data]);
-
-	//key events: undo, redo, escaping drawing
-	// useEffect(() => {
-	// 	const listenerFunc = (evt: any) => {
-	// 		if (
-	// 			evt.code === 'KeyZ' &&
-	// 			(evt.ctrlKey || evt.metaKey) &&
-	// 			evt.shiftKey
-	// 		) {
-	// 			evt.stopPropagation();
-	// 			evt.stopImmediatePropagation();
-	// 			evt.preventDefault();
-	// 		} else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
-	// 			evt.stopImmediatePropagation();
-	// 			evt.preventDefault();
-	// 		}
-	// 	};
-
-	// 	document.addEventListener('keydown', (event) => listenerFunc(event));
-	// 	return document.removeEventListener('keydown', (event) =>
-	// 		listenerFunc(event)
-	// 	);
-	// }, []);
+	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
 
 	const createInitialValue = (content: string) => {
 		const value = JSON.parse(content);
@@ -132,26 +121,44 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
 					<div className='pl-10 pt-10 pr-3 pb-3'>
-						{currNode_data.n.document && (
+						{nodeDataSWR.n.document && (
 							// <PlateProvider>
 							<EditorComponent
-								key={currNode_data.n.id}
+								key={nodeDataSWR.n.id}
 								initialValue={[
 									{
 										type: 'title',
 										id: 'Node Title',
 										children: [
-											{ text: currNode_data.n.title },
+											{ text: nodeDataSWR.n.title },
 										],
 									} as MyTitleElement,
 									...createInitialValue(
-										currNode_data.n.document
+										nodeDataSWR.n.document
 									),
 								]}
 								value={document}
 								setValue={setdocument}
 								id={'documentId'}
-								save={saveDocument}
+								save={async (params) => {
+									const newData = {
+										connectedNodes:
+											nodeDataSWR.connectedNodes,
+										n: {
+											...nodeDataSWR.n,
+											title: params.title,
+											document: JSON.stringify(
+												params.document.slice(1)
+											),
+										},
+									};
+									console.log(newData);
+
+									SWRmutateCurrNode(saveDocument(params), {
+										optimisticData: newData,
+										populateCache: false,
+									});
+								}}
 								blockElement={Block}
 								customPlugins={[
 									createNormalizeTypesPlugin({
@@ -174,12 +181,12 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 				<SplitPaneRight>
 					<DocumentSideTabs
 						editorComponent={
-							currNode_data.n.shelf ? (
+							nodeDataSWR.n.shelf ? (
 								<EditorComponent
-									key={currNode_data.n.id + 'shelf'}
+									key={nodeDataSWR.n.id + 'shelf'}
 									initialValue={[
 										...createInitialValue(
-											currNode_data.n.shelf
+											nodeDataSWR.n.shelf
 										),
 									]}
 									value={shelf}
@@ -200,13 +207,11 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 						<div className='ml-[14px]'>
 							<h2 className='font-bold ml-1 text-md'>Shelf</h2>
 						</div>
-						{currNode_data.n.shelf && (
+						{nodeDataSWR.n.shelf && (
 							<EditorComponent
-								key={currNode_data.n.id + 'shelf'}
+								key={nodeDataSWR.n.id + 'shelf'}
 								initialValue={[
-									...createInitialValue(
-										currNode_data.n.shelf
-									),
+									...createInitialValue(nodeDataSWR.n.shelf),
 								]}
 								value={shelf}
 								setValue={setshelf}

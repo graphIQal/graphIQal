@@ -42,7 +42,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 		changeDocumentVar,
 		changeUsername,
 		changeNodeId,
-		changeNodeData,
+		changeCurrNodeData,
 		changeCurrTab,
 	} = useViewAPI();
 
@@ -90,20 +90,33 @@ const MainTabs: React.FC<MainTabsProps> = ({
 
 	// Dude this is launching like 17 times, each re-render calls it once more.
 	// Maybe it doesn't matter since swr does automatic caching?
-	const res = useGetNodeData(nodeId as string, 'maintab');
+	// const res = useGetNodeData(nodeId as string, 'maintab');
+
+	const {
+		data: nodeDataSWR,
+		// isLoading,
+		// error,
+		// mutate: SWRmutateCurrNode,
+	} = useSWR(
+		[nodeId ? `/api/username/${nodeId}` : null],
+		fetcherSingleReturn,
+		{ revalidateOnMount: true, revalidateOnFocus: true }
+	);
 
 	useEffect(() => {
-		if (res) {
-			changeNodeData(res);
+		console.log('nodeDataSWR');
+		if (nodeDataSWR) {
+			('changeNodeData');
+			changeCurrNodeData(nodeDataSWR);
 		}
-	}, [res]);
+	}, [nodeDataSWR]);
 
 	const { data: session, status } = useSession();
 
 	const {
 		data: favData,
-		error: favError,
-		isLoading: favisLoading,
+		// error: favError,
+		// isLoading: favisLoading,
 		mutate: mutateFav,
 	} = useSWR(
 		status === 'authenticated' && session?.user?.favouritesId
@@ -230,7 +243,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 											...favData.connectedNodes,
 											{
 												r: { type: 'HAS' },
-												connected_node: res.n,
+												connected_node: nodeDataSWR.n,
 											},
 										],
 									};

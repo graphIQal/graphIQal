@@ -49,23 +49,39 @@ const EditorComponent: React.FC<{
 	const { nodeId, username, currNode_data } = useViewData();
 	const router = useRouter();
 
+	console.log('re-render editor ', nodeId);
+
 	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 3000));
 
 	useEffect(() => {
 		window.addEventListener('beforeunload', onUnload);
-		// router.events.on('routeChangeStart', onUnload);
+		router.events.on('routeChangeStart', onRouterUnload);
 
 		return () => {
-			clearTimeout(intervalRef.current);
 			window.removeEventListener('beforeunload', onUnload);
-			// router.events.off('routeChangeStart', onUnload);
+			router.events.off('routeChangeStart', onRouterUnload);
 		};
 	}, [value]);
 
+	const onRouterUnload = (url: string, { shallow }: { shallow: boolean }) => {
+		if (value.length > 0 && !shallow) {
+			console.log('onRouterUnload');
+			// console.log('unloading', JSON.stringify(value));
+			clearTimeout(intervalRef.current);
+			save({
+				nodeId,
+				username,
+				document: value,
+				title: value[0].children[0].text as string,
+			});
+		}
+	};
 	const onUnload = () => {
 		// code to save progress to local storage....
 		if (value.length > 0) {
+			console.log('onUnload');
 			// console.log('unloading', JSON.stringify(value));
+			clearTimeout(intervalRef.current);
 			save({
 				nodeId,
 				username,
@@ -131,7 +147,6 @@ const EditorComponent: React.FC<{
 					setValue(docValue);
 					clearTimeout(intervalRef.current);
 					intervalRef.current = setTimeout(() => {
-						// console.log('accessing save');
 						save({
 							nodeId,
 							username,

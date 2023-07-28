@@ -66,12 +66,8 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 				// { at: path }
 			);
 
-			console.log(editor.children);
 			// outdent node to carry all children nodes.
-
 			outdent(editor);
-
-			console.log(editor.children);
 		} else if (isBlock) {
 			// Children should all be code lines
 			const children = getChildren([node, path]);

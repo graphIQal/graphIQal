@@ -1,3 +1,5 @@
+import { mutate } from 'swr';
+
 export type SaveDocumentInput = {
 	nodeId: string;
 	username: string;
@@ -12,7 +14,7 @@ export const saveDocument = async ({
 	title = 'untitled',
 }: SaveDocumentInput) => {
 	console.log('saveDocument');
-	// console.log(title);
+	console.log(title, nodeId);
 	// console.log(JSON.stringify(document));
 
 	const res = await fetch(

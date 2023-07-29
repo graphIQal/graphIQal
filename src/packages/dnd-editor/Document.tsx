@@ -38,9 +38,6 @@ import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeCon
 const Document: React.FC<{ viewId: string }> = () => {
 	const { nodeId } = useViewData();
 
-	const [document, setdocument] = useState([]);
-	const [shelf, setshelf] = useState([]);
-
 	const {
 		data: nodeDataSWR,
 		isLoading,
@@ -52,6 +49,9 @@ const Document: React.FC<{ viewId: string }> = () => {
 		{ revalidateOnMount: true, revalidateOnFocus: false }
 	);
 
+	const [document, setdocument] = useState([]);
+	const [shelf, setshelf] = useState([]);
+
 	// const {
 	// 	data: nodeDataSWR,
 	// 	trigger,
@@ -59,9 +59,9 @@ const Document: React.FC<{ viewId: string }> = () => {
 	// 	reset,
 	// } = useSWRMutation(`/api/username/${nodeId}`, fetcherSingleReturn);
 
-	useEffect(() => {
-		console.log('nodeId, ', nodeId);
-	}, [nodeId]);
+	// useEffect(() => {
+	// 	console.log('nodeId, ', nodeId);
+	// }, [nodeId]);
 
 	if (isLoading || !nodeDataSWR) {
 		return (
@@ -79,9 +79,6 @@ const Document: React.FC<{ viewId: string }> = () => {
 			</SplitPane>
 		);
 	}
-
-	console.log('document re-rendered');
-	console.log(nodeDataSWR.n.title, nodeDataSWR.n.id);
 
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
 		nodeDataSWR.n.document = `
@@ -176,14 +173,6 @@ const Document: React.FC<{ viewId: string }> = () => {
 											),
 										},
 									};
-									console.log(newData);
-
-									console.log(
-										'mutate: ',
-										newData.n.title,
-										' -> ',
-										newData.n.id
-									);
 
 									await SWRmutateCurrNode(
 										saveDocument(params),

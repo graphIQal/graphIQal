@@ -104,7 +104,6 @@ const MainTabs: React.FC<MainTabsProps> = ({
 	);
 
 	useEffect(() => {
-		console.log('nodeDataSWR ', nodeDataSWR);
 		if (nodeDataSWR) {
 			('changeNodeData');
 			changeCurrNodeData(nodeDataSWR);
@@ -112,8 +111,6 @@ const MainTabs: React.FC<MainTabsProps> = ({
 	}, [nodeDataSWR]);
 
 	const { data: session, status } = useSession();
-
-	console.log('--------------');
 
 	const {
 		data: favData,
@@ -152,7 +149,6 @@ const MainTabs: React.FC<MainTabsProps> = ({
 					/>
 					<IconCircleButton
 						onClick={() => {
-							console.log('openSettings');
 							setisSettingsOpen(true);
 						}}
 						size={35}

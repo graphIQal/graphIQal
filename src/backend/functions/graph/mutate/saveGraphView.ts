@@ -34,6 +34,7 @@ export const saveGraphView = async ({
 	});
 
 	console.log('saveGraphView');
+	console.log(body);
 
 	const res = await fetch(
 		`/api/${username}/${nodeId}/graph/${graphViewId}/save`,

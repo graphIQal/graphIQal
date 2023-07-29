@@ -5,7 +5,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import GraphActionContext from '../context/GraphActionContext';
 import DrawingContext, {
-  DrawingContextInterface,
+	DrawingContextInterface,
 } from '../context/GraphDrawingContext';
 import { useDropNode } from '../hooks/dragging/useDropNode';
 import { handleEscapeDrawing } from '../helpers/handleKeyPress';
@@ -28,194 +28,208 @@ import { addConnection } from '../../../helpers/backend/addConnection';
 import { ActionChanges, useHistoryState } from '../hooks/useHistoryState';
 
 export const GraphContainer: React.FC<{}> = () => {
-  const { windowVar, documentVar } = useViewData();
-  if (!windowVar || !documentVar) return <div></div>;
+	const { windowVar, documentVar } = useViewData();
+	if (!windowVar || !documentVar) return <div></div>;
 
-  //For drawing
-  const drawingContext = useContext(DrawingContext) as DrawingContextInterface;
-  const {
-    startNode,
-    endNode,
-    drawingMode,
-    setDrawingMode,
-    setIsDrawing,
-    isDrawing,
-  } = drawingContext;
+	//For drawing
+	const drawingContext = useContext(
+		DrawingContext
+	) as DrawingContextInterface;
+	const {
+		startNode,
+		endNode,
+		drawingMode,
+		setDrawingMode,
+		setIsDrawing,
+		isDrawing,
+	} = drawingContext;
 
-  const { graphViewId, nodeData_Graph, nodeVisualData_Graph } =
-    useGraphViewData();
-  const {
-    changeNodeData_Graph,
-    changeAlert,
-    changeVisualData_Graph,
-    setHistoryFunctions,
-    changeHistory,
-  } = useGraphViewAPI();
+	const { graphViewId, nodeData_Graph, nodeVisualData_Graph } =
+		useGraphViewData();
 
-  const nodeDataRef = useRef(nodeData_Graph);
-  const visualDataRef = useRef(nodeVisualData_Graph);
+	console.log('nodeData graph ', nodeData_Graph);
+	console.log('nodeVisualDatagraph ', nodeVisualData_Graph);
 
-  useEffect(() => {
-    nodeDataRef.current = nodeData_Graph;
-    visualDataRef.current = nodeVisualData_Graph;
-  }, [nodeData_Graph, nodeVisualData_Graph]);
+	const {
+		changeNodeData_Graph,
+		changeAlert,
+		changeVisualData_Graph,
+		setHistoryFunctions,
+		changeHistory,
+	} = useGraphViewAPI();
 
-  const { undo, redo, history, addAction, pointer } = useHistoryState(
-    changeNodeData_Graph,
-    changeVisualData_Graph,
-    changeAlert,
-    nodeDataRef,
-    visualDataRef
-  );
+	const nodeDataRef = useRef(nodeData_Graph);
+	const visualDataRef = useRef(nodeVisualData_Graph);
 
-  useEffect(() => {
-    setHistoryFunctions(addAction, undo, redo);
-  }, []);
+	useEffect(() => {
+		nodeDataRef.current = nodeData_Graph;
+		visualDataRef.current = nodeVisualData_Graph;
+	}, [nodeData_Graph, nodeVisualData_Graph]);
 
-  useEffect(() => {
-    changeHistory(history, pointer);
-  }, [history, pointer]);
+	const { undo, redo, history, addAction, pointer } = useHistoryState(
+		changeNodeData_Graph,
+		changeVisualData_Graph,
+		changeAlert,
+		nodeDataRef,
+		visualDataRef
+	);
 
-  //key events: undo, redo, escaping drawing
-  useEffect(() => {
-    const listenerFunc = (evt: any) => {
-      if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
-        evt.stopPropagation();
-        evt.stopImmediatePropagation();
-        evt.preventDefault();
-        redo();
-      } else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
-        evt.stopImmediatePropagation();
-        evt.preventDefault();
-        undo();
-      } else if (evt.keyCode == 27) {
-        evt.stopImmediatePropagation();
-        //escape key
-        handleEscapeDrawing(drawingContext, setPoints);
-      }
-    };
+	useEffect(() => {
+		setHistoryFunctions(addAction, undo, redo);
+	}, []);
 
-    document.addEventListener('keydown', (event) => listenerFunc(event));
-    return document.removeEventListener('keydown', (event) =>
-      listenerFunc(event)
-    );
-  }, []);
+	useEffect(() => {
+		changeHistory(history, pointer);
+	}, [history, pointer]);
 
-  // Wheel event: panning and zooming
-  useEffect(() => {
-    documentVar
-      .getElementById('parent' + graphViewId)
-      ?.addEventListener('wheel', onWheel, { passive: false });
-    return () => {
-      documentVar
-        .getElementById('parent' + graphViewId)
-        ?.removeEventListener('wheel', onWheel);
-    };
-  });
+	//key events: undo, redo, escaping drawing
+	useEffect(() => {
+		const listenerFunc = (evt: any) => {
+			if (
+				evt.code === 'KeyZ' &&
+				(evt.ctrlKey || evt.metaKey) &&
+				evt.shiftKey
+			) {
+				evt.stopPropagation();
+				evt.stopImmediatePropagation();
+				evt.preventDefault();
+				redo();
+			} else if (evt.code === 'KeyZ' && (evt.ctrlKey || evt.metaKey)) {
+				evt.stopImmediatePropagation();
+				evt.preventDefault();
+				undo();
+			} else if (evt.keyCode == 27) {
+				evt.stopImmediatePropagation();
+				//escape key
+				handleEscapeDrawing(drawingContext, setPoints);
+			}
+		};
 
-  //Pan and zoom
-  const ref = useRef(null);
-  let { onWheel, translateX, translateY, scale } = usePanAndZoom(ref);
+		document.addEventListener('keydown', (event) => listenerFunc(event));
+		return document.removeEventListener('keydown', (event) =>
+			listenerFunc(event)
+		);
+	}, []);
 
-  if (!Number.isFinite(translateX)) {
-    translateX = 0;
-  }
+	// Wheel event: panning and zooming
+	useEffect(() => {
+		documentVar
+			.getElementById('parent' + graphViewId)
+			?.addEventListener('wheel', onWheel, { passive: false });
+		return () => {
+			documentVar
+				.getElementById('parent' + graphViewId)
+				?.removeEventListener('wheel', onWheel);
+		};
+	});
 
-  if (!Number.isFinite(translateY)) {
-    translateY = 0;
-  }
+	//Pan and zoom
+	const ref = useRef(null);
+	let { onWheel, translateX, translateY, scale } = usePanAndZoom(ref);
 
-  //DND
-  const startPos = useRef<{ left: number; top: number }>();
-  const [, drop] = useDropNode(setIsDrawing, translateX, translateY, scale);
-  const { value: canDrag, toggle: setCanDrag } = useToggle(false);
+	if (!Number.isFinite(translateX)) {
+		translateX = 0;
+	}
 
-  //Drawing
-  const canvas = useRef<any>();
-  const { canvasWidth, canvasHeight, points, setPoints } = useCanvas(
-    translateX,
-    translateY,
-    scale,
-    ref,
-    windowVar
-  );
+	if (!Number.isFinite(translateY)) {
+		translateY = 0;
+	}
 
-  useEffect(() => {
-    const canvasEle = canvas.current;
-    if (canvasEle) {
-      canvasEle.width = canvasEle.clientWidth;
-      canvasEle.height = canvasEle.clientHeight;
-    }
-  });
+	//DND
+	const startPos = useRef<{ left: number; top: number }>();
+	const [, drop] = useDropNode(setIsDrawing, translateX, translateY, scale);
+	const { value: canDrag, toggle: setCanDrag } = useToggle(false);
 
-  //Adds a line when the mouse is released from the drawing area of a node
-  useEffect(() => {
-    if (
-      !startNode ||
-      !endNode ||
-      startNode.current == '' ||
-      endNode.current == ''
-    ) {
-      return;
-    }
+	//Drawing
+	const canvas = useRef<any>();
+	const { canvasWidth, canvasHeight, points, setPoints } = useCanvas(
+		translateX,
+		translateY,
+		scale,
+		ref,
+		windowVar
+	);
 
-    if (
-      startNode.current !== '' &&
-      endNode.current !== '' &&
-      startNode.current != endNode.current
-    ) {
-      addConnection(startNode.current, endNode.current, {
-        addAction,
-        nodeData_Graph,
-        changeAlert,
-        changeNodeData_Graph,
-      });
-    }
-  }, [endNode.current]);
+	useEffect(() => {
+		const canvasEle = canvas.current;
+		if (canvasEle) {
+			canvasEle.width = canvasEle.clientWidth;
+			canvasEle.height = canvasEle.clientHeight;
+		}
+	});
 
-  const handleStartPoint = useDrawingStart();
-  const handleDrawing = useDrawingCanvas();
-  const handleDrawingEnd = useDrawingEnd(translateX, translateY, scale);
+	//Adds a line when the mouse is released from the drawing area of a node
+	useEffect(() => {
+		if (
+			!startNode ||
+			!endNode ||
+			startNode.current == '' ||
+			endNode.current == ''
+		) {
+			return;
+		}
 
-  //Pill menu information for centered node
-  const {
-    xCategory,
-    yCategory,
-    getDropdownItemsX,
-    getDropdownItemsY,
-    getDropdownItems,
-  } = useFiltering();
+		if (
+			startNode.current !== '' &&
+			endNode.current !== '' &&
+			startNode.current != endNode.current
+		) {
+			addConnection(startNode.current, endNode.current, {
+				addAction,
+				nodeData_Graph,
+				changeAlert,
+				changeNodeData_Graph,
+			});
+		}
+	}, [endNode.current]);
 
-  //Resizing
-  const updateSize = useResize();
+	const handleStartPoint = useDrawingStart();
+	const handleDrawing = useDrawingCanvas();
+	const handleDrawingEnd = useDrawingEnd(translateX, translateY, scale);
 
-  return (
-    <GraphActionContext.Provider
-      value={{
-        hideSourceOnDrag: true,
-        canDrag: canDrag,
-        setCanDrag: setCanDrag,
-        updateSize: updateSize,
-      }}
-    >
-      <div className='h-full w-full' id={'parent' + graphViewId} ref={drop}>
-        <Filtering
-          xCategory={xCategory}
-          yCategory={yCategory}
-          getDropdownItems={getDropdownItems}
-          getDropdownItemsX={getDropdownItemsX}
-          getDropdownItemsY={getDropdownItemsY}
-        />
-        <GraphMindMapView
-          points={points}
-          setPoints={setPoints}
-          startPos={startPos}
-          translateX={translateX}
-          translateY={translateY}
-          scale={scale}
-        />
-        {/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
-        {/* <div className=' absolute  flex-row w-10'>
+	//Pill menu information for centered node
+	const {
+		xCategory,
+		yCategory,
+		getDropdownItemsX,
+		getDropdownItemsY,
+		getDropdownItems,
+	} = useFiltering();
+
+	//Resizing
+	const updateSize = useResize();
+
+	return (
+		<GraphActionContext.Provider
+			value={{
+				hideSourceOnDrag: true,
+				canDrag: canDrag,
+				setCanDrag: setCanDrag,
+				updateSize: updateSize,
+			}}
+		>
+			<div
+				className='h-full w-full'
+				id={'parent' + graphViewId}
+				ref={drop}
+			>
+				<Filtering
+					xCategory={xCategory}
+					yCategory={yCategory}
+					getDropdownItems={getDropdownItems}
+					getDropdownItemsX={getDropdownItemsX}
+					getDropdownItemsY={getDropdownItemsY}
+				/>
+				<GraphMindMapView
+					points={points}
+					setPoints={setPoints}
+					startPos={startPos}
+					translateX={translateX}
+					translateY={translateY}
+					scale={scale}
+				/>
+				{/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
+				{/* <div className=' absolute  flex-row w-10'>
         <IconCircleButton
           src='draw'
           onClick={() => setDrawingMode(!drawingMode)}
@@ -225,44 +239,44 @@ export const GraphContainer: React.FC<{}> = () => {
         <IconCircleButton src='redo' onClick={() => {}} selected={false} />
       </div> */}
 
-        <div
-          onMouseDown={
-            drawingMode
-              ? (event: any) => {
-                  handleStartPoint('');
-                }
-              : () => {
-                  return null;
-                }
-          }
-          onMouseMove={
-            isDrawing && drawingMode
-              ? (event: any) => {
-                  handleDrawing(event, points, setPoints);
-                }
-              : () => {
-                  return null;
-                }
-          }
-          onMouseUp={
-            isDrawing && drawingMode
-              ? (event: any) => {
-                  handleDrawingEnd(points, setPoints);
-                }
-              : () => {
-                  if (!drawingMode) setDrawingMode(true);
-                }
-          }
-        >
-          <canvas
-            ref={ref}
-            width={canvasWidth}
-            height={canvasHeight}
-            id='canvas'
-            className='overflow-auto'
-          />
-        </div>
-      </div>
-    </GraphActionContext.Provider>
-  );
+				<div
+					onMouseDown={
+						drawingMode
+							? (event: any) => {
+									handleStartPoint('');
+							  }
+							: () => {
+									return null;
+							  }
+					}
+					onMouseMove={
+						isDrawing && drawingMode
+							? (event: any) => {
+									handleDrawing(event, points, setPoints);
+							  }
+							: () => {
+									return null;
+							  }
+					}
+					onMouseUp={
+						isDrawing && drawingMode
+							? (event: any) => {
+									handleDrawingEnd(points, setPoints);
+							  }
+							: () => {
+									if (!drawingMode) setDrawingMode(true);
+							  }
+					}
+				>
+					<canvas
+						ref={ref}
+						width={canvasWidth}
+						height={canvasHeight}
+						id='canvas'
+						className='overflow-auto'
+					/>
+				</div>
+			</div>
+		</GraphActionContext.Provider>
+	);
 };

@@ -58,8 +58,8 @@ const GraphSplitPaneWrapper: React.FC<{
 
 	const {
 		data,
-		error: nodeError,
-		isLoading: nodeDataLoading,
+		// error: nodeError,
+		// isLoading: nodeDataLoading,
 	} = useSWR(
 		[
 			viewId && nodeId
@@ -69,11 +69,6 @@ const GraphSplitPaneWrapper: React.FC<{
 		],
 		fetcherAll
 	);
-	// useSuspenseSWR(
-	//   viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null
-	// );
-
-	//;
 
 	useEffect(() => {
 		let nodeData = {} as { [key: string]: NodeData };

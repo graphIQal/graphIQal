@@ -55,7 +55,6 @@ const EditorComponent: React.FC<{
 	}, []);
 
 	useEffect(() => {
-		// console.log('value ', value);
 		window.addEventListener('beforeunload', onUnload);
 		router.events.on('routeChangeStart', onRouterUnload);
 
@@ -66,10 +65,7 @@ const EditorComponent: React.FC<{
 	}, [value]);
 
 	const onRouterUnload = (url: string, { shallow }: { shallow: boolean }) => {
-		// console.log('url: ', url);
 		if (value.length > 0 && !shallow) {
-			// console.log('onRouterUnload');
-			console.log('unloading', JSON.stringify(value));
 			clearTimeout(intervalRef.current);
 			save({
 				nodeId,
@@ -82,8 +78,6 @@ const EditorComponent: React.FC<{
 	const onUnload = () => {
 		// code to save progress to local storage....
 		if (value.length > 0) {
-			// console.log('onUnload');
-			console.log('unloading', JSON.stringify(value));
 			clearTimeout(intervalRef.current);
 			save({
 				nodeId,

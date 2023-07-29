@@ -5,10 +5,10 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const { username, search } = req.query;
+	const { homenodeId, search } = req.query;
 
 	const cypher: string = `
-	MATCH (u: User {username: "${username}"})-[*0..]->(n:Node)
+	MATCH (u: Node {id: "${homenodeId}"})-[*0..]->(n:Node)
     WHERE toLower(n.title) STARTS WITH toLower("${search}")
     RETURN DISTINCT n {.*}
     LIMIT 100

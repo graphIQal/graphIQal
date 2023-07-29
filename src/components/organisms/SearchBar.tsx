@@ -16,6 +16,7 @@ import {
 	useGraphViewAPI,
 	useGraphViewData,
 } from '../../packages/graph/context/GraphViewContext';
+import { useSession } from 'next-auth/react';
 
 const SearchBar: React.FC = () => {
 	const [showSearchBar, setShowSearchBar] = useState(false);
@@ -44,8 +45,56 @@ const SearchBar: React.FC = () => {
 		);
 	}, []);
 
-	const { username, documentVar } = useViewData();
+	const { documentVar } = useViewData();
+	const { data: session, status } = useSession();
+
+	//state to hold the results from the search
+	const [results, setResults] = useState<{ n: any }[]>([]);
+
+	useEffect(() => {
+		document.getElementById('search_bar')?.focus();
+	}, [showSearchBar]);
+
+	//navigating from keyboard
+	const [highlighted, setHighlighted] = useState(0);
+
+	//Hot keys for escape
+	const plusKeyPressed = useRef<boolean>(false);
+	const pKeyPressed = useRef<boolean>(false);
+
+	const [searchVal, setSearchVal] = useState<string>('');
+	const { data: searchResult } = useSWR(
+		[
+			searchVal.length > 0
+				? `/api/general/search?homenodeId=${session?.user?.homenodeId}&search=${searchVal}`
+				: null,
+		],
+		fetcherAll,
+		{
+			keepPreviousData: true,
+		}
+	);
+
+	useEffect(() => {
+		if (searchResult && searchResult[0]) {
+			setResults(searchResult[0]);
+		} else {
+			setResults([]);
+		}
+	}, [searchResult && searchResult[0]]);
+
 	if (!documentVar) return <div></div>;
+
+	if (!showSearchBar) return <></>;
+
+	if (status !== 'authenticated' || !session || !session.user) {
+		<div
+			className=' fixed top-[10%] left-[50%] translate-x-[-50%] w-[40%] min-h-[30%] bg-base_white flex flex-col gap-y-2 p-2 rounded-sm shadow-sm z-[100]'
+			id='search_container'
+		>
+			Login to search (Guest account allowed for public graphs)
+		</div>;
+	}
 
 	const getButtonItems = (result: any) => {
 		return [
@@ -54,7 +103,10 @@ const SearchBar: React.FC = () => {
 				src: 'navigation',
 				onClick: () => {
 					console.log('result of query ' + JSON.stringify(result));
-					router.push(`/${username}/${result.id}`, undefined);
+					router.push(
+						`/${session?.user?.homenodeId}/${result.id}`,
+						undefined
+					);
 					setShowSearchBar(false);
 				},
 			},
@@ -71,7 +123,9 @@ const SearchBar: React.FC = () => {
 							changeAlert,
 							addAction,
 						},
-						username,
+						session?.user?.homenodeId
+							? session?.user?.homenodeId
+							: 'username',
 						'',
 						{
 							id: result.id,
@@ -91,20 +145,6 @@ const SearchBar: React.FC = () => {
 			},
 		];
 	};
-
-	//state to hold the results from the search
-	const [results, setResults] = useState<{ n: any }[]>([]);
-
-	useEffect(() => {
-		document.getElementById('search_bar')?.focus();
-	}, [showSearchBar]);
-
-	//navigating from keyboard
-	const [highlighted, setHighlighted] = useState(0);
-
-	//Hot keys for escape
-	const plusKeyPressed = useRef<boolean>(false);
-	const pKeyPressed = useRef<boolean>(false);
 
 	const checkAndScroll = () => {
 		const result = checkIfVisible(
@@ -166,40 +206,15 @@ const SearchBar: React.FC = () => {
 				setHighlighted(results.length - 1);
 			}
 		} else if (event.code == 'Enter') {
-			router.push(`/${username}/${results[highlighted].n.id}`, undefined);
+			router.push(
+				`/${session?.user?.homenodeId}/${results[highlighted].n.id}`,
+				undefined
+			);
 			setShowSearchBar(false);
 		} else if (event.keyCode == 27) {
 			setShowSearchBar(false);
 		}
 	};
-
-	const [searchVal, setSearchVal] = useState<string>('');
-	const { data: searchResult } = useSWR(
-		[
-			searchVal.length > 0
-				? `/api/general/search?username=${username}&search=${searchVal}`
-				: null,
-		],
-		fetcherAll,
-		{
-			keepPreviousData: true,
-		}
-	);
-	// const { data: searchResult } = useSuspenseSWR(
-	//   searchVal.length > 0
-	//     ? `/api/general/search?username=${viewContext.username}&search=${searchVal}`
-	//     : null
-	// );
-
-	useEffect(() => {
-		if (searchResult && searchResult[0]) {
-			setResults(searchResult[0]);
-		} else {
-			setResults([]);
-		}
-	}, [searchResult && searchResult[0]]);
-
-	if (!showSearchBar) return <></>;
 
 	return (
 		<div

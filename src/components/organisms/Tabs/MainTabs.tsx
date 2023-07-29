@@ -20,11 +20,11 @@ import { formatNodeConnectionstoMap } from '../../../helpers/frontend/formatNode
 import { addFavourite } from '../../../backend/functions/general/favourites/add';
 import { deleteFavourite } from '../../../backend/functions/general/favourites/delete';
 import { removeFromArray } from '../../../helpers/general/removeFromArray';
+import Document from '../../../packages/dnd-editor/Document';
 
 type MainTabsProps = {
 	mainViewTabs: MainTabProps[];
 	setMainViewTabs: (val: MainTabProps[]) => void;
-	router: Router;
 };
 
 export type MainTabProps = {
@@ -104,7 +104,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 	);
 
 	useEffect(() => {
-		console.log('nodeDataSWR');
+		console.log('nodeDataSWR ', nodeDataSWR);
 		if (nodeDataSWR) {
 			('changeNodeData');
 			changeCurrNodeData(nodeDataSWR);
@@ -112,6 +112,8 @@ const MainTabs: React.FC<MainTabsProps> = ({
 	}, [nodeDataSWR]);
 
 	const { data: session, status } = useSession();
+
+	console.log('--------------');
 
 	const {
 		data: favData,
@@ -325,4 +327,4 @@ const MainTabs: React.FC<MainTabsProps> = ({
 		</div>
 	);
 };
-export default withRouter(MainTabs);
+export default MainTabs;

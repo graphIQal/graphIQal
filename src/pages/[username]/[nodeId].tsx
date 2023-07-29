@@ -8,7 +8,7 @@ import MainTabs, {
 
 import { ViewDataProvider } from '../../components/context/ViewContext';
 import Graph from '../../packages/graph/Graph';
-import SplitPaneWrapper from '../../packages/dnd-editor/Document';
+import Document from '../../packages/dnd-editor/Document';
 import { SideBar } from '../../components/organisms/sidebar-navigator';
 import { useSession } from 'next-auth/react';
 
@@ -17,10 +17,10 @@ import { useSession } from 'next-auth/react';
 const Home: React.FC = () => {
 	let newTabs: MainTabProps[] = [
 		{
-			label: 'Home',
+			label: 'Document',
 			viewId: '',
 			viewType: 'document',
-			component: <SplitPaneWrapper viewId={''} />,
+			component: <Document viewId={''} />,
 		},
 		//temp
 		// {

@@ -9,12 +9,10 @@ import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
 import {
-	createMyEditor,
 	createMyPlugins,
 	ELEMENT_BLOCK,
-	MyValue,
-	useMyEditorState,
 	MyPlatePlugin,
+	MyValue,
 } from './plateTypes';
 import { BlockPlugins } from './Plugins/BlockPlugins';
 import { CommandPlugins } from './Plugins/CommandPlugins';
@@ -22,11 +20,10 @@ import { FormatPlugins } from './Plugins/FormatPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 
+import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import { useViewData } from '../../components/context/ViewContext';
-import { createMyPlateEditor } from './plateTypes';
 import { withDraggable } from '../dnd-editor/components/withDraggable';
-import { useRouter } from 'next/router';
 
 const EditorComponent: React.FC<{
 	value: any[];
@@ -46,14 +43,19 @@ const EditorComponent: React.FC<{
 	customPlugins = [],
 }) => {
 	// const router = useRouter();
-	const { nodeId, username, currNode_data } = useViewData();
+	const { nodeId, username } = useViewData();
 	const router = useRouter();
-
-	console.log('re-render editor ', nodeId);
 
 	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 3000));
 
 	useEffect(() => {
+		console.log('on Mount');
+		setValue(initialValue);
+		console.log(nodeId, value, initialValue);
+	}, []);
+
+	useEffect(() => {
+		console.log('value ', value);
 		window.addEventListener('beforeunload', onUnload);
 		router.events.on('routeChangeStart', onRouterUnload);
 
@@ -64,6 +66,7 @@ const EditorComponent: React.FC<{
 	}, [value]);
 
 	const onRouterUnload = (url: string, { shallow }: { shallow: boolean }) => {
+		console.log('url: ', url);
 		if (value.length > 0 && !shallow) {
 			console.log('onRouterUnload');
 			// console.log('unloading', JSON.stringify(value));

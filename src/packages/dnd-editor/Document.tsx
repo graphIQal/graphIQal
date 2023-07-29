@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import SplitPane, {
@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { createNormalizeTypesPlugin } from '@udecode/plate';
 import useSWR, { mutate } from 'swr';
+import useSWRMutation from 'swr/mutation';
 import { fetcherSingleReturn } from '../../backend/driver/fetcher';
 import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
 import { saveShelf } from '../../backend/functions/general/document/mutate/saveShelf';
@@ -34,9 +35,8 @@ import {
 import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
 import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
 
-const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
-	const { nodeId, username, currNode_data, documentVar, windowVar } =
-		useViewData();
+const Document: React.FC<{ viewId: string }> = () => {
+	const { nodeId } = useViewData();
 
 	const [document, setdocument] = useState([]);
 	const [shelf, setshelf] = useState([]);
@@ -52,38 +52,62 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 		{ revalidateOnMount: true, revalidateOnFocus: false }
 	);
 
-	if (isLoading || nodeDataSWR === null) {
-		return null;
+	// const {
+	// 	data: nodeDataSWR,
+	// 	trigger,
+	// 	isMutating,
+	// 	reset,
+	// } = useSWRMutation(`/api/username/${nodeId}`, fetcherSingleReturn);
+
+	useEffect(() => {
+		console.log('nodeId, ', nodeId);
+	}, [nodeId]);
+
+	if (isLoading || !nodeDataSWR) {
+		return (
+			<SplitPane className='split-pane-row'>
+				<SplitPaneLeft>
+					<div className='pl-10 pt-10 pr-3 pb-3'></div>
+				</SplitPaneLeft>
+				<Divider className='separator-col' />
+				<SplitPaneRight>
+					<div className='pl-10 pt-10 pr-3 pb-3'></div>
+					{/* If I put shelf inside documentSideTabs it has issues with setting state and I'm not sure why tbh */}
+					{/* I suspect this might be because it gets rendered in tabs afterthe fact. */}
+					<Divider className='separator-row' />
+				</SplitPaneRight>
+			</SplitPane>
+		);
 	}
 
-	console.log(nodeDataSWR);
+	console.log('document re-rendered');
+	console.log(nodeDataSWR.n.title, nodeDataSWR.n.id);
 
-	// useEffect(() => {
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
 		nodeDataSWR.n.document = `
-			[
-				{
-					"type": "block",
-					"id": "${uuidv4()}",
-					"children": [
-						{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
-					]
-				}
-			]`;
+		[
+			{
+				"type": "block",
+				"id": "${uuidv4()}",
+				"children": [
+					{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
+				]
+			}
+		]`;
 	}
 
 	// useEffect(() => {
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.shelf) {
 		nodeDataSWR.n.shelf = `
-					[
-						{
-							"type": "block",
-							"id": "${uuidv4()}",
-							"children": [
-								{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
-							]
-						}
-					]`;
+				[
+					{
+						"type": "block",
+						"id": "${uuidv4()}",
+						"children": [
+							{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
+						]
+					}
+				]`;
 	}
 
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
@@ -124,7 +148,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 						{nodeDataSWR.n.document && (
 							// <PlateProvider>
 							<EditorComponent
-								key={nodeDataSWR.n.id}
+								key={nodeId}
 								initialValue={[
 									{
 										type: 'title',
@@ -154,10 +178,20 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 									};
 									console.log(newData);
 
-									SWRmutateCurrNode(saveDocument(params), {
-										optimisticData: newData,
-										populateCache: false,
-									});
+									console.log(
+										'mutate: ',
+										newData.n.title,
+										' -> ',
+										newData.n.id
+									);
+
+									await SWRmutateCurrNode(
+										saveDocument(params),
+										{
+											optimisticData: newData,
+											populateCache: false,
+										}
+									);
 								}}
 								blockElement={Block}
 								customPlugins={[
@@ -201,7 +235,7 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 						}
 					/>
 					{/* If I put shelf inside documentSideTabs it has issues with setting state and I'm not sure why tbh */}
-					{/* I suspect this might be because it gets rendered in tabs afterthe fact. */}
+					{/* I suspect this might be because it gets rendered in tabs after the fact. */}
 					<Divider className='separator-row' />
 					<div className='py-4 px-2 '>
 						<div className='ml-[14px]'>
@@ -226,4 +260,4 @@ const SplitPaneWrapper: React.FC<{ viewId: string }> = () => {
 		</DndProvider>
 	);
 };
-export default SplitPaneWrapper;
+export default Document;

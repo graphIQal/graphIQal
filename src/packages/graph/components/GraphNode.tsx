@@ -36,11 +36,7 @@ export interface NodeProps {
 	children: ReactNode;
 	updateStartPos: (val: { left: number; top: number }) => void;
 }
-export const GraphNode: FC<NodeProps> = ({
-	children,
-
-	updateStartPos,
-}) => {
+export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 	const nodeInfo = useContext(GraphNodeContext) as GraphNodeContextInterface;
 	const { canDrag, setCanDrag, hideSourceOnDrag } = useContext(
 		GraphActionContext
@@ -204,7 +200,7 @@ export const GraphNode: FC<NodeProps> = ({
 			></div>
 			<ResizableBox
 				classes={
-					'p-sm overflow-hidden h-full w-full h-12 rounded-sm border-grey border-[1px] flex flex-row items-center align-middle z-10 p-3 gap-x-3 border-l-[3px] ' +
+					'p-sm overflow-hidden h-full w-full h-12 rounded-sm border-grey border-[1px] flex flex-row z-10 p-3 gap-x-3 border-l-[3px] ' +
 					backgroundClass
 				}
 				style={{

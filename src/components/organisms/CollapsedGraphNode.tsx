@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { updateNode } from '../../helpers/backend/updateNode';
 import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
 import GraphNodeContext, {
-  GraphNodeContextInterface,
+	GraphNodeContextInterface,
 } from '../../packages/graph/context/GraphNodeContext';
 import { useViewData } from '../context/ViewContext';
 import IconCircleButton from '../molecules/IconCircleButton';
@@ -12,121 +12,122 @@ import { ItemProps } from './Dropdown';
 import useSWR from 'swr';
 import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
 import {
-  useGraphViewAPI,
-  useGraphViewData,
+	useGraphViewAPI,
+	useGraphViewData,
 } from '../../packages/graph/context/GraphViewContext';
 
 const CollapsedGraphNode: React.FC<{
-  toggleDropdown: () => void;
-  showSearchDropdown: boolean;
-  setShowSearchDropdown: (val: boolean) => void;
-  setResults: (val: ItemProps[]) => void;
+	toggleDropdown: () => void;
+	showSearchDropdown: boolean;
+	setShowSearchDropdown: (val: boolean) => void;
+	setResults: (val: ItemProps[]) => void;
 }> = ({
-  toggleDropdown,
-  showSearchDropdown,
-  setShowSearchDropdown,
-  setResults,
+	toggleDropdown,
+	showSearchDropdown,
+	setShowSearchDropdown,
+	setResults,
 }) => {
-  const { title, id, icon } = useContext(
-    GraphNodeContext
-  ) as GraphNodeContextInterface;
+	const { title, id, icon } = useContext(
+		GraphNodeContext
+	) as GraphNodeContextInterface;
 
-  const { username } = useViewData();
+	const { username } = useViewData();
 
-  const { nodeData_Graph, nodeVisualData_Graph, addAction } =
-    useGraphViewData();
-  const { changeNodeData_Graph, changeVisualData_Graph, changeAlert } =
-    useGraphViewAPI();
+	const { nodeData_Graph, nodeVisualData_Graph, addAction } =
+		useGraphViewData();
+	const { changeNodeData_Graph, changeVisualData_Graph, changeAlert } =
+		useGraphViewAPI();
 
-  const [searchVal, setSearchVal] = useState<string>('');
+	const [searchVal, setSearchVal] = useState<string>('');
 
-  const { data: searchResult } = useSWR(
-    [
-      searchVal.length > 0
-        ? `/api/general/search?username=${username}&search=${searchVal}`
-        : null,
-    ],
-    fetcherAll
-  );
+	const { data: searchResult } = useSWR(
+		[
+			searchVal.length > 0
+				? `/api/general/search?username=${username}&search=${searchVal}`
+				: null,
+		],
+		fetcherAll
+	);
 
-  const formRef = useRef<any>(null);
-  useEffect(() => {
-    if (searchResult && searchResult[0]) {
-      const items: ItemProps[] = searchResult[0].map(
-        (result: any, i: number) => {
-          return {
-            text: result.n.title,
-            onPress: () => {
-              formRef.current.value = result.n.title;
-              addExistingNodeToGraph(
-                {
-                  nodeData_Graph,
-                  nodeVisualData_Graph,
-                  changeNodeData_Graph,
-                  changeVisualData_Graph,
-                  changeAlert,
-                  addAction,
-                },
-                username,
-                id,
-                result.n
-              );
-            },
-          };
-        }
-      );
-      setResults(items);
-    } else {
-      setResults([]);
-    }
-  }, [searchResult && searchResult[0]]);
+	const formRef = useRef<any>(null);
+	useEffect(() => {
+		if (searchResult && searchResult[0]) {
+			const items: ItemProps[] = searchResult[0].map(
+				(result: any, i: number) => {
+					return {
+						text: result.n.title,
+						onPress: () => {
+							formRef.current.value = result.n.title;
+							addExistingNodeToGraph(
+								{
+									nodeData_Graph,
+									nodeVisualData_Graph,
+									changeNodeData_Graph,
+									changeVisualData_Graph,
+									changeAlert,
+									addAction,
+								},
+								username,
+								id,
+								result.n
+							);
+						},
+					};
+				}
+			);
+			setResults(items);
+		} else {
+			setResults([]);
+		}
+	}, [searchResult && searchResult[0]]);
 
-  return (
-    <>
-      <div
-        className={
-          'w-full h-full flex items-center content-center justify-items-stretch flex-row '
-        }
-      >
-        <div className='flex flex-row gap-x-3 items-center'>
-          <IconCircleButton
-            src={icon ? icon : 'block'}
-            onClick={toggleDropdown}
-            circle={false}
-          />
-          <form>
-            <input
-              type='text'
-              name='name'
-              id='node_title'
-              placeholder='Type title or press /'
-              // defaultValue={title}
-              value={title}
-              ref={formRef}
-              autoComplete='off'
-              onChange={async (newVal: any) => {
-                updateNode('title', newVal.target.value, id, {
-                  addAction,
-                  changeVisualData_Graph,
-                  nodeVisualData_Graph,
-                  nodeData_Graph,
-                  changeNodeData_Graph,
-                });
-                if (newVal.target.value[0] == '/' && !showSearchDropdown) {
-                  setShowSearchDropdown(true);
-                }
-                if (showSearchDropdown) {
-                  if (newVal.target.value.length > 0) {
-                    setSearchVal(newVal.target.value.substring(1));
-                  }
-                }
-              }}
-              className='bg-transparent border-none outline-none'
-            />
-          </form>
-        </div>
-      </div>
-    </>
-  );
+	return (
+		<>
+			<div
+				className={'w-full h-full flex justify-items-stretch flex-row '}
+			>
+				<div className='flex flex-row gap-x-3 w-full h-fit items-center'>
+					<IconCircleButton
+						src={icon ? icon : 'block'}
+						onClick={toggleDropdown}
+						circle={false}
+					/>
+					<input
+						className='bg-transparent border-none outline-none w-full block '
+						type='text'
+						name='name'
+						id='node_title'
+						placeholder='Type title or press /'
+						// defaultValue={title}
+						value={title}
+						ref={formRef}
+						autoComplete='off'
+						onChange={async (newVal: any) => {
+							updateNode('title', newVal.target.value, id, {
+								addAction,
+								changeVisualData_Graph,
+								nodeVisualData_Graph,
+								nodeData_Graph,
+								changeNodeData_Graph,
+							});
+							if (
+								newVal.target.value[0] == '/' &&
+								!showSearchDropdown
+							) {
+								setShowSearchDropdown(true);
+							}
+							if (showSearchDropdown) {
+								if (newVal.target.value.length > 0) {
+									setSearchVal(
+										newVal.target.value.substring(1)
+									);
+								}
+							}
+						}}
+					/>
+				</div>
+			</div>
+		</>
+	);
 };
 export default CollapsedGraphNode;

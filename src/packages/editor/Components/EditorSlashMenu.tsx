@@ -350,8 +350,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			searchPattern={'.+'}
 			filter={(search: string) => (value) =>
 				value.data.searchFunction(
-					search.toLowerCase()
-					// getTextAfterTrigger(search.toLowerCase())
+					getTextAfterTrigger(search.toLowerCase())
 				)}
 			// value.toLowerCase().startsWith(search.toLowerCase())}
 		/>

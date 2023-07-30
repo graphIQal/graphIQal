@@ -60,7 +60,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			text: 'Create Node',
 			data: {
 				searchFunction: (search) => {
-					if ('create'.startsWith(search)) {
+					if ('create /'.startsWith(search)) {
 						return true;
 					}
 					return false;
@@ -125,7 +125,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			text: 'Bullet List',
 			data: {
 				searchFunction: (search) => {
-					if ('Bullet List'.startsWith(search)) {
+					if ('bullet List'.startsWith(search)) {
 						return true;
 					}
 					return false;
@@ -213,6 +213,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			text: 'Header 3',
 			data: {
 				searchFunction: (search) => {
+					console.log('search, ', search);
 					// check if it's a number, if it's a number and not a three or it's 3
 					if (
 						'header 3'.startsWith(search) ||
@@ -316,20 +317,27 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 		},
 	];
 
+	const trigger = '/';
+
+	const getTextAfterTrigger = (search: string) => {
+		const indexOfTrigger = search.indexOf(trigger);
+		return indexOfTrigger !== -1
+			? search.substring(indexOfTrigger + 1)
+			: search;
+	};
+
 	return (
 		<Combobox
 			id='1'
 			onSelectItem={(plateEditor, item) => {
 				// had to go through a SHIT load of stuff, finally figured out undo is working but honestly it's kinda hacky no?
 				// editor.undo();
-				console.log('editor, ', editor);
-				console.log(item);
-				deleteBackward(editor, { unit: 'word' });
+				deleteBackward(plateEditor, { unit: 'word' });
 				item.data.onPress();
 
 				// the combobox is getting overridden by the exitbreakline on headers.
 			}}
-			trigger='/'
+			trigger={trigger}
 			// component={(store) => {
 			// 	return <BlockMenu></BlockMenu>;
 			// }}
@@ -341,7 +349,10 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			// }}
 			searchPattern={'.+'}
 			filter={(search: string) => (value) =>
-				value.data.searchFunction(search.toLowerCase())}
+				value.data.searchFunction(
+					search.toLowerCase()
+					// getTextAfterTrigger(search.toLowerCase())
+				)}
 			// value.toLowerCase().startsWith(search.toLowerCase())}
 		/>
 	);

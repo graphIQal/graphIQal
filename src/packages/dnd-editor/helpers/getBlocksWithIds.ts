@@ -4,7 +4,7 @@ import {
 	isBlock,
 	TEditor,
 	Value,
-} from '@udecode/plate-core';
+} from '@udecode/plate';
 import { MyEditor } from '../../editor/plateTypes';
 
 /**

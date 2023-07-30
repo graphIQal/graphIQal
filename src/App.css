@@ -14,6 +14,10 @@
     color: theme(colors.base_black);
   }
 
+  [contenteditable]:read-write:focus {
+    outline: none;
+  }
+
   h1 {
     @apply text-xxl;
     @apply font-bold;

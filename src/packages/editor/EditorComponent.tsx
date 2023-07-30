@@ -11,6 +11,7 @@ import { editableProps } from './editableProps';
 import {
 	createMyPlugins,
 	ELEMENT_BLOCK,
+	MyEditor,
 	MyPlatePlugin,
 	MyValue,
 } from './plateTypes';
@@ -45,8 +46,8 @@ const EditorComponent: React.FC<{
 	// const router = useRouter();
 	const { nodeId, username } = useViewData();
 	const router = useRouter();
-
 	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 3000));
+	const editorRef = useRef<MyEditor | null>(null);
 
 	useEffect(() => {
 		// console.log('on Mount');
@@ -136,11 +137,12 @@ const EditorComponent: React.FC<{
 	return (
 		<div className='pb-[50%]'>
 			<Plate<MyValue>
+				editorRef={editorRef}
 				editableProps={editableProps}
 				initialValue={initialValue}
 				// editor={editor}
 				onChange={(docValue) => {
-					// console.log(docValue);
+					console.log(docValue);
 					setValue(docValue);
 					clearTimeout(intervalRef.current);
 					intervalRef.current = setTimeout(() => {
@@ -155,8 +157,8 @@ const EditorComponent: React.FC<{
 				plugins={plugins}
 				id={id}
 			>
-				<EditorFloatingMenu />
-				<EditorSlashMenu />
+				{/* <EditorFloatingMenu /> */}
+				{/* <EditorSlashMenu /> */}
 			</Plate>
 		</div>
 	);

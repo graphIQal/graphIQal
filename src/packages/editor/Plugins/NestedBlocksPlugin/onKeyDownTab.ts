@@ -3,7 +3,7 @@ import {
 	KeyboardHandlerReturnType,
 	PlateEditor,
 	Value,
-} from '@udecode/plate-core';
+} from '@udecode/plate';
 import { MyEditor, MyValue } from '../../plateTypes';
 import { indent } from './transforms/indent';
 import { outdent } from './transforms/outdent';

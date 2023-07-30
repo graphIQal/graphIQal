@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { useEditorRef } from '@udecode/plate-core';
+import { useEditorRef } from '@udecode/plate';
 
 import { useDragNode, UseDragNodeOptions } from './useDragNode';
 import { useDropNode, UseDropNodeOptions } from './useDropNode';

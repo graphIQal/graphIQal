@@ -1,4 +1,4 @@
-import { getRange, TNodeEntry, Value } from '@udecode/plate-core';
+import { getRange, TNodeEntry, Value } from '@udecode/plate';
 import { MyEditor } from '../../editor/plateTypes';
 
 /**

@@ -47,8 +47,8 @@ export const GraphContainer: React.FC<{}> = () => {
 	const { graphViewId, nodeData_Graph, nodeVisualData_Graph } =
 		useGraphViewData();
 
-	console.log('nodeData graph ', nodeData_Graph);
-	console.log('nodeVisualDatagraph ', nodeVisualData_Graph);
+	// console.log('nodeData graph ', nodeData_Graph);
+	// console.log('nodeVisualDatagraph ', nodeVisualData_Graph);
 
 	const {
 		changeNodeData_Graph,

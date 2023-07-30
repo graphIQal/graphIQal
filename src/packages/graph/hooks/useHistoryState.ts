@@ -82,7 +82,10 @@ export const useHistoryState = (
 				newState[id].y = value.old.y;
 				setnodeVisualData_Graph(newState);
 
-				alert('asd');
+				console.log(
+					'node_size activating in document? Is it because the graph is active and rendered?'
+				);
+				// alert('asd');
 
 				break;
 			case 'NODE_ADD':

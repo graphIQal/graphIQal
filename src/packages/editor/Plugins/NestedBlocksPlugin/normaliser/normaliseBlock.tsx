@@ -1,11 +1,14 @@
-import { ELEMENT_PARAGRAPH, unwrapNodes, wrapNodes } from '@udecode/plate';
 import {
+	ELEMENT_PARAGRAPH,
 	TElement,
 	TNodeEntry,
 	getChildren,
 	getPluginType,
 	setNodes,
-} from '@udecode/plate-core';
+	unwrapNodes,
+	wrapNodes,
+} from '@udecode/plate';
+
 import {
 	BlockwrappedElements,
 	ELEMENT_BLOCK,

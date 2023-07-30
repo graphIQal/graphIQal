@@ -13,8 +13,8 @@ export const saveDocument = async ({
 	document,
 	title = 'untitled',
 }: SaveDocumentInput) => {
-	console.log('saveDocument');
-	console.log(title, nodeId);
+	// console.log('saveDocument');
+	// console.log(title, nodeId);
 	// console.log(JSON.stringify(document));
 
 	const res = await fetch(

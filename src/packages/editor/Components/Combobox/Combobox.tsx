@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Component, useEffect } from 'react';
+import { useEffect } from 'react';
 // import * as Popover from '@radix-ui/react-popover';
 import {
 	comboboxActions,
@@ -17,31 +17,11 @@ import {
 	useComboboxItem,
 	useComboboxSelectors,
 } from '@udecode/plate-combobox';
-// import {
-// 	useEventEditorSelectors,
-// 	usePlateEditorState,
-// } from '@udecode/plate-common';
-// import { createVirtualRef } from '@udecode/plate-floating';
 
-// import { cn } from '@/lib/utils';
-// import {
-// 	ComboboxProps,
-// 	Data,
-// 	NoData,
-// 	Popover,
-// 	TComboboxItem,
-// 	comboboxActions,
-// 	useActiveComboboxStore,
-// 	useComboboxControls,
-// 	useComboboxSelectors,
-// } from '@udecode/plate';
-import { container } from 'tailwindcss/defaultTheme';
+import { useEventEditorSelectors, usePlateEditorState } from '@udecode/plate';
+import { createVirtualRef } from '@udecode/plate-floating';
 
-import {
-	usePlateEditorState,
-	useEventEditorSelectors,
-	Popover,
-} from '@udecode/plate';
+import * as Popover from '@radix-ui/react-popover';
 
 export function ComboboxItem<TData extends Data = NoData>({
 	combobox,
@@ -82,11 +62,24 @@ export function ComboboxContent<TData extends Data = NoData>(
 	const { menuProps, targetRange } = useComboboxContent(state);
 
 	return (
-		<Popover
-			content={<div className='absolute'></div>}
-			floatingOptions={{ strategy: 'absolute', placement: 'right-start' }}
-			children={
-				<div>
+		<Popover.Root open>
+			<Popover.PopoverAnchor
+				virtualRef={createVirtualRef(editor, targetRange ?? undefined)}
+			/>
+
+			<Popover.Portal container={portalElement}>
+				<Popover.Content
+					{...menuProps}
+					sideOffset={5}
+					side='bottom'
+					align='start'
+					className='z-[500] m-0 max-h-[288px] w-[300px] overflow-scroll rounded-md bg-popover p-0 shadow-md'
+					onOpenAutoFocus={(event) => event.preventDefault()}
+				>
+					{Component
+						? Component({ store: activeComboboxStore })
+						: null}
+
 					{filteredItems.map((item, index) => (
 						<ComboboxItem
 							key={item.key}
@@ -96,9 +89,9 @@ export function ComboboxContent<TData extends Data = NoData>(
 							onRenderItem={onRenderItem}
 						/>
 					))}
-				</div>
-			}
-		></Popover>
+				</Popover.Content>
+			</Popover.Portal>
+		</Popover.Root>
 	);
 }
 

@@ -1,8 +1,10 @@
 import {
-	createComboboxPlugin,
+	// createComboboxPlugin,
 	createNodeIdPlugin,
 	Plate,
 } from '@udecode/plate';
+
+import { createComboboxPlugin } from '@udecode/plate-combobox';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { SaveDocumentInput } from '../../backend/functions/general/document/mutate/saveDocument';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
@@ -101,9 +103,7 @@ const EditorComponent: React.FC<{
 					...CommandPlugins,
 					...FormatPlugins,
 					createBlockPlugin(),
-					createComboboxPlugin({
-						options: {},
-					}),
+					createComboboxPlugin(),
 					// createHistoryPlugin(),
 					createNodeIdPlugin({
 						options: {
@@ -158,7 +158,7 @@ const EditorComponent: React.FC<{
 				id={id}
 			>
 				{/* <EditorFloatingMenu /> */}
-				{/* <EditorSlashMenu /> */}
+				<EditorSlashMenu />
 			</Plate>
 		</div>
 	);

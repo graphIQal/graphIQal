@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import useMergedRef from '@react-hook/merged-ref';
-import { Value } from '@udecode/plate-core';
 import { useDndNode } from '../hooks/useDnDNode';
 import { getBlockStyles } from './Draggable.styles';
 import { DraggableProps, DragHandleProps } from './Draggable.types';

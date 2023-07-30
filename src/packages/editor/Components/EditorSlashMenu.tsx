@@ -1,8 +1,6 @@
 import { TippyProps } from '@tippyjs/react';
 import {
-	Combobox,
 	deleteBackward,
-	deleteText,
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
@@ -14,22 +12,21 @@ import {
 	setNodes,
 	toggleList,
 } from '@udecode/plate';
+import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
-import { Transforms } from 'slate';
+import { v4 as uuidv4 } from 'uuid';
+import { createNodeInDocument } from '../../../backend/functions/node/mutate/createNodeInDocument';
+import { useViewData } from '../../../components/context/ViewContext';
 import BlockMenu from '../../../components/organisms/BlockMenu';
 import {
 	ELEMENT_NODELINK,
 	MyH1Element,
 	MyH2Element,
-	MyH3Element,
 	MyNodeLinkElement,
 	useMyPlateEditorRef,
 } from '../plateTypes';
-import { createNodeInDocument } from '../../../backend/functions/node/mutate/createNodeInDocument';
-import { useViewData } from '../../../components/context/ViewContext';
-import { v4 as uuidv4 } from 'uuid';
-import { useRouter } from 'next/router';
 import { formatList } from '../Plugins/Autoformat/autoformatUtils';
+import { Combobox } from './Combobox/Combobox';
 
 export const markTooltip: TippyProps = {
 	arrow: true,
@@ -322,23 +319,26 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	return (
 		<Combobox
 			id='1'
-			onSelectItem={(editor, item) => {
+			onSelectItem={(plateEditor, item) => {
 				// had to go through a SHIT load of stuff, finally figured out undo is working but honestly it's kinda hacky no?
 				// editor.undo();
+				console.log('editor, ', editor);
+				console.log(item);
 				deleteBackward(editor, { unit: 'word' });
 				item.data.onPress();
 
 				// the combobox is getting overridden by the exitbreakline on headers.
 			}}
 			trigger='/'
-			component={(store) => {
-				return <BlockMenu></BlockMenu>;
-			}}
+			// component={(store) => {
+			// 	return <BlockMenu></BlockMenu>;
+			// }}
+			controlled={false}
 			items={items}
-			onRenderItem={({ search, item }) => {
-				if (item.data.customRender) return item.data.customRender();
-				return <div>{item.text}</div>;
-			}}
+			// onRenderItem={({ search, item }) => {
+			// 	if (item.data.customRender) return item.data.customRender();
+			// 	return <div>{item.text}</div>;
+			// }}
 			searchPattern={'.+'}
 			filter={(search: string) => (value) =>
 				value.data.searchFunction(search.toLowerCase())}

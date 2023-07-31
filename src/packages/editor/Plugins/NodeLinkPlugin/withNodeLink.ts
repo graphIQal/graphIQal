@@ -1,4 +1,4 @@
-import { PlateEditor, Value } from '@udecode/plate-core';
+import { PlateEditor, Value } from '@udecode/plate';
 
 import { MyEditor, MyValue } from '../../plateTypes';
 import { normalizeNodeLink } from './normalisenodeLink';

@@ -5,7 +5,7 @@ import {
 	getChildren,
 	getPluginType,
 	setNodes,
-} from '@udecode/plate-core';
+} from '@udecode/plate';
 import {
 	BlockwrappedElements,
 	ELEMENT_BLOCK,

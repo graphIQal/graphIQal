@@ -1,14 +1,15 @@
 import React, { forwardRef, useMemo } from 'react';
-import {
-	createNodesWithHOC,
-	findNodePath,
-	PlateRenderElementProps,
-	Value,
-} from '@udecode/plate-core';
+// import {
+// 	createNodesWithHOC,
+// 	findNodePath,
+// 	PlateRenderElementProps,
+// 	Value,
+// } from '@udecode/plate';
 import { useReadOnly } from 'slate-react';
 import { Draggable } from './Draggable';
 import { DraggableProps } from './Draggable.types';
 import { MyEditor, MyValue } from '../../editor/plateTypes';
+import { PlateRenderElementProps, findNodePath } from '@udecode/plate-common';
 
 export interface WithDraggableOptions<V extends MyValue = MyValue>
 	extends Pick<
@@ -63,5 +64,3 @@ export const withDraggable = <V extends MyValue>(
 		);
 	});
 };
-
-export const withDraggables = createNodesWithHOC(withDraggable);

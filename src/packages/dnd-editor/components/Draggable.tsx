@@ -1,11 +1,10 @@
-import React, { useEffect, useRef } from 'react';
 import useMergedRef from '@react-hook/merged-ref';
-import { Value } from '@udecode/plate-core';
+import { deselect } from '@udecode/plate';
+import { useRef } from 'react';
+import { MyValue } from '../../editor/plateTypes';
 import { useDndNode } from '../hooks/useDnDNode';
 import { getBlockStyles } from './Draggable.styles';
-import { DraggableProps, DragHandleProps } from './Draggable.types';
-import { getMyEditor, MyValue, useMyEditorRef } from '../../editor/plateTypes';
-import { deselect } from '@udecode/plate';
+import { DragHandleProps, DraggableProps } from './Draggable.types';
 
 export const DragHandle = ({ styles, ...props }: DragHandleProps) => {
 	return (

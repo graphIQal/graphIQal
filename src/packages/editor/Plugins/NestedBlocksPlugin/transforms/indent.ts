@@ -5,7 +5,7 @@ import {
 	moveNodes,
 	PlateEditor,
 } from '@udecode/plate';
-import { getNodeEntries, getPluginInjectProps } from '@udecode/plate-core';
+import { getNodeEntries, getPluginInjectProps } from '@udecode/plate';
 import { Path } from 'slate';
 import { COMMAND_NEST, MyValue } from '../../../plateTypes';
 

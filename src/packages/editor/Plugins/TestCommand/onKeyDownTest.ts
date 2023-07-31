@@ -4,7 +4,7 @@ import {
 	KeyboardHandlerReturnType,
 	PlateEditor,
 	Value,
-} from '@udecode/plate-core';
+} from '@udecode/plate';
 import { MyEditor, MyValue } from '../../plateTypes';
 
 export const onKeyDownTest =

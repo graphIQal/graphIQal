@@ -5,7 +5,7 @@ import {
 	isExpanded,
 	TReactEditor,
 	Value,
-} from '@udecode/plate-core';
+} from '@udecode/plate';
 import { MyEditor, MyValue } from '../../editor/plateTypes';
 import { DragItemNode } from '../types';
 import { UseDropNodeOptions } from '../hooks/useDropNode';

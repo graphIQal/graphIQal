@@ -1,4 +1,4 @@
-import { EElement, TElement, Value } from '@udecode/plate-core';
+import { EElement, TElement, Value } from '@udecode/plate';
 import { StyledElementProps } from '@udecode/plate-styled-components';
 import React from 'react';
 import { Path } from 'slate';

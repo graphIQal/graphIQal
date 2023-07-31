@@ -135,143 +135,6 @@ const MainTabs: React.FC<MainTabsProps> = ({
 			<Modal open={isSettingsOpen} setOpen={setisSettingsOpen}>
 				<SettingsPanel />
 			</Modal>
-			<div className='h-10 flex flex-row bg-blue-50 w-full items-center align-middle absolute top-0 z-10 justify-between'>
-				<div className='flex flex-row'>
-					<IconCircleButton
-						onClick={() => {
-							console.log('hover on left side for favourites');
-						}}
-						size={35}
-						src='menu'
-						circle={false}
-						// color={'#FFCB45'}
-						selected={false}
-					/>
-					<IconCircleButton
-						onClick={() => {
-							setisSettingsOpen(true);
-						}}
-						size={35}
-						src='settings'
-						circle={false}
-						// color={'#FFCB45'}
-						selected={false}
-					/>
-					<div>breadcrumb</div>
-				</div>
-				<div className='flex flex-row'>
-					<IconCircleButton
-						onClick={async () => {
-							// all we need to do is write a function that addes to favourites. Easy money
-							if (
-								nodeId &&
-								session &&
-								session.user &&
-								nodeId !== session?.user?.homenodeId &&
-								nodeId !== session?.user?.homelessnodeId
-							) {
-								// Not in favourites
-
-								if (
-									nodeId && connectionMap
-										? (nodeId as string) in connectionMap
-										: false
-								) {
-									const newData = {
-										// n: favData.n,
-										n: {
-											...favData.n,
-											// DUDE WHAT THE FUCK IF I MAKE THIS LENGTH - 1 IT'S INSTANT BUT IF NOT NAH
-											// okay this works idk why idk how idk what im calling it a day. 12:50AM jul 28 2023 i hate my life
-											favourites:
-												favData.n.favourites.filter(
-													(id: string) =>
-														id !==
-														(nodeId as string)
-												),
-											// In fact, if I just copy n it's slow af.
-											// This is the correct code but man idk.
-											// favourites: removeFromArray(
-											// 	favData.n.favourites,
-											// 	nodeId
-											// ),
-											// WHATTT. 2 STrings. Okay, in fact, instant! 3 STRINGS AND IT"S a whole second????
-											// I tested different strings too. 2/3 of any of these will always be fast. 3/3 always slow.
-											// In fact, I tested random strings and they're fast. But these three specific strings and they're slow?
-											// I've found some inconsistencies, I think i'm getting caught up in this.
-											// favourites: [
-											// 	'2ac3cddd-ff9b-4e97-a494-c1f076d431a6',
-											// 	'7276d7d8-d1bb-4016-9f1e-2bce21d88e0f',
-											// 	'8b800581-d8af-408c-9ac7-f3ca7f16ac36',
-											// 	'9e0bc847-25cc-4fb7-a437-f7c956be4958',
-											// ],
-											// For whatever reason, (it's not rendering, or the speed of removeFromArray. Tested w/ whatever)
-											// Inputting favourites here makes the re-render hella slow, like a whole second later.
-										},
-										connectedNodes: removeFromArray(
-											favData.connectedNodes,
-											nodeId,
-											(node: connectedNode_type) =>
-												node.connected_node.id ===
-												nodeId
-										),
-									};
-
-									await mutateFav(
-										deleteFavourite({
-											favouritesId:
-												session.user.favouritesId,
-											nodeId: nodeId as string,
-										}),
-										{
-											optimisticData: newData,
-											populateCache: false,
-										}
-									);
-								} else {
-									const newData = {
-										n: {
-											...favData.n,
-											favourites: [
-												...favData.n.favourites,
-												nodeId,
-											],
-										},
-										connectedNodes: [
-											...favData.connectedNodes,
-											{
-												r: { type: 'HAS' },
-												connected_node: nodeDataSWR.n,
-											},
-										],
-									};
-
-									await mutateFav(
-										addFavourite({
-											favouritesId:
-												session.user.favouritesId,
-											nodeId: nodeId as string,
-										}),
-										{
-											optimisticData: newData,
-											populateCache: false,
-										}
-									);
-								}
-							}
-						}}
-						size={40}
-						src='star'
-						circle={false}
-						color={'#FFCB45'}
-						selected={
-							nodeId && connectionMap
-								? (nodeId as string) in connectionMap
-								: false
-						}
-					/>
-				</div>
-			</div>
 			<Tabs>
 				{mainViewTabs.map((tab, index) => {
 					return (
@@ -303,6 +166,148 @@ const MainTabs: React.FC<MainTabsProps> = ({
 						</div>
 					);
 				})}
+				<div className='h-10 flex flex-row bg-blue-50 w-full items-center align-middle absolute top-10 z-10 justify-between'>
+					<div className='flex flex-row'>
+						<IconCircleButton
+							onClick={() => {
+								console.log(
+									'hover on left side for favourites'
+								);
+							}}
+							size={35}
+							src='menu'
+							circle={false}
+							// color={'#FFCB45'}
+							selected={false}
+						/>
+						<IconCircleButton
+							onClick={() => {
+								console.log('open Settings');
+								setisSettingsOpen(true);
+							}}
+							size={35}
+							src='settings'
+							circle={false}
+							// color={'#FFCB45'}
+							selected={false}
+						/>
+						<div>breadcrumb</div>
+					</div>
+					<div className='flex flex-row'>
+						<IconCircleButton
+							onClick={async () => {
+								// all we need to do is write a function that addes to favourites. Easy money
+								if (
+									nodeId &&
+									session &&
+									session.user &&
+									nodeId !== session?.user?.homenodeId &&
+									nodeId !== session?.user?.homelessnodeId
+								) {
+									// Not in favourites
+
+									if (
+										nodeId && connectionMap
+											? (nodeId as string) in
+											  connectionMap
+											: false
+									) {
+										const newData = {
+											// n: favData.n,
+											n: {
+												...favData.n,
+												// DUDE WHAT THE FUCK IF I MAKE THIS LENGTH - 1 IT'S INSTANT BUT IF NOT NAH
+												// okay this works idk why idk how idk what im calling it a day. 12:50AM jul 28 2023 i hate my life
+												favourites:
+													favData.n.favourites.filter(
+														(id: string) =>
+															id !==
+															(nodeId as string)
+													),
+												// In fact, if I just copy n it's slow af.
+												// This is the correct code but man idk.
+												// favourites: removeFromArray(
+												// 	favData.n.favourites,
+												// 	nodeId
+												// ),
+												// WHATTT. 2 STrings. Okay, in fact, instant! 3 STRINGS AND IT"S a whole second????
+												// I tested different strings too. 2/3 of any of these will always be fast. 3/3 always slow.
+												// In fact, I tested random strings and they're fast. But these three specific strings and they're slow?
+												// I've found some inconsistencies, I think i'm getting caught up in this.
+												// favourites: [
+												// 	'2ac3cddd-ff9b-4e97-a494-c1f076d431a6',
+												// 	'7276d7d8-d1bb-4016-9f1e-2bce21d88e0f',
+												// 	'8b800581-d8af-408c-9ac7-f3ca7f16ac36',
+												// 	'9e0bc847-25cc-4fb7-a437-f7c956be4958',
+												// ],
+												// For whatever reason, (it's not rendering, or the speed of removeFromArray. Tested w/ whatever)
+												// Inputting favourites here makes the re-render hella slow, like a whole second later.
+											},
+											connectedNodes: removeFromArray(
+												favData.connectedNodes,
+												nodeId,
+												(node: connectedNode_type) =>
+													node.connected_node.id ===
+													nodeId
+											),
+										};
+
+										await mutateFav(
+											deleteFavourite({
+												favouritesId:
+													session.user.favouritesId,
+												nodeId: nodeId as string,
+											}),
+											{
+												optimisticData: newData,
+												populateCache: false,
+											}
+										);
+									} else {
+										const newData = {
+											n: {
+												...favData.n,
+												favourites: [
+													...favData.n.favourites,
+													nodeId,
+												],
+											},
+											connectedNodes: [
+												...favData.connectedNodes,
+												{
+													r: { type: 'HAS' },
+													connected_node:
+														nodeDataSWR.n,
+												},
+											],
+										};
+
+										await mutateFav(
+											addFavourite({
+												favouritesId:
+													session.user.favouritesId,
+												nodeId: nodeId as string,
+											}),
+											{
+												optimisticData: newData,
+												populateCache: false,
+											}
+										);
+									}
+								}
+							}}
+							size={40}
+							src='star'
+							circle={false}
+							color={'#FFCB45'}
+							selected={
+								nodeId && connectionMap
+									? (nodeId as string) in connectionMap
+									: false
+							}
+						/>
+					</div>
+				</div>
 			</Tabs>
 			{mainViewTabs.map((tab, i) => {
 				return (

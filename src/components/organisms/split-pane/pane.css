@@ -38,13 +38,13 @@
 }
 
 .separator-col {
-  @apply border-base_black;
-  @apply border-x-2;
+  @apply border-lining;
+  @apply border;
   cursor: col-resize;
 }
 
 .separator-row {
-  @apply border-base_black;
-  @apply border-y-2;
+  @apply border-lining;
+  @apply border;
   cursor: row-resize;
 }

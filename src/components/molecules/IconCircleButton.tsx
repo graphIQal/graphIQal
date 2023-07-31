@@ -43,167 +43,71 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 	color = 'black',
 }) => {
 	const iconSize = size * 0.5;
+
 	const handleClick = (e: any) => {
+		console.log('handleClick');
 		e.stopPropagation();
 		e.preventDefault();
 		onClick();
 	};
+
 	const icons: any = {
-		plus: (
-			<Plus
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-				size={iconSize}
-			/>
-		),
-		draw: (
-			<Pencil
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-				size={iconSize}
-			/>
-		),
-		undo: (
-			<Undo
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-				size={iconSize}
-			/>
-		),
-		redo: (
-			<Redo
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-				size={iconSize}
-			/>
-		),
+		plus: <Plus color={!selected ? color : 'white'} size={iconSize} />,
+		draw: <Pencil color={!selected ? color : 'white'} size={iconSize} />,
+		undo: <Undo color={!selected ? color : 'white'} size={iconSize} />,
+		redo: <Redo color={!selected ? color : 'white'} size={iconSize} />,
 		spotlight: (
-			<Flashlight
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-				size={iconSize}
-			/>
+			<Flashlight color={!selected ? color : 'white'} size={iconSize} />
 		),
 		navigation: (
-			<Navigation
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-				size={iconSize}
-			/>
+			<Navigation color={!selected ? color : 'white'} size={iconSize} />
 		),
 		expand: (
 			<ArrowsAngleExpand
 				color={!selected ? color : 'white'}
-				onClick={handleClick}
 				size={iconSize}
 			/>
 		),
-		remove: (
-			<Trash
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-				size={iconSize}
-			/>
-		),
+		remove: <Trash color={!selected ? color : 'white'} size={iconSize} />,
 		connection: (
 			<Connectdevelop
 				color={!selected ? color : 'white'}
-				onClick={handleClick}
 				size={iconSize}
 			/>
 		),
 		close: (
-			<CloseOutline
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-				size={iconSize}
-			/>
+			<CloseOutline color={!selected ? color : 'white'} size={iconSize} />
 		),
-		block: (
-			<Cube
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
-		),
+		block: <Cube size={'1em'} color={!selected ? color : 'white'} />,
 		angleRight: (
-			<AngleRight
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
+			<AngleRight size={'1em'} color={!selected ? color : 'white'} />
 		),
 		angleLeft: (
-			<AngleLeft
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
+			<AngleLeft size={'1em'} color={!selected ? color : 'white'} />
 		),
 		angleDown: (
-			<AngleDown
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
+			<AngleDown size={'1em'} color={!selected ? color : 'white'} />
 		),
-		save: (
-			<Save
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
-		),
-		data: (
-			<Data
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
-		),
+		save: <Save size={'1em'} color={!selected ? color : 'white'} />,
+		data: <Data size={'1em'} color={!selected ? color : 'white'} />,
 		algo: (
-			<Thealgorithms
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
+			<Thealgorithms size={'1em'} color={!selected ? color : 'white'} />
 		),
 		checklist: (
-			<CardChecklist
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
+			<CardChecklist size={'1em'} color={!selected ? color : 'white'} />
 		),
-		star: (
-			<Star
-				size={'1em'}
-				color={selected ? color : 'white'}
-				onClick={handleClick}
-			/>
-		),
-		menu: (
-			<MenuOutline
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
-		),
-		settings: (
-			<Settings
-				size={'1em'}
-				color={!selected ? color : 'white'}
-				onClick={handleClick}
-			/>
-		),
+		star: <Star size={'1em'} color={selected ? color : 'white'} />,
+		menu: <MenuOutline size={'1em'} color={!selected ? color : 'white'} />,
+		settings: <Settings size={'1em'} color={!selected ? color : 'white'} />,
 	};
 
 	return (
 		<div className='hover:cursor-pointer hover:opacity-80'>
 			{circle ? (
 				<Circle
+					onClick={onClick}
 					diameter={size}
-					children={<IconButton onClick={onClick} src={icons[src]} />}
+					children={<IconButton src={icons[src]} />}
 					backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
 				/>
 			) : (

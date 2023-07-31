@@ -94,7 +94,7 @@ export const H2 = (props: PlateRenderElementProps) => {
 };
 
 export const H3 = (props: PlateRenderElementProps) => {
-	return <h3 className='text-md font-semibold'>{props.children}</h3>;
+	return <h3 className='text-md font-bold'>{props.children}</h3>;
 };
 
 export const OL = (props: PlateRenderElementProps) => {

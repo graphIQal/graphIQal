@@ -19,6 +19,7 @@ export const TextMarkPlugins = createMyPlugins(
 		createSubscriptPlugin(),
 		createSuperscriptPlugin(),
 		createUnderlinePlugin(),
+		createCodePlugin(),
 	],
 	{
 		components: createPlateUI({}),

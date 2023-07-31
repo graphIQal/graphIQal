@@ -3,6 +3,7 @@ import {
 	Combobox,
 	deleteBackward,
 	deleteText,
+	ELEMENT_CODE_BLOCK,
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
@@ -125,39 +126,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			},
 		},
 		{
-			key: 'blist',
-			text: 'Bullet List',
-			data: {
-				searchFunction: (search) => {
-					if ('Bullet List'.startsWith(search)) {
-						return true;
-					}
-					return false;
-				},
-				onPress: () => {
-					formatList(editor, ELEMENT_LI);
-				},
-			},
-		},
-		{
-			key: 'tlist',
-			text: 'Todo List',
-			data: {
-				searchFunction: (search) => {
-					if (
-						'checkbox'.startsWith(search) ||
-						'todo list'.startsWith(search)
-					) {
-						return true;
-					}
-					return false;
-				},
-				onPress: () => {
-					formatList(editor, ELEMENT_TODO_LI);
-				},
-			},
-		},
-		{
 			key: 'h1',
 			text: 'Header 1',
 			data: {
@@ -176,7 +144,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					if (isSelectionAtBlockStart(editor)) {
 						setNodes(editor, { type: ELEMENT_H1 });
 					} else {
-						console.log('inserting');
 						insertNodes(editor, {
 							type: getPluginType(editor, ELEMENT_H1),
 							children: [{ text: '' }],
@@ -232,7 +199,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					if (isSelectionAtBlockStart(editor)) {
 						setNodes(editor, { type: ELEMENT_H3 });
 					} else {
-						console.log('inserting');
 						insertNodes(editor, {
 							type: getPluginType(editor, ELEMENT_H3),
 							children: [{ text: '' }],
@@ -241,6 +207,61 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				},
 			},
 		},
+		{
+			key: 'blist',
+			text: 'Bullet List',
+			data: {
+				searchFunction: (search) => {
+					if ('Bullet List'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+				onPress: () => {
+					formatList(editor, ELEMENT_LI);
+				},
+			},
+		},
+		{
+			key: 'tlist',
+			text: 'Todo List',
+			data: {
+				searchFunction: (search) => {
+					if (
+						'checkbox'.startsWith(search) ||
+						'todo list'.startsWith(search)
+					) {
+						return true;
+					}
+					return false;
+				},
+				onPress: () => {
+					formatList(editor, ELEMENT_TODO_LI);
+				},
+			},
+		},
+		// {
+		// 	key: 'code block',
+		// 	text: 'Code Block',
+		// 	data: {
+		// 		searchFunction: (search) => {
+		// 			if ('code block'.startsWith(search)) {
+		// 				return true;
+		// 			}
+		// 			return false;
+		// 		},
+		// 		onPress: () => {
+		// 			if (isSelectionAtBlockStart(editor)) {
+		// 				setNodes(editor, { type: ELEMENT_CODE_BLOCK });
+		// 			} else {
+		// 				insertNodes(editor, {
+		// 					type: getPluginType(editor, ELEMENT_CODE_BLOCK),
+		// 					children: [{ text: '' }],
+		// 				});
+		// 			}
+		// 		},
+		// 	},
+		// },
 		{
 			key: 'HAScreate',
 			text: 'Create Node with Connection: HAS',

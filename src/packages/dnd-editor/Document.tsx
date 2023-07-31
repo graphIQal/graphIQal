@@ -34,8 +34,12 @@ import {
 } from '../editor/plateTypes';
 import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
 import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
+import IconCircleButton from '../../components/molecules/IconCircleButton';
 
-const Document: React.FC<{ viewId: string }> = () => {
+const Document: React.FC<{
+	viewId: string;
+	barComponents: { [key: string]: JSX.Element };
+}> = ({ barComponents }) => {
 	const { nodeId } = useViewData();
 
 	const {
@@ -141,7 +145,17 @@ const Document: React.FC<{ viewId: string }> = () => {
 		<DndProvider backend={HTML5Backend}>
 			<SplitPane className='split-pane-row z-20'>
 				<SplitPaneLeft>
-					<div className='pl-10 pt-0 pr-3 pb-3'>
+					<div className='w-full h-10 bg-base_white flex flex-row justify-between z-10 top-0 sticky'>
+						<div className='flex flex-row gap-x-1 justify-start align-middle items-center'>
+							{barComponents.favouriteBar}
+							<div>BreadCrumb</div>
+						</div>
+						<div className='flex flex-row gap-x-1 justify-end align-middle items-center'>
+							{barComponents.settings}
+							{barComponents.favourite}
+						</div>
+					</div>
+					<div className='pl-10 pt-20 pr-3 pb-3'>
 						{nodeDataSWR.n.document && (
 							// <PlateProvider>
 							<EditorComponent
@@ -202,6 +216,19 @@ const Document: React.FC<{ viewId: string }> = () => {
 				</SplitPaneLeft>
 				<Divider className='separator-col' />
 				<SplitPaneRight>
+					<div className='w-full h-10 bg-base_white flex flex-row justify-between z-10 top-0 sticky'>
+						<div className='flex flex-row gap-x-1 justify-start align-middle items-center pl-2 w-full'>
+							<input className='border rounded-full py-2 pl-4 leading-2 w-full focus:outline-none focus:shadow-outline text-sm p-10 h-[30px]' />
+						</div>
+						<div className='flex flex-row gap-x-1 justify-end align-middle items-center '>
+							<IconCircleButton
+								src='search'
+								size={40}
+								onClick={() => console.log('search')}
+								circle={false}
+							/>
+						</div>
+					</div>
 					<DocumentSideTabs
 						editorComponent={
 							nodeDataSWR.n.shelf ? (

@@ -3,10 +3,12 @@ import Circle from '../atoms/Circle';
 import IconButton from '../atoms/IconButton';
 import { Plus } from '@styled-icons/fa-solid/Plus';
 import { Star } from '@styled-icons/fa-solid/Star';
+import { Star as HollowStar } from '@styled-icons/fa-regular/Star';
 import { Pencil } from '@styled-icons/bootstrap/Pencil';
 import { Cube } from '@styled-icons/boxicons-solid/Cube';
 import { Undo } from '@styled-icons/icomoon/Undo';
 import { Redo } from '@styled-icons/icomoon/Redo';
+import { Search } from '@styled-icons/feather/Search';
 import { Flashlight } from '@styled-icons/fluentui-system-filled/Flashlight';
 import { Navigation } from '@styled-icons/boxicons-regular/Navigation';
 import { ArrowsAngleExpand } from '@styled-icons/bootstrap/ArrowsAngleExpand';
@@ -96,9 +98,14 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		checklist: (
 			<CardChecklist size={'1em'} color={!selected ? color : 'white'} />
 		),
-		star: <Star size={'1em'} color={selected ? color : 'white'} />,
+		star: selected ? (
+			<Star size={'1em'} color={color} />
+		) : (
+			<HollowStar size={'1em'} />
+		),
 		menu: <MenuOutline size={'1em'} color={!selected ? color : 'white'} />,
 		settings: <Settings size={'1em'} color={!selected ? color : 'white'} />,
+		search: <Search size={'1em'} color={color} />,
 	};
 
 	return (

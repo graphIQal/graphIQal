@@ -20,7 +20,7 @@ export const Tabs: React.FC<{ children: any }> = ({ children }) => {
 		{ text: 'Duplicate graph', onPress: () => null },
 	];
 	return (
-		<div className='flex flex-row bg-blue-50 items-center align-middle absolute top-0 w-fit overflow-x-scroll'>
+		<div className='flex flex-row bg-blue-50 items-center align-middle absolute top-0 w-fit overflow-x-scroll border-lining -ml-[1px]'>
 			{children}
 			<div className='ml-[0.5rem]'>
 				<IconCircleButton

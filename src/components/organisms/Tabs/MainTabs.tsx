@@ -235,6 +235,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 							? (nodeId as string) in connectionMap
 							: false
 					}
+					hoverText='Favourite this node'
 				/>
 			),
 			favouriteBar: (
@@ -242,6 +243,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 					onClick={() => {
 						console.log('hover on left side for favourites');
 					}}
+					hoverText='Mouse to the left of the window for the favourites sidebar'
 					size={40}
 					src='menu'
 					circle={false}
@@ -253,6 +255,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 					onClick={() => {
 						setisSettingsOpen(true);
 					}}
+					hoverText='Settings'
 					size={40}
 					src='settings'
 					circle={false}

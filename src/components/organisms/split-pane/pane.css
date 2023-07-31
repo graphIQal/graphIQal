@@ -39,12 +39,12 @@
 
 .separator-col {
   @apply border-lining;
-  @apply border;
+  @apply border-l;
   cursor: col-resize;
 }
 
 .separator-row {
   @apply border-lining;
-  @apply border;
+  @apply border-t;
   cursor: row-resize;
 }

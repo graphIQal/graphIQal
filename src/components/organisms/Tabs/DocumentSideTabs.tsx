@@ -42,13 +42,6 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 					router.push(`/${username}/${result.id}`, undefined);
 				},
 			},
-			{
-				//this button should put the selected node in focus
-				src: 'spotlight',
-				onClick: () => {
-					//   changeNodeInFocusId(result.id);
-				},
-			},
 		];
 	};
 

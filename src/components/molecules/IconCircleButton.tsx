@@ -24,6 +24,8 @@ import { Thealgorithms } from '@styled-icons/simple-icons/Thealgorithms';
 import { CardChecklist } from '@styled-icons/bootstrap/CardChecklist';
 import { MenuOutline } from '@styled-icons/evaicons-outline/MenuOutline';
 import { Settings } from '@styled-icons/material/Settings';
+import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft';
+import { ArrowRight } from '@styled-icons/fa-solid/ArrowRight';
 
 type NodeButtonProps = {
 	onClick: () => void;
@@ -32,6 +34,7 @@ type NodeButtonProps = {
 	size?: number;
 	circle?: boolean;
 	color?: string;
+	hoverText?: string;
 };
 
 //filled circle button with plus icon button inside
@@ -43,6 +46,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 	size = 30,
 	circle = true,
 	color = 'black',
+	hoverText = '',
 }) => {
 	const iconSize = size * 0.5;
 
@@ -106,10 +110,15 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		menu: <MenuOutline size={'1em'} color={!selected ? color : 'white'} />,
 		settings: <Settings size={'1em'} color={!selected ? color : 'white'} />,
 		search: <Search size={'1em'} color={color} />,
+		ArrowLeft: <ArrowLeft size={'1em'} color={color} />,
+		ArrowRight: <ArrowRight size={'1em'} color={color} />,
 	};
 
 	return (
-		<div className='hover:cursor-pointer hover:opacity-80'>
+		<div
+			className='hover:cursor-pointer hover:opacity-80'
+			title={hoverText}
+		>
 			{circle ? (
 				<Circle
 					onClick={onClick}

@@ -63,7 +63,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			text: 'Create Node',
 			data: {
 				searchFunction: (search) => {
-					if ('create'.startsWith(search)) {
+					console.log('search ', search);
+					if ('create node'.startsWith(search)) {
 						return true;
 					}
 					return false;
@@ -318,6 +319,14 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			},
 		},
 	];
+	const trigger = '/';
+
+	const getTextAfterTrigger = (search: string) => {
+		const indexOfTrigger = search.lastIndexOf(trigger);
+		return indexOfTrigger !== -1
+			? search.substring(indexOfTrigger + 1)
+			: search;
+	};
 
 	return (
 		<Combobox
@@ -330,7 +339,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 				// the combobox is getting overridden by the exitbreakline on headers.
 			}}
-			trigger='/'
+			trigger={trigger}
 			component={(store) => {
 				return <BlockMenu></BlockMenu>;
 			}}
@@ -341,7 +350,9 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			}}
 			searchPattern={'.+'}
 			filter={(search: string) => (value) =>
-				value.data.searchFunction(search.toLowerCase())}
+				value.data.searchFunction(
+					getTextAfterTrigger(search.toLowerCase())
+				)}
 			// value.toLowerCase().startsWith(search.toLowerCase())}
 		/>
 	);

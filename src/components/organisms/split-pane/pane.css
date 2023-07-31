@@ -23,8 +23,8 @@
 .split-pane-right ,
 .split-pane-left {
   @apply flex-1;
-  @apply overflow-scroll;
-  width: 100%;
+  @apply overflow-y-scroll;
+  /* width: 100%; */
 }
 
 .split-pane-top,

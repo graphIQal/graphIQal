@@ -130,7 +130,7 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 	const [currTab, setCurrTab] = useState(0);
 
 	return (
-		<div className='max-width-full relative pt-10 -mt-10'>
+		<div className='z-20 w-fit'>
 			<Tabs>
 				{tabs.map((tab, index) => {
 					return (

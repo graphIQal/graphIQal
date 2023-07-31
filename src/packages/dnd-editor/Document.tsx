@@ -139,7 +139,7 @@ const Document: React.FC<{ viewId: string }> = () => {
 
 	return (
 		<DndProvider backend={HTML5Backend}>
-			<SplitPane className='split-pane-row'>
+			<SplitPane className='split-pane-row z-20'>
 				<SplitPaneLeft>
 					<div className='pl-10 pt-0 pr-3 pb-3'>
 						{nodeDataSWR.n.document && (

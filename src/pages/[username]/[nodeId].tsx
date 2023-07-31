@@ -1,35 +1,18 @@
-import { useRouter, withRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
+import { fetcherAll } from '../../backend/driver/fetcher';
 import MainTabs, {
 	MainTabProps,
 } from '../../components/organisms/Tabs/MainTabs';
 
 import { ViewDataProvider } from '../../components/context/ViewContext';
-import Graph from '../../packages/graph/Graph';
 import Document from '../../packages/dnd-editor/Document';
-import { SideBar } from '../../components/organisms/sidebar-navigator';
-import { useSession } from 'next-auth/react';
+import Graph from '../../packages/graph/Graph';
 
 // ('use client');
 
 const Home: React.FC = () => {
-	let newTabs: MainTabProps[] = [
-		{
-			label: 'Document',
-			viewId: '',
-			viewType: 'document',
-			component: <Document viewId={''} />,
-		},
-		//temp
-		// {
-		//   label: 'Graph View',
-		//   viewId: '',
-		//   viewType: 'graph',
-		//   component: <Graph2 viewId={''} title={'Graph View'} />,
-		// },
-	];
 	const router = useRouter();
 	const { nodeId, username } = router.query;
 
@@ -37,6 +20,20 @@ const Home: React.FC = () => {
 		[nodeId ? `/api/${username}/${nodeId}/document` : null],
 		fetcherAll
 	);
+	let newTabs: MainTabProps[] = [
+		{
+			title: 'Document',
+			viewId: '',
+			viewType: 'document',
+		},
+		//temp graph for offline purposes
+		// {
+		//   label: 'Graph View',
+		//   viewId: '',
+		//   viewType: 'graph',
+		//   component: <Graph viewId={''} title={'Graph View'} />,
+		// },
+	];
 
 	const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
@@ -51,15 +48,9 @@ const Home: React.FC = () => {
 						includedIDs[record.g.properties.id] = true;
 
 						newTabs.push({
-							label: record.g.properties.title,
+							title: record.g.properties.title,
 							viewId: record.g.properties.id,
 							viewType: 'graph',
-							component: (
-								<Graph
-									viewId={record.g.properties.id}
-									title={record.g.properties.title}
-								/>
-							),
 						});
 					}
 				});
@@ -74,4 +65,4 @@ const Home: React.FC = () => {
 		</ViewDataProvider>
 	);
 };
-export default withRouter(Home);
+export default Home;

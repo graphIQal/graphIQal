@@ -8,7 +8,7 @@ export const ShelfBlock = (props: any) => {
 
 	return (
 		<div
-			className='border-2 rounded-md border-emerald-500' /**{...props.attributes}**/
+			className='border my-1 p-1 rounded-md border-lining' /**{...props.attributes}**/
 		>
 			{props.children}
 		</div>

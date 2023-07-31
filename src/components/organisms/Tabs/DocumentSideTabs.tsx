@@ -57,14 +57,23 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 		];
 
 		connectedNodes
-			.sort(
-				(a, b) =>
+			.sort((a, b) => {
+				const relationshipOrderComparison =
 					relationshipOrder.indexOf(a.r.type) -
-					relationshipOrder.indexOf(b.r.type)
-			)
+					relationshipOrder.indexOf(b.r.type);
+
+				return a.r.fromNode === false
+					? -1 // Sort false `fromNode` values before positive `fromNode` values
+					: b.r.fromNode === false
+					? 1 // Sort positive `fromNode` values after false `fromNode` values
+					: relationshipOrderComparison !== 0
+					? relationshipOrderComparison // If `fromNode` values are the same, sort by relationship order
+					: 0;
+			})
 			.map((connectedNode: connectedNode_type, i: number) => {
 				items.push(
 					<ConnectionListItem
+						fromNode={connectedNode.r.fromNode}
 						key={i}
 						type={connectedNode.r.type}
 						title={connectedNode.connected_node.title}

@@ -7,7 +7,10 @@ export type getNodeData_type = {
 	connectedNodes: connectedNode_type[];
 };
 
-export type Connection = { type: string; [key: string]: string };
+export type Connection = {
+	type: string;
+	[key: string]: string;
+} & { fromNode: boolean };
 
 export type connectedNode_type = {
 	r: Connection;

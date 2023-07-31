@@ -3,6 +3,8 @@ import IconCircleButton from '../molecules/IconCircleButton';
 import { OnHoverMenu } from './OnHoverMenu';
 import { title } from 'process';
 import { useViewData } from '../context/ViewContext';
+import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft';
+import { ArrowRight } from '@styled-icons/fa-solid/ArrowRight';
 
 type ConnectionListItemProps = {
 	type: string;
@@ -14,6 +16,7 @@ type ConnectionListItemProps = {
 		onClick: () => void;
 	}[];
 	url: string;
+	fromNode: boolean;
 };
 const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
 	type,
@@ -22,6 +25,7 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
 	index,
 	buttonItems,
 	url,
+	fromNode,
 }) => {
 	const { windowVar } = useViewData();
 	if (!windowVar) return <div></div>;
@@ -36,7 +40,10 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
 				className='flex flex-row items-center align-middle'
 				key={index}
 			>
-				<div>{type}</div>
+				{!fromNode && <ArrowLeft size={15} />}
+				<div className='px-1'>{type}</div>
+				{fromNode && <ArrowRight size={15} />}
+				<div className='h-full py-2 ml-2 border-l border-lining'></div>
 				<IconCircleButton
 					circle={false}
 					src='block'

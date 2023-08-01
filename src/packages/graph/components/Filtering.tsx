@@ -16,63 +16,68 @@ import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import { useGraphViewData } from '../context/GraphViewContext';
 
 type FilteringProps = {
-  xCategory: string;
-  yCategory: string;
-  getDropdownItemsX: () => ItemProps[];
-  getDropdownItemsY: () => ItemProps[];
-  getDropdownItems: () => ItemProps[];
+	xCategory: string;
+	yCategory: string;
+	getDropdownItemsX: () => ItemProps[];
+	getDropdownItemsY: () => ItemProps[];
+	getDropdownItems: () => ItemProps[];
 };
 export const Filtering: React.FC<FilteringProps> = ({
-  xCategory,
-  yCategory,
-  getDropdownItems,
-  getDropdownItemsX,
-  getDropdownItemsY,
+	xCategory,
+	yCategory,
+	getDropdownItems,
+	getDropdownItemsX,
+	getDropdownItemsY,
 }) => {
-  const {
-    tags,
-    graphViewId,
-    nodeVisualData_Graph,
-    nodeData_Graph,
-    history,
-    pointer,
-    undo,
-    redo,
-  } = useGraphViewData();
+	const {
+		tags,
+		graphViewId,
+		nodeVisualData_Graph,
+		nodeData_Graph,
+		history,
+		pointer,
+		undo,
+		redo,
+	} = useGraphViewData();
 
-  const { username, nodeId } = useViewData();
+	const { username, nodeId, currNode_data } = useViewData();
 
-  return (
-    <div className=' relative flex flex-row p-3 justify-between mb-3 w-full align-middle items-center'>
-      <div className='flex flex-row gap-x-5'>
-        <div className='flex flex-row gap-x-3 align-middle items-center'>
-          <IconCircleButton
-            src='save'
-            size={30}
-            onClick={() => {
-              saveGraphView({
-                username,
-                graphViewId,
-                nodeId,
-                graphViewData: nodeVisualData_Graph,
-                nodeData: nodeData_Graph,
-                history: history,
-                pointer: pointer,
-              });
-            }}
-          />
-          <div className='flex flex-row gap-x-1 align-middle items-center'>
-            <IconCircleButton src='undo' onClick={undo} />
-            <IconCircleButton src='redo' onClick={redo} />
-          </div>
-        </div>
-        {/* <TextButton
+	return (
+		<div>
+			<div className=' absolute top-10 flex flex-row py-2 px-3 justify-between w-full align-middle items-center z-99'>
+				<div className='flex flex-row gap-x-5'>
+					<div className='flex flex-row gap-x-3 align-middle items-center'>
+						<IconCircleButton
+							src='save'
+							size={30}
+							onClick={() => {
+								saveGraphView({
+									username,
+									graphViewId,
+									nodeId,
+									graphViewData: nodeVisualData_Graph,
+									nodeData: nodeData_Graph,
+									history: history,
+									pointer: pointer,
+								});
+							}}
+						/>
+						<div className='flex flex-row gap-x-1 align-middle items-center'>
+							<IconCircleButton src='undo' onClick={undo} />
+							<IconCircleButton src='redo' onClick={redo} />
+						</div>
+						<h3 className='text-md font-semibold'>
+							{currNode_data.n.title}
+						</h3>
+						{/* <TitleWithNavigation /> */}
+					</div>
+					{/* <TextButton
 				text='Create Node'
 				onClick={() => {
 					console.log('hmm');
 				}}
 			></TextButton> */
-        /* <PillMenu
+					/* <PillMenu
         label='In View: '
         value={nodeInView}
         dropdownItems={getDropdownItems()}
@@ -87,7 +92,7 @@ export const Filtering: React.FC<FilteringProps> = ({
         value={yCategory}
         dropdownItems={getDropdownItemsY()}
       /> */}
-        {/* <div className='flex flex-row justify-items-stretch gap-x-2 align-middle items-center'>
+					{/* <div className='flex flex-row justify-items-stretch gap-x-2 align-middle items-center'>
 					{tags.map(
 						(
 							tag: {
@@ -110,8 +115,8 @@ export const Filtering: React.FC<FilteringProps> = ({
 						}}
 					></TextButton>
 				</div> */}
-      </div>
-      <TitleWithNavigation />
-    </div>
-  );
+				</div>
+			</div>
+		</div>
+	);
 };

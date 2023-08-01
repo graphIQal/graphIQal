@@ -128,9 +128,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
 		if (!nodeInFocus_data) return;
 		let newTabs = [...tabs];
 		newTabs[0].component = (
-			<SidePanel
-				title={'All Connections for ' + nodeInFocus_data.n.title}
-			>
+			<SidePanel title={nodeInFocus_data.n.title}>
 				<SelectableList
 					onEnter={() => null}
 					listItems={renderConnections(

@@ -162,7 +162,7 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 				className=' h-[30px] w-[30px] absolute z-10'
 				style={{
 					left: nodeInfo.left - OFFSET / 2,
-					top: nodeInfo.top - OFFSET / 2,
+					top: nodeInfo.top,
 				}}
 				onMouseDown={() => {
 					updateStartPos({ left: nodeInfo.left, top: nodeInfo.top });
@@ -186,9 +186,9 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 			</div>
 			{/* This div and the resizable box must remain siblings for the line drawing */}
 			<div
+				className='absolute flex flex-row justify-center align-middle items-center hover:bg-selected_white pointer-pencil rounded-md'
 				onMouseOver={() => setShowMenu(true)}
 				onMouseLeave={() => setShowMenu(false)}
-				className='absolute flex flex-row justify-center align-middle items-center hover:bg-selected_white pointer-pencil rounded-md'
 				style={{
 					left: nodeInfo.left - OFFSET / 2,
 					top: nodeInfo.top - OFFSET / 2,
@@ -200,7 +200,7 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 			></div>
 			<ResizableBox
 				classes={
-					'p-sm overflow-hidden h-full w-full h-12 rounded-sm border-grey border-[1px] flex flex-row z-10 p-3 gap-x-3 border-l-[3px] ' +
+					'p-sm overflow-hidden h-full w-full h-12 flex flex-row z-10 p-3 gap-x-3 border-[1px] border-l-[3px] rounded ' +
 					backgroundClass
 				}
 				style={{

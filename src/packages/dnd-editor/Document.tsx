@@ -155,7 +155,7 @@ const Document: React.FC<{
 							{barComponents.favourite}
 						</div>
 					</div>
-					<div className='pl-10 pt-16 pr-3 pb-3'>
+					<div className='pl-10 pt-15 pr-3 pb-3'>
 						{nodeDataSWR.n.document && (
 							// <PlateProvider>
 							<EditorComponent

@@ -22,10 +22,13 @@ import { fetcher, fetcherAll } from '../../../backend/driver/fetcher';
 import SearchBar from '../../../components/organisms/SearchBar';
 import { useViewData } from '../../../components/context/ViewContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
+import { useFiltering } from '../hooks/useFiltering';
+import { Filtering } from './Filtering';
 
 const GraphSplitPaneWrapper: React.FC<{
 	viewId: string;
-}> = ({ viewId }) => {
+	barComponents: { [key: string]: JSX.Element };
+}> = ({ viewId, barComponents }) => {
 	// console.log('rerendering graph pane wrapper');
 
 	const { nodeId, username, documentVar, windowVar } = useViewData();
@@ -146,6 +149,15 @@ const GraphSplitPaneWrapper: React.FC<{
 	//   console.log('common parents ', res);
 	// });
 
+	//Pill menu information for centered node
+	const {
+		xCategory,
+		yCategory,
+		getDropdownItemsX,
+		getDropdownItemsY,
+		getDropdownItems,
+	} = useFiltering();
+
 	return (
 		<DrawingContext.Provider
 			value={{
@@ -166,6 +178,19 @@ const GraphSplitPaneWrapper: React.FC<{
 						tabIndex={-1}
 						ref={containerRef}
 					>
+						<div className='w-full flex flex-row justify-between align-center items-center'>
+							<Filtering
+								xCategory={xCategory}
+								yCategory={yCategory}
+								getDropdownItems={getDropdownItems}
+								getDropdownItemsX={getDropdownItemsX}
+								getDropdownItemsY={getDropdownItemsY}
+							/>
+							<div className='flex flex-row justify-end align-middle items-center'>
+								{barComponents.settings}
+								{barComponents.favourite}
+							</div>
+						</div>
 						<GraphContainer />
 						<SearchBar />
 						<Alert />

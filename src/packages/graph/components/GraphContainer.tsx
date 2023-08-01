@@ -187,15 +187,6 @@ export const GraphContainer: React.FC<{}> = () => {
 	const handleDrawing = useDrawingCanvas();
 	const handleDrawingEnd = useDrawingEnd(translateX, translateY, scale);
 
-	//Pill menu information for centered node
-	const {
-		xCategory,
-		yCategory,
-		getDropdownItemsX,
-		getDropdownItemsY,
-		getDropdownItems,
-	} = useFiltering();
-
 	//Resizing
 	const updateSize = useResize();
 
@@ -213,13 +204,6 @@ export const GraphContainer: React.FC<{}> = () => {
 				id={'parent' + graphViewId}
 				ref={drop}
 			>
-				<Filtering
-					xCategory={xCategory}
-					yCategory={yCategory}
-					getDropdownItems={getDropdownItems}
-					getDropdownItemsX={getDropdownItemsX}
-					getDropdownItemsY={getDropdownItemsY}
-				/>
 				<GraphMindMapView
 					points={points}
 					setPoints={setPoints}

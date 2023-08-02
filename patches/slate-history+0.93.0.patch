@@ -1,0 +1,145 @@
+diff --git a/node_modules/slate-history/dist/history.d.ts b/node_modules/slate-history/dist/history.d.ts
+index fff2b0c..56f70eb 100644
+--- a/node_modules/slate-history/dist/history.d.ts
++++ b/node_modules/slate-history/dist/history.d.ts
+@@ -2,6 +2,7 @@ import { Operation, Range } from 'slate';
+ interface Batch {
+     operations: Operation[];
+     selectionBefore: Range | null;
++    blockId: string;
+ }
+ /**
+  * `History` objects hold all of the operations that are applied to a value, so
+diff --git a/node_modules/slate-history/dist/index.es.js b/node_modules/slate-history/dist/index.es.js
+index 61c542e..2c73a92 100644
+--- a/node_modules/slate-history/dist/index.es.js
++++ b/node_modules/slate-history/dist/index.es.js
+@@ -127,6 +127,7 @@ var withHistory = editor => {
+   };
+ 
+   e.undo = () => {
++    console.log('yay')
+     var {
+       history
+     } = e;
+@@ -155,6 +156,7 @@ var withHistory = editor => {
+   };
+ 
+   e.apply = op => {
++    console.log('yay')
+     var {
+       operations,
+       history
+@@ -187,7 +189,8 @@ var withHistory = editor => {
+       } else {
+         var batch = {
+           operations: [op],
+-          selectionBefore: e.selection
++          selectionBefore: e.selection,
++          blockId: 'huh'
+         };
+         e.writeHistory('undos', batch);
+       }
+diff --git a/node_modules/slate-history/dist/index.js b/node_modules/slate-history/dist/index.js
+index 098b573..3060359 100644
+--- a/node_modules/slate-history/dist/index.js
++++ b/node_modules/slate-history/dist/index.js
+@@ -105,6 +105,7 @@ var withHistory = function withHistory(editor) {
+   };
+ 
+   e.redo = function () {
++    console.log('undo')
+     var history = e.history;
+     var redos = history.redos;
+ 
+@@ -133,11 +134,12 @@ var withHistory = function withHistory(editor) {
+         });
+       });
+       history.redos.pop();
+-      e.writeHistory('undos', batch);
++      e.writeHistory('undos', {...batch, id: 'redo'});
+     }
+   };
+ 
+   e.undo = function () {
++    console.log('yay')
+     var history = e.history;
+     var undos = history.undos;
+ 
+@@ -172,6 +174,7 @@ var withHistory = function withHistory(editor) {
+   };
+ 
+   e.apply = function (op) {
++    console.log('apply')
+     var operations = e.operations,
+         history = e.history;
+     var undos = history.undos;
+@@ -200,7 +203,8 @@ var withHistory = function withHistory(editor) {
+       } else {
+         var batch = {
+           operations: [op],
+-          selectionBefore: e.selection
++          selectionBefore: e.selection,
++          id: 'lmaoo'
+         };
+         e.writeHistory('undos', batch);
+       }
+diff --git a/node_modules/slate-history/dist/slate-history.js b/node_modules/slate-history/dist/slate-history.js
+index ff62920..339ff33 100644
+--- a/node_modules/slate-history/dist/slate-history.js
++++ b/node_modules/slate-history/dist/slate-history.js
+@@ -87,6 +87,7 @@
+      * Undo to the previous saved state.
+      */
+     undo: function undo(editor) {
++      console.log('undo')
+       editor.undo();
+     },
+ 
+@@ -140,7 +141,9 @@
+       var history = e.history;
+       var redos = history.redos;
+ 
++      console.log('yay')
+       if (redos.length > 0) {
++        
+         var batch = redos[redos.length - 1];
+ 
+         if (batch.selectionBefore) {
+@@ -165,7 +168,7 @@
+           });
+         });
+         history.redos.pop();
+-        e.writeHistory('undos', batch);
++        e.writeHistory('undos', {...batch, id: 'undo'});
+       }
+     };
+ 
+@@ -173,6 +176,8 @@
+       var history = e.history;
+       var undos = history.undos;
+ 
++      console.log('yay')
++
+       if (undos.length > 0) {
+         var batch = undos[undos.length - 1];
+         HistoryEditor.withoutSaving(e, function () {
+@@ -198,7 +203,7 @@
+             }
+           });
+         });
+-        e.writeHistory('redos', batch);
++        e.writeHistory('redos', {...batch, blockId: 'poopoo'});
+         history.undos.pop();
+       }
+     };
+@@ -232,7 +237,8 @@
+         } else {
+           var batch = {
+             operations: [op],
+-            selectionBefore: e.selection
++            selectionBefore: e.selection,
++            blockId: 'lmao'
+           };
+           e.writeHistory('undos', batch);
+         }

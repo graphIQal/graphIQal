@@ -58,7 +58,7 @@ module.exports = {
 				secondary_white: 'rgb(251, 251, 250)',
 				action: '#1A57F2',
 				yellow: '#FFCB45',
-				lining: '242425',
+				lining: '#e5e7eb',
 				node: '#8DD39C',
 				selected_white: '#F5F6F7',
 				connection: '#4362B1',

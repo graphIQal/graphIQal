@@ -148,7 +148,7 @@ const Document: React.FC<{
 					<div className='w-full h-10 bg-base_white flex flex-row justify-between z-10 top-0 sticky'>
 						<div className='flex flex-row gap-x-1 justify-start align-middle items-center'>
 							{barComponents.favouriteBar}
-							{/* <div>BreadCrumb</div> */}
+							{barComponents.breadcrumb}
 						</div>
 						<div className='flex flex-row justify-end align-middle items-center'>
 							{barComponents.settings}

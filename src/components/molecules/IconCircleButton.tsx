@@ -26,7 +26,7 @@ import { MenuOutline } from '@styled-icons/evaicons-outline/MenuOutline';
 import { Settings } from '@styled-icons/material/Settings';
 import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft';
 import { ArrowRight } from '@styled-icons/fa-solid/ArrowRight';
-
+import { CircularGraph } from '@styled-icons/entypo/CircularGraph';
 type NodeButtonProps = {
 	onClick: () => void;
 	src: string;
@@ -85,6 +85,9 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 			<CloseOutline color={!selected ? color : 'white'} size={iconSize} />
 		),
 		block: <Cube size={'1em'} color={!selected ? color : 'white'} />,
+		graph: (
+			<CircularGraph size={'1em'} color={!selected ? color : 'white'} />
+		),
 		angleRight: (
 			<AngleRight size={'1em'} color={!selected ? color : 'white'} />
 		),
@@ -121,7 +124,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		>
 			{circle ? (
 				<Circle
-					onClick={onClick}
+					onClick={handleClick}
 					diameter={size}
 					children={<IconButton src={icons[src]} />}
 					backgroundClass={selected ? 'bg-base_black' : 'bg-white'}

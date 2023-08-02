@@ -1,6 +1,9 @@
 import {
 	createComboboxPlugin,
 	createNodeIdPlugin,
+	getBlockAbove,
+	getNode,
+	getNodeAncestor,
 	Plate,
 } from '@udecode/plate';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -11,6 +14,7 @@ import { editableProps } from './editableProps';
 import {
 	createMyPlugins,
 	ELEMENT_BLOCK,
+	MyEditor,
 	MyPlatePlugin,
 	MyValue,
 } from './plateTypes';
@@ -47,6 +51,7 @@ const EditorComponent: React.FC<{
 	const router = useRouter();
 
 	const intervalRef = useRef<NodeJS.Timeout>(setTimeout(() => {}, 3000));
+	const editorRef = useRef<MyEditor | null>(null);
 
 	useEffect(() => {
 		// console.log('on Mount');
@@ -57,6 +62,23 @@ const EditorComponent: React.FC<{
 	useEffect(() => {
 		window.addEventListener('beforeunload', onUnload);
 		router.events.on('routeChangeStart', onRouterUnload);
+		console.log('editorRef');
+		console.log(editorRef.current?.history);
+		const lastUndo =
+			editorRef.current?.history.undos[
+				editorRef.current?.history.undos.length - 1
+			];
+		console.log(lastUndo);
+
+		if (editorRef.current && lastUndo?.operations[0].path) {
+			console.log(lastUndo?.operations[0].path);
+
+			// const lastBlockParent = getNode(
+			// 	editorRef.current,
+			// 	lastUndo?.operations[0].path
+			// );
+			// console.log(lastBlocksparent);
+		}
 
 		return () => {
 			window.removeEventListener('beforeunload', onUnload);
@@ -120,25 +142,17 @@ const EditorComponent: React.FC<{
 		[]
 	);
 
-	// const editorOnly = createMyEditor();
-	// const editor = createMyPlateEditor({
-	// 	plugins: plugins,
-	// });
-
 	// `useCallback` here to memoize the function for subsequent renders.
 	// const renderElement = useCallback((props: any) => {
 	// 	return <Block {...props} />;
 	// }, []);
 
-	// get editor instance
-	// const editor =
-
 	return (
 		<div className='pb-[50%]'>
 			<Plate<MyValue>
+				editorRef={editorRef}
 				editableProps={editableProps}
 				initialValue={initialValue}
-				// editor={editor}
 				onChange={(docValue) => {
 					// console.log(docValue);
 					setValue(docValue);
@@ -149,8 +163,9 @@ const EditorComponent: React.FC<{
 							username,
 							document: docValue,
 							title: docValue[0].children[0].text as string,
+							// editorRef.current.history,
 						});
-					}, 5000);
+					}, 2000);
 				}}
 				plugins={plugins}
 				id={id}

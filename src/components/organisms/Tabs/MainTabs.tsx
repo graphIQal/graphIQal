@@ -23,6 +23,10 @@ import { removeFromArray } from '../../../helpers/general/removeFromArray';
 import Document from '../../../packages/dnd-editor/Document';
 import Graph from '../../../packages/graph/Graph';
 
+import { CircularGraph } from '@styled-icons/entypo/CircularGraph';
+import LinkButton from '../../molecules/LinkButton';
+import Breadcrumb from '../Breadcrumb';
+
 type MainTabsProps = {
 	mainViewTabs: MainTabProps[];
 	setMainViewTabs: (val: MainTabProps[]) => void;
@@ -74,7 +78,9 @@ const MainTabs: React.FC<MainTabsProps> = ({
 		// if (router.query.tab) return;
 		if (!username) return;
 		if (mainViewTabs.length == 0) return;
-		router.push(
+
+		// if (!viewId && !view)
+		router.replace(
 			{
 				pathname: '/' + username + '/' + nodeId,
 				query: {
@@ -262,6 +268,25 @@ const MainTabs: React.FC<MainTabsProps> = ({
 					// color={'#FFCB45'}
 					selected={false}
 				/>
+			),
+			breadcrumb: (
+				<>
+					<Breadcrumb getNodeTitle={() => nodeDataSWR.n.title} />
+				</>
+				// <div className='flex flex-row'>
+				// 	{nodeDataSWR && (
+				// 		<LinkButton onClick={() => router.reload()}>
+				// 			<div className='flex flex-row gap-x-1 align-center items-center'>
+				// 				{nodeDataSWR.n.icon ? (
+				// 					<CircularGraph size='1em' />
+				// 				) : (
+				// 					<CircularGraph size='1em' />
+				// 				)}
+				// 				{nodeDataSWR.n.title}
+				// 			</div>
+				// 		</LinkButton>
+				// 	)}
+				// </div>
 			),
 		}),
 		[nodeId, favData, connectionMap]

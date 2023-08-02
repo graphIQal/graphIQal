@@ -33,10 +33,7 @@ const Circle: React.FC<CircleProps> = ({
 				maxWidth: diameter,
 			}}
 			ref={ref}
-			onClick={(e: any) => {
-				console.log('onClick');
-				onClick(e);
-			}}
+			onClick={onClick}
 			className={className}
 		>
 			{children}

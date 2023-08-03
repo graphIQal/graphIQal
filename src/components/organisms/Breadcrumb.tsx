@@ -2,8 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { CircularGraph } from '@styled-icons/entypo/CircularGraph';
+import LinkButton from '../molecules/LinkButton';
 
 interface BreadcrumbLink {
+	icon?: JSX.Element;
 	title: string;
 	path: string;
 }
@@ -42,19 +45,18 @@ const Breadcrumb: React.FC<{
 	}, [router.asPath]);
 
 	return (
-		<nav className='text-gray-500 text-sm'>
-			<ul className='flex'>
-				{pastLinks.map((link, index) => (
-					<li key={index}>
-						{index > 0 && <span className='mx-2'>/</span>}
-						{index === pastLinks.length - 1 ? (
-							<span>{link.title}</span>
-						) : (
-							<Link href={link.path}>{link.title}</Link>
-						)}
-					</li>
-				))}
-			</ul>
+		<nav className='text-gray-500 text-sm flex flex-row'>
+			{pastLinks.map((link, index) => (
+				<>
+					{index > 0 && <span className='mx-2'>/</span>}
+					<LinkButton onClick={() => router.push(link.path)}>
+						<div className='flex flex-row gap-x-1 align-center items-center'>
+							{<CircularGraph size='1em' />}
+							{link.title}
+						</div>
+					</LinkButton>
+				</>
+			))}
 		</nav>
 	);
 };

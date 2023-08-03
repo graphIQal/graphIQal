@@ -24,7 +24,7 @@ const LinkButton: React.FC<LinkButtonProps> = ({
 			<div
 				onAnimationEnd={() => setEffect(false)}
 				className={`${
-					effect && 'animate-pulse '
+					effect && 'animate-wiggle '
 				} text-base_black font-semibold p-1 hover:bg-lining rounded-sm focus:outline-none cursor-pointer ${className}`}
 			>
 				{children}

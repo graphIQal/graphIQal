@@ -127,7 +127,6 @@ const Document: React.FC<{
 							text: connectionMap[value.nodeId as string]
 								? connectionMap[value.nodeId as string].title
 								: 'Untitled',
-							underline: true,
 						},
 					];
 				} else if (value.type === ELEMENT_BLOCK) {
@@ -155,7 +154,7 @@ const Document: React.FC<{
 							{barComponents.favourite}
 						</div>
 					</div>
-					<div className='pl-10 pt-15 pr-3 pb-3'>
+					<div className='pl-10 pt-15 mt-10 pr-3 pb-3'>
 						{nodeDataSWR.n.document && (
 							// <PlateProvider>
 							<EditorComponent

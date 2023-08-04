@@ -154,7 +154,7 @@ const EditorComponent: React.FC<{
 				editableProps={editableProps}
 				initialValue={initialValue}
 				onChange={(docValue) => {
-					// console.log(docValue);
+					console.log(docValue);
 					setValue(docValue);
 					clearTimeout(intervalRef.current);
 					intervalRef.current = setTimeout(() => {

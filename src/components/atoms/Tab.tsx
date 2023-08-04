@@ -66,7 +66,7 @@ const Tab: React.FC<TabProps> = ({
 			// onMouseOver={() => setShowDel(true)}
 			// onMouseLeave={() => setShowDel(false)}
 			className={
-				'min-w-[9rem] h-10 border-x border-lining p-2 text-sm hover:cursor-pointer hover:bg-base_white flex flex-row items-center justify-between align-middle z-20 ' +
+				'min-w-[9rem] h-10 border-lining p-2 text-sm hover:cursor-pointer hover:bg-base_white flex flex-row items-center justify-between align-middle z-20 ' +
 				(selected && ' bg-base_white')
 			}
 		>

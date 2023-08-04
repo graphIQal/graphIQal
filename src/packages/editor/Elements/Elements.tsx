@@ -42,7 +42,7 @@ export const NodeLink = (props: any) => {
 
 	return (
 		<div
-			className='bg-node cursor-pointer hover:opacity-80 font-semibold underline-offset-2 decoration-lining truncate'
+			className='border-l-4 pl-2 border-node cursor-pointer hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
 			onClick={() => {
 				// Navigate to node
 				router.push(props.element.routeString, undefined);

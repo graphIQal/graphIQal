@@ -53,14 +53,6 @@ export const NodeLink = (props: any) => {
 	);
 };
 
-export const NodeBlock = (props: PlateRenderElementProps) => {
-	return (
-		<Block>
-			<div>{props.children}</div>
-		</Block>
-	);
-};
-
 export const TitleElement = (props: any) => {
 	// Showing untitled if title is empty.
 

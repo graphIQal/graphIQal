@@ -6,6 +6,8 @@ import {
 	getNodeAncestor,
 	Plate,
 } from '@udecode/plate';
+import { Path, Node, Editor } from 'slate';
+
 import React, { useEffect, useMemo, useRef } from 'react';
 import { SaveDocumentInput } from '../../backend/functions/general/document/mutate/saveDocument';
 import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
@@ -70,15 +72,15 @@ const EditorComponent: React.FC<{
 			];
 		console.log(lastUndo);
 
-		if (editorRef.current && lastUndo?.operations[0].path) {
-			console.log(lastUndo?.operations[0].path);
-
-			// const lastBlockParent = getNode(
-			// 	editorRef.current,
-			// 	lastUndo?.operations[0].path
-			// );
-			// console.log(lastBlocksparent);
-		}
+		// if (editorRef.current && lastUndo?.operations[0].path) {
+		// console.log(lastUndo?.operations[0].path);
+		// getClosestBlock(lastUndo?.operations[0].path as Path);
+		// const lastBlockParent = getNode(
+		// 	editorRef.current,
+		// 	lastUndo?.operations[0].path
+		// );
+		// console.log(lastBlocksparent);
+		// }
 
 		return () => {
 			window.removeEventListener('beforeunload', onUnload);

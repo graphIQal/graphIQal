@@ -11,35 +11,60 @@ index fff2b0c..56f70eb 100644
  /**
   * `History` objects hold all of the operations that are applied to a value, so
 diff --git a/node_modules/slate-history/dist/index.es.js b/node_modules/slate-history/dist/index.es.js
-index 61c542e..2c73a92 100644
+index 61c542e..c97409b 100644
 --- a/node_modules/slate-history/dist/index.es.js
 +++ b/node_modules/slate-history/dist/index.es.js
-@@ -127,6 +127,7 @@ var withHistory = editor => {
-   };
- 
-   e.undo = () => {
-+    console.log('yay')
-     var {
-       history
-     } = e;
-@@ -155,6 +156,7 @@ var withHistory = editor => {
-   };
- 
-   e.apply = op => {
-+    console.log('yay')
-     var {
-       operations,
-       history
-@@ -187,7 +189,8 @@ var withHistory = editor => {
+@@ -185,10 +185,22 @@ var withHistory = editor => {
+       if (lastBatch && merge) {
+         lastBatch.operations.push(op);
        } else {
++        // create object, and save. 
++        const changedBlocks = {};
++        // get all affected blocks in operations. 
++        for(const i in op) {
++          const nodeId = e.getClosestBlock(op[i])
++          console.log(nodeId)
++          if(nodeId) changedBlocks[nodeId] = true;
++        }
++
++
          var batch = {
            operations: [op],
 -          selectionBefore: e.selection
 +          selectionBefore: e.selection,
-+          blockId: 'huh'
++          changedBlocks: changedBlocks,
          };
++
          e.writeHistory('undos', batch);
        }
+ 
+@@ -206,8 +218,26 @@ var withHistory = editor => {
+     e.history[stack].push(batch);
+   };
+ 
++  e.getClosestBlock = (path) => {
++    const ancestors = Path.ancestors(path, { reverse: true });
++  
++    console.log(ancestors)
++
++    for (const i in ancestors) {
++      const node = e.node(ancestors[i]);
++      console.log(node)
++      if (node && node[0].type === 'block') {
++        return node[0].id;
++      }
++    }
++
++    return null;
++  };
++
+   return e;
++  
+ };
++
+ /**
+  * Check whether to merge an operation into the previous operation.
+  */
 diff --git a/node_modules/slate-history/dist/index.js b/node_modules/slate-history/dist/index.js
 index 098b573..3060359 100644
 --- a/node_modules/slate-history/dist/index.js

@@ -71,6 +71,10 @@ export const ELEMENT_CONNECTION = 'connection';
 
 export const COMMAND_NEST = 'nested';
 export const COMMAND_TEST = 'test';
+
+// marks
+export const MARK_CUT = 'cut';
+
 /**
  * Text
  */

@@ -27,6 +27,8 @@ import { Settings } from '@styled-icons/material/Settings';
 import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft';
 import { ArrowRight } from '@styled-icons/fa-solid/ArrowRight';
 import { CircularGraph } from '@styled-icons/entypo/CircularGraph';
+import { Cut } from '@styled-icons/ionicons-sharp/Cut';
+
 type NodeButtonProps = {
 	onClick: () => void;
 	src: string;
@@ -115,6 +117,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		search: <Search size={'1em'} color={color} />,
 		ArrowLeft: <ArrowLeft size={'1em'} color={color} />,
 		ArrowRight: <ArrowRight size={'1em'} color={color} />,
+		Cut: <Cut size={'1em'} color={selected ? color : 'black'} />,
 	};
 
 	return (

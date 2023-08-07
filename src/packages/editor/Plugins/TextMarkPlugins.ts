@@ -1,4 +1,5 @@
 import {
+	HotkeyPlugin,
 	createBoldPlugin,
 	createCodePlugin,
 	createItalicPlugin,
@@ -8,7 +9,12 @@ import {
 	createSuperscriptPlugin,
 	createUnderlinePlugin,
 } from '@udecode/plate';
-import { ELEMENT_TITLE, createMyPlugins } from '../plateTypes';
+import {
+	ELEMENT_TITLE,
+	MARK_CUT,
+	createMyPluginFactory,
+	createMyPlugins,
+} from '../plateTypes';
 
 export const TextMarkPlugins = createMyPlugins(
 	[

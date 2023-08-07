@@ -55,6 +55,7 @@ const Document: React.FC<{
 
 	const [document, setdocument] = useState([]);
 	const [shelf, setshelf] = useState([]);
+	const [showCutText, setshowCutText] = useState(false);
 
 	// const {
 	// 	data: nodeDataSWR,
@@ -150,6 +151,15 @@ const Document: React.FC<{
 							{barComponents.breadcrumb}
 						</div>
 						<div className='flex flex-row justify-end align-middle items-center'>
+							<IconCircleButton
+								onClick={() => {
+									setshowCutText(!showCutText);
+								}}
+								selected={showCutText}
+								src='Cut'
+								circle={false}
+								color={'#FFCB45'}
+							/>
 							{barComponents.settings}
 							{barComponents.favourite}
 						</div>
@@ -208,6 +218,7 @@ const Document: React.FC<{
 										},
 									}),
 								]}
+								showCutText={showCutText}
 							/>
 							// </PlateProvider>
 						)}

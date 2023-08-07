@@ -13,7 +13,8 @@ import {
 	MARK_UNDERLINE,
 	MarkToolbarButton,
 } from '@udecode/plate';
-import { useMyPlateEditorRef } from '../plateTypes';
+import { MARK_CUT, useMyPlateEditorRef } from '../plateTypes';
+import { Cut } from '@styled-icons/ionicons-sharp/Cut';
 
 export const markTooltip: TippyProps = {
 	arrow: true,
@@ -64,6 +65,11 @@ export const EditorFloatingMenu = ({ children }: { children?: ReactNode }) => {
 			<MarkToolbarButton
 				type={getPluginType(editor, MARK_STRIKETHROUGH)}
 				icon={<FormatStrikethrough />}
+				// tooltip={underlineTooltip}
+			/>
+			<MarkToolbarButton
+				type={getPluginType(editor, MARK_CUT)}
+				icon={<Cut />}
 				// tooltip={underlineTooltip}
 			/>
 			{children}

@@ -4,6 +4,7 @@ import {
 	getBlockAbove,
 	getNode,
 	getNodeAncestor,
+	HotkeyPlugin,
 	Plate,
 } from '@udecode/plate';
 import { Path, Node, Editor } from 'slate';
@@ -14,8 +15,10 @@ import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
 import {
+	createMyPluginFactory,
 	createMyPlugins,
 	ELEMENT_BLOCK,
+	MARK_CUT,
 	MyEditor,
 	MyPlatePlugin,
 	MyValue,
@@ -39,6 +42,7 @@ const EditorComponent: React.FC<{
 	save: (args: SaveDocumentInput) => void;
 	blockElement: (props: any) => JSX.Element;
 	customPlugins?: MyPlatePlugin[];
+	showCutText?: boolean;
 }> = ({
 	initialValue,
 	value,
@@ -47,6 +51,7 @@ const EditorComponent: React.FC<{
 	save,
 	blockElement,
 	customPlugins = [],
+	showCutText = false,
 }) => {
 	// const router = useRouter();
 	const { nodeId, username } = useViewData();
@@ -112,6 +117,29 @@ const EditorComponent: React.FC<{
 		}
 	};
 
+	// const cutTextPlugin = useMemo(
+	// 	() =>
+	const cutTextPlugin = createMyPluginFactory<HotkeyPlugin>({
+		key: MARK_CUT,
+		isElement: false,
+		isLeaf: true,
+		options: {
+			hotkey: 'mod+g',
+		},
+		component: (props) => {
+			console.log('cut plugin', props);
+			console.log('showCutText ', showCutText);
+
+			return showCutText ? (
+				<span className='text-lining'>{props.children}</span>
+			) : (
+				<span>{props.children}</span>
+			);
+		},
+	});
+	// ,[showCutText];
+	// );
+
 	const plugins = useMemo(
 		() =>
 			createMyPlugins(
@@ -169,7 +197,7 @@ const EditorComponent: React.FC<{
 						});
 					}, 2000);
 				}}
-				plugins={plugins}
+				plugins={[...plugins, cutTextPlugin()]}
 				id={id}
 			>
 				<EditorFloatingMenu />

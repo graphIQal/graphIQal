@@ -64,6 +64,9 @@ export const GraphContainer: React.FC<{}> = () => {
 	useEffect(() => {
 		nodeDataRef.current = nodeData_Graph;
 		visualDataRef.current = nodeVisualData_Graph;
+		// console.log('nodeData_Graph');
+		// console.log(nodeData_Graph);
+		// console.log(nodeVisualData_Graph);
 	}, [nodeData_Graph, nodeVisualData_Graph]);
 
 	const { undo, redo, history, addAction, pointer } = useHistoryState(

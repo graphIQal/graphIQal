@@ -20,6 +20,7 @@ export type NodeData = {
 	connections: { [key: string]: ConnectionData };
 	icon: string;
 	color: string;
+	document?: string;
 };
 
 export type GraphNodeData = {

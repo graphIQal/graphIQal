@@ -31,6 +31,7 @@ import { OFFSET } from '../hooks/drawing/useDrawingEnd';
 import { useToggle } from '../../../helpers/hooks/useToggle';
 import { useViewData } from '../../../components/context/ViewContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
+import DocumentGraphNode from '../../../components/organisms/DocumentGraphNode';
 
 export interface NodeProps {
 	children: ReactNode;
@@ -213,7 +214,15 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 				id={nodeInfo.id}
 			>
 				{/* {collapsed ? ( */}
-				<CollapsedGraphNode
+				{/* <CollapsedGraphNode
+					toggleDropdown={() =>
+						setshowEditDropdown(!showEditDropdown)
+					}
+					setResults={setSearchResults}
+					showSearchDropdown={showSearchDropdown}
+					setShowSearchDropdown={setShowSearchDropdown}
+				/> */}
+				<DocumentGraphNode
 					toggleDropdown={() =>
 						setshowEditDropdown(!showEditDropdown)
 					}

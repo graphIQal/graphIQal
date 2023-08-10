@@ -50,6 +50,7 @@ const CollapsedGraphNode: React.FC<{
 	);
 
 	const formRef = useRef<any>(null);
+
 	useEffect(() => {
 		if (searchResult && searchResult[0]) {
 			const items: ItemProps[] = searchResult[0].map(

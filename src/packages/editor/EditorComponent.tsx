@@ -5,7 +5,9 @@ import {
 	getNode,
 	getNodeAncestor,
 	HotkeyPlugin,
+	onKeyDownToggleMark,
 	Plate,
+	ToggleMarkPlugin,
 } from '@udecode/plate';
 import { Path, Node, Editor } from 'slate';
 
@@ -101,6 +103,9 @@ const EditorComponent: React.FC<{
 				username,
 				document: value,
 				title: value[0].children[0].text as string,
+				history: editorRef.current?.history
+					? editorRef.current.history
+					: null,
 			});
 		}
 	};
@@ -113,24 +118,31 @@ const EditorComponent: React.FC<{
 				username,
 				document: value,
 				title: value[0].children[0].text as string,
+				history: editorRef.current?.history
+					? editorRef.current.history
+					: null,
 			});
 		}
 	};
 
 	// const cutTextPlugin = useMemo(
 	// 	() =>
-	const cutTextPlugin = createMyPluginFactory<HotkeyPlugin>({
+	const cutTextPlugin = createMyPluginFactory<ToggleMarkPlugin>({
 		key: MARK_CUT,
 		isElement: false,
 		isLeaf: true,
 		options: {
 			hotkey: 'mod+g',
 		},
+		handlers: {
+			onKeyDown: onKeyDownToggleMark,
+		},
+		// query: (el) => !someHtmlElement(el, (node) => node.style.fontWeight === 'normal'),
 		component: (props) => {
 			console.log('cut plugin', props);
 			console.log('showCutText ', showCutText);
 
-			return showCutText ? (
+			return !showCutText ? (
 				<span className='text-lining'>{props.children}</span>
 			) : (
 				<span>{props.children}</span>
@@ -193,7 +205,9 @@ const EditorComponent: React.FC<{
 							username,
 							document: docValue,
 							title: docValue[0].children[0].text as string,
-							// editorRef.current.history,
+							history: editorRef.current?.history
+								? editorRef.current.history
+								: null,
 						});
 					}, 2000);
 				}}

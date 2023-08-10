@@ -208,6 +208,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 						<GraphNodeContext.Provider
 							value={{
 								title: title,
+								node_data: nodeData_Graph[node],
 								id: node,
 								icon: icon,
 								color: color,

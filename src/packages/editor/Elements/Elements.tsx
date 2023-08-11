@@ -1,17 +1,4 @@
-import {
-	createPlateUI,
-	ELEMENT_H1,
-	ELEMENT_H2,
-	ELEMENT_H3,
-	PlateRenderElementProps,
-	useEditorRef,
-} from '@udecode/plate';
-import { CSSProperties, useRef, useState } from 'react';
-import { useDrag } from 'react-dnd';
-import Handle from '../../../components/atoms/Handle';
-import { DropLineDirection, ItemTypes } from '../../dnd-editor/types';
-import { MyTitleElement, MyValue, useMyEditorRef } from '../plateTypes';
-import { Draggable } from '../../dnd-editor/components/Draggable';
+import { PlateRenderElementProps } from '@udecode/plate';
 import { useRouter } from 'next/router';
 
 // ELEMENTS
@@ -57,7 +44,7 @@ export const TitleElement = (props: any) => {
 	// Showing untitled if title is empty.
 
 	return (
-		<div className='ml-[14px]'>
+		<div className='ml-[50px]'>
 			<h1 className={'ml-1 text-3xl font-extrabold mb-3'}>
 				<div
 					className={

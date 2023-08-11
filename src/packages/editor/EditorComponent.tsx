@@ -1,15 +1,10 @@
 import {
 	createComboboxPlugin,
 	createNodeIdPlugin,
-	getBlockAbove,
-	getNode,
-	getNodeAncestor,
-	HotkeyPlugin,
 	onKeyDownToggleMark,
 	Plate,
 	ToggleMarkPlugin,
 } from '@udecode/plate';
-import { Path, Node, Editor } from 'slate';
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import { SaveDocumentInput } from '../../backend/functions/general/document/mutate/saveDocument';
@@ -19,7 +14,6 @@ import { editableProps } from './editableProps';
 import {
 	createMyPluginFactory,
 	createMyPlugins,
-	ELEMENT_BLOCK,
 	MARK_CUT,
 	MyEditor,
 	MyPlatePlugin,
@@ -34,7 +28,6 @@ import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import { useViewData } from '../../components/context/ViewContext';
-import { withDraggable } from '../dnd-editor/components/withDraggable';
 
 const EditorComponent: React.FC<{
 	value: any[];
@@ -79,16 +72,6 @@ const EditorComponent: React.FC<{
 				editorRef.current?.history.undos.length - 1
 			];
 		console.log(lastUndo);
-
-		// if (editorRef.current && lastUndo?.operations[0].path) {
-		// console.log(lastUndo?.operations[0].path);
-		// getClosestBlock(lastUndo?.operations[0].path as Path);
-		// const lastBlockParent = getNode(
-		// 	editorRef.current,
-		// 	lastUndo?.operations[0].path
-		// );
-		// console.log(lastBlocksparent);
-		// }
 
 		return () => {
 			window.removeEventListener('beforeunload', onUnload);

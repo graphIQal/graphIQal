@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import SplitPane, {
@@ -11,19 +11,25 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 // import Document from '../../src/pages/document/Document';
 import { v4 as uuidv4 } from 'uuid';
 
-import { createNormalizeTypesPlugin } from '@udecode/plate';
-import useSWR, { mutate } from 'swr';
-import useSWRMutation from 'swr/mutation';
+import {
+	Emoji,
+	EmojiPicker,
+	EmojiToolbarDropdown,
+	createNormalizeTypesPlugin,
+} from '@udecode/plate';
+import useSWR from 'swr';
 import { fetcherSingleReturn } from '../../backend/driver/fetcher';
 import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
 import { saveShelf } from '../../backend/functions/general/document/mutate/saveShelf';
 import { useViewData } from '../../components/context/ViewContext';
+import IconCircleButton from '../../components/molecules/IconCircleButton';
 import DocumentSideTabs from '../../components/organisms/Tabs/DocumentSideTabs';
 import SplitPane, {
 	Divider,
 	SplitPaneLeft,
 	SplitPaneRight,
 } from '../../components/organisms/split-pane/SplitPane';
+import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
 import EditorComponent from '../editor/EditorComponent';
 import { Block } from '../editor/Elements/Elements';
 import {
@@ -33,8 +39,6 @@ import {
 	MyTitleElement,
 } from '../editor/plateTypes';
 import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
-import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
-import IconCircleButton from '../../components/molecules/IconCircleButton';
 import { withDraggable } from './components/withDraggable';
 
 const Document: React.FC<{
@@ -166,6 +170,28 @@ const Document: React.FC<{
 						</div>
 					</div>
 					<div className='pl-10 pt-15 mt-10 pr-3 pb-3'>
+						<div className='absolute z-10 ml-[14px]'>
+							<EmojiToolbarDropdown
+								pluginKey='emoji'
+								icon={
+									<IconCircleButton
+										src='star'
+										onClick={() => {}}
+										circle={false}
+									/>
+								}
+								EmojiPickerComponent={(props) => (
+									<div className='text-[14px]'>
+										<EmojiPicker
+											{...props}
+											onSelectEmoji={(emoji: Emoji) => {
+												console.log('emoji', emoji);
+											}}
+										/>
+									</div>
+								)}
+							></EmojiToolbarDropdown>
+						</div>
 						{nodeDataSWR.n.document && (
 							// <PlateProvider>
 							<EditorComponent
@@ -245,22 +271,24 @@ const Document: React.FC<{
 					<DocumentSideTabs
 						editorComponent={
 							nodeDataSWR.n.shelf ? (
-								<EditorComponent
-									key={nodeDataSWR.n.id + 'shelf'}
-									initialValue={[
-										...createInitialValue(
-											nodeDataSWR.n.shelf
-										),
-									]}
-									value={shelf}
-									setValue={setshelf}
-									id={'shelfDocument'}
-									save={saveShelf}
-									customElements={{
-										[ELEMENT_BLOCK]:
-											withDraggable(ShelfBlock),
-									}}
-								/>
+								<>
+									<EditorComponent
+										key={nodeDataSWR.n.id + 'shelf'}
+										initialValue={[
+											...createInitialValue(
+												nodeDataSWR.n.shelf
+											),
+										]}
+										value={shelf}
+										setValue={setshelf}
+										id={'shelfDocument'}
+										save={saveShelf}
+										customElements={{
+											[ELEMENT_BLOCK]:
+												withDraggable(ShelfBlock),
+										}}
+									/>
+								</>
 							) : (
 								<></>
 							)

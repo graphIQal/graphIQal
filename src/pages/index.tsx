@@ -2,25 +2,15 @@ import Link from 'next/link';
 import { useState } from 'react';
 // import TextButton from '../src/components/molecules/TextButton';
 // import { login, register } from '../src/backend/functions/authentication';
-import { login, register } from '../backend/functions/authentication';
-import TextButton from '../components/molecules/TextButton';
-import { deleteAll } from '../backend/functions/writing';
-import {
-	GenerateCypher,
-	addBlockOnNodeCreation,
-	cypherGenerator,
-	returnCypher,
-} from '../backend/cypher-generation/cypherGenerators';
-import { useRouter } from 'next/router';
-import { deleteUser } from '../backend/functions/general/deleteUser';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
 	const [email, setemail] = useState('1332@gatech.edu');
 	const [password, setpassword] = useState('password');
 
 	const router = useRouter();
-	const { session, status } = useSession();
+	const { data: session, status } = useSession();
 
 	console.log('session, status');
 	console.log(session, status);

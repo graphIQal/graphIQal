@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html,
+	h1,
+	h2,
+	h3,
+	p {
+		@apply font-primary;
+		color: theme(colors.base_black);
+	}
+
+	[contenteditable]:read-write:focus {
+		outline: none;
+	}
+
+	h1 {
+		@apply text-xxl;
+		@apply font-bold;
+	}
+
+	h2 {
+		@apply text-xl;
+		@apply font-bold;
+	}
+
+	h3 {
+		@apply text-lg;
+		@apply font-bold;
+	}
+
+	p {
+		@apply text-md;
+	}
+}
+
+@layer components {
+	/* Atoms */
+	.handle {
+		@apply bg-connection;
+		@apply w-3;
+		@apply h-3;
+		@apply inline-block;
+		@apply mr-1;
+		@apply cursor-move;
+	}
+
+	.icon_button {
+		width: theme(spacing.sm);
+	}
+
+	/* Molecules */
+	.menu_item {
+		@apply px-1;
+		@apply py-1;
+		@apply bg-base_black;
+	}
+
+	.button_text {
+		@apply text-sm;
+		@apply text-base_white;
+	}
+
+	/* Organisms */
+	.menu {
+		@apply rounded-text_box;
+		@apply border-base_black;
+		@apply rounded-text_box;
+		width: fit-content;
+		@apply flex;
+		@apply flex-row;
+	}
+
+	.collapsed_node {
+		font-size: calc(theme(fontSize[sm]));
+	}
+}
+
+.container {
+	/* @apply bg-base_white; */
+	@apply h-screen;
+	@apply w-max;
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 5vh;
+}
+
+/* :root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */

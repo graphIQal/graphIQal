@@ -9,28 +9,25 @@ import Head from 'next/head';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 
-import '../App.css';
+import '@/styles/globals.css';
 import '../packages/resizable/resizable.css';
 import '../packages/graph/graph.css';
-import '../index.css';
-import '../components/molecules/molecules.css';
 import '../components/organisms/split-pane/pane.css';
 import '../packages/editor/editor.css';
-import '../components/atoms/atoms.css';
-import '../components/organisms/organisms.css';
 
 import View from '../components/layouts/View';
 import Window from '../components/layouts/Window';
-import TabContext from '../components/context/ViewContext';
+// import TabContext from '../components/context/ViewContext';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { SWRConfig } from 'swr';
 import { useSWRCache } from '../helpers/hooks/useSWRCache';
+import { AppProps } from 'next/app';
 
 export default function MyApp({
 	Component,
 	pageProps: { session, ...pageProps },
-}) {
+}: AppProps) {
 	// useSWRCache();
 
 	return (

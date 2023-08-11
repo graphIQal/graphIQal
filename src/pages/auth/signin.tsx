@@ -77,12 +77,9 @@ const SignIn: React.FC = () => {
 					}}
 				/>
 				<Divider widthCSS='w-10' />
-				<p className='text-sm text-lining'>
+				<p className='text-sm '>
 					Don't have an account?{' '}
-					<Link
-						href='/auth/signup'
-						className='underline hover:text-base_black'
-					>
+					<Link href='/auth/signup' className='underline '>
 						Sign Up
 					</Link>
 				</p>

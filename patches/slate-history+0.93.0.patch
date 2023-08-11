@@ -1,5 +1,5 @@
 diff --git a/node_modules/slate-history/dist/history.d.ts b/node_modules/slate-history/dist/history.d.ts
-index fff2b0c..56f70eb 100644
+index fff2b0c..c6be3cd 100644
 --- a/node_modules/slate-history/dist/history.d.ts
 +++ b/node_modules/slate-history/dist/history.d.ts
 @@ -2,6 +2,7 @@ import { Operation, Range } from 'slate';
@@ -11,7 +11,7 @@ index fff2b0c..56f70eb 100644
  /**
   * `History` objects hold all of the operations that are applied to a value, so
 diff --git a/node_modules/slate-history/dist/index.es.js b/node_modules/slate-history/dist/index.es.js
-index 61c542e..c97409b 100644
+index 61c542e..08a44b4 100644
 --- a/node_modules/slate-history/dist/index.es.js
 +++ b/node_modules/slate-history/dist/index.es.js
 @@ -185,10 +185,22 @@ var withHistory = editor => {
@@ -22,7 +22,7 @@ index 61c542e..c97409b 100644
 +        const changedBlocks = {};
 +        // get all affected blocks in operations. 
 +        for(const i in op) {
-+          const nodeId = e.getClosestBlock(op[i])
++          const nodeId = e.getClosestBlock(op)
 +          console.log(nodeId)
 +          if(nodeId) changedBlocks[nodeId] = true;
 +        }
@@ -43,7 +43,7 @@ index 61c542e..c97409b 100644
    };
  
 +  e.getClosestBlock = (path) => {
-+    const ancestors = Path.ancestors(path, { reverse: true });
++    const ancestors = [path, ...Path.ancestors(path, { reverse: true })]
 +  
 +    console.log(ancestors)
 +
@@ -66,7 +66,7 @@ index 61c542e..c97409b 100644
   * Check whether to merge an operation into the previous operation.
   */
 diff --git a/node_modules/slate-history/dist/index.js b/node_modules/slate-history/dist/index.js
-index 098b573..3060359 100644
+index 098b573..6084413 100644
 --- a/node_modules/slate-history/dist/index.js
 +++ b/node_modules/slate-history/dist/index.js
 @@ -105,6 +105,7 @@ var withHistory = function withHistory(editor) {
@@ -110,7 +110,7 @@ index 098b573..3060359 100644
          e.writeHistory('undos', batch);
        }
 diff --git a/node_modules/slate-history/dist/slate-history.js b/node_modules/slate-history/dist/slate-history.js
-index ff62920..339ff33 100644
+index ff62920..531340a 100644
 --- a/node_modules/slate-history/dist/slate-history.js
 +++ b/node_modules/slate-history/dist/slate-history.js
 @@ -87,6 +87,7 @@

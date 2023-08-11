@@ -94,7 +94,7 @@ const CollapsedGraphNode: React.FC<{
 						circle={false}
 					/>
 					<input
-						className='bg-transparent border-none outline-none w-full block '
+						className='bg-transparent border-none outline-none w-full block font-semibold '
 						type='text'
 						name='name'
 						id='node_title'

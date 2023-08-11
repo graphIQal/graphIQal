@@ -2,7 +2,7 @@ import React from 'react';
 
 type IconButtonProps = {
 	src: any;
-	onClick?: () => void;
+	onClick?: (e: any) => void;
 };
 
 //An icon that is clickable

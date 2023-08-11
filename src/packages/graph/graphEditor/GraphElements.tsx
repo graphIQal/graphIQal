@@ -57,7 +57,7 @@ export const TitleElementGraph = (props: any) => {
 
 	return (
 		<div className='ml-[14px]'>
-			<h1 className={'ml-1 font-bold mb-3'}>
+			<h1 className={'ml-1 font-semibold mb-3'}>
 				<div
 					className={
 						props.element.children[0].text.length === 0

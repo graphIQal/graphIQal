@@ -300,6 +300,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 											tab: index,
 										},
 									}}
+									shallow={true}
 								>
 									<Tab
 										label={tab.title}

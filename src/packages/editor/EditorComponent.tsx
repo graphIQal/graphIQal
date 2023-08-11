@@ -71,6 +71,7 @@ const EditorComponent: React.FC<{
 	useEffect(() => {
 		window.addEventListener('beforeunload', onUnload);
 		router.events.on('routeChangeStart', onRouterUnload);
+
 		console.log('editorRef');
 		console.log(editorRef.current?.history);
 		const lastUndo =
@@ -97,6 +98,7 @@ const EditorComponent: React.FC<{
 
 	const onRouterUnload = (url: string, { shallow }: { shallow: boolean }) => {
 		if (value.length > 0 && !shallow) {
+			console.log('unshallow, save');
 			clearTimeout(intervalRef.current);
 			save({
 				nodeId,

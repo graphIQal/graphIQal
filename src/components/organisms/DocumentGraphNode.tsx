@@ -43,7 +43,7 @@ const DocumentGraphNode: React.FC<{
 
 	const [document, setdocument] = useState([]);
 
-	console.log('node_data ', node_data);
+	// console.log('node_data ', node_data);
 
 	if ('title' in node_data && !node_data.document) {
 		node_data.document = `

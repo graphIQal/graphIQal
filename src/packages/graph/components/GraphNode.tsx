@@ -213,63 +213,26 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 				}}
 				id={nodeInfo.id}
 			>
-				{/* {collapsed ? ( */}
-				{/* <CollapsedGraphNode
-					toggleDropdown={() =>
-						setshowEditDropdown(!showEditDropdown)
-					}
-					setResults={setSearchResults}
-					showSearchDropdown={showSearchDropdown}
-					setShowSearchDropdown={setShowSearchDropdown}
-				/> */}
-				<DocumentGraphNode
-					toggleDropdown={() =>
-						setshowEditDropdown(!showEditDropdown)
-					}
-					setResults={setSearchResults}
-					showSearchDropdown={showSearchDropdown}
-					setShowSearchDropdown={setShowSearchDropdown}
-				/>
-				{/* ) : (
-          <div>
-            {getTypedConnections(
-              viewContext,
-              nodeInfo.id,
-              ConnectionTypes.HAS
-            )?.map((nodeID, i) => {
-              let { icon, color } = viewContext.nodeData_Graph[nodeID];
-              let childTitle = viewContext.nodeData_Graph[nodeID].title;
-
-              return (
-                <div key={i} className=' bg-opacity-50'>
-                  <h3
-                    className={
-                      'absolute top-0 left-0 text-white p-1 bg-' + color
-                    }
-                  >
-                    {nodeInfo.title}
-                  </h3>
-                  <div className='mt-8'>
-                    <CollapsedGraphNode
-                      id={nodeID}
-                      title={childTitle}
-                      icon={icon}
-                      color={color}
-                      toggleDropdown={() =>
-                        setshowEditDropdown(!showEditDropdown)
-                      }
-                      results={searchResults}
-                      setResults={setSearchResults}
-                      showSearchDropdown={showSearchDropdown}
-                      setShowSearchDropdown={setShowSearchDropdown}
-                      showMenu={showMenu}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )} */}
+				{collapsed ? (
+					<CollapsedGraphNode
+						toggleDropdown={() => {
+							console.log('toggle dropdown');
+							setshowEditDropdown(!showEditDropdown);
+						}}
+						setResults={setSearchResults}
+						showSearchDropdown={showSearchDropdown}
+						setShowSearchDropdown={setShowSearchDropdown}
+					/>
+				) : (
+					<DocumentGraphNode
+						toggleDropdown={() =>
+							setshowEditDropdown(!showEditDropdown)
+						}
+						setResults={setSearchResults}
+						showSearchDropdown={showSearchDropdown}
+						setShowSearchDropdown={setShowSearchDropdown}
+					/>
+				)}
 			</ResizableBox>
 			{/* Search dropdown and Icon/color dropdown */}
 			{showSearchDropdown && (

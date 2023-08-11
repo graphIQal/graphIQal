@@ -137,7 +137,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 					className='rounded-full bg-opacity-0 hover:bg-opacity-10 bg-black flex align-middle justify-center items-center'
 					style={{ width: size + 'px', height: size + 'px' }}
 				>
-					<IconButton onClick={onClick} src={icons[src]} />
+					<IconButton onClick={handleClick} src={icons[src]} />
 				</div>
 			)}
 		</div>

@@ -8,6 +8,7 @@ import {
 	autoformatSubscriptNumbers,
 	createAutoformatPlugin,
 	createExitBreakPlugin,
+	// createExitBreakPlugin,
 	createNormalizeTypesPlugin,
 	createResetNodePlugin,
 	createSoftBreakPlugin,

@@ -6,6 +6,7 @@ import {
 	BlockElements,
 	ELEMENT_BLOCK,
 	ELEMENT_NODELINK,
+	ELEMENT_TITLE,
 	MyTitleElement,
 } from '../../packages/editor/plateTypes';
 import GraphNodeContext, {
@@ -16,6 +17,8 @@ import { ItemProps } from './Dropdown';
 import EditorComponent from '../../packages/editor/EditorComponent';
 import { Block } from '../../packages/editor/Elements/Elements';
 import { createNormalizeTypesPlugin } from '@udecode/plate';
+import { withDraggable } from '../../packages/dnd-editor/components/withDraggable';
+import { TitleElementGraph } from '../../packages/graph/graphEditor/GraphElements';
 
 const DocumentGraphNode: React.FC<{
 	toggleDropdown: () => void;
@@ -120,7 +123,10 @@ const DocumentGraphNode: React.FC<{
 								// 	}
 								// );
 							}}
-							blockElement={Block}
+							customElements={{
+								[ELEMENT_BLOCK]: withDraggable(Block),
+								[ELEMENT_TITLE]: TitleElementGraph,
+							}}
 							customPlugins={[
 								createNormalizeTypesPlugin({
 									options: {

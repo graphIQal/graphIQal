@@ -35,6 +35,7 @@ import {
 import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
 import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
 import IconCircleButton from '../../components/molecules/IconCircleButton';
+import { withDraggable } from './components/withDraggable';
 
 const Document: React.FC<{
 	viewId: string;
@@ -205,7 +206,9 @@ const Document: React.FC<{
 										}
 									);
 								}}
-								blockElement={Block}
+								customElements={{
+									[ELEMENT_BLOCK]: withDraggable(Block),
+								}}
 								customPlugins={[
 									createNormalizeTypesPlugin({
 										options: {
@@ -253,7 +256,10 @@ const Document: React.FC<{
 									setValue={setshelf}
 									id={'shelfDocument'}
 									save={saveShelf}
-									blockElement={ShelfBlock}
+									customElements={{
+										[ELEMENT_BLOCK]:
+											withDraggable(ShelfBlock),
+									}}
 								/>
 							) : (
 								<></>
@@ -277,7 +283,9 @@ const Document: React.FC<{
 								setValue={setshelf}
 								id={'shelfDocument'}
 								save={saveShelf}
-								blockElement={ShelfBlock}
+								customElements={{
+									[ELEMENT_BLOCK]: withDraggable(ShelfBlock),
+								}}
 							/>
 						)}
 					</div>

@@ -269,24 +269,10 @@ const MainTabs: React.FC<MainTabsProps> = ({
 					selected={false}
 				/>
 			),
-			breadcrumb: (
+			breadcrumb: nodeDataSWR && (
 				<>
 					<Breadcrumb getNodeTitle={() => nodeDataSWR.n.title} />
 				</>
-				// <div className='flex flex-row'>
-				// 	{nodeDataSWR && (
-				// 		<LinkButton onClick={() => router.reload()}>
-				// 			<div className='flex flex-row gap-x-1 align-center items-center'>
-				// 				{nodeDataSWR.n.icon ? (
-				// 					<CircularGraph size='1em' />
-				// 				) : (
-				// 					<CircularGraph size='1em' />
-				// 				)}
-				// 				{nodeDataSWR.n.title}
-				// 			</div>
-				// 		</LinkButton>
-				// 	)}
-				// </div>
 			),
 		}),
 		[nodeId, favData, connectionMap]

@@ -21,7 +21,6 @@ const Breadcrumb: React.FC<{
 		const handleRouteChange = (url: string) => {
 			setPastLinks((prevLinks) => {
 				const newTitle = getNodeTitle();
-				console.log('prevLinks', prevLinks);
 				if (
 					prevLinks.length > 0 &&
 					prevLinks[prevLinks.length - 1].title === newTitle

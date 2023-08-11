@@ -42,7 +42,7 @@ const EditorComponent: React.FC<{
 	initialValue: any[];
 	id: string;
 	save: (args: SaveDocumentInput) => void;
-	blockElement: (props: any) => JSX.Element;
+	customElements: { [key: string]: (props: any) => any };
 	customPlugins?: MyPlatePlugin[];
 	showCutText?: boolean;
 }> = ({
@@ -51,7 +51,7 @@ const EditorComponent: React.FC<{
 	setValue,
 	id = uuidv4(),
 	save,
-	blockElement,
+	customElements,
 	customPlugins = [],
 	showCutText = false,
 }) => {
@@ -177,7 +177,7 @@ const EditorComponent: React.FC<{
 				],
 				{
 					components: {
-						[ELEMENT_BLOCK]: withDraggable(blockElement),
+						...customElements,
 					},
 				}
 			),

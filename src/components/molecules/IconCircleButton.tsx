@@ -59,7 +59,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		onClick();
 	};
 
-	const icons: any = {
+	const icons: { [key: string]: JSX.Element } = {
 		plus: <Plus color={!selected ? color : 'white'} size={iconSize} />,
 		draw: <Pencil color={!selected ? color : 'white'} size={iconSize} />,
 		undo: <Undo color={!selected ? color : 'white'} size={iconSize} />,
@@ -112,12 +112,17 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		) : (
 			<HollowStar size={'1em'} />
 		),
-		menu: <MenuOutline size={'1em'} color={!selected ? color : 'white'} />,
-		settings: <Settings size={'1em'} color={!selected ? color : 'white'} />,
-		search: <Search size={'1em'} color={color} />,
-		ArrowLeft: <ArrowLeft size={'1em'} color={color} />,
-		ArrowRight: <ArrowRight size={'1em'} color={color} />,
-		Cut: <Cut size={'1em'} color={selected ? color : 'black'} />,
+		menu: (
+			<MenuOutline size={iconSize} color={!selected ? color : 'white'} />
+		),
+		settings: (
+			<Settings size={iconSize} color={!selected ? color : 'white'} />
+		),
+		search: <Search size={iconSize} color={color} />,
+		ArrowLeft: <ArrowLeft size={iconSize} color={color} />,
+		ArrowRight: <ArrowRight size={iconSize} color={color} />,
+		Cut: <Cut size={iconSize} color={selected ? color : 'black'} />,
+		node: <CircularGraph size={iconSize} color={'black'} />,
 	};
 
 	return (
@@ -129,15 +134,31 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 				<Circle
 					onClick={handleClick}
 					diameter={size}
-					children={<IconButton src={icons[src]} />}
+					children={
+						<IconButton
+							src={src in icons ? icons[src] : <span>{src}</span>}
+						/>
+					}
 					backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
 				/>
 			) : (
 				<div
 					className='rounded-full bg-opacity-0 hover:bg-opacity-10 bg-black flex align-middle justify-center items-center'
-					style={{ width: size + 'px', height: size + 'px' }}
+					style={{
+						width: size + 'px',
+						height: size + 'px',
+					}}
 				>
-					<IconButton onClick={handleClick} src={icons[src]} />
+					<IconButton
+						onClick={handleClick}
+						src={
+							src in icons ? (
+								icons[src]
+							) : (
+								<span style={{ fontSize: size }}>{src}</span>
+							)
+						}
+					/>
 				</div>
 			)}
 		</div>

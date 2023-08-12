@@ -232,7 +232,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 							}
 						}
 					}}
-					size={40}
+					size={30}
 					src='star'
 					circle={false}
 					color={'#FFCB45'}
@@ -250,7 +250,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 						console.log('hover on left side for favourites');
 					}}
 					hoverText='Mouse to the left of the window for the favourites sidebar'
-					size={40}
+					size={30}
 					src='menu'
 					circle={false}
 					selected={false}

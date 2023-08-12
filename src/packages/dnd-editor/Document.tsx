@@ -40,12 +40,13 @@ import {
 } from '../editor/plateTypes';
 import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
 import { withDraggable } from './components/withDraggable';
+import { updateNodeFields } from '@/backend/functions/general/document/mutate/updateNodeFields';
 
 const Document: React.FC<{
 	viewId: string;
 	barComponents: { [key: string]: JSX.Element };
 }> = ({ barComponents }) => {
-	const { nodeId } = useViewData();
+	const { nodeId, username } = useViewData();
 
 	const {
 		data: nodeDataSWR,
@@ -173,19 +174,51 @@ const Document: React.FC<{
 						<div className='absolute z-10 ml-[14px]'>
 							<EmojiToolbarDropdown
 								pluginKey='emoji'
+								closeOnSelect={true}
 								icon={
 									<IconCircleButton
-										src='star'
+										src={
+											nodeDataSWR && nodeDataSWR.n.icon
+												? nodeDataSWR.n.icon
+												: 'node'
+										}
 										onClick={() => {}}
 										circle={false}
+										size={30}
 									/>
 								}
 								EmojiPickerComponent={(props) => (
 									<div className='text-[14px]'>
 										<EmojiPicker
 											{...props}
-											onSelectEmoji={(emoji: Emoji) => {
+											onSelectEmoji={async (
+												emoji: Emoji
+											) => {
 												console.log('emoji', emoji);
+												const newData = {
+													connectedNodes:
+														nodeDataSWR.connectedNodes,
+													n: {
+														...nodeDataSWR.n,
+														icon: emoji.skins[0]
+															.native,
+													},
+												};
+
+												await SWRmutateCurrNode(
+													updateNodeFields({
+														nodeId,
+														username,
+														fieldValObj: {
+															icon: emoji.skins[0]
+																.native,
+														},
+													}),
+													{
+														optimisticData: newData,
+														populateCache: false,
+													}
+												);
 											}}
 										/>
 									</div>

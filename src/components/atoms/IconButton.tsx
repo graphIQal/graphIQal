@@ -10,11 +10,11 @@ type IconButtonProps = {
 const IconButton: React.FC<IconButtonProps> = ({ src, onClick = () => {} }) => {
 	const classes = 'icon_button hover:opacity-50';
 	const renderButton = () => {
-		if (typeof src == 'string') {
-			return <img src={src} className={classes} onClick={onClick} />;
-		} else {
-			return <div onClick={onClick}>{src}</div>;
-		}
+		// if (typeof src == 'string') {
+		// 	return <img src={src} className={classes} onClick={onClick} />;
+		// } else {
+		return <div onClick={onClick}>{src}</div>;
+		// }
 	};
 	return renderButton();
 };

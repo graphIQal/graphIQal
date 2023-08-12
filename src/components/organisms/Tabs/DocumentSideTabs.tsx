@@ -9,6 +9,10 @@ import { useViewData } from '../../context/ViewContext';
 import { SelectableList } from '../../templates/SelectableList';
 import { useRouter } from 'next/router';
 import { Divider } from '../split-pane/SplitPane';
+import ConnectionSection from '../ConnectionList/ConnectionSectionItem';
+
+import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
+import { connectionColours } from '@/theme/colors';
 
 export type SideTabPropsDoc = {
 	label: string;
@@ -59,41 +63,42 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 		// 	RELATED: [],
 		// 	CUSTOM: [],
 		// };
-		const sectionDisplayNames = {
-			'HAS-To': 'Parent',
-			'HAS-From': 'Child',
-			'IS-To': 'Is',
-			'Is-From': 'Encompasses',
-			'NEEDS-To': 'Needed',
-			'NEEDS-From': 'Needs',
-			'FOLLOWS-To': 'Followed',
-			'FOLLOWS-From': 'Follows',
-			'RELATED-To': 'Related',
-			'RELATED-From': 'Related',
-			'CUSTOM-To': 'Custom',
-			'CUSTOM-From': 'Custom',
+		const sectionDisplayNames: { [key: string]: string } = {
+			'To-HAS': 'Parent',
+			'From-HAS': 'Child',
+			'To-IS': 'Is',
+			'From-Is': 'Encompasses',
+			'To-NEEDS': 'Needed',
+			'From-NEEDS': 'Needs',
+			'To-FOLLOWS': 'Followed',
+			'From-FOLLOWS': 'Follows',
+			'To-RELATED': 'Related',
+			'From-RELATED': 'Related',
+			'To-CUSTOM': 'Custom',
+			'From-CUSTOM': 'Custom',
 		};
 
 		const sections: Record<string, JSX.Element[]> = {
-			'HAS-To': [],
-			'HAS-From': [],
-			'IS-To': [],
-			'Is-From': [],
-			'NEEDS-To': [],
-			'NEEDS-From': [],
-			'FOLLOWS-To': [],
-			'FOLLOWS-From': [],
-			'RELATED-To': [],
-			'RELATED-From': [],
-			'CUSTOM-To': [],
-			'CUSTOM-From': [],
+			'To-HAS': [],
+			'From-HAS': [],
+			'To-IS': [],
+			'From-Is': [],
+			'To-NEEDS': [],
+			'From-NEEDS': [],
+			'To-FOLLOWS': [],
+			'From-FOLLOWS': [],
+			'To-RELATED': [],
+			'From-RELATED': [],
+			'To-CUSTOM': [],
+			'From-CUSTOM': [],
 		};
 
 		connectedNodes.forEach((connectedNode, i) => {
 			const connectionType = connectedNode.r.type;
-			const sectionKey = `${connectionType}-${
+			const sectionKey = `${
 				connectedNode.r.fromNode ? 'From' : 'To'
-			}`;
+			}-${connectionType}`;
+
 			sections[sectionKey].push(
 				<ConnectionListItem
 					fromNode={connectedNode.r.fromNode}
@@ -108,7 +113,42 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 			);
 		});
 
-		// return sections.map((sectionKey))
+		return Object.entries(sections).map(([name, connectionItems], i) => {
+			if (connectionItems.length < 1) return;
+
+			const fromNode = name.startsWith('From-');
+
+			return (
+				<ConnectionSection
+					colour={connectionColours[sectionDisplayNames[name]]}
+					title={
+						<div
+							className='flex flex-row items-center w-full'
+							key={i}
+						>
+							<div className='w-2/5'>
+								{sectionDisplayNames[name]}
+							</div>
+							<div className='flex flex-row items-center w-3/5'>
+								<div className='h-full py-2 ml-2 border-l border-base_black'></div>
+								<div className='flex items-center'>
+									{!fromNode && <ArrowLeftIcon />}
+									<div className='px-1'>
+										{name.split('-')[1]}
+									</div>
+									{fromNode && <ArrowRightIcon />}
+								</div>
+								{/* <div className='flex justify-center items-center rounded-full text-center border-base_black border-[0.5px] mx-2'>
+									{connectionItems.length}
+								</div> */}
+							</div>
+						</div>
+					}
+				>
+					{connectionItems}
+				</ConnectionSection>
+			);
+		});
 
 		// connectedNodes
 		// 	.sort((a, b) => {

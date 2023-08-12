@@ -52,7 +52,7 @@ const resetBlockTypesCommonRule = {
 };
 
 export const FormatPlugins = createMyPlugins([
-	// createTrailingBlockPlugin({ options: { type: ELEMENT_PARAGRAPH } }),
+	createTrailingBlockPlugin({ options: { type: ELEMENT_PARAGRAPH } }),
 	createSoftBreakPlugin(),
 	// createTrailingBlockPlugin(),
 	createResetNodePlugin({

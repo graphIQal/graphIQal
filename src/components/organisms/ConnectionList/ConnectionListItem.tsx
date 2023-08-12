@@ -33,17 +33,13 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
 		<div
 			key={index}
 			className={
-				'flex flex-row gap-x-3 justify-between items-center align-middle p-2 border-y-[0.5px]  border-base_black border-opacity-10 '
+				'flex flex-row gap-x-3 justify-between items-center align-middle p-2 border-y-[0.5px] border-base_black border-opacity-10 '
 			}
 		>
 			<div
 				className='flex flex-row items-center align-middle'
 				key={index}
 			>
-				{!fromNode && <ArrowLeft size={15} />}
-				<div className='px-1'>{type}</div>
-				{fromNode && <ArrowRight size={15} />}
-				<div className='h-full py-2 ml-2 border-l border-lining'></div>
 				<IconCircleButton
 					circle={false}
 					src='block'

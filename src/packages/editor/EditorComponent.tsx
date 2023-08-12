@@ -152,7 +152,6 @@ const EditorComponent: React.FC<{
 					createComboboxPlugin({
 						options: {},
 					}),
-					// createHistoryPlugin(),
 					createNodeIdPlugin({
 						options: {
 							idCreator: uuidv4,

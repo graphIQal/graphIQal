@@ -5,38 +5,63 @@ import { title } from 'process';
 import { useViewData } from '../../context/ViewContext';
 import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft';
 import { ArrowRight } from '@styled-icons/fa-solid/ArrowRight';
+import { ChevronDownIcon } from '@udecode/plate';
+import { connectionColours } from '@/theme/colors';
 
-type ConnectionListItemProps = {
-	type: string;
-	title: string;
-	id: string;
-	index: number;
-	buttonItems: {
-		src: string;
-		onClick: () => void;
-	}[];
-	url: string;
-	fromNode: boolean;
+type ConnectionSectionProps = {
+	title: string | JSX.Element;
+	colour: string;
+	children: React.ReactNode;
 };
-const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
-	type,
+
+const ConnectionSection: React.FC<ConnectionSectionProps> = ({
 	title,
-	id,
-	index,
-	buttonItems,
-	url,
-	fromNode,
+	colour,
+	children,
 }) => {
 	const { windowVar } = useViewData();
-	const [open, setOpen] = useState(false);
 	if (!windowVar) return <div></div>;
+
+	const [isOpen, setIsOpen] = useState(title === 'Parents' ? true : false);
+
+	const toggleAccordion = () => {
+		setIsOpen(!isOpen);
+	};
+	const maxHeight = '10em';
+
 	return (
 		<div
-			key={index}
-			className={
-				'flex flex-row gap-x-3 justify-between items-center align-middle p-2 border-y-[0.5px]  border-base_black border-opacity-10 '
-			}
-		></div>
+			className={'border-t border-base_black bg-[' + colour + ']'}
+			style={{ backgroundColor: colour }}
+		>
+			<div
+				className='border-b border-base_black cursor-pointer flex items-center h-10 px-2 w-full '
+				onClick={toggleAccordion}
+			>
+				<ChevronDownIcon
+					className={`h-4 w-4 mr-1 shrink-0 text-muted-foreground transition-transform duration-200 ${
+						isOpen ? 'rotate-180' : 'rotate-0'
+					}`}
+				/>
+				<h3 className='text-md font-semibold'>{title}</h3>
+			</div>
+			{/* maxHeight must be fixed and same as in taiwind config */}
+			<div
+				className={`overflow-y-auto transition-all ${
+					isOpen ? 'animate-accordion-down' : 'animate-accordion-up'
+				}`}
+				style={{ maxHeight: isOpen ? `${maxHeight}` : '0' }}
+			>
+				<div className=''>{children}</div>
+			</div>
+			{/* <div
+  className={`overflow-y-auto transition-all duration-300 ${
+    isOpen ? `max-h-${maxHeight}` : 'max-h-0'
+  }`}
+>
+  <div className="mt-2">{children}</div>
+</div> */}
+		</div>
 	);
 };
-export default ConnectionListItem;
+export default ConnectionSection;

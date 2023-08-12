@@ -104,8 +104,8 @@ module.exports = {
 					TEXT_BASE_SIZE / (TEXT_SCALE_RATIO * TEXT_SCALE_RATIO) +
 					'em',
 				sm: TEXT_BASE_SIZE / TEXT_SCALE_RATIO + 'em',
-				md: TEXT_BASE_SIZE * TEXT_SCALE_RATIO + 'em',
-				lg: TEXT_BASE_SIZE * TEXT_SCALE_RATIO * TEXT_SCALE_RATIO + 'em',
+				md: TEXT_BASE_SIZE + 'em',
+				lg: TEXT_BASE_SIZE * TEXT_SCALE_RATIO + 'em',
 				xl:
 					TEXT_BASE_SIZE *
 						TEXT_SCALE_RATIO *
@@ -149,10 +149,10 @@ module.exports = {
 				},
 				'accordion-down': {
 					from: { height: 0 },
-					to: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '10em' },
 				},
 				'accordion-up': {
-					from: { height: 'var(--radix-accordion-content-height)' },
+					from: { height: '10em' },
 					to: { height: 0 },
 				},
 			},

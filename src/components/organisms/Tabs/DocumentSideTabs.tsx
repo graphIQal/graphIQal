@@ -126,7 +126,7 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 							className='flex flex-row items-center w-full'
 							key={i}
 						>
-							<div className='w-2/5'>
+							<div className='w-2/5 mr-2'>
 								{sectionDisplayNames[name]}
 							</div>
 							<div className='flex flex-row items-center w-3/5'>

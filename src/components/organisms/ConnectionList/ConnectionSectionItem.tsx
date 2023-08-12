@@ -31,11 +31,11 @@ const ConnectionSection: React.FC<ConnectionSectionProps> = ({
 
 	return (
 		<div
-			className={'border-t border-base_black bg-[' + colour + ']'}
-			style={{ backgroundColor: colour }}
+			className={'border-t border-lining'}
+			// style={{ backgroundColor: colour }}
 		>
 			<div
-				className='border-b border-base_black cursor-pointer flex items-center h-10 px-2 w-full '
+				className='border-lining cursor-pointer flex items-center h-10 px-2 w-full '
 				onClick={toggleAccordion}
 			>
 				<ChevronDownIcon

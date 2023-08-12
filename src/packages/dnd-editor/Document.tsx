@@ -129,6 +129,10 @@ const Document: React.FC<{
 			Object.entries(obj).forEach(([key, value]) => {
 				// Key is either an array index or object key
 				if (value.type === ELEMENT_NODELINK) {
+					value.icon = connectionMap[value.nodeId as string]
+						? connectionMap[value.nodeId as string].icon
+						: 'node';
+
 					value.children = [
 						{
 							text: connectionMap[value.nodeId as string]
@@ -176,16 +180,19 @@ const Document: React.FC<{
 								pluginKey='emoji'
 								closeOnSelect={true}
 								icon={
-									<IconCircleButton
-										src={
-											nodeDataSWR && nodeDataSWR.n.icon
-												? nodeDataSWR.n.icon
-												: 'node'
-										}
-										onClick={() => {}}
-										circle={false}
-										size={30}
-									/>
+									<div className='text-xl'>
+										<IconCircleButton
+											src={
+												nodeDataSWR &&
+												nodeDataSWR.n.icon
+													? nodeDataSWR.n.icon
+													: 'node'
+											}
+											onClick={() => {}}
+											circle={false}
+											size={30}
+										/>
+									</div>
 								}
 								EmojiPickerComponent={(props) => (
 									<div className='text-[14px]'>
@@ -194,7 +201,7 @@ const Document: React.FC<{
 											onSelectEmoji={async (
 												emoji: Emoji
 											) => {
-												console.log('emoji', emoji);
+												// console.log('emoji', emoji);
 												const newData = {
 													connectedNodes:
 														nodeDataSWR.connectedNodes,

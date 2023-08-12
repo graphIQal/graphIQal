@@ -174,6 +174,7 @@ export interface MyNodeLinkElement extends BlockElements {
 	type: typeof ELEMENT_NODELINK;
 	nodeId: string;
 	routeString: string;
+	icon?: string;
 	children: InlineElements[];
 }
 

@@ -7,7 +7,7 @@ import SearchBar from '../SearchBar';
 import router from 'next/router';
 import { SidePanel } from '../../templates/SidePanel';
 
-import ConnectionListItem from '../ConnectionListItem';
+import ConnectionListItem from '../ConnectionList/ConnectionListItem';
 import {
 	connectedNode_type,
 	getNodeData_type,

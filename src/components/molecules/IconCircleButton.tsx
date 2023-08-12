@@ -127,7 +127,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 
 	return (
 		<div
-			className='hover:cursor-pointer hover:opacity-80'
+			className='hover:cursor-pointer hover:opacity-80 inline-block'
 			title={hoverText}
 		>
 			{circle ? (
@@ -155,7 +155,11 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 							src in icons ? (
 								icons[src]
 							) : (
-								<span style={{ fontSize: size }}>{src}</span>
+								<span
+								// style={{ fontSize: size }}
+								>
+									{src}
+								</span>
 							)
 						}
 					/>

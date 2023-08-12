@@ -79,6 +79,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						type: getPluginType(editor, ELEMENT_NODELINK),
 						nodeId: newId,
 						routeString: `/${username}/${newId}`,
+						icon: 'node',
 						children: [{ text: '' }],
 					} as MyNodeLinkElement);
 

@@ -3,7 +3,7 @@ import EditorComponent from '../../../packages/editor/EditorComponent';
 import ShelfEditor from '../../../packages/shelf-editor/ShelfEditor';
 import Tab from '../../atoms/Tab';
 import { Tabs } from './Tabs';
-import ConnectionListItem from '../ConnectionListItem';
+import ConnectionListItem from '../ConnectionList/ConnectionListItem';
 import { connectedNode_type } from '../../../backend/functions/node/query/useGetNodeData';
 import { useViewData } from '../../context/ViewContext';
 import { SelectableList } from '../../templates/SelectableList';
@@ -47,45 +47,99 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 
 	const renderConnections = (connectedNodes: connectedNode_type[]) => {
 		const items: any[] = [];
-		const relationshipOrder = [
-			'HAS',
-			'IS',
-			'NEEDS',
-			'FOLLOWS',
-			'RELATED',
-			'CUSTOM',
-		];
 
-		connectedNodes
-			.sort((a, b) => {
-				const relationshipOrderComparison =
-					relationshipOrder.indexOf(a.r.type) -
-					relationshipOrder.indexOf(b.r.type);
+		// const sections = {
+		// 	HAS: {
+		// 		PARENT: [],
+		// 		CHILDREN: [],
+		// 	},
+		// 	IS: { IS: [], ENCOMPASSES: [] },
+		// 	NEEDS: { NEEDS: [], NEEDED: [] },
+		// 	FOLLOWS: { FOLLOWS: [], FOLLOWED: [] },
+		// 	RELATED: [],
+		// 	CUSTOM: [],
+		// };
+		const sectionDisplayNames = {
+			'HAS-To': 'Parent',
+			'HAS-From': 'Child',
+			'IS-To': 'Is',
+			'Is-From': 'Encompasses',
+			'NEEDS-To': 'Needed',
+			'NEEDS-From': 'Needs',
+			'FOLLOWS-To': 'Followed',
+			'FOLLOWS-From': 'Follows',
+			'RELATED-To': 'Related',
+			'RELATED-From': 'Related',
+			'CUSTOM-To': 'Custom',
+			'CUSTOM-From': 'Custom',
+		};
 
-				return a.r.fromNode === false
-					? -1 // Sort false `fromNode` values before positive `fromNode` values
-					: b.r.fromNode === false
-					? 1 // Sort positive `fromNode` values after false `fromNode` values
-					: relationshipOrderComparison !== 0
-					? relationshipOrderComparison // If `fromNode` values are the same, sort by relationship order
-					: 0;
-			})
-			.map((connectedNode: connectedNode_type, i: number) => {
-				items.push(
-					<ConnectionListItem
-						fromNode={connectedNode.r.fromNode}
-						key={i}
-						type={connectedNode.r.type}
-						title={connectedNode.connected_node.title}
-						id={connectedNode.connected_node.id}
-						index={i}
-						buttonItems={getButtonItems(
-							connectedNode.connected_node
-						)}
-						url={connectedNode.connected_node.url}
-					/>
-				);
-			});
+		const sections: Record<string, JSX.Element[]> = {
+			'HAS-To': [],
+			'HAS-From': [],
+			'IS-To': [],
+			'Is-From': [],
+			'NEEDS-To': [],
+			'NEEDS-From': [],
+			'FOLLOWS-To': [],
+			'FOLLOWS-From': [],
+			'RELATED-To': [],
+			'RELATED-From': [],
+			'CUSTOM-To': [],
+			'CUSTOM-From': [],
+		};
+
+		connectedNodes.forEach((connectedNode, i) => {
+			const connectionType = connectedNode.r.type;
+			const sectionKey = `${connectionType}-${
+				connectedNode.r.fromNode ? 'From' : 'To'
+			}`;
+			sections[sectionKey].push(
+				<ConnectionListItem
+					fromNode={connectedNode.r.fromNode}
+					key={i}
+					type={connectedNode.r.type}
+					title={connectedNode.connected_node.title}
+					id={connectedNode.connected_node.id}
+					index={i}
+					buttonItems={getButtonItems(connectedNode.connected_node)}
+					url={connectedNode.connected_node.url}
+				/>
+			);
+		});
+
+		// return sections.map((sectionKey))
+
+		// connectedNodes
+		// 	.sort((a, b) => {
+		// 		const relationshipOrderComparison =
+		// 			relationshipOrder.indexOf(a.r.type) -
+		// 			relationshipOrder.indexOf(b.r.type);
+
+		// 		return a.r.fromNode === false
+		// 			? -1 // Sort false `fromNode` values before positive `fromNode` values
+		// 			: b.r.fromNode === false
+		// 			? 1 // Sort positive `fromNode` values after false `fromNode` values
+		// 			: relationshipOrderComparison !== 0
+		// 			? relationshipOrderComparison // If `fromNode` values are the same, sort by relationship order
+		// 			: 0;
+		// 	})
+		// 	.map((connectedNode: connectedNode_type, i: number) => {
+		// 		items.push(
+		// 			<ConnectionListItem
+		// 				fromNode={connectedNode.r.fromNode}
+		// 				key={i}
+		// 				type={connectedNode.r.type}
+		// 				title={connectedNode.connected_node.title}
+		// 				id={connectedNode.connected_node.id}
+		// 				index={i}
+		// 				buttonItems={getButtonItems(
+		// 					connectedNode.connected_node
+		// 				)}
+		// 				url={connectedNode.connected_node.url}
+		// 			/>
+		// 		);
+		// 	});
 		return items;
 	};
 

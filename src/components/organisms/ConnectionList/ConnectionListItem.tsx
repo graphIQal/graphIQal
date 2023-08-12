@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
-import IconCircleButton from '../molecules/IconCircleButton';
-import { OnHoverMenu } from './OnHoverMenu';
+import IconCircleButton from '../../molecules/IconCircleButton';
+import { OnHoverMenu } from '../OnHoverMenu';
 import { title } from 'process';
-import { useViewData } from '../context/ViewContext';
+import { useViewData } from '../../context/ViewContext';
 import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft';
 import { ArrowRight } from '@styled-icons/fa-solid/ArrowRight';
 

@@ -190,7 +190,6 @@ const Document: React.FC<{
 											}
 											onClick={() => {}}
 											circle={false}
-											size={30}
 										/>
 									</div>
 								}

@@ -55,7 +55,7 @@ export const TitleElement = (props: any) => {
 
 	return (
 		<div className='ml-[50px]'>
-			<h1 className={'ml-1 text-3xl font-extrabold mb-3'}>
+			<h1 className={'ml-1 text-xl font-extrabold mb-3'}>
 				<div
 					className={
 						props.element.children[0].text.length === 0
@@ -71,11 +71,7 @@ export const TitleElement = (props: any) => {
 };
 
 export const H1 = (props: PlateRenderElementProps) => {
-	return <h1 className='text-xl font-bold'>{props.children}</h1>;
-};
-
-export const LI = (props: PlateRenderElementProps) => {
-	return <li className=''>{props.children}</li>;
+	return <h1 className='text-xl font-extrabold'>{props.children}</h1>;
 };
 
 export const H2 = (props: PlateRenderElementProps) => {
@@ -84,6 +80,10 @@ export const H2 = (props: PlateRenderElementProps) => {
 
 export const H3 = (props: PlateRenderElementProps) => {
 	return <h3 className='text-md font-bold'>{props.children}</h3>;
+};
+
+export const LI = (props: PlateRenderElementProps) => {
+	return <li className=''>{props.children}</li>;
 };
 
 export const OL = (props: PlateRenderElementProps) => {

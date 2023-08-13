@@ -27,12 +27,12 @@
 	}
 
 	h3 {
-		@apply text-lg;
+		@apply text-md;
 		@apply font-bold;
 	}
 
 	p {
-		@apply text-md;
+		@apply text-sm;
 	}
 }
 

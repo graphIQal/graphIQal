@@ -9,8 +9,8 @@ export const colors = [
 ];
 
 export const connectionColours: { [key: string]: string } = {
-	Parent: '#FCDDEC',
-	Child: '#f3ddfc',
+	Parents: '#FCDDEC',
+	Children: '#f3ddfc',
 	Is: '#FFF492',
 	Encompasses: '#FF9292',
 	Needed: '#d7f7cb',

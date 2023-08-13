@@ -55,8 +55,8 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 
 		// const sections = {
 		// 	HAS: {
-		// 		PARENT: [],
-		// 		CHILDREN: [],
+		// 		PARENTs: [],
+		// 		CHILDrenREN: [],
 		// 	},
 		// 	IS: { IS: [], ENCOMPASSES: [] },
 		// 	NEEDS: { NEEDS: [], NEEDED: [] },
@@ -65,8 +65,8 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 		// 	CUSTOM: [],
 		// };
 		const sectionDisplayNames: { [key: string]: string } = {
-			'To-HAS': 'Parent',
-			'From-HAS': 'Child',
+			'To-HAS': 'Parents',
+			'From-HAS': 'Children',
 			'To-IS': 'Is',
 			'From-Is': 'Encompasses',
 			'To-NEEDS': 'Needed',
@@ -124,7 +124,7 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 					colour={connectionColours[sectionDisplayNames[name]]}
 					title={
 						<div
-							className='flex flex-row items-center w-full'
+							className='flex flex-row items-center w-full '
 							key={i}
 						>
 							<div className='mr-2'>

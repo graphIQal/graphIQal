@@ -143,9 +143,9 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 											<div>
 												<ArrowRightIcon />
 											</div>
-											<div className='w-3 items-center'>
+											{/* <div className='w-3 items-center'>
 												<CircularGraph />
-											</div>
+											</div> */}
 										</>
 									)}
 								</div>

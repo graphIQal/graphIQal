@@ -155,7 +155,7 @@ const Document: React.FC<{
 		<DndProvider backend={HTML5Backend}>
 			<SplitPane className='split-pane-row z-20'>
 				<SplitPaneLeft>
-					<div className='w-full h-10 bg-base_white flex flex-row justify-between z-10 top-0 sticky'>
+					<div className='w-full h-10 bg-base_white flex flex-row justify-between z-20 top-0 sticky'>
 						<div className='flex flex-row gap-x-1 justify-start align-middle items-center'>
 							{barComponents.favouriteBar}
 							{barComponents.breadcrumb}
@@ -174,7 +174,7 @@ const Document: React.FC<{
 							{barComponents.favourite}
 						</div>
 					</div>
-					<div className='pl-10 pt-15 mt-10 pr-3 pb-3'>
+					<div className='relative pl-10 pt-15 mt-10 pr-3 pb-3'>
 						<div className='absolute z-10 ml-[14px]'>
 							<EmojiToolbarDropdown
 								pluginKey='emoji'

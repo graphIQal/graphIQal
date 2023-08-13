@@ -28,7 +28,7 @@ export default function MyApp({
 	Component,
 	pageProps: { session, ...pageProps },
 }: AppProps) {
-	// useSWRCache();
+	useSWRCache();
 
 	return (
 		<>

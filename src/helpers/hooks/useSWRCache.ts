@@ -28,6 +28,7 @@ export const useSWRCache = () => {
 			newCache[key] = cache.get(key);
 		}
 
-		setSWRCache(JSON.stringify(newCache));
+		console.log(JSON.stringify(newCache));
+		// setSWRCache(JSON.stringify(newCache));
 	});
 };

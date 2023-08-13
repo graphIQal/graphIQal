@@ -28,7 +28,6 @@ export const NodeLink = (props: any) => {
 
 	const router = useRouter();
 
-	console.log('NodeLink', props);
 	return (
 		<div
 			className='border-l-4 border-node cursor-pointer hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'

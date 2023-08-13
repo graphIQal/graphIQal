@@ -10,8 +10,9 @@ import { SelectableList } from '../../templates/SelectableList';
 import { useRouter } from 'next/router';
 import { Divider } from '../split-pane/SplitPane';
 import ConnectionSection from '../ConnectionList/ConnectionSectionItem';
+import { CircularGraph } from '@styled-icons/entypo/CircularGraph';
 
-import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, ArrowRightIcon, DiscIcon } from '@radix-ui/react-icons';
 import { connectionColours } from '@/theme/colors';
 
 export type SideTabPropsDoc = {
@@ -126,17 +127,27 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 							className='flex flex-row items-center w-full'
 							key={i}
 						>
-							<div className='w-2/5 mr-2'>
+							<div className='mr-2'>
 								{sectionDisplayNames[name]}
 							</div>
-							<div className='flex flex-row items-center w-3/5'>
-								<div className='h-full py-2 ml-2 border-l border-base_black'></div>
-								<div className='flex items-center'>
+							<div className='flex flex-row items-center'>
+								<div className='h-full py-2 mx-3 border-l border-base_black'></div>
+								<div className='flex flex-row items-center'>
+									{/* {currNode_data.n.title} */}
 									{!fromNode && <ArrowLeftIcon />}
 									<div className='px-1'>
 										{name.split('-')[1]}
 									</div>
-									{fromNode && <ArrowRightIcon />}
+									{fromNode && (
+										<>
+											<div>
+												<ArrowRightIcon />
+											</div>
+											<div className='w-3 items-center'>
+												<CircularGraph />
+											</div>
+										</>
+									)}
 								</div>
 								{/* <div className='flex justify-center items-center rounded-full text-center border-base_black border-[0.5px] mx-2'>
 									{connectionItems.length}

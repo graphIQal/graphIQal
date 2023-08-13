@@ -58,7 +58,8 @@ module.exports = {
 			colors: {
 				base_black: '#424245',
 				base_white: 'rgba(255,255,255,1)',
-				secondary_white: 'rgb(251, 251, 250)',
+				secondary_white: '#FFFCF9',
+				secondary_black: '#242425',
 				action: '#1A57F2',
 				yellow: '#FFCB45',
 				lining: '#e5e7eb',

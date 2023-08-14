@@ -271,7 +271,10 @@ const MainTabs: React.FC<MainTabsProps> = ({
 			),
 			breadcrumb: nodeDataSWR && (
 				<>
-					<Breadcrumb getNodeTitle={() => nodeDataSWR.n.title} />
+					<Breadcrumb
+						getNodeTitle={() => nodeDataSWR.n.title}
+						getNodeIcon={() => nodeDataSWR.n.icon}
+					/>
 				</>
 			),
 		}),

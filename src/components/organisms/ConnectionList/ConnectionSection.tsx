@@ -22,7 +22,10 @@ const ConnectionSection: React.FC<ConnectionSectionProps> = ({
 	const { windowVar } = useViewData();
 	if (!windowVar) return <div></div>;
 
-	const [isOpen, setIsOpen] = useState(title === 'Parents' ? true : false);
+	console.log('title: ', title);
+	const [isOpen, setIsOpen] = useState(
+		colour === connectionColours['Parents'] ? true : false
+	);
 
 	const toggleAccordion = () => {
 		setIsOpen(!isOpen);

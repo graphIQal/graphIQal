@@ -284,7 +284,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 			<Modal open={isSettingsOpen} setOpen={setisSettingsOpen}>
 				<SettingsPanel />
 			</Modal>
-			<div className='absolute w-screen h-10 bg-blue-50'>
+			<div className='w-screen h-10 bg-blue-50'>
 				<Tabs>
 					{mainViewTabs.map((tab, index) => {
 						if (index === 0 && nodeDataSWR)
@@ -324,7 +324,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 			{mainViewTabs.map((tab, i) => {
 				return (
 					<div
-						className='pt-10 h-screen'
+						className=' h-screen'
 						key={i}
 						style={{
 							display:

@@ -38,7 +38,6 @@ export const Dropdown: React.FC<{
 
 	return (
 		<div className='absolute w-max shadow-md bg-white z-50'>
-			{' '}
 			{list && items && (
 				<SelectableList
 					onEnter={() => null}

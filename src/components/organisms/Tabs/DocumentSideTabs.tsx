@@ -194,24 +194,26 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 	const [currTab, setCurrTab] = useState(0);
 
 	return (
-		<div className='z-20 w-fit'>
-			<Tabs>
-				{tabs.map((tab, index) => {
-					return (
-						<div key={index}>
-							<Tab
-								label={tab.label}
-								selected={index == currTab}
-								index={index}
-								currTab={currTab}
-								setCurrTab={setCurrTab}
-								tabs={tabs}
-								setTabs={setTabs}
-							/>
-						</div>
-					);
-				})}
-			</Tabs>
+		<div className='z-20 w-fit '>
+			<div className='absolute top-0'>
+				<Tabs>
+					{tabs.map((tab, index) => {
+						return (
+							<div key={index}>
+								<Tab
+									label={tab.label}
+									selected={index == currTab}
+									index={index}
+									currTab={currTab}
+									setCurrTab={setCurrTab}
+									tabs={tabs}
+									setTabs={setTabs}
+								/>
+							</div>
+						);
+					})}
+				</Tabs>
+			</div>
 			{tabs.map((tab, i) => {
 				return (
 					<div

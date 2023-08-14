@@ -15,7 +15,7 @@ const LinkButton: React.FC<LinkButtonProps> = ({
 
 	return (
 		<div
-			className='text-sm'
+			className='text-sm inline-block'
 			onClick={() => {
 				onClick();
 				setEffect(true);

@@ -46,7 +46,7 @@ const Breadcrumb: React.FC<{
 	return (
 		<nav className='text-gray-500 text-sm flex flex-row'>
 			{pastLinks.map((link, index) => (
-				<>
+				<div key={index}>
 					{index > 0 && <span className='mx-2'>/</span>}
 					<LinkButton onClick={() => router.push(link.path)}>
 						<div className='flex flex-row gap-x-1 align-center items-center'>
@@ -54,7 +54,7 @@ const Breadcrumb: React.FC<{
 							{link.title}
 						</div>
 					</LinkButton>
-				</>
+				</div>
 			))}
 		</nav>
 	);

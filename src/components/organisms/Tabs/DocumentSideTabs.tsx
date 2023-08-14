@@ -9,7 +9,7 @@ import { useViewData } from '../../context/ViewContext';
 import { SelectableList } from '../../templates/SelectableList';
 import { useRouter } from 'next/router';
 import { Divider } from '../split-pane/SplitPane';
-import ConnectionSection from '../ConnectionList/ConnectionSectionItem';
+import ConnectionSection from '../ConnectionList/ConnectionSection';
 import { CircularGraph } from '@styled-icons/entypo/CircularGraph';
 
 import { ArrowLeftIcon, ArrowRightIcon, DiscIcon } from '@radix-ui/react-icons';
@@ -53,17 +53,6 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 	const renderConnections = (connectedNodes: connectedNode_type[]) => {
 		const items: any[] = [];
 
-		// const sections = {
-		// 	HAS: {
-		// 		PARENTs: [],
-		// 		CHILDrenREN: [],
-		// 	},
-		// 	IS: { IS: [], ENCOMPASSES: [] },
-		// 	NEEDS: { NEEDS: [], NEEDED: [] },
-		// 	FOLLOWS: { FOLLOWS: [], FOLLOWED: [] },
-		// 	RELATED: [],
-		// 	CUSTOM: [],
-		// };
 		const sectionDisplayNames: { [key: string]: string } = {
 			'To-HAS': 'Parents',
 			'From-HAS': 'Children',
@@ -103,7 +92,7 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 			sections[sectionKey].push(
 				<ConnectionListItem
 					fromNode={connectedNode.r.fromNode}
-					key={i}
+					key={connectedNode.connected_node.id}
 					type={connectedNode.r.type}
 					title={connectedNode.connected_node.title}
 					id={connectedNode.connected_node.id}

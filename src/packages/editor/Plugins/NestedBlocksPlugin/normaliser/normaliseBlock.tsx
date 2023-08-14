@@ -117,6 +117,8 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 			if (isMarkActive(editor, 'strikethrough'))
 				removeEditorMark(editor, 'strikethrough');
+
+			if (isMarkActive(editor, 'cut')) removeEditorMark(editor, 'cut');
 		}
 
 		// normalizeNode([node, path]);

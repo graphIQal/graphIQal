@@ -19,9 +19,8 @@ export const saveDocument = async ({
 	// console.log(title, nodeId);
 	// console.log(JSON.stringify(document));
 
-	console.log('saveDocument');
 	if (history === null) return;
-	console.log(history, document);
+	console.log('saveDocument');
 	// const changedBlocks = {};
 	// for (const i in history.undos) {
 	// 	for (const key in history.undos[i].blockIds) {

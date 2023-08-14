@@ -33,6 +33,7 @@ const ConnectionSection: React.FC<ConnectionSectionProps> = ({
 		<div
 			className={'border-t border-lining'}
 			style={{ backgroundColor: colour }}
+			key={colour}
 		>
 			<div
 				className='border-lining cursor-pointer flex items-center h-10 px-2 w-full '

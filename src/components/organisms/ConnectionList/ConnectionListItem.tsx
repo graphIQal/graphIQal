@@ -31,7 +31,7 @@ const ConnectionListItem: React.FC<ConnectionListItemProps> = ({
 	if (!windowVar) return <div></div>;
 	return (
 		<div
-			key={index}
+			key={id}
 			className={
 				'flex flex-row gap-x-3 justify-between items-center align-middle p-2 border-y-[0.5px] border-base_black border-opacity-10 '
 			}

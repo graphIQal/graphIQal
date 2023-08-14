@@ -11,22 +11,27 @@ index fff2b0c..c6be3cd 100644
  /**
   * `History` objects hold all of the operations that are applied to a value, so
 diff --git a/node_modules/slate-history/dist/index.es.js b/node_modules/slate-history/dist/index.es.js
-index 61c542e..08a44b4 100644
+index 61c542e..9b9444c 100644
 --- a/node_modules/slate-history/dist/index.es.js
 +++ b/node_modules/slate-history/dist/index.es.js
-@@ -185,10 +185,22 @@ var withHistory = editor => {
+@@ -185,10 +185,27 @@ var withHistory = editor => {
        if (lastBatch && merge) {
          lastBatch.operations.push(op);
        } else {
 +        // create object, and save. 
 +        const changedBlocks = {};
 +        // get all affected blocks in operations. 
-+        for(const i in op) {
-+          const nodeId = e.getClosestBlock(op)
-+          console.log(nodeId)
-+          if(nodeId) changedBlocks[nodeId] = true;
++        console.log('op');
++        console.log(op);
++
++        const nodeId = e.getClosestBlock(op.path)
++
++        if(op.newPath) {
++          const newNodeId = e.getClosestBlock(op.newPath)
++          if(newNodeId) changedBlocks[newNodeId] = true;
 +        }
 +
++        if(nodeId) changedBlocks[nodeId] = true;
 +
          var batch = {
            operations: [op],
@@ -38,20 +43,22 @@ index 61c542e..08a44b4 100644
          e.writeHistory('undos', batch);
        }
  
-@@ -206,8 +218,26 @@ var withHistory = editor => {
+@@ -206,8 +223,28 @@ var withHistory = editor => {
      e.history[stack].push(batch);
    };
  
 +  e.getClosestBlock = (path) => {
 +    const ancestors = [path, ...Path.ancestors(path, { reverse: true })]
-+  
 +    console.log(ancestors)
-+
-+    for (const i in ancestors) {
-+      const node = e.node(ancestors[i]);
-+      console.log(node)
-+      if (node && node[0].type === 'block') {
-+        return node[0].id;
++  
++    for (let i = 0; i < ancestors.length; i++) {
++      if(e.hasPath(ancestors[i])) {
++        const node = e.node(ancestors[i]);
++        console.log(ancestors[i])
++        console.log(node)
++        if (node && node[0].type === 'block') {
++          return node[0].id;
++        }
 +      }
 +    }
 +

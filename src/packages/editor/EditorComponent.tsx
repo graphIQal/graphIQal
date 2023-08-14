@@ -67,11 +67,11 @@ const EditorComponent: React.FC<{
 
 		console.log('editorRef');
 		console.log(editorRef.current?.history);
-		const lastUndo =
-			editorRef.current?.history.undos[
-				editorRef.current?.history.undos.length - 1
-			];
-		console.log(lastUndo);
+
+		// const lastUndo =
+		// 	editorRef.current?.history.undos[
+		// 		editorRef.current?.history.undos.length - 1
+		// 	];
 
 		return () => {
 			window.removeEventListener('beforeunload', onUnload);

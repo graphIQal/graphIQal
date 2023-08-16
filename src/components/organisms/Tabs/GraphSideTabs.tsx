@@ -19,6 +19,7 @@ import {
 	useGraphViewAPI,
 	useGraphViewData,
 } from '../../../packages/graph/context/GraphViewContext';
+import { renderConnections } from './RenderConnections';
 
 export type SideTabProps = {
 	label: string;
@@ -80,50 +81,6 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
 		];
 	};
 
-	const renderConnections = (connectedNodes: connectedNode_type[]) => {
-		const items: any[] = [];
-		const relationshipOrder = [
-			'HAS',
-			'IS',
-			'NEEDS',
-			'FOLLOWS',
-			'RELATED',
-			'CUSTOM',
-		];
-
-		connectedNodes
-			.sort((a, b) => {
-				const relationshipOrderComparison =
-					relationshipOrder.indexOf(a.r.type) -
-					relationshipOrder.indexOf(b.r.type);
-
-				return a.r.fromNode === false
-					? -1 // Sort false `fromNode` values before positive `fromNode` values
-					: b.r.fromNode === false
-					? 1 // Sort positive `fromNode` values after false `fromNode` values
-					: relationshipOrderComparison !== 0
-					? relationshipOrderComparison // If `fromNode` values are the same, sort by relationship order
-					: 0;
-			})
-			.map((connectedNode: connectedNode_type, i: number) => {
-				items.push(
-					<ConnectionListItem
-						fromNode={connectedNode.r.fromNode}
-						key={i}
-						type={connectedNode.r.type}
-						title={connectedNode.connected_node.title}
-						id={connectedNode.connected_node.id}
-						index={i}
-						buttonItems={getButtonItems(
-							connectedNode.connected_node
-						)}
-						url={connectedNode.connected_node.url}
-					/>
-				);
-			});
-		return items;
-	};
-
 	useEffect(() => {
 		if (!nodeInFocus_data) return;
 		let newTabs = [...tabs];
@@ -132,7 +89,8 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
 				<SelectableList
 					onEnter={() => null}
 					listItems={renderConnections(
-						nodeInFocus_data.connectedNodes
+						nodeInFocus_data.connectedNodes,
+						getButtonItems
 					)}
 				/>
 			</SidePanel>
@@ -160,7 +118,8 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
 						nodeInFocus_data.connectedNodes.filter(
 							({ r, connected_node }: any) =>
 								connected_node.id in mainNodeConnections
-						)
+						),
+						getButtonItems
 					)}
 				/>
 			</SidePanel>

@@ -2,7 +2,7 @@ import { useLocalStorage, useEventListener } from 'usehooks-ts';
 import { useSWRConfig } from 'swr';
 import { useEffect } from 'react';
 //
-export const useSWRCache = () => {
+export const usePersistentSWRCache = () => {
 	const [swrCache, setSWRCache] = useLocalStorage('swrcache', '{}');
 	const parsedSWRCache = JSON.parse(swrCache) as object;
 	const { cache, mutate } = useSWRConfig();

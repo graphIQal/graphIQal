@@ -66,7 +66,7 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 		nodeInFocusId == nodeInfo.id
 			? 'bg-opacity-30 bg-' + nodeInfo.color
 			: 'bg-base_white';
-	const collapsed = nodeVisualData_Graph[nodeInfo.id].collapsed;
+	const collapsed = !nodeData_Graph[nodeInfo.id].document;
 
 	//disables dragging if we're drawing
 	useEffect(() => {

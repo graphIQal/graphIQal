@@ -22,7 +22,6 @@ const ConnectionSection: React.FC<ConnectionSectionProps> = ({
 	const { windowVar } = useViewData();
 	if (!windowVar) return <div></div>;
 
-	console.log('title: ', title);
 	const [isOpen, setIsOpen] = useState(
 		colour === connectionColours['Parents'] ? true : false
 	);
@@ -34,7 +33,7 @@ const ConnectionSection: React.FC<ConnectionSectionProps> = ({
 
 	return (
 		<div
-			className={'border-t border-lining'}
+			className={'border-t border-lining w-full'}
 			style={{ backgroundColor: colour }}
 			key={colour}
 		>

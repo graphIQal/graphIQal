@@ -62,7 +62,7 @@ module.exports = {
 				secondary_black: '#242425',
 				action: '#1A57F2',
 				yellow: '#FFCB45',
-				lining: '#e5e7eb',
+				lining: '#DADCE0',
 				node: '#4362B1',
 				selected_white: '#F5F6F7',
 				connection: '#4362B1',

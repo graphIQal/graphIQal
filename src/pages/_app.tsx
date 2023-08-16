@@ -21,14 +21,14 @@ import Window from '../components/layouts/Window';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { SWRConfig } from 'swr';
-import { useSWRCache } from '../helpers/hooks/useSWRCache';
+import { usePersistentSWRCache } from '../helpers/hooks/useSWRCache';
 import { AppProps } from 'next/app';
 
 export default function MyApp({
 	Component,
 	pageProps: { session, ...pageProps },
 }: AppProps) {
-	useSWRCache();
+	usePersistentSWRCache();
 
 	return (
 		<>

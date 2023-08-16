@@ -1,5 +1,6 @@
 import { mutate } from 'swr';
 import { History } from 'slate-history';
+import { fetcherAll } from '@/backend/driver/fetcher';
 
 export type SaveDocumentInput = {
 	nodeId: string;
@@ -21,12 +22,23 @@ export const saveDocument = async ({
 
 	if (history === null) return;
 	console.log('saveDocument');
-	// const changedBlocks = {};
-	// for (const i in history.undos) {
-	// 	for (const key in history.undos[i].blockIds) {
-	// 		console.log(key);
-	// 		// changedBlocks[]
-	// 	}
+
+	// const blockMutates = [];
+
+	// if (history.redos.length > 0) {
+	// 	// save last redo
+	// 	blockMutates.push(
+	// 		...Object.keys(
+	// 			history.redos[history.redos.length - 1].changedBlocks
+	// 		)
+	// 	);
+	// } else {
+	// 	// save last undo
+	// 	blockMutates.push(
+	// 		...Object.keys(
+	// 			history.undos[history.undos.length - 2].changedBlocks
+	// 		)
+	// 	);
 	// }
 
 	const res = await fetch(

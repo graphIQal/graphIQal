@@ -1,12 +1,12 @@
 diff --git a/node_modules/slate-history/dist/history.d.ts b/node_modules/slate-history/dist/history.d.ts
-index fff2b0c..c6be3cd 100644
+index fff2b0c..6330059 100644
 --- a/node_modules/slate-history/dist/history.d.ts
 +++ b/node_modules/slate-history/dist/history.d.ts
 @@ -2,6 +2,7 @@ import { Operation, Range } from 'slate';
  interface Batch {
      operations: Operation[];
      selectionBefore: Range | null;
-+    blockId: string;
++    changedBlocks: {[key:string] : string};
  }
  /**
   * `History` objects hold all of the operations that are applied to a value, so

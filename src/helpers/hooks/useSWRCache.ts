@@ -23,10 +23,10 @@ export const usePersistentSWRCache = () => {
 	useEventListener('beforeunload', () => {
 		const newCache: any = {};
 
-		// // @ts-ignore
-		// for (const key of cache.keys()) {
-		// 	newCache[key] = cache.get(key);
-		// }
+		// @ts-ignore
+		for (const key of cache.keys()) {
+			newCache[key] = cache.get(key);
+		}
 
 		// console.log(JSON.stringify(newCache));
 		setSWRCache(JSON.stringify(newCache));

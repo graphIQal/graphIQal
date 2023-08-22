@@ -26,6 +26,8 @@ import Graph from '../../../packages/graph/Graph';
 import { CircularGraph } from '@styled-icons/entypo/CircularGraph';
 import LinkButton from '../../molecules/LinkButton';
 import Breadcrumb from '../Breadcrumb';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 type MainTabsProps = {
 	mainViewTabs: MainTabProps[];
@@ -282,77 +284,80 @@ const MainTabs: React.FC<MainTabsProps> = ({
 	);
 
 	return (
-		<div className='h-screen overflow-y-auto max-h-full max-x-full overflow-x-hidden'>
-			<SideBar favData={favData} connectionMap={connectionMap} />
-			<Modal open={isSettingsOpen} setOpen={setisSettingsOpen}>
-				<SettingsPanel />
-			</Modal>
-			<div className='w-screen h-10 bg-blue-50'>
-				<Tabs>
-					{mainViewTabs.map((tab, index) => {
-						if (index === 0 && nodeDataSWR)
-							tab.title = nodeDataSWR.n.title;
-						return (
-							<div key={index}>
-								<Link
-									href={{
-										pathname: '/' + username + '/' + nodeId,
-										query: {
-											view: tab.viewType,
-											viewId: tab.viewId,
-											tab: index,
-										},
-									}}
-									shallow={true}
-								>
-									<Tab
-										label={tab.title}
-										selected={
-											mainViewTabs[currTab].viewId ===
-											tab.viewId
-										}
-										index={index}
-										currTab={currTab}
-										setCurrTab={changeCurrTab}
-										tabs={mainViewTabs}
-										setTabs={setMainViewTabs}
-										onClick={() => null}
-									/>
-								</Link>
-							</div>
-						);
-					})}
-				</Tabs>
+		<DndProvider backend={HTML5Backend}>
+			<div className='h-screen overflow-y-auto max-h-full max-x-full overflow-x-hidden'>
+				<SideBar favData={favData} connectionMap={connectionMap} />
+				<Modal open={isSettingsOpen} setOpen={setisSettingsOpen}>
+					<SettingsPanel />
+				</Modal>
+				<div className='w-screen h-10 bg-blue-50'>
+					<Tabs>
+						{mainViewTabs.map((tab, index) => {
+							if (index === 0 && nodeDataSWR)
+								tab.title = nodeDataSWR.n.title;
+							return (
+								<div key={index}>
+									<Link
+										href={{
+											pathname:
+												'/' + username + '/' + nodeId,
+											query: {
+												view: tab.viewType,
+												viewId: tab.viewId,
+												tab: index,
+											},
+										}}
+										shallow={true}
+									>
+										<Tab
+											label={tab.title}
+											selected={
+												mainViewTabs[currTab].viewId ===
+												tab.viewId
+											}
+											index={index}
+											currTab={currTab}
+											setCurrTab={changeCurrTab}
+											tabs={mainViewTabs}
+											setTabs={setMainViewTabs}
+											onClick={() => null}
+										/>
+									</Link>
+								</div>
+							);
+						})}
+					</Tabs>
+				</div>
+				{mainViewTabs.map((tab, i) => {
+					return (
+						<div
+							className=' h-screen'
+							key={i}
+							style={{
+								display:
+									mainViewTabs[currTab].viewId === tab.viewId
+										? 'block'
+										: 'none',
+							}}
+						>
+							{tab.viewType === 'document' ? (
+								// Add the information from the bar, and inside the component we can render custom data HOLY SHIT YES.
+								<Document
+									viewId={tab.viewId}
+									barComponents={BarComponents}
+								></Document>
+							) : (
+								<Graph
+									viewId={tab.viewId}
+									title={tab.title}
+									barComponents={BarComponents}
+								/>
+							)}
+						</div>
+					);
+				})}
 			</div>
-			{mainViewTabs.map((tab, i) => {
-				return (
-					<div
-						className=' h-screen'
-						key={i}
-						style={{
-							display:
-								mainViewTabs[currTab].viewId === tab.viewId
-									? 'block'
-									: 'none',
-						}}
-					>
-						{tab.viewType === 'document' ? (
-							// Add the information from the bar, and inside the component we can render custom data HOLY SHIT YES.
-							<Document
-								viewId={tab.viewId}
-								barComponents={BarComponents}
-							></Document>
-						) : (
-							<Graph
-								viewId={tab.viewId}
-								title={tab.title}
-								barComponents={BarComponents}
-							/>
-						)}
-					</div>
-				);
-			})}
-		</div>
+		</DndProvider>
 	);
 };
 export default MainTabs;

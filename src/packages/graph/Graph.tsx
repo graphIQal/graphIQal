@@ -4,8 +4,6 @@
  */
 
 import React from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import GraphSplitPaneWrapper from './components/GraphSplitPaneWrapper';
 import { GraphViewDataProvider } from './context/GraphViewContext';
 
@@ -17,14 +15,12 @@ const Graph: React.FC<{
 	// console.log('rerendering graph root');
 
 	return (
-		<DndProvider backend={HTML5Backend}>
-			<GraphViewDataProvider>
-				<GraphSplitPaneWrapper
-					viewId={viewId}
-					barComponents={barComponents}
-				/>
-			</GraphViewDataProvider>
-		</DndProvider>
+		<GraphViewDataProvider>
+			<GraphSplitPaneWrapper
+				viewId={viewId}
+				barComponents={barComponents}
+			/>
+		</GraphViewDataProvider>
 	);
 };
 

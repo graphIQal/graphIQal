@@ -66,7 +66,9 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 		nodeInFocusId == nodeInfo.id
 			? 'bg-opacity-30 bg-' + nodeInfo.color
 			: 'bg-base_white';
-	const collapsed = !nodeData_Graph[nodeInfo.id].document;
+
+	let collapsed = false;
+	// const collapsed = nodeInfo.width * nodeInfo.height < 12000;
 
 	//disables dragging if we're drawing
 	useEffect(() => {
@@ -155,6 +157,8 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 				className='absolute'
 			/>
 		);
+	} else {
+		// collapsed = nodeInfo.width * nodeInfo.height < 20000;
 	}
 
 	return (
@@ -213,7 +217,8 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 				}}
 				id={nodeInfo.id}
 			>
-				{collapsed ? (
+				{/* Document Graph Node */}
+				{/* 
 					<CollapsedGraphNode
 						toggleDropdown={() => {
 							console.log('toggle dropdown');
@@ -223,7 +228,16 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 						showSearchDropdown={showSearchDropdown}
 						setShowSearchDropdown={setShowSearchDropdown}
 					/>
-				) : (
+				) */}
+				<div>
+					<div className='absolute z-10'>
+						<IconCircleButton
+							src={nodeInfo.icon ? nodeInfo.icon : 'node'}
+							onClick={() => setshowEditDropdown((n) => !n)}
+							circle={false}
+							size={20}
+						/>
+					</div>
 					<DocumentGraphNode
 						toggleDropdown={() =>
 							setshowEditDropdown(!showEditDropdown)
@@ -232,10 +246,10 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 						showSearchDropdown={showSearchDropdown}
 						setShowSearchDropdown={setShowSearchDropdown}
 					/>
-				)}
+				</div>
 			</ResizableBox>
 			{/* Search dropdown and Icon/color dropdown */}
-			{showSearchDropdown && (
+			{/* {showSearchDropdown && (
 				<div
 					className='absolute'
 					style={{
@@ -251,7 +265,7 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 						setShowDropdown={setShowSearchDropdown}
 					/>
 				</div>
-			)}
+			)} */}
 			{showEditDropdown && (
 				<div
 					className='w-full absolute'

@@ -19,6 +19,7 @@ import { Block } from '../../packages/editor/Elements/Elements';
 import { createNormalizeTypesPlugin } from '@udecode/plate';
 import { withDraggable } from '../../packages/dnd-editor/components/withDraggable';
 import { TitleElementGraph } from '../../packages/graph/graphEditor/GraphElements';
+import { saveDocument } from '@/backend/functions/general/document/mutate/saveDocument';
 
 const DocumentGraphNode: React.FC<{
 	toggleDropdown: () => void;
@@ -88,7 +89,7 @@ const DocumentGraphNode: React.FC<{
 			<div
 				className={'w-full h-full flex justify-items-stretch flex-row '}
 			>
-				<div className='flex flex-row gap-x-3 w-full h-fit items-center overflow-y-scroll '>
+				<div className='flex flex-row gap-x-3 w-full h-fit items-center overflow-y-scroll ml-2'>
 					{node_data.document && (
 						<EditorComponent
 							key={id}
@@ -116,7 +117,12 @@ const DocumentGraphNode: React.FC<{
 								// 	},
 								// };
 								// await SWRmutateCurrNode(
-								// 	saveDocument(params),
+								const realParams = {
+									...params,
+									nodeId: id,
+									title: title,
+								};
+								saveDocument(realParams);
 								// 	{
 								// 		optimisticData: newData,
 								// 		populateCache: false,

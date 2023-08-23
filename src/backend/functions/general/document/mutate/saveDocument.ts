@@ -20,8 +20,12 @@ export const saveDocument = async ({
 	// console.log(title, nodeId);
 	// console.log(JSON.stringify(document));
 
-	if (history === null) return;
-	console.log('saveDocument');
+	if (
+		history === null ||
+		(history.undos.length < 1 && history.redos.length < 1)
+	)
+		return;
+	console.log('saveDocument', nodeId, title, history);
 
 	// const blockMutates = [];
 

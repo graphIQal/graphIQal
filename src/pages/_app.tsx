@@ -28,7 +28,7 @@ export default function MyApp({
 	Component,
 	pageProps: { session, ...pageProps },
 }: AppProps) {
-	usePersistentSWRCache();
+	// usePersistentSWRCache();
 
 	return (
 		<>

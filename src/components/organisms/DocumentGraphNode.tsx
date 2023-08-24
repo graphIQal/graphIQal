@@ -21,17 +21,7 @@ import { withDraggable } from '../../packages/dnd-editor/components/withDraggabl
 import { TitleElementGraph } from '../../packages/graph/graphEditor/GraphElements';
 import { saveDocument } from '@/backend/functions/general/document/mutate/saveDocument';
 
-const DocumentGraphNode: React.FC<{
-	toggleDropdown: () => void;
-	showSearchDropdown: boolean;
-	setShowSearchDropdown: (val: boolean) => void;
-	setResults: (val: ItemProps[]) => void;
-}> = ({
-	toggleDropdown,
-	showSearchDropdown,
-	setShowSearchDropdown,
-	setResults,
-}) => {
+const DocumentGraphNode: React.FC<{}> = ({}) => {
 	const { title, id, icon, node_data } = useContext(
 		GraphNodeContext
 	) as GraphNodeContextInterface;
@@ -120,7 +110,7 @@ const DocumentGraphNode: React.FC<{
 								const realParams = {
 									...params,
 									nodeId: id,
-									title: title,
+									// title: title,
 								};
 								saveDocument(realParams);
 								// 	{

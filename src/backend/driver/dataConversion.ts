@@ -341,6 +341,7 @@ export const jsonToCypher_graphView = ({
 			let out = '';
 			out += 'SET';
 			for (const property in node.set) {
+				if (property === 'document') continue;
 				out += ' n.' + property + ' = "' + node.set[property] + '",';
 			}
 			out = out.slice(0, out.length - 1);

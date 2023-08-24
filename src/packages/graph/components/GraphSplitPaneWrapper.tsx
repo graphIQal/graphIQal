@@ -3,27 +3,25 @@
  * Creates and sets all the global props that go into Context wrappers
  */
 
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { getCommonParents } from '../../../backend/functions/general/getCommonParents';
-import { Alert } from '../../../components/organisms/Alert';
-import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
-import SplitPane, {
-	SplitPaneLeft,
-	SplitPaneRight,
-	Divider,
-} from '../../../components/organisms/split-pane/SplitPane';
-import DrawingContext from '../context/GraphDrawingContext';
-import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
-import { useHistoryState } from '../hooks/useHistoryState';
-import { GraphContainer } from './GraphContainer';
 import useSWR from 'swr';
 import { fetcher, fetcherAll } from '../../../backend/driver/fetcher';
-import SearchBar from '../../../components/organisms/SearchBar';
 import { useViewData } from '../../../components/context/ViewContext';
+import { Alert } from '../../../components/organisms/Alert';
+import SearchBar from '../../../components/organisms/SearchBar';
+import GraphSideTabs from '../../../components/organisms/Tabs/GraphSideTabs';
+import SplitPane, {
+	Divider,
+	SplitPaneLeft,
+	SplitPaneRight,
+} from '../../../components/organisms/split-pane/SplitPane';
+import DrawingContext from '../context/GraphDrawingContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
+import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useFiltering } from '../hooks/useFiltering';
 import { Filtering } from './Filtering';
+import { GraphContainer } from './GraphContainer';
 
 const GraphSplitPaneWrapper: React.FC<{
 	viewId: string;
@@ -68,43 +66,32 @@ const GraphSplitPaneWrapper: React.FC<{
 			viewId && nodeId
 				? `/api/${username}/${nodeId}/graph/${viewId}`
 				: null,
-			nodeInFocusId ? `/api/${username}/${nodeInFocusId}` : null,
 		],
-		fetcherAll
+		fetcher
+	);
+
+	const { data: nodeInFocusData } = useSWR(
+		[nodeInFocusId ? `/api/${username}/${nodeInFocusId}` : null],
+		fetcher
 	);
 
 	useEffect(() => {
-		let nodeData = {} as { [key: string]: NodeData };
-		let visualData = {} as { [key: string]: GraphNodeData };
-		if (!data || !data[0]) return;
-		for (let node in data[0]) {
-			const nodeDataResponse = data[0];
-			let nodeConnections: { [key: string]: ConnectionData } = {};
-			for (let connection in nodeDataResponse[node].connections) {
-				nodeConnections[
-					nodeDataResponse[node].connections[connection].endNode
-				] = {
-					...nodeDataResponse[node].connections[connection],
-					content: [],
-				};
-			}
-			nodeData[nodeDataResponse[node].node.id] = {
-				...nodeDataResponse[node].node,
-				connections: nodeConnections,
-			};
+		// let nodeData = {} as { [key: string]: NodeData };
+		// let visualData = {} as { [key: string]: GraphNodeData };
+		console.log('data graph');
+		console.log(data);
 
-			visualData[nodeDataResponse[node].node.id] =
-				nodeDataResponse[node].relationship;
-		}
-		changeNodeData_Graph(nodeData);
-		changeVisualData_Graph(visualData);
-	}, [data && data[0]]);
+		if (!data) return;
+
+		changeNodeData_Graph(data.nodeData);
+		changeVisualData_Graph(data.visualData);
+	}, [data]);
 
 	useEffect(() => {
-		if (data && data[1]) {
-			setnodeInFocus_data(data[1][0]);
+		if (nodeInFocusData) {
+			setnodeInFocus_data(nodeInFocusData[0]);
 		}
-	}, [data && data[1]]);
+	}, [nodeInFocusData]);
 
 	// set NodeId once it changes
 	useEffect(() => {

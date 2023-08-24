@@ -70,6 +70,7 @@ export const renderConnections = (
 
 		return (
 			<ConnectionSection
+				key={name}
 				colour={connectionColours[sectionDisplayNames[name]]}
 				title={
 					<div className='flex flex-row items-center w-full ' key={i}>

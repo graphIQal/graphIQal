@@ -10,12 +10,8 @@ import {
 	useReducer,
 	useRef,
 } from 'react';
-import { NodeData, GraphNodeData } from '../graphTypes';
-import {
-	Action,
-	ActionChanges,
-	useHistoryState,
-} from '../hooks/useHistoryState';
+import { GraphNodeData, NodeData } from '../graphTypes';
+import { Action, ActionChanges } from '../hooks/useHistoryState';
 
 // export type GraphViewContextInterface = {
 //   nodeInFocusId: string; //ID of "centered" node (shows only its connections and relevant data), 'homenode' if no centered node

@@ -2,30 +2,25 @@
  * Container for Graph; renders either "Mind map" view or "Axis" view
  * Sets information for Context wrapper that deals with actions like dragging, undo/redo, resize
  */
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
+import { useViewData } from '../../../components/context/ViewContext';
+import { addConnection } from '../../../helpers/backend/addConnection';
+import { useToggle } from '../../../helpers/hooks/useToggle';
 import GraphActionContext from '../context/GraphActionContext';
 import DrawingContext, {
 	DrawingContextInterface,
 } from '../context/GraphDrawingContext';
-import { useDropNode } from '../hooks/dragging/useDropNode';
+import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
 import { handleEscapeDrawing } from '../helpers/handleKeyPress';
+import { useDropNode } from '../hooks/dragging/useDropNode';
 import { useCanvas } from '../hooks/drawing/useCanvas';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { useDrawingEnd } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
-import { useFiltering } from '../hooks/useFiltering';
+import { useHistoryState } from '../hooks/useHistoryState';
 import { useResize } from '../hooks/useResize';
 import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
-import { Filtering } from './Filtering';
 import { GraphMindMapView } from './GraphMindMapView';
-import { useToggle } from '../../../helpers/hooks/useToggle';
-import { addNode } from '../../../helpers/backend/addNode';
-import SearchBar from '../../../components/organisms/SearchBar';
-import { useViewData } from '../../../components/context/ViewContext';
-import { useGraphViewAPI } from '../context/GraphViewContext';
-import { useGraphViewData } from '../context/GraphViewContext';
-import { addConnection } from '../../../helpers/backend/addConnection';
-import { ActionChanges, useHistoryState } from '../hooks/useHistoryState';
 
 export const GraphContainer: React.FC<{}> = () => {
 	const { windowVar, documentVar } = useViewData();

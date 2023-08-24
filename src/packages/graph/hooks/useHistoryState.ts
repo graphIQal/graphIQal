@@ -10,6 +10,7 @@ import {
 	useRef,
 } from 'react';
 import { GraphNodeData, LineRefs, NodeData } from '../graphTypes';
+import { useSWRConfig } from 'swr';
 
 export type Action = {
 	type: ActionChanges;
@@ -42,6 +43,7 @@ export const useHistoryState = (
 ) => {
 	const history = useRef<Action[]>([]);
 	const pointer = useRef<number>(-1);
+	const { mutate } = useSWRConfig();
 
 	const addActionToStack = (action: Action) => {
 		history.current = [
@@ -71,11 +73,12 @@ export const useHistoryState = (
 		let newState: any;
 
 		console.log('undo');
-		if (pointer.current == -1) {
-			console.log('hmm');
+		if (pointer.current === -1) {
+			console.log('hmm', pointer.current);
 			return;
 		}
 		const { id, value, type } = history.current[pointer.current];
+		console.log('undo values: ', id, value, type);
 
 		switch (type) {
 			case 'NODE_SIZE':

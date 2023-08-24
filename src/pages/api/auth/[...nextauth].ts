@@ -65,9 +65,6 @@ export default NextAuth({
 			},
 			async authorize(credentials, req) {
 				// Add logic here to look up the user from the credentials supplied
-				console.log('credentials, ');
-				console.log(credentials);
-
 				if (!credentials) return null;
 
 				const params = {
@@ -93,7 +90,6 @@ export default NextAuth({
 						res[0].u.properties.password
 					).success
 				) {
-					console.log('res', res[0].u.properties);
 					return res[0].u.properties;
 				} else {
 					// Signup flow -> Probably from signup.
@@ -111,65 +107,29 @@ export default NextAuth({
 	},
 	callbacks: {
 		async jwt({ token, user, account, profile }) {
-			console.log('jwt');
-			console.log(token);
-			console.log(user);
-
 			token = { ...token, ...user };
 			return token;
 		},
 		async signIn({ user, account, profile, email }) {
-			console.log('sign in');
-			console.log({ user, account, profile, email });
-
 			return true;
 		},
 		async redirect({ url, baseUrl }) {
 			// Allows relative callback URLs
-			// console.log('redirect');
-			// // console.log(url, baseUrl);
 			if (url.startsWith('/')) return `${baseUrl}${url}`;
 			// Allows callback URLs on the same origin
 			else if (new URL(url).origin === baseUrl) return url;
 			return baseUrl;
 		},
 		async session({ session, token, user }) {
-			console.log('session');
-			console.log(session);
-			console.log(token);
-			console.log(user);
-
 			// Send properties to the client, like an access_token and user id from a provider.
 			// session.accessToken = token.accessToken;
 			session.user = { ...session.user, ...token, ...user };
 			token = { ...token, ...user };
 
-			console.log('new session');
-			console.log(session);
-			// session.user.id = token.id;
-
 			return session;
 		},
 	},
-	events: {
-		async signIn({ user, account, profile, isNewUser }) {
-			console.log('signed in ');
-			console.log({ user, account, profile, isNewUser });
-			// redirect()
-		},
-		async linkAccount({ user, account, profile }) {
-			console.log('linked account');
-			console.log({ user, account, profile });
-		},
-		async createUser({ user }) {
-			console.log('create User');
-			console.log(user);
-		},
-		async updateUser({ user }) {
-			console.log('create User');
-			console.log(user);
-		},
-	},
+	events: {},
 	session: {
 		strategy: 'jwt',
 		// maxAge: 60 * 24 * 60 * 60, // 30 days

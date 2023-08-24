@@ -25,6 +25,7 @@ export const saveDocument = async ({
 		(history.undos.length < 1 && history.redos.length < 1)
 	)
 		return;
+
 	console.log('saveDocument', nodeId, title, history);
 
 	// const blockMutates = [];

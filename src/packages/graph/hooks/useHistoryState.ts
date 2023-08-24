@@ -49,6 +49,7 @@ export const useHistoryState = (
 			action,
 		];
 		pointer.current += 1;
+		console.log(history, pointer.current);
 	};
 
 	const addAction = (
@@ -56,6 +57,7 @@ export const useHistoryState = (
 		type: ActionChanges,
 		value: { old: any; new: any }
 	) => {
+		console.log('add action', type, id, value);
 		addActionToStack({
 			id: id,
 			value: value,
@@ -67,8 +69,10 @@ export const useHistoryState = (
 		const nodeData_Graph = nodeRef.current;
 		const nodeVisualData_Graph = visualRef.current;
 		let newState: any;
-		setAlert('');
+
+		console.log('undo');
 		if (pointer.current == -1) {
+			console.log('hmm');
 			return;
 		}
 		const { id, value, type } = history.current[pointer.current];
@@ -82,7 +86,7 @@ export const useHistoryState = (
 				newState[id].y = value.old.y;
 				setnodeVisualData_Graph(newState);
 
-				alert('asd');
+				// alert('asd');
 
 				break;
 			case 'NODE_ADD':
@@ -175,6 +179,7 @@ export const useHistoryState = (
 	const redo = () => {
 		const nodeData_Graph = nodeRef.current;
 		const nodeVisualData_Graph = visualRef.current;
+		console.log('redo');
 		if (pointer.current + 1 >= history.current.length) {
 			return;
 		}

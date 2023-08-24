@@ -238,14 +238,7 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 							size={20}
 						/>
 					</div>
-					<DocumentGraphNode
-						toggleDropdown={() =>
-							setshowEditDropdown(!showEditDropdown)
-						}
-						setResults={setSearchResults}
-						showSearchDropdown={showSearchDropdown}
-						setShowSearchDropdown={setShowSearchDropdown}
-					/>
+					<DocumentGraphNode />
 				</div>
 			</ResizableBox>
 			{/* Search dropdown and Icon/color dropdown */}

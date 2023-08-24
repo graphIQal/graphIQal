@@ -35,6 +35,7 @@ export const GraphContainer: React.FC<{}> = () => {
 	const drawingContext = useContext(
 		DrawingContext
 	) as DrawingContextInterface;
+
 	const {
 		startNode,
 		endNode,

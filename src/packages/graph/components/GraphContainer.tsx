@@ -223,6 +223,7 @@ export const GraphContainer: React.FC<{
 					translateX={translateX}
 					translateY={translateY}
 					scale={scale}
+					mutateGraphData={mutateGraphData}
 				/>
 				{/* <GraphAxisView xCategory={xCategory} yCategory={yCategory} /> */}
 				{/* <div className=' absolute  flex-row w-10'>

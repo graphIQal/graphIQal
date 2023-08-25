@@ -24,6 +24,7 @@ import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
 import { ConnectionTypes } from '../graphTypes';
 import GraphNodeContext from '../context/GraphNodeContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
+import { KeyedMutator } from 'swr';
 
 type MindMapProps = {
 	points: any;
@@ -32,6 +33,7 @@ type MindMapProps = {
 	translateX: number;
 	translateY: number;
 	scale: number;
+	mutateGraphData: KeyedMutator<any>;
 };
 export const GraphMindMapView: React.FC<MindMapProps> = ({
 	points,
@@ -40,6 +42,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 	translateX,
 	translateY,
 	scale,
+	mutateGraphData,
 }) => {
 	const handleDrawing = useDrawingCanvas();
 	const handleStartPoint = useDrawingStart();
@@ -51,6 +54,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 		graphViewId,
 		tags,
 	} = useGraphViewData();
+
 	const { changeNodeData_Graph, changeAlert } = useGraphViewAPI();
 
 	// Types in connection dropdown to select from
@@ -74,7 +78,8 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 							changeNodeData_Graph,
 							addAction,
 							changeAlert,
-						}
+						},
+						mutateGraphData
 					),
 			});
 			if (
@@ -103,7 +108,8 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 							changeNodeData_Graph,
 							addAction,
 							changeAlert,
-						}
+						},
+						mutateGraphData
 					),
 			});
 		}

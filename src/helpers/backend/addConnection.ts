@@ -1,9 +1,6 @@
-import { KeyedMutator, useSWRConfig } from 'swr';
+import { createConnection } from '@/backend/functions/node/mutate/createConnection';
+import { KeyedMutator } from 'swr';
 import { API, State } from '../../packages/graph/context/GraphViewContext';
-import { NodeData } from '../../packages/graph/graphTypes';
-import { ActionChanges } from '../../packages/graph/hooks/useHistoryState';
-import { saveGraphAction } from '@/backend/functions/graph/mutate/saveGraphAction';
-import { saveGraphConnection } from '@/backend/functions/graph/mutate/saveGraphConnection';
 
 export const addConnection = (
 	node1: string,
@@ -32,9 +29,8 @@ export const addConnection = (
 			newnodeData_Graph[node2].title
 	);
 
-	// changeNodeData_Graph(newnodeData_Graph);
 	// Now mutating in the cache
-	mutateGraphData(saveGraphConnection({ node1, node2, type: 'related' }), {
+	mutateGraphData(createConnection({ node1, node2, type: 'related' }), {
 		optimisticData: {
 			visualData: nodeVisualData_Graph,
 			nodeData: newnodeData_Graph,

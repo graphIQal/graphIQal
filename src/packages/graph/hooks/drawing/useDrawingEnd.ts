@@ -108,6 +108,8 @@ export const useDrawingEnd = (
 									{ nodeVisualData_Graph }
 								);
 
+								console.log('add arrow');
+
 								updateConnection(
 									'arrowAdd',
 									func,
@@ -120,7 +122,8 @@ export const useDrawingEnd = (
 										changeNodeData_Graph,
 										addAction,
 										changeAlert,
-									}
+									},
+									mutateGraphData
 								);
 								break;
 							}

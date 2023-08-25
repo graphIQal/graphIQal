@@ -53,8 +53,6 @@ export const addNode = (
 
 	changeAlert('Created new node');
 
-	// changeVisualData_Graph(newGraphData);
-	// changeNodeData_Graph(newNodeData);
 	mutateGraphData(
 		createGraphNode({
 			id,

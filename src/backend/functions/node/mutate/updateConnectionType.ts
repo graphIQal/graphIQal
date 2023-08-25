@@ -4,24 +4,28 @@ import { jsonToCypher_graphView } from '../../../driver/dataConversion';
 import { GraphNodeData, NodeData } from '../../../../packages/graph/graphTypes';
 import { Action } from '../../../../packages/graph/hooks/useHistoryState';
 
-type saveGraphConnectionInput = {
-	node1: string;
-	node2: string;
-	type: string;
+type changeConnectionTypeInput = {
+	startNode: string;
+	endNode: string;
+	oldType: string;
+	newType: string;
 };
 
-export const saveGraphConnection = async ({
-	node1,
-	node2,
-	type,
-}: saveGraphConnectionInput) => {
+export const changeConnectionType = async ({
+	startNode,
+	endNode,
+	oldType,
+	newType,
+}: changeConnectionTypeInput) => {
 	const body = `
-		MATCH (n:Node {id: "${node1}"})
-		MATCH (endNode:Node {id: "${node2}"})
-		MERGE (n)-[rel:${type}]->(endNode)
+		MATCH (n:Node {id:"${startNode}"})-[r:${oldType}]->(m:Node {id:"${endNode}"})
+		CREATE (n)-[r2:${newType}]->(m)
+		SET r2 = properties(r)
+		WITH r
+		DELETE r
 	`;
 
-	const res = await fetch(`/api/general/nodes/mutate/newConnection`, {
+	const res = await fetch(`/api/general/nodes/mutate/connection`, {
 		method: 'POST',
 		body: body,
 	})

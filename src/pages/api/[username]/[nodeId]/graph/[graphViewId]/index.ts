@@ -24,7 +24,6 @@ export default async function handler(
 	const data: any = await write(cypher as string, params);
 
 	if ('err' in data) {
-		console.log('failed');
 		res.status(400).json(data);
 	} else {
 		let nodeData = {} as { [key: string]: NodeData };
@@ -54,9 +53,6 @@ export default async function handler(
 				nodeDataResponse[node].relationship;
 		}
 
-		console.log('here');
 		res.status(200).json({ nodeData, visualData });
 	}
-
-	// res.status(200).json(data);
 }

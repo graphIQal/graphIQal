@@ -59,19 +59,16 @@ const GraphSplitPaneWrapper: React.FC<{
 
 	const {
 		data,
+		mutate: mutateGraphData,
 		// error: nodeError,
 		// isLoading: nodeDataLoading,
 	} = useSWR(
-		[
-			viewId && nodeId
-				? `/api/${username}/${nodeId}/graph/${viewId}`
-				: null,
-		],
+		viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null,
 		fetcher
 	);
 
 	const { data: nodeInFocusData } = useSWR(
-		[nodeInFocusId ? `/api/${username}/${nodeInFocusId}` : null],
+		nodeInFocusId ? `/api/${username}/${nodeInFocusId}` : null,
 		fetcher
 	);
 
@@ -178,7 +175,10 @@ const GraphSplitPaneWrapper: React.FC<{
 								{barComponents.favourite}
 							</div>
 						</div>
-						<GraphContainer />
+						<GraphContainer
+							viewId={viewId}
+							mutateGraphData={mutateGraphData}
+						/>
 						<SearchBar />
 						<Alert />
 					</div>

@@ -15,6 +15,7 @@ export const addNode = (
 		changeNodeData_Graph,
 		nodeData_Graph,
 	} = context;
+
 	if (
 		!nodeVisualData_Graph ||
 		!changeAlert ||
@@ -24,6 +25,7 @@ export const addNode = (
 		!nodeData_Graph
 	)
 		return;
+
 	let newNodes = { ...nodeVisualData_Graph };
 	let id = uuidv4();
 

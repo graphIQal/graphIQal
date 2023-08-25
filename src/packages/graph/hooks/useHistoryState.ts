@@ -10,7 +10,7 @@ import {
 	useRef,
 } from 'react';
 import { GraphNodeData, LineRefs, NodeData } from '../graphTypes';
-import { useSWRConfig } from 'swr';
+import { KeyedMutator, useSWRConfig } from 'swr';
 
 export type Action = {
 	type: ActionChanges;
@@ -39,11 +39,11 @@ export const useHistoryState = (
 	setnodeVisualData_Graph: any,
 	setAlert: (val: string) => void,
 	nodeRef: MutableRefObject<{ [key: string]: NodeData }>,
-	visualRef: MutableRefObject<{ [key: string]: GraphNodeData }>
+	visualRef: MutableRefObject<{ [key: string]: GraphNodeData }>,
+	mutateGraphData: KeyedMutator<any>
 ) => {
 	const history = useRef<Action[]>([]);
 	const pointer = useRef<number>(-1);
-	const { mutate } = useSWRConfig();
 
 	const addActionToStack = (action: Action) => {
 		history.current = [
@@ -59,7 +59,9 @@ export const useHistoryState = (
 		type: ActionChanges,
 		value: { old: any; new: any }
 	) => {
-		console.log('add action', type, id, value);
+		// just directly fetch it.
+		// This won't cache the change though.
+
 		addActionToStack({
 			id: id,
 			value: value,
@@ -88,6 +90,8 @@ export const useHistoryState = (
 				newState[id].x = value.old.x;
 				newState[id].y = value.old.y;
 				setnodeVisualData_Graph(newState);
+
+				// Just directly mutate here
 
 				// alert('asd');
 

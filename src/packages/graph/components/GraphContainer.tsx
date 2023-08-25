@@ -21,9 +21,13 @@ import { useHistoryState } from '../hooks/useHistoryState';
 import { useResize } from '../hooks/useResize';
 import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { GraphMindMapView } from './GraphMindMapView';
+import { KeyedMutator } from 'swr';
 
-export const GraphContainer: React.FC<{}> = () => {
-	const { windowVar, documentVar } = useViewData();
+export const GraphContainer: React.FC<{
+	viewId: string;
+	mutateGraphData: KeyedMutator<any>;
+}> = ({ viewId, mutateGraphData }) => {
+	const { nodeId, username, windowVar, documentVar } = useViewData();
 	if (!windowVar || !documentVar) return <div></div>;
 
 	//For drawing
@@ -65,12 +69,16 @@ export const GraphContainer: React.FC<{}> = () => {
 		// console.log(nodeVisualData_Graph);
 	}, [nodeData_Graph, nodeVisualData_Graph]);
 
+	// const useSWRKey =
+	// 	viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null;
+
 	const { undo, redo, history, addAction, pointer } = useHistoryState(
 		changeNodeData_Graph,
 		changeVisualData_Graph,
 		changeAlert,
 		nodeDataRef,
-		visualDataRef
+		visualDataRef,
+		mutateGraphData
 	);
 
 	useEffect(() => {
@@ -173,9 +181,10 @@ export const GraphContainer: React.FC<{}> = () => {
 			endNode.current !== '' &&
 			startNode.current != endNode.current
 		) {
-			addConnection(startNode.current, endNode.current, {
+			addConnection(startNode.current, endNode.current, mutateGraphData, {
 				addAction,
 				nodeData_Graph,
+				nodeVisualData_Graph,
 				changeAlert,
 				changeNodeData_Graph,
 			});
@@ -221,7 +230,6 @@ export const GraphContainer: React.FC<{}> = () => {
         <IconCircleButton src='undo' onClick={() => {}} selected={false} />
         <IconCircleButton src='redo' onClick={() => {}} selected={false} />
       </div> */}
-
 				<div
 					onMouseDown={
 						drawingMode

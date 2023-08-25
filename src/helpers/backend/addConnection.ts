@@ -30,7 +30,7 @@ export const addConnection = (
 	);
 
 	// Now mutating in the cache
-	mutateGraphData(createConnection({ node1, node2, type: 'related' }), {
+	mutateGraphData(createConnection({ node1, node2, type: 'RELATED' }), {
 		optimisticData: {
 			visualData: nodeVisualData_Graph,
 			nodeData: newnodeData_Graph,

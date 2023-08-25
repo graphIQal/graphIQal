@@ -5,19 +5,19 @@ import { GraphNodeData, NodeData } from '../../../../packages/graph/graphTypes';
 import { Action } from '../../../../packages/graph/hooks/useHistoryState';
 
 type createConnectionInput = {
-	node1: string;
-	node2: string;
+	startNode: string;
+	endNode: string;
 	type: string;
 };
 
 export const createConnection = async ({
-	node1,
-	node2,
+	startNode,
+	endNode,
 	type,
 }: createConnectionInput) => {
 	const body = `
-		MATCH (n:Node {id: "${node1}"})
-		MATCH (endNode:Node {id: "${node2}"})
+		MATCH (n:Node {id: "${startNode}"})
+		MATCH (endNode:Node {id: "${endNode}"})
 		MERGE (n)-[rel:${type}]->(endNode)
 	`;
 

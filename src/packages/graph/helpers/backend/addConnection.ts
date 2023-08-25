@@ -3,8 +3,8 @@ import { KeyedMutator } from 'swr';
 import { API, State } from '../../context/GraphViewContext';
 
 export const addConnection = (
-	node1: string,
-	node2: string,
+	startNode: string,
+	endNode: string,
 	mutateGraphData: KeyedMutator<any>,
 	context: Partial<State & API>
 ) => {
@@ -14,35 +14,21 @@ export const addConnection = (
 	if (!changeAlert || !nodeData_Graph || !addAction || !nodeVisualData_Graph)
 		return;
 
-	let newnodeData_Graph = { ...nodeData_Graph };
-	newnodeData_Graph[node1].connections[node2] = {
-		startNode: node1,
-		endNode: node2,
-		content: [],
-		type: 'RELATED',
-	};
-
-	changeAlert(
-		'Connection of type RELATED added between ' +
-			newnodeData_Graph[node1].title +
-			' and ' +
-			newnodeData_Graph[node2].title
-	);
-
 	// Now mutating in the cache
-	mutateGraphData(createConnection({ node1, node2, type: 'RELATED' }), {
-		optimisticData: {
-			visualData: nodeVisualData_Graph,
-			nodeData: newnodeData_Graph,
-		},
-		populateCache: false,
-		revalidate: false,
-	});
+	// mutateGraphData(createConnection({ startNode, endNode, type: 'RELATED' }), {
+	// 	optimisticData: {
+	// 		visualData: nodeVisualData_Graph,
+	// 		nodeData: newnodeData_Graph,
+	// 	},
+	// 	populateCache: false,
+	// 	revalidate: false,
+	// });
 
-	addAction(node1, 'CONNECTION_ADD', {
-		endNode: node2,
+	addAction(startNode, 'CONNECTION_ADD', {
+		startNode: startNode,
+		endNode: endNode,
 		connection: {
-			...newnodeData_Graph[node1].connections[node2],
+			// ...newnodeData_Graph[startNode].connections[endNode],
 			type: 'RELATED',
 		},
 	});

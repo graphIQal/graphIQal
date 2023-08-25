@@ -22,12 +22,12 @@ export const deleteConnection = (
 
 	let newNodes = { ...viewContext.nodeData_Graph };
 
+	const type = newNodes[start].connections[end].type;
+
 	addAction(start, 'CONNECTION_DELETE', {
 		endNode: end,
 		connection: newNodes[start].connections[end],
 	});
-
-	const type = newNodes[start].connections[end].type;
 
 	delete newNodes[start].connections[end];
 	delete newNodes[end].connections[start];

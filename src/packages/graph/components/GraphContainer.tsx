@@ -72,22 +72,23 @@ export const GraphContainer: React.FC<{
 	// const useSWRKey =
 	// 	viewId && nodeId ? `/api/${username}/${nodeId}/graph/${viewId}` : null;
 
-	const { undo, redo, history, addAction, pointer } = useHistoryState(
+	const { undo, redo, history, addAction } = useHistoryState({
 		changeNodeData_Graph,
 		changeVisualData_Graph,
 		changeAlert,
 		nodeDataRef,
 		visualDataRef,
-		mutateGraphData
-	);
+		mutateGraphData,
+		graphViewId,
+	});
 
 	useEffect(() => {
 		setHistoryFunctions(addAction, undo, redo);
 	}, []);
 
 	useEffect(() => {
-		changeHistory(history, pointer);
-	}, [history, pointer]);
+		changeHistory(history);
+	}, [history]);
 
 	//key events: undo, redo, escaping drawing
 	useEffect(() => {

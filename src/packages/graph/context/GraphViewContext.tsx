@@ -10,33 +10,12 @@ import {
 	useReducer,
 	useRef,
 } from 'react';
-import { GraphNodeData, NodeData } from '../graphTypes';
-import { Action, ActionChanges } from '../hooks/useHistoryState';
-
-// export type GraphViewContextInterface = {
-//   nodeInFocusId: string; //ID of "centered" node (shows only its connections and relevant data), 'homenode' if no centered node
-//   setnodeInFocusId: (val: string) => void;
-//   nodeData_Graph: { [key: string]: NodeData }; //The data of the nodes that are shown on the screen
-//   setnodeData_Graph: (val: { [key: string]: NodeData }) => void;
-//   nodeVisualData_Graph: { [key: string]: GraphNodeData };
-//   setnodeVisualData_Graph: (val: { [key: string]: GraphNodeData }) => void;
-//   graphViewId: string;
-//   setGraphViewId: (val: string) => void;
-//   tags: NodeData[];
-//   setTags: (val: NodeData[]) => void;
-//   alert: string;
-//   setAlert: (val: string) => void;
-
-//   addAction: (id: string, type: ActionChanges, value: any) => void;
-//   undo: () => void;
-//   redo: () => void;
-//   history: React.MutableRefObject<Action[]>;
-//   pointer: React.MutableRefObject<Number>;
-// };
-
-// const GraphViewContext = createContext<GraphViewContextInterface | null>(null);
-
-// export default GraphViewContext;
+import { NodeData, GraphNodeData } from '../graphTypes';
+import {
+	Action,
+	ActionChanges,
+	useHistoryState,
+} from '../hooks/useHistoryState';
 
 type Actions =
 	| { type: 'changeNodeInFocusId'; id: string }
@@ -54,8 +33,10 @@ type Actions =
 	| {
 			type: 'changeHistory';
 
-			history: React.MutableRefObject<Action[]>;
-			pointer: React.MutableRefObject<Number>;
+			history: React.MutableRefObject<{
+				undos: Action[];
+				redos: Action[];
+			}>;
 	  }
 	| {
 			type: 'setHistoryFunctions';
@@ -87,7 +68,6 @@ const reducer = (state: State, action: Actions): State => {
 			return {
 				...state,
 				history: action.history,
-				pointer: action.pointer,
 			};
 		case 'setHistoryFunctions':
 			return {
@@ -109,8 +89,7 @@ export type State = {
 	addAction: (id: string, type: ActionChanges, value: any) => void;
 	undo: () => void;
 	redo: () => void;
-	history: React.MutableRefObject<Action[]>;
-	pointer: React.MutableRefObject<Number>;
+	history: React.MutableRefObject<{ undos: Action[]; redos: Action[] }>;
 };
 
 export type API = {
@@ -126,8 +105,7 @@ export type API = {
 		redo: () => void
 	) => void;
 	changeHistory: (
-		history: React.MutableRefObject<Action[]>,
-		pointer: React.MutableRefObject<Number>
+		history: React.MutableRefObject<{ undos: Action[]; redos: Action[] }>
 	) => void;
 };
 
@@ -147,8 +125,10 @@ export const GraphViewDataProvider: React.FC<{
 		addAction: (id: string, type: ActionChanges, value: any) => null,
 		undo: () => null,
 		redo: () => null,
-		history: useRef<Action[]>([]),
-		pointer: useRef<number>(0),
+		history: useRef<{
+			undos: Action[];
+			redos: Action[];
+		}>({ undos: [], redos: [] }),
 	};
 
 	const [graphViewState, dispatch] = useReducer(reducer, defaultState);
@@ -170,13 +150,14 @@ export const GraphViewDataProvider: React.FC<{
 		const changeTags = (tags: NodeData[]) =>
 			dispatch({ type: 'changeTags', tags });
 		const changeHistory = (
-			history: React.MutableRefObject<Action[]>,
-			pointer: React.MutableRefObject<Number>
+			history: React.MutableRefObject<{
+				undos: Action[];
+				redos: Action[];
+			}>
 		) =>
 			dispatch({
 				type: 'changeHistory',
 				history,
-				pointer,
 			});
 		const setHistoryFunctions = (
 			addAction: (id: string, type: ActionChanges, value: any) => void,

@@ -6,7 +6,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import useSWR from 'swr';
-import { fetcher, fetcherAll } from '../../../backend/driver/fetcher';
+import { fetcher } from '../../../backend/driver/fetcher';
 import { useViewData } from '../../../components/context/ViewContext';
 import { Alert } from '../../../components/organisms/Alert';
 import SearchBar from '../../../components/organisms/SearchBar';
@@ -18,7 +18,6 @@ import SplitPane, {
 } from '../../../components/organisms/split-pane/SplitPane';
 import DrawingContext from '../context/GraphDrawingContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
-import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { useFiltering } from '../hooks/useFiltering';
 import { Filtering } from './Filtering';
 import { GraphContainer } from './GraphContainer';
@@ -36,9 +35,6 @@ const GraphSplitPaneWrapper: React.FC<{
 		changeNodeData_Graph,
 		changeVisualData_Graph,
 		changeGraphViewId,
-		changeAlert,
-		changeHistory,
-		setHistoryFunctions,
 	} = useGraphViewAPI();
 
 	let document = documentVar;

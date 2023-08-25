@@ -34,24 +34,40 @@ export type ActionChanges =
 	| 'NODE_TITLE'
 	| 'NODE_SIZE';
 
-export const useHistoryState = (
-	setnodeData_Graph: any,
-	setnodeVisualData_Graph: any,
-	setAlert: (val: string) => void,
-	nodeRef: MutableRefObject<{ [key: string]: NodeData }>,
-	visualRef: MutableRefObject<{ [key: string]: GraphNodeData }>,
-	mutateGraphData: KeyedMutator<any>
-) => {
-	const history = useRef<Action[]>([]);
-	const pointer = useRef<number>(-1);
+export type History_Graph = React.MutableRefObject<{
+	undos: Action[];
+	redos: Action[];
+}>;
+
+type historyStateInput = {
+	changeNodeData_Graph: any;
+	changeVisualData_Graph: any;
+	changeAlert: (val: string) => void;
+	nodeDataRef: MutableRefObject<{ [key: string]: NodeData }>;
+	visualDataRef: MutableRefObject<{ [key: string]: GraphNodeData }>;
+	mutateGraphData: KeyedMutator<any>;
+	graphViewId: string;
+};
+export const useHistoryState = ({
+	changeNodeData_Graph,
+	changeVisualData_Graph,
+	changeAlert,
+	nodeDataRef,
+	visualDataRef,
+	mutateGraphData,
+	graphViewId,
+}: historyStateInput) => {
+	const history = useRef<{ undos: Action[]; redos: Action[] }>({
+		undos: [],
+		redos: [],
+	});
 
 	const addActionToStack = (action: Action) => {
-		history.current = [
-			...history.current.slice(0, pointer.current + 1),
-			action,
-		];
-		pointer.current += 1;
-		console.log(history, pointer.current);
+		history.current.undos = [...history.current.undos, action];
+
+		history.current.redos = [];
+
+		console.log(history.current);
 	};
 
 	const addAction = (
@@ -62,6 +78,13 @@ export const useHistoryState = (
 		// just directly fetch it.
 		// This won't cache the change though.
 
+		console.log('new Action: ');
+		console.log({
+			id: id,
+			value: value,
+			type: type,
+		});
+
 		addActionToStack({
 			id: id,
 			value: value,
@@ -70,16 +93,19 @@ export const useHistoryState = (
 	};
 
 	const undo = () => {
-		const nodeData_Graph = nodeRef.current;
-		const nodeVisualData_Graph = visualRef.current;
+		const nodeData_Graph = nodeDataRef.current;
+		const nodeVisualData_Graph = visualDataRef.current;
 		let newState: any;
 
-		console.log('undo');
-		if (pointer.current === -1) {
-			console.log('hmm', pointer.current);
-			return;
-		}
-		const { id, value, type } = history.current[pointer.current];
+		console.log(history.current);
+		if (history.current.undos.length < 1) return;
+
+		const { id, value, type } =
+			history.current.undos[history.current.undos.length - 1];
+
+		history.current.undos.pop();
+		history.current.redos.push({ id, value, type });
+
 		console.log('undo values: ', id, value, type);
 
 		switch (type) {
@@ -89,7 +115,7 @@ export const useHistoryState = (
 				newState[id].width = value.old.width;
 				newState[id].x = value.old.x;
 				newState[id].y = value.old.y;
-				setnodeVisualData_Graph(newState);
+				changeVisualData_Graph(newState);
 
 				// Just directly mutate here
 
@@ -99,10 +125,10 @@ export const useHistoryState = (
 			case 'NODE_ADD':
 				newState = { ...nodeData_Graph };
 				delete newState[id];
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				let newVisualState = { ...nodeVisualData_Graph };
 				delete newVisualState[id];
-				setnodeVisualData_Graph(newVisualState);
+				changeVisualData_Graph(newVisualState);
 
 				break;
 			case 'NODE_ADD_EXISTING':
@@ -111,58 +137,58 @@ export const useHistoryState = (
 					newState[value.old.node_data.id] = value.old.node_data;
 				}
 				delete newState[id];
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				newState = { ...nodeVisualData_Graph };
 				if (value.old.node_data)
 					newState[value.old.node_data.id] = value.old.node_visual;
 				delete newState[id];
-				setnodeVisualData_Graph(newState);
+				changeVisualData_Graph(newState);
 				break;
 
 			case 'NODE_DELETE':
 				newState = { ...nodeData_Graph };
 				newState[id] = value.deletedNode;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				newState = { ...nodeVisualData_Graph };
 				newState[id] = value.deletedVisualNode;
-				setnodeVisualData_Graph(newState);
+				changeVisualData_Graph(newState);
 				break;
 			case 'NODE_COLOR':
 				newState = { ...nodeData_Graph };
 				newState[id].color = value.old.color;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'NODE_ICON':
 				newState = { ...nodeData_Graph };
 				newState[id].icon = value.old.icon;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'CONNECTION_ADD':
 				newState = { ...nodeData_Graph };
 				delete newState[id].connections[value.endNode];
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'CONNECTION_DELETE':
 				newState = { ...nodeData_Graph };
 				newState[id].connections[value.endNode] = value.connection;
-				setnodeData_Graph(nodeData_Graph);
+				changeNodeData_Graph(nodeData_Graph);
 				break;
 
 			case 'CONNECTION_TYPE':
 				newState = { ...nodeData_Graph };
 				newState[id].connections[value.endNode].type = value.old.type;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'CONNECTION_DIRECTION':
 				newState = { ...nodeData_Graph };
 				newState[value.endNode].connections[id] = value.oldConnection;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'DRAG':
 				newState = { ...nodeVisualData_Graph };
 				newState[id].x = value.old.x;
 				newState[id].y = value.old.y;
-				setnodeVisualData_Graph(newState);
+				changeVisualData_Graph(newState);
 				break;
 			case 'NODE_TITLE':
 				// let undoOps = 0;
@@ -176,22 +202,27 @@ export const useHistoryState = (
 				// pointer.current -= undoOps;
 				newState = { ...nodeData_Graph };
 				newState[id].title = value.oldTitle;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 		}
-
-		pointer.current -= 1;
 	};
 
 	const redo = () => {
-		const nodeData_Graph = nodeRef.current;
-		const nodeVisualData_Graph = visualRef.current;
+		const nodeData_Graph = nodeDataRef.current;
+		const nodeVisualData_Graph = visualDataRef.current;
+		console.log(history.current);
+
+		if (history.current.redos.length < 1) return;
 		console.log('redo');
-		if (pointer.current + 1 >= history.current.length) {
-			return;
-		}
-		const { id, value, type } = history.current[pointer.current + 1];
+
+		const { id, value, type } =
+			history.current.redos[history.current.redos.length - 1];
+
+		history.current.redos.pop();
+		history.current.undos.push({ id, value, type });
+
 		let newState: any;
+
 		switch (type) {
 			case 'NODE_SIZE':
 				newState = { ...nodeData_Graph };
@@ -199,62 +230,62 @@ export const useHistoryState = (
 				newState[id].width = value.new.width;
 				newState[id].x = value.new.x;
 				newState[id].y = value.new.y;
-				setnodeVisualData_Graph(newState);
+				changeVisualData_Graph(newState);
 
 				break;
 			case 'NODE_ADD':
 				newState = { ...nodeData_Graph };
 				newState[id] = value.new.node_data;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				newState = { ...nodeVisualData_Graph };
 				newState[id] = value.new.node_visual;
-				setnodeVisualData_Graph(newState);
+				changeVisualData_Graph(newState);
 				break;
 			case 'NODE_ADD_EXISTING':
 				newState = { ...nodeData_Graph };
 				newState[id] = value.new.node_data;
 				if (value.old.node_data)
 					delete newState[value.old.node_data.id];
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				newState = { ...nodeVisualData_Graph };
 				newState[id] = value.new.node_visual;
 				if (value.old.node_data)
 					delete newState[value.old.node_data.id];
-				setnodeVisualData_Graph(newState);
+				changeVisualData_Graph(newState);
 				break;
 			case 'NODE_DELETE':
 				newState = { ...nodeData_Graph };
 				delete newState[id];
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				newState = { ...nodeVisualData_Graph };
 				delete newState[id];
-				setnodeVisualData_Graph(newState);
+				changeVisualData_Graph(newState);
 				break;
 			case 'NODE_COLOR':
 				newState = { ...nodeData_Graph };
 				newState[id].color = value.new.color;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'NODE_ICON':
 				newState = { ...nodeData_Graph };
 				newState[id].icon = value.new.icon;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'CONNECTION_ADD':
 				newState = { ...nodeData_Graph };
 				newState[id].connections[value.endNode] = value.connection;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 
 			case 'CONNECTION_DELETE':
 				newState = { ...nodeData_Graph };
 				delete newState[id].connections[value.endNode];
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'CONNECTION_TYPE':
 				newState = { ...nodeData_Graph };
 				newState[id].connections[value.endNode].type = value.new.type;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'CONNECTION_DIRECTION':
 				newState = { ...nodeData_Graph };
@@ -267,13 +298,13 @@ export const useHistoryState = (
 						value.newConnection;
 					delete newState[value.endNode].connections[id];
 				}
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 			case 'DRAG':
 				newState = { ...nodeVisualData_Graph };
 				newState[id].x = value.new.x;
 				newState[id].y = value.new.y;
-				setnodeVisualData_Graph(newState);
+				changeVisualData_Graph(newState);
 				break;
 			case 'NODE_TITLE':
 				// let redoOps = 0;
@@ -287,14 +318,10 @@ export const useHistoryState = (
 				// pointer.current += redoOps - 1;
 				newState = { ...nodeData_Graph };
 				newState[id].title = value.title;
-				setnodeData_Graph(newState);
+				changeNodeData_Graph(newState);
 				break;
 		}
-
-		// setnodeData_Graph(newNodes);
-		// setnodeVisualData_Graph(newVisualNodes);
-		pointer.current += 1;
 	};
 
-	return { undo, redo, addAction, history, pointer };
+	return { undo, redo, addAction, history };
 };

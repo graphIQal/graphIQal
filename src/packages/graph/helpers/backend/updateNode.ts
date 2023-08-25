@@ -1,3 +1,4 @@
+import { KeyedMutator } from 'swr';
 import { API, State } from '../../context/GraphViewContext';
 
 export type NodeUpdate = 'resize' | 'drag' | 'title' | 'icon' | 'color';
@@ -6,7 +7,8 @@ export const updateNode = (
 	type: NodeUpdate,
 	newVal: any,
 	nodeID: string,
-	context: Partial<State & API>
+	context: Partial<State & API>,
+	mutateGraphData: KeyedMutator<any>
 ) => {
 	const {
 		addAction,
@@ -15,6 +17,7 @@ export const updateNode = (
 		nodeData_Graph,
 		changeNodeData_Graph,
 	} = context;
+
 	if (
 		!addAction ||
 		!changeVisualData_Graph ||
@@ -44,6 +47,7 @@ export const updateNode = (
 			graphNodes[nodeID].y = y;
 
 			changeVisualData_Graph({ ...graphNodes });
+			// Add mutation
 
 			break;
 		case 'resize':

@@ -3,6 +3,7 @@ import { API, State } from '../../packages/graph/context/GraphViewContext';
 import { NodeData } from '../../packages/graph/graphTypes';
 import { isLineDirectional } from './gettersConnectionInfo';
 import { changeConnectionType } from '@/backend/functions/node/mutate/updateConnectionType';
+import { reverseConnection } from '@/backend/functions/node/mutate/reverseConnection';
 
 type LineUpdate = 'arrowAdd' | 'type' | 'reverse';
 
@@ -84,7 +85,6 @@ export const updateConnection = (
 			const newType = newVal.newType;
 
 			const newNodes = { ...nodeData_Graph };
-			// const oldType = newNodes[start].connections[end].type;
 
 			if (newNodes[start].connections[end].type == newType) return;
 
@@ -122,7 +122,7 @@ export const updateConnection = (
 				}),
 				{
 					optimisticData: (data: any) => ({
-						visualData: newNodes,
+						nodeData: newNodes,
 						...data,
 					}),
 					populateCache: false,
@@ -133,6 +133,14 @@ export const updateConnection = (
 			break;
 		case 'reverse':
 			newData = { ...nodeData_Graph };
+
+			// This should be written in terms of the origin start and from, but oh well.
+			const originalStart = newVal.arrowEnd;
+			const originalEnd = newVal.arrowStart;
+
+			const type =
+				nodeData_Graph[originalStart].connections[originalEnd].type;
+
 			let oldConnection =
 				newData[newVal.arrowEnd].connections[newVal.arrowStart];
 
@@ -152,6 +160,23 @@ export const updateConnection = (
 				newConnection: newConnectionVal,
 			});
 
+			// I don't know why if I delete this it takes one re-render or action for the reverse to show.
 			changeNodeData_Graph(newData);
+
+			mutateGraphData(
+				reverseConnection({
+					startNode: originalStart,
+					endNode: originalEnd,
+					type,
+				}),
+				{
+					optimisticData: (data: any) => ({
+						nodeData: newData,
+						visualData: data.visualData,
+					}),
+					populateCache: false,
+					revalidate: false,
+				}
+			);
 	}
 };

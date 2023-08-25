@@ -12,6 +12,7 @@ import {
 import { GraphNodeData, LineRefs, NodeData } from '../graphTypes';
 import { KeyedMutator, useSWRConfig } from 'swr';
 import { createConnection } from '@/backend/functions/node/mutate/createConnection';
+import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConnection';
 
 export type Action = {
 	type: ActionChanges;
@@ -167,9 +168,43 @@ export const useHistoryState = ({
 
 				break;
 			case 'CONNECTION_DELETE':
-				newState = { ...nodeData_Graph };
-				delete newState[id].connections[value.endNode];
-				changeNodeData_Graph(newState);
+				// newState = { ...nodeData_Graph };
+				// delete newState[id].connections[value.endNode];
+				// changeNodeData_Graph(newState);
+
+				changeAlert(
+					'Deleted connection from ' +
+						nodeData_Graph[value.startNode].title +
+						' to ' +
+						nodeData_Graph[value.endNode].title
+				);
+
+				let newNodes = { ...nodeData_Graph };
+
+				const type =
+					newNodes[value.startNode].connections[value.endNode].type;
+
+				delete newNodes[value.startNode].connections[value.endNode];
+				delete newNodes[value.endNode].connections[value.startNode];
+
+				// changeNodeData_Graph(newNodes);
+
+				mutateGraphData(
+					deleteConnectionAPI({
+						startNode: value.startNode,
+						endNode: value.endNode,
+						type,
+					}),
+					{
+						optimisticData: (data: any) => ({
+							nodeData: newNodes,
+							visualData: data.visualData,
+						}),
+						populateCache: false,
+						revalidate: false,
+					}
+				);
+
 				break;
 			case 'CONNECTION_TYPE':
 				newState = { ...nodeData_Graph };

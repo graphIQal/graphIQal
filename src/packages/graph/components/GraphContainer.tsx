@@ -186,14 +186,18 @@ export const GraphContainer: React.FC<{
 				nodeData_Graph,
 				nodeVisualData_Graph,
 				changeAlert,
-				changeNodeData_Graph,
 			});
 		}
 	}, [endNode.current]);
 
 	const handleStartPoint = useDrawingStart();
 	const handleDrawing = useDrawingCanvas();
-	const handleDrawingEnd = useDrawingEnd(translateX, translateY, scale);
+	const handleDrawingEnd = useDrawingEnd(
+		translateX,
+		translateY,
+		scale,
+		mutateGraphData
+	);
 
 	//Resizing
 	const updateSize = useResize();

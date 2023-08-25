@@ -1,35 +1,38 @@
 import { v4 as uuidv4 } from 'uuid';
 import { API, State } from '../../packages/graph/context/GraphViewContext';
+import { KeyedMutator } from 'swr';
+import { createGraphNode } from '@/backend/functions/graph/mutate/createGraphNode';
 
 export const addNode = (
-	context: Partial<State & API>,
+	context: Partial<State & API & { nodeId: string }>,
+	mutateGraphData: KeyedMutator<any>,
 	size: number[],
 	x: number,
 	y: number
 ) => {
 	const {
+		graphViewId,
 		nodeVisualData_Graph,
 		changeAlert,
-		changeVisualData_Graph,
 		addAction,
-		changeNodeData_Graph,
 		nodeData_Graph,
+		nodeId,
 	} = context;
 
 	if (
 		!nodeVisualData_Graph ||
 		!changeAlert ||
-		!changeVisualData_Graph ||
 		!addAction ||
-		!changeNodeData_Graph ||
-		!nodeData_Graph
+		!nodeData_Graph ||
+		!graphViewId ||
+		!nodeId
 	)
 		return;
 
-	let newNodes = { ...nodeVisualData_Graph };
+	let newGraphData = { ...nodeVisualData_Graph };
 	let id = uuidv4();
 
-	newNodes[id] = {
+	newGraphData[id] = {
 		x: x,
 		y: y,
 		width: size[0],
@@ -38,8 +41,9 @@ export const addNode = (
 		categorizing_node: id,
 	};
 
-	let newnodeData_Graph = { ...nodeData_Graph };
-	newnodeData_Graph[id] = {
+	let newNodeData = { ...nodeData_Graph };
+
+	newNodeData[id] = {
 		id: id,
 		title: '',
 		connections: {},
@@ -49,12 +53,29 @@ export const addNode = (
 
 	changeAlert('Created new node');
 
-	changeVisualData_Graph(newNodes);
-	changeNodeData_Graph(newnodeData_Graph);
+	// changeVisualData_Graph(newGraphData);
+	// changeNodeData_Graph(newNodeData);
+	mutateGraphData(
+		createGraphNode({
+			id,
+			nodeId,
+			nodeVisualData: newGraphData[id],
+			graphViewId,
+		}),
+		{
+			optimisticData: {
+				visualData: newGraphData,
+				nodeData: newNodeData,
+			},
+			populateCache: false,
+			revalidate: false,
+		}
+	);
+
 	addAction(id, 'NODE_ADD', {
 		new: {
-			node_data: newnodeData_Graph[id],
-			node_visual: newNodes[id],
+			node_data: newNodeData[id],
+			node_visual: newGraphData[id],
 		},
 		old: {},
 	});

@@ -18,6 +18,8 @@ import {
 	useGraphViewAPI,
 	useGraphViewData,
 } from '../../context/GraphViewContext';
+import { KeyedMutator } from 'swr';
+import { useViewData } from '@/components/context/ViewContext';
 
 export type Coord = {
 	x: number;
@@ -31,10 +33,13 @@ export const OFFSET = 50;
 export const useDrawingEnd = (
 	translateX: number,
 	translateY: number,
-	scale: number
+	scale: number,
+	mutateGraphData: KeyedMutator<any>
 ) => {
 	const { graphViewId, nodeData_Graph, addAction, nodeVisualData_Graph } =
 		useGraphViewData();
+
+	const { nodeId } = useViewData();
 
 	const { changeAlert, changeVisualData_Graph, changeNodeData_Graph } =
 		useGraphViewAPI();
@@ -64,13 +69,16 @@ export const useDrawingEnd = (
 
 				addNode(
 					{
+						graphViewId,
 						nodeVisualData_Graph,
 						changeAlert,
 						changeVisualData_Graph,
 						addAction,
 						changeNodeData_Graph,
 						nodeData_Graph,
+						nodeId,
 					},
+					mutateGraphData,
 					newSize,
 					snappedX,
 					snappedY

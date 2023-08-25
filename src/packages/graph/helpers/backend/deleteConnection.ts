@@ -1,5 +1,5 @@
 import { KeyedMutator } from 'swr';
-import { API, State } from '../../packages/graph/context/GraphViewContext';
+import { API, State } from '../../context/GraphViewContext';
 import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConnection';
 
 export const deleteConnection = (

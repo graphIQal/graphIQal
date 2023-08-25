@@ -1,9 +1,8 @@
-import { KeyedMutator } from 'swr';
-import { API, State } from '../../packages/graph/context/GraphViewContext';
-import { NodeData } from '../../packages/graph/graphTypes';
-import { isLineDirectional } from './gettersConnectionInfo';
-import { changeConnectionType } from '@/backend/functions/node/mutate/updateConnectionType';
 import { reverseConnection } from '@/backend/functions/node/mutate/reverseConnection';
+import { changeConnectionType } from '@/backend/functions/node/mutate/updateConnectionType';
+import { KeyedMutator } from 'swr';
+import { API, State } from '../../context/GraphViewContext';
+import { isLineDirectional } from './gettersConnectionInfo';
 
 type LineUpdate = 'arrowAdd' | 'type' | 'reverse';
 

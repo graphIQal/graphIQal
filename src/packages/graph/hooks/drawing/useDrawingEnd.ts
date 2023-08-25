@@ -3,13 +3,17 @@
  */
 
 import { MutableRefObject, useCallback, useContext } from 'react';
-import { addNode } from '../../../../helpers/backend/addNode';
-import { updateConnection } from '../../../../helpers/backend/updateConnection';
+import { addNode } from '../../helpers/backend/addNode';
+import { updateConnection } from '../../helpers/backend/updateConnection';
 import DrawingContext, {
 	DrawingContextInterface,
 } from '../../context/GraphDrawingContext';
-import { calcArrowStart, isArrow, isCircle } from '../../helpers/drawingEvents';
-import { snapToGrid } from '../../helpers/snapToGrid';
+import {
+	calcArrowStart,
+	isArrow,
+	isCircle,
+} from '../../helpers/frontend/drawingEvents';
+import { snapToGrid } from '../../helpers/frontend/snapToGrid';
 import GraphActionContext, {
 	GraphActionContextInterface,
 } from '../../context/GraphActionContext';

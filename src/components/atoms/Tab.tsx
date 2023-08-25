@@ -1,10 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import IconButton from './IconButton';
-import IconCircleButton from '../molecules/IconCircleButton';
-import Link from 'next/link';
-import { SideTabProps } from '../organisms/Tabs/GraphSideTabs';
-import { SideTabPropsDoc } from '../organisms/Tabs/DocumentSideTabs';
-import { updateView } from '../../helpers/backend/updateView';
+import { updateView } from '@/packages/graph/helpers/backend/updateView';
+import React, { useEffect } from 'react';
 import { useToggle } from '../../helpers/hooks/useToggle';
 
 type TabProps = {

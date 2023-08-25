@@ -4,14 +4,14 @@
  */
 import { useContext, useEffect, useRef } from 'react';
 import { useViewData } from '../../../components/context/ViewContext';
-import { addConnection } from '../../../helpers/backend/addConnection';
+import { addConnection } from '../helpers/backend/addConnection';
 import { useToggle } from '../../../helpers/hooks/useToggle';
 import GraphActionContext from '../context/GraphActionContext';
 import DrawingContext, {
 	DrawingContextInterface,
 } from '../context/GraphDrawingContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
-import { handleEscapeDrawing } from '../helpers/handleKeyPress';
+import { handleEscapeDrawing } from '../helpers/frontend/handleKeyPress';
 import { useDropNode } from '../hooks/dragging/useDropNode';
 import { useCanvas } from '../hooks/drawing/useCanvas';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';

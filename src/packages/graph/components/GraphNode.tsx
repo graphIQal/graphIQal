@@ -9,8 +9,7 @@ import IconCircleButton from '../../../components/molecules/IconCircleButton';
 import CollapsedGraphNode from '../../../components/organisms/CollapsedGraphNode';
 import { Dropdown, ItemProps } from '../../../components/organisms/Dropdown';
 import { OnHoverMenu } from '../../../components/organisms/OnHoverMenu';
-import { deleteNode } from '../../../helpers/backend/deleteNode';
-import { updateNode } from '../../../helpers/backend/updateNode';
+// import { deleteNode } from '../../../helpers/backend/deleteNode';
 import { getTypedConnections } from '../../../helpers/frontend/getTypedConnections';
 import { DragHandle } from '../../../packages/dnd-editor/components/Draggable';
 import ResizableBox from '../../../packages/resizable/resizableBox';
@@ -32,6 +31,8 @@ import { useToggle } from '../../../helpers/hooks/useToggle';
 import { useViewData } from '../../../components/context/ViewContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
 import DocumentGraphNode from '../../../components/organisms/DocumentGraphNode';
+import { deleteNode } from '../helpers/backend/deleteNode';
+import { updateNode } from '../helpers/backend/updateNode';
 
 export interface NodeProps {
 	children: ReactNode;

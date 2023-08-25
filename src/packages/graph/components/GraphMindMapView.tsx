@@ -9,15 +9,15 @@ import {
 	getConnectionType,
 	getIconAndColor,
 	isLineDirectional,
-} from '../../../helpers/backend/gettersConnectionInfo';
+} from '../helpers/backend/gettersConnectionInfo';
 
-import { updateConnection } from '../../../helpers/backend/updateConnection';
+import { updateConnection } from '../helpers/backend/updateConnection';
 import DrawingContext, {
 	DrawingContextInterface,
 } from '../context/GraphDrawingContext';
 import GraphEditor from './GraphEditor';
 import { GraphNode } from './GraphNode';
-import { deleteConnection } from '../../../helpers/backend/deleteConnection';
+import { deleteConnection } from '../helpers/backend/deleteConnection';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { handleEndPoint } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';

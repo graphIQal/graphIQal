@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { API, State } from '../../packages/graph/context/GraphViewContext';
+// import { API, State } from '../../packages/graph/context/GraphViewContext';
 import { KeyedMutator } from 'swr';
 import { createGraphNode } from '@/backend/functions/graph/mutate/createGraphNode';
+import { API, State } from '../../context/GraphViewContext';
 
 export const addNode = (
 	context: Partial<State & API & { nodeId: string }>,

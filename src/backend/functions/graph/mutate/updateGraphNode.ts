@@ -4,28 +4,17 @@ import { jsonToCypher_graphView } from '../../../driver/dataConversion';
 import { GraphNodeData, NodeData } from '../../../../packages/graph/graphTypes';
 import { Action } from '../../../../packages/graph/hooks/useHistoryState';
 
-type createGraphNodeInput = {
-	id: string;
+type updateGraphNodeInput = {
 	nodeId: string;
-	nodeVisualData: GraphNodeData;
+	nodeVisualData: Partial<GraphNodeData>;
 	graphViewId: string;
 };
 
-export const createGraphNode = async ({
-	id,
+export const updateGraphNode = async ({
 	nodeId,
 	nodeVisualData,
 	graphViewId,
-}: createGraphNodeInput) => {
-	// nodeVisualData[id] = {
-	// 	x: x,
-	// 	y: y,
-	// 	width: size[0],
-	// 	height: size[1],
-	// 	collapsed: true,
-	// 	categorizing_node: id,
-	// };
-
+}: updateGraphNodeInput) => {
 	let out = 'SET';
 
 	for (const property in nodeVisualData) {
@@ -54,16 +43,10 @@ export const createGraphNode = async ({
 	out = out.slice(0, out.length - 1);
 
 	const body = `
-		MERGE (n: Node {id: "${id}"})
-		SET n.title = '', n.icon = 'node', n.color = 'black'
-
-		MERGE (currentNode: Node {id: "${nodeId}"})
-		MERGE (currentNode)-[:HAS]->(n)
-
-		MERGE (g: GRAPH_VIEW {id: "${graphViewId}"})
-		MERGE (g)-[r:HAS]->(n)
+        MERGE (n: Node {id: "${nodeId}"})
+        MERGE (g: GRAPH_VIEW {id: "${graphViewId}"})
+        MERGE (g)-[r:HAS]->(n)
 		${out}
-
 	`;
 
 	const res = await fetch(`/api/general/nodes/mutate/graphView`, {

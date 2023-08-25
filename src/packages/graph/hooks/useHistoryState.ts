@@ -13,6 +13,7 @@ import { GraphNodeData, LineRefs, NodeData } from '../graphTypes';
 import { KeyedMutator, useSWRConfig } from 'swr';
 import { createConnection } from '@/backend/functions/node/mutate/createConnection';
 import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConnection';
+import { updateGraphNode } from '@/backend/functions/graph/mutate/updateGraphNode';
 
 export type Action = {
 	type: ActionChanges;
@@ -228,7 +229,23 @@ export const useHistoryState = ({
 				newState = { ...nodeVisualData_Graph };
 				newState[id].x = value.new.x;
 				newState[id].y = value.new.y;
-				changeVisualData_Graph(newState);
+				// changeVisualData_Graph(newState);
+
+				mutateGraphData(
+					updateGraphNode({
+						nodeId: id,
+						nodeVisualData: { x: value.new.x, y: value.new.y },
+						graphViewId,
+					}),
+					{
+						optimisticData: (data: any) => ({
+							nodeData: data.nodeData,
+							visualData: newState,
+						}),
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 				break;
 			case 'NODE_TITLE':
 				// let redoOps = 0;

@@ -32,7 +32,6 @@ type Actions =
 	| { type: 'changeAlert'; alert: string }
 	| {
 			type: 'changeHistory';
-
 			history: React.MutableRefObject<{
 				undos: Action[];
 				redos: Action[];

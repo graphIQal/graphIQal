@@ -1,3 +1,4 @@
+import { fetcherSingleReturn } from '@/backend/driver/fetcher';
 import { API, State } from '../../packages/graph/context/GraphViewContext';
 import {
 	ConnectionData,
@@ -29,30 +30,21 @@ export const addExistingNodeToGraph = async (
 		return;
 
 	if (nodeToAdd.id in nodeData_Graph) return;
+	console.log('made it');
 
+	// const node = await fetcherSingleReturn(`/api/${username}/${nodeToAdd.id}`);
+
+	// console.log('fetchedNode: ', node);
+
+	// if(node === null)
+
+	// We don't have to fetch. We pass in the default data, mutate it in addActions, and ask useSWR to revalidate to fetch its true colours
 	const node: NodeData = {
 		//node is the node that you get from the database with the given ID
 		...nodeToAdd,
 		color: 'black',
 		icon: 'block',
-		connections: await fetch(`/api/${username}/${nodeToAdd.id}`)
-			.then((res) => {
-				return res.json();
-			})
-			.then((result: any) => {
-				let connections: { [key: string]: ConnectionData } = {};
-				result[0].connectedNodes.map((connection: any) => {
-					if (connection.connected_node) {
-						connections[connection.connected_node.id] = {
-							type: connection.r.type,
-							startNode: nodeToAdd.id,
-							endNode: connection.connected_node.id,
-							content: [],
-						};
-					}
-				});
-				return connections;
-			}),
+		connections: {},
 	};
 
 	addAction(nodeToAdd.id, 'NODE_ADD_EXISTING', {

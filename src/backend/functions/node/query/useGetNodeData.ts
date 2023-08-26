@@ -17,21 +17,14 @@ export type connectedNode_type = {
 	connected_node: { [key: string]: string };
 };
 
-export const useGetNodeData = (nodeId: string) => {
+export const useGetNodeData = async (nodeId: string) => {
 	// console.log('usegetNodeData ', nodeId);
 
 	const { data: res } = useSWR(
-		[nodeId ? `/api/username/${nodeId}` : null],
-		fetcherAll,
+		nodeId ? `/api/username/${nodeId}` : null,
+		fetcher,
 		{ dedupingInterval: 4000 }
 	);
-	// const res = await fetch(`/api/${username}/${nodeId}`)
-	// 	.then((res) => {
-	// 		return res.json();
-	// 	})
-	// 	.then((json) => {
-	// 		return json;
-	// 	});
 
 	return res && res[0] ? res[0][0] : null;
 };

@@ -177,7 +177,7 @@ export const useHistoryState = ({
 							nodeData: newNodeData,
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -293,8 +293,8 @@ export const useHistoryState = ({
 							);
 
 							return {
-								visualData: data.nodeVisualData_Graph,
 								nodeData: newnodeData_Graph,
+								visualData: data.visualData,
 							};
 						},
 						populateCache: false,
@@ -409,8 +409,8 @@ export const useHistoryState = ({
 		const nodeData_Graph = nodeDataRef.current;
 		const nodeVisualData_Graph = visualDataRef.current;
 		let newState: any;
-		let newGraphData: any;
-		let newVisualState: any;
+		let newNodeData: any;
+		let newVisualData: any;
 
 		console.log(history.current);
 		if (history.current.undos.length < 1) return;
@@ -460,12 +460,12 @@ export const useHistoryState = ({
 			case 'NODE_ADD':
 				console.log('id, value.newNode');
 				console.log(id, value.newNode);
-				newGraphData = { ...nodeData_Graph };
-				delete newGraphData[id];
-				changeNodeData_Graph(newGraphData);
-				newVisualState = { ...nodeVisualData_Graph };
-				delete newVisualState[id];
-				changeVisualData_Graph(newVisualState);
+				newNodeData = { ...nodeData_Graph };
+				delete newNodeData[id];
+				changeNodeData_Graph(newNodeData);
+				newVisualData = { ...nodeVisualData_Graph };
+				delete newVisualData[id];
+				changeVisualData_Graph(newVisualData);
 
 				changeAlert('Undo create');
 
@@ -475,8 +475,8 @@ export const useHistoryState = ({
 					}),
 					{
 						optimisticData: {
-							nodeData: newGraphData,
-							visualData: newVisualState,
+							nodeData: newNodeData,
+							visualData: newVisualData,
 						},
 						populateCache: false,
 						revalidate: false,
@@ -485,17 +485,29 @@ export const useHistoryState = ({
 
 				break;
 			case 'NODE_ADD_EXISTING':
-				newState = { ...nodeData_Graph };
-				if (value.old.node_data) {
-					newState[value.old.node_data.id] = value.old.node_data;
-				}
-				delete newState[id];
-				changeNodeData_Graph(newState);
-				newState = { ...nodeVisualData_Graph };
-				if (value.old.node_data)
-					newState[value.old.node_data.id] = value.old.node_visual;
-				delete newState[id];
-				changeVisualData_Graph(newState);
+				newNodeData = { ...nodeData_Graph };
+				delete newNodeData[id];
+				changeNodeData_Graph(newNodeData);
+
+				newVisualData = { ...nodeVisualData_Graph };
+				delete newVisualData[id];
+				changeVisualData_Graph(newVisualData);
+
+				mutateGraphData(
+					deleteGraphNode({
+						nodeId: value.newNode.id,
+						graphViewId,
+					}),
+					{
+						optimisticData: {
+							nodeData: newNodeData,
+							visualData: newVisualData,
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
+
 				break;
 
 			case 'NODE_DELETE':

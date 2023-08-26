@@ -171,10 +171,7 @@ const GraphSplitPaneWrapper: React.FC<{
 								{barComponents.favourite}
 							</div>
 						</div>
-						<GraphContainer
-							viewId={viewId}
-							mutateGraphData={mutateGraphData}
-						/>
+						<GraphContainer />
 						<SearchBar />
 						<Alert />
 					</div>

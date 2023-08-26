@@ -14,7 +14,6 @@ type graphViewInput = {
 	graphViewId: string;
 	nodeId: string;
 	history: React.MutableRefObject<Action[]>;
-	pointer: React.MutableRefObject<Number>;
 };
 
 export const jsonToCypher_graphView = ({
@@ -23,7 +22,6 @@ export const jsonToCypher_graphView = ({
 	graphViewId,
 	nodeId,
 	history,
-	pointer,
 }: graphViewInput) => {
 	let cypher = '';
 
@@ -330,12 +328,6 @@ export const jsonToCypher_graphView = ({
 		},
 	};
 
-	for (let i = 0; i <= Number(pointer.current); i++) {
-		const transaction = history.current[i];
-
-		transactionToData[transaction.type](transaction);
-	}
-
 	const setPropertiesCypher = (node: any) => {
 		if (node.set && Object.values(node.set).length > 0) {
 			let out = '';
@@ -397,6 +389,7 @@ export const jsonToCypher_graphView = ({
 
 		cypher += `
 		MERGE (n: Node {id: "${nodeKey}"})
+
 		${setPropertiesCypher(node)}
 
 		${setVisualDataCypher(node)}

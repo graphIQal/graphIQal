@@ -46,7 +46,7 @@ export const updateNode = (
 			graphNodes[nodeID].x = x;
 			graphNodes[nodeID].y = y;
 
-			changeVisualData_Graph({ ...graphNodes });
+			// changeVisualData_Graph({ ...graphNodes });
 			// Add mutation
 
 			break;

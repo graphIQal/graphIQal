@@ -73,10 +73,8 @@ export const useHistoryState = ({
 		console.log(history.current);
 	};
 
-	const addAction = (id: string, type: ActionChanges, value: any) => {
-		// just directly fetch it.
-		// This won't cache the change though.
-
+	const applyAction = (action: Action) => {
+		const { id, type, value } = action;
 		const nodeData_Graph = nodeDataRef.current;
 		const nodeVisualData_Graph = visualDataRef.current;
 
@@ -91,7 +89,29 @@ export const useHistoryState = ({
 				newState[id].y = value.new.y;
 				changeVisualData_Graph(newState);
 
+				mutateGraphData(
+					updateGraphNode({
+						nodeId: id,
+						nodeVisualData: {
+							x: value.new.x,
+							y: value.new.y,
+							height: value.new.height,
+							width: value.new.width,
+						},
+						graphViewId,
+					}),
+					{
+						optimisticData: (data: any) => ({
+							nodeData: data.nodeData,
+							visualData: newState,
+						}),
+						populateCache: false,
+						revalidate: false,
+					}
+				);
+
 				break;
+
 			case 'NODE_ADD':
 				newState = { ...nodeData_Graph };
 				newState[id] = value.new.node_data;
@@ -135,22 +155,6 @@ export const useHistoryState = ({
 				// newState[id].connections[value.endNode] = value.connection;
 				// changeNodeData_Graph(newState);
 
-				let newnodeData_Graph = { ...nodeData_Graph };
-				newnodeData_Graph[value.startNode].connections[value.endNode] =
-					{
-						startNode: value.startNode,
-						endNode: value.endNode,
-						content: [],
-						type: 'RELATED',
-					};
-
-				changeAlert(
-					'Connection of type RELATED added between ' +
-						newnodeData_Graph[value.startNode].title +
-						' and ' +
-						newnodeData_Graph[value.endNode].title
-				);
-
 				mutateGraphData(
 					createConnection({
 						startNode: value.startNode,
@@ -158,9 +162,29 @@ export const useHistoryState = ({
 						type: 'RELATED',
 					}),
 					{
-						optimisticData: {
-							visualData: nodeVisualData_Graph,
-							nodeData: newnodeData_Graph,
+						optimisticData: (data: any) => {
+							let newnodeData_Graph = { ...data.nodeData };
+
+							newnodeData_Graph[value.startNode].connections[
+								value.endNode
+							] = {
+								startNode: value.startNode,
+								endNode: value.endNode,
+								content: [],
+								type: 'RELATED',
+							};
+
+							changeAlert(
+								'Connection of type RELATED added between ' +
+									newnodeData_Graph[value.startNode].title +
+									' and ' +
+									newnodeData_Graph[value.endNode].title
+							);
+
+							return {
+								visualData: data.nodeVisualData_Graph,
+								nodeData: newnodeData_Graph,
+							};
 						},
 						populateCache: false,
 						revalidate: false,
@@ -226,10 +250,13 @@ export const useHistoryState = ({
 				changeNodeData_Graph(newState);
 				break;
 			case 'DRAG':
+				console.log('drag');
+
 				newState = { ...nodeVisualData_Graph };
 				newState[id].x = value.new.x;
 				newState[id].y = value.new.y;
-				// changeVisualData_Graph(newState);
+
+				changeVisualData_Graph(newState);
 
 				mutateGraphData(
 					updateGraphNode({
@@ -247,21 +274,18 @@ export const useHistoryState = ({
 					}
 				);
 				break;
-			case 'NODE_TITLE':
-				// let redoOps = 0;
-				// for (let i = pointer.current + 1; i < history.current.length; ++i) {
-				//   if (history.current[i].type == 'NODE_TITLE' && redoOps < 5) {
-				//     redoOps += 1;
-				//   } else {
-				//     break;
-				//   }
-				// }
-				// pointer.current += redoOps - 1;
-				newState = { ...nodeData_Graph };
-				newState[id].title = value.title;
-				changeNodeData_Graph(newState);
-				break;
 		}
+	};
+
+	const addAction = (id: string, type: ActionChanges, value: any) => {
+		// just directly fetch it.
+		// This won't cache the change though.
+
+		applyAction({
+			id: id,
+			value: value,
+			type: type,
+		});
 
 		addActionToStack({
 			id: id,
@@ -390,14 +414,15 @@ export const useHistoryState = ({
 		console.log(history.current);
 
 		if (history.current.redos.length < 1) return;
-		console.log('redo');
 
 		const { id, value, type } =
 			history.current.redos[history.current.redos.length - 1];
 
+		console.log('redo', { id, value, type });
+
 		history.current.redos.pop();
-		addAction(id, type, value);
-		// history.current.undos.push({ id, value, type });
+		history.current.undos.push({ id, value, type });
+		applyAction({ id, type, value });
 	};
 
 	return { undo, redo, addAction, history };

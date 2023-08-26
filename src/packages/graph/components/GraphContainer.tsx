@@ -21,14 +21,15 @@ import { useHistoryState } from '../hooks/useHistoryState';
 import { useResize } from '../hooks/useResize';
 import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { GraphMindMapView } from './GraphMindMapView';
-import { KeyedMutator } from 'swr';
+import useSWR, { KeyedMutator } from 'swr';
+import { fetcher } from '@/backend/driver/fetcher';
 
-export const GraphContainer: React.FC<{
-	viewId: string;
-	mutateGraphData: KeyedMutator<any>;
-}> = ({ viewId, mutateGraphData }) => {
+export const GraphContainer: React.FC = () => {
 	const { nodeId, username, windowVar, documentVar } = useViewData();
-	if (!windowVar || !documentVar) return <div></div>;
+	const { graphViewId, nodeData_Graph, nodeVisualData_Graph } =
+		useGraphViewData();
+
+	if (!windowVar || !documentVar || !graphViewId) return <div></div>;
 
 	//For drawing
 	const drawingContext = useContext(
@@ -44,9 +45,6 @@ export const GraphContainer: React.FC<{
 		isDrawing,
 	} = drawingContext;
 
-	const { graphViewId, nodeData_Graph, nodeVisualData_Graph } =
-		useGraphViewData();
-
 	// console.log('nodeData graph ', nodeData_Graph);
 	// console.log('nodeVisualDatagraph ', nodeVisualData_Graph);
 
@@ -60,6 +58,18 @@ export const GraphContainer: React.FC<{
 
 	const nodeDataRef = useRef(nodeData_Graph);
 	const visualDataRef = useRef(nodeVisualData_Graph);
+
+	const {
+		data,
+		mutate: mutateGraphData,
+		// error: nodeError,
+		// isLoading: nodeDataLoading,
+	} = useSWR(
+		graphViewId && nodeId
+			? `/api/${username}/${nodeId}/graph/${graphViewId}`
+			: null,
+		fetcher
+	);
 
 	useEffect(() => {
 		nodeDataRef.current = nodeData_Graph;

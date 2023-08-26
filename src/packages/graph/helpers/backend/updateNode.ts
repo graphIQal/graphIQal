@@ -112,16 +112,12 @@ export const updateNode = (
 				new: { icon: newVal },
 				old: { icon: nodeData[nodeID].icon },
 			});
-			nodeData[nodeID].icon = newVal;
-			changeNodeData_Graph({ ...nodeData });
 			break;
 		case 'color':
 			addAction(nodeID, 'NODE_COLOR', {
 				new: { color: newVal },
 				old: { color: nodeData[nodeID].color },
 			});
-			nodeData[nodeID].color = newVal;
-			changeNodeData_Graph({ ...nodeData });
 			break;
 	}
 };

@@ -17,15 +17,9 @@ export const deleteNode = (id: string, viewContext: Partial<State & API>) => {
 		!changeVisualData_Graph
 	)
 		return;
-	changeAlert('Removed node: ' + newnodeData_Graph[id].title);
+
 	addAction(id, 'NODE_DELETE', {
 		deletedNode: newnodeData_Graph[id],
 		deletedVisualNode: newVisualNodes[id],
 	});
-
-	delete newnodeData_Graph[id];
-	delete newVisualNodes[id];
-
-	changeNodeData_Graph(newnodeData_Graph);
-	changeVisualData_Graph(newVisualNodes);
 };

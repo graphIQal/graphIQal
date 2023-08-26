@@ -9,6 +9,7 @@ import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConne
 import { MutableRefObject, useRef } from 'react';
 import { KeyedMutator } from 'swr';
 import { GraphNodeData, NodeData } from '../graphTypes';
+import { deleteGraphNode } from '@/backend/functions/graph/mutate/deleteGraphNode';
 
 export type Action = {
 	type: ActionChanges;
@@ -179,13 +180,36 @@ export const useHistoryState = ({
 				break;
 
 			case 'NODE_DELETE':
-				newState = { ...nodeData_Graph };
-				delete newState[id];
-				changeNodeData_Graph(newState);
-				newState = { ...nodeVisualData_Graph };
-				delete newState[id];
-				changeVisualData_Graph(newState);
+				changeAlert('Removed node: ' + nodeData_Graph[id].title);
+
+				mutateGraphData(
+					deleteGraphNode({
+						nodeId: id,
+						graphViewId,
+					}),
+					{
+						optimisticData: () => {
+							newNodeData = { ...nodeData_Graph };
+							newGraphData = { ...nodeVisualData_Graph };
+
+							delete newNodeData[id];
+							delete newGraphData[id];
+
+							changeNodeData_Graph(newNodeData);
+							changeVisualData_Graph(newGraphData);
+
+							return {
+								nodeData: newNodeData,
+								visualData: newGraphData,
+							};
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
+
 				break;
+
 			case 'NODE_COLOR':
 				newState = { ...nodeData_Graph };
 				newState[id].color = value.new.color;

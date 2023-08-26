@@ -12,6 +12,8 @@ import { GraphNodeData, NodeData } from '../graphTypes';
 import { deleteGraphNode } from '@/backend/functions/graph/mutate/deleteGraphNode';
 import { updateNode } from '@/backend/functions/node/mutate/updateNode';
 import { deleteDetachNode } from '@/backend/functions/node/mutate/deleteDetachNode';
+import { changeConnectionType } from '@/backend/functions/node/mutate/updateConnectionType';
+import { reverseConnection } from '@/backend/functions/node/mutate/reverseConnection';
 
 export type Action = {
 	type: ActionChanges;
@@ -262,10 +264,6 @@ export const useHistoryState = ({
 				);
 				break;
 			case 'CONNECTION_ADD':
-				// newState = { ...nodeData_Graph };
-				// newState[id].connections[value.endNode] = value.connection;
-				// changeNodeData_Graph(newState);
-
 				mutateGraphData(
 					createConnection({
 						startNode: value.startNode,
@@ -304,10 +302,6 @@ export const useHistoryState = ({
 
 				break;
 			case 'CONNECTION_DELETE':
-				// newState = { ...nodeData_Graph };
-				// delete newState[id].connections[value.endNode];
-				// changeNodeData_Graph(newState);
-
 				changeAlert(
 					'Deleted connection from ' +
 						nodeData_Graph[value.startNode].title +
@@ -343,22 +337,78 @@ export const useHistoryState = ({
 
 				break;
 			case 'CONNECTION_TYPE':
-				newState = { ...nodeData_Graph };
-				newState[id].connections[value.endNode].type = value.new.type;
-				changeNodeData_Graph(newState);
+				changeAlert(
+					'Changed connection type of ' +
+						nodeData_Graph[value.startNode].title +
+						' to ' +
+						nodeData_Graph[value.endNode].title +
+						' from ' +
+						value.old.type +
+						' to ' +
+						value.new.type
+				);
+
+				newNodeData = { ...nodeData_Graph };
+
+				newNodeData[value.startNode].connections[value.endNode].type =
+					value.new.type;
+
+				// if (newNodeData[value.endNode].connections[value.startNode]) {
+				// 	newNodeData[value.endNode].connections[
+				// 		value.startNode
+				// 	].type = value.new.type;
+				// }
+
+				changeNodeData_Graph(newNodeData);
+
+				mutateGraphData(
+					changeConnectionType({
+						startNode: value.startNode,
+						endNode: value.endNode,
+						oldType: value.old.type,
+						newType: value.new.type,
+					}),
+					{
+						optimisticData: (data: any) => ({
+							nodeData: newNodeData,
+							...data,
+						}),
+						populateCache: false,
+						revalidate: false,
+					}
+				);
+
 				break;
+
 			case 'CONNECTION_DIRECTION':
-				newState = { ...nodeData_Graph };
-				if (newState[id].connections[value.endNode]) {
-					newState[value.endNode].connections[id] =
-						value.newConnection;
-					delete newState[id].connections[value.endNode];
-				} else {
-					newState[id].connections[value.endNode] =
-						value.newConnection;
-					delete newState[value.endNode].connections[id];
-				}
-				changeNodeData_Graph(newState);
+				newNodeData = { ...nodeData_Graph };
+				newNodeData[value.originalEndNode].connections[
+					value.originalStartNode
+				] = value.newConnection;
+
+				delete newNodeData[value.originalStartNode].connections[
+					value.originalEndNode
+				];
+
+				// I don't know why if I delete this it takes one re-render or action for the reverse to show.
+				changeNodeData_Graph(newNodeData);
+
+				mutateGraphData(
+					reverseConnection({
+						startNode: value.originalStartNode,
+						endNode: value.originalEndNode,
+						type: value.type,
+					}),
+					{
+						optimisticData: (data: any) => ({
+							nodeData: newNodeData,
+							visualData: data.visualData,
+						}),
+						populateCache: false,
+						revalidate: false,
+					}
+				);
+
 				break;
 			case 'DRAG':
 				console.log('drag');

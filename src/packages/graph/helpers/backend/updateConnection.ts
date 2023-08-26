@@ -96,49 +96,17 @@ export const updateConnection = (
 				old: { type: oldType },
 			});
 
-			changeAlert(
-				'Changed connection type of ' +
-					nodeData_Graph[start].title +
-					' to ' +
-					nodeData_Graph[end].title +
-					' from ' +
-					oldType +
-					' to ' +
-					newVal.newType
-			);
-
-			newNodes[start].connections[end].type = newType;
-			if (newNodes[end].connections[start]) {
-				newNodes[end].connections[start].type = newType;
-			}
-
-			mutateGraphData(
-				changeConnectionType({
-					startNode: start,
-					endNode: end,
-					oldType,
-					newType,
-				}),
-				{
-					optimisticData: (data: any) => ({
-						nodeData: newNodes,
-						...data,
-					}),
-					populateCache: false,
-					revalidate: false,
-				}
-			);
-
 			break;
 		case 'reverse':
 			newData = { ...nodeData_Graph };
 
 			// This should be written in terms of the origin start and from, but oh well.
-			const originalStart = newVal.arrowEnd;
-			const originalEnd = newVal.arrowStart;
+			const originalStartNode = newVal.arrowEnd;
+			const originalEndNode = newVal.arrowStart;
 
 			const type =
-				nodeData_Graph[originalStart].connections[originalEnd].type;
+				nodeData_Graph[originalStartNode].connections[originalEndNode]
+					.type;
 
 			let oldConnection =
 				newData[newVal.arrowEnd].connections[newVal.arrowStart];
@@ -148,34 +116,13 @@ export const updateConnection = (
 				startNode: newVal.arrowStart,
 				endNode: newVal.arrowEnd,
 			};
-			newData[newVal.arrowStart].connections[newVal.arrowEnd] =
-				newConnectionVal;
-
-			delete newData[newVal.arrowEnd].connections[newVal.arrowStart];
 
 			addAction(newVal.arrowStart, 'CONNECTION_DIRECTION', {
-				endNode: newVal.arrowEnd,
+				originalStartNode,
+				originalEndNode,
+				type,
 				oldConnection: oldConnection,
 				newConnection: newConnectionVal,
 			});
-
-			// I don't know why if I delete this it takes one re-render or action for the reverse to show.
-			changeNodeData_Graph(newData);
-
-			mutateGraphData(
-				reverseConnection({
-					startNode: originalStart,
-					endNode: originalEnd,
-					type,
-				}),
-				{
-					optimisticData: (data: any) => ({
-						nodeData: newData,
-						visualData: data.visualData,
-					}),
-					populateCache: false,
-					revalidate: false,
-				}
-			);
 	}
 };

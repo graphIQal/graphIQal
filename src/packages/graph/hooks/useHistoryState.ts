@@ -11,6 +11,7 @@ import { KeyedMutator } from 'swr';
 import { GraphNodeData, NodeData } from '../graphTypes';
 import { deleteGraphNode } from '@/backend/functions/graph/mutate/deleteGraphNode';
 import { updateNode } from '@/backend/functions/node/mutate/updateNode';
+import { deleteDetachNode } from '@/backend/functions/node/mutate/deleteDetachNode';
 
 export type Action = {
 	type: ActionChanges;
@@ -81,13 +82,6 @@ export const useHistoryState = ({
 
 		switch (type) {
 			case 'NODE_SIZE':
-				newState = { ...nodeData_Graph };
-				newState[id].height = value.new.height;
-				newState[id].width = value.new.width;
-				newState[id].x = value.new.x;
-				newState[id].y = value.new.y;
-				changeVisualData_Graph(newState);
-
 				mutateGraphData(
 					updateGraphNode({
 						nodeId: id,
@@ -100,10 +94,19 @@ export const useHistoryState = ({
 						graphViewId,
 					}),
 					{
-						optimisticData: (data: any) => ({
-							nodeData: data.nodeData,
-							visualData: newState,
-						}),
+						optimisticData: (data: any) => {
+							newState = { ...nodeData_Graph };
+							newState[id].height = value.new.height;
+							newState[id].width = value.new.width;
+							newState[id].x = value.new.x;
+							newState[id].y = value.new.y;
+							changeVisualData_Graph(newState);
+
+							return {
+								nodeData: data.nodeData,
+								visualData: newState,
+							};
+						},
 						populateCache: false,
 						revalidate: false,
 					}
@@ -406,6 +409,8 @@ export const useHistoryState = ({
 		const nodeData_Graph = nodeDataRef.current;
 		const nodeVisualData_Graph = visualDataRef.current;
 		let newState: any;
+		let newGraphData: any;
+		let newVisualState: any;
 
 		console.log(history.current);
 		if (history.current.undos.length < 1) return;
@@ -420,25 +425,63 @@ export const useHistoryState = ({
 
 		switch (type) {
 			case 'NODE_SIZE':
-				newState = { ...nodeVisualData_Graph };
-				newState[id].height = value.old.height;
-				newState[id].width = value.old.width;
-				newState[id].x = value.old.x;
-				newState[id].y = value.old.y;
-				changeVisualData_Graph(newState);
-
 				// Just directly mutate here
+				mutateGraphData(
+					updateGraphNode({
+						nodeId: id,
+						nodeVisualData: {
+							x: value.old.x,
+							y: value.old.y,
+							height: value.old.height,
+							width: value.old.width,
+						},
+						graphViewId,
+					}),
+					{
+						optimisticData: (data: any) => {
+							newState = { ...nodeVisualData_Graph };
+							newState[id].height = value.old.height;
+							newState[id].width = value.old.width;
+							newState[id].x = value.old.x;
+							newState[id].y = value.old.y;
+							changeVisualData_Graph(newState);
 
-				// alert('asd');
+							return {
+								nodeData: data.nodeData,
+								visualData: newState,
+							};
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 
 				break;
 			case 'NODE_ADD':
-				newState = { ...nodeData_Graph };
-				delete newState[id];
-				changeNodeData_Graph(newState);
-				let newVisualState = { ...nodeVisualData_Graph };
+				console.log('id, value.newNode');
+				console.log(id, value.newNode);
+				newGraphData = { ...nodeData_Graph };
+				delete newGraphData[id];
+				changeNodeData_Graph(newGraphData);
+				newVisualState = { ...nodeVisualData_Graph };
 				delete newVisualState[id];
 				changeVisualData_Graph(newVisualState);
+
+				changeAlert('Undo create');
+
+				mutateGraphData(
+					deleteDetachNode({
+						nodeId: id,
+					}),
+					{
+						optimisticData: {
+							nodeData: newGraphData,
+							visualData: newVisualState,
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 
 				break;
 			case 'NODE_ADD_EXISTING':

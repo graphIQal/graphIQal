@@ -98,15 +98,15 @@ export const updateNode = (
 			changeVisualData_Graph({ ...graphNodes });
 			break;
 
-		case 'title':
-			addAction(nodeID, 'NODE_TITLE', {
-				old: { title: nodeData[nodeID].title },
-				new: { title: newVal },
-			});
-			nodeData[nodeID].title = newVal;
+		// case 'title':
+		// 	addAction(nodeID, 'NODE_TITLE', {
+		// 		old: { title: nodeData[nodeID].title },
+		// 		new: { title: newVal },
+		// 	});
+		// 	nodeData[nodeID].title = newVal;
 
-			changeNodeData_Graph({ ...nodeData });
-			break;
+		// 	changeNodeData_Graph({ ...nodeData });
+		// 	break;
 		case 'icon':
 			addAction(nodeID, 'NODE_ICON', {
 				new: { icon: newVal },

@@ -353,12 +353,6 @@ export const useHistoryState = ({
 				newNodeData[value.startNode].connections[value.endNode].type =
 					value.new.type;
 
-				// if (newNodeData[value.endNode].connections[value.startNode]) {
-				// 	newNodeData[value.endNode].connections[
-				// 		value.startNode
-				// 	].type = value.new.type;
-				// }
-
 				changeNodeData_Graph(newNodeData);
 
 				mutateGraphData(
@@ -377,7 +371,6 @@ export const useHistoryState = ({
 						revalidate: false,
 					}
 				);
-
 				break;
 
 			case 'CONNECTION_DIRECTION':
@@ -697,10 +690,31 @@ export const useHistoryState = ({
 				break;
 
 			case 'CONNECTION_TYPE':
-				newState = { ...nodeData_Graph };
-				newState[id].connections[value.endNode].type = value.old.type;
-				changeNodeData_Graph(newState);
+				newNodeData = { ...nodeData_Graph };
+
+				newNodeData[value.startNode].connections[value.endNode].type =
+					value.old.type;
+
+				changeNodeData_Graph(newNodeData);
+
+				mutateGraphData(
+					changeConnectionType({
+						startNode: value.startNode,
+						endNode: value.endNode,
+						oldType: value.new.type,
+						newType: value.old.type,
+					}),
+					{
+						optimisticData: (data: any) => ({
+							nodeData: newNodeData,
+							...data,
+						}),
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 				break;
+
 			case 'CONNECTION_DIRECTION':
 				newState = { ...nodeData_Graph };
 				newState[value.endNode].connections[id] = value.oldConnection;

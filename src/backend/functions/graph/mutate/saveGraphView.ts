@@ -30,7 +30,6 @@ export const saveGraphView = async ({
 		graphViewId,
 		nodeId,
 		history,
-		pointer,
 	});
 
 	console.log('saveGraphView');

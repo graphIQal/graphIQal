@@ -63,7 +63,6 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
 							addAction,
 						},
 						username,
-						'',
 						{
 							id: result.id,
 							title: result.title,

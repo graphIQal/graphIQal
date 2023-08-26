@@ -2,18 +2,13 @@
  * Hook for controlling history actions
  */
 
-import {
-	MutableRefObject,
-	useCallback,
-	useContext,
-	useEffect,
-	useRef,
-} from 'react';
-import { GraphNodeData, LineRefs, NodeData } from '../graphTypes';
-import { KeyedMutator, useSWRConfig } from 'swr';
+import { createGraphNode } from '@/backend/functions/graph/mutate/createGraphNode';
+import { updateGraphNode } from '@/backend/functions/graph/mutate/updateGraphNode';
 import { createConnection } from '@/backend/functions/node/mutate/createConnection';
 import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConnection';
-import { updateGraphNode } from '@/backend/functions/graph/mutate/updateGraphNode';
+import { MutableRefObject, useRef } from 'react';
+import { KeyedMutator } from 'swr';
+import { GraphNodeData, NodeData } from '../graphTypes';
 
 export type Action = {
 	type: ActionChanges;
@@ -79,6 +74,8 @@ export const useHistoryState = ({
 		const nodeVisualData_Graph = visualDataRef.current;
 
 		let newState: any;
+		let newNodeData: any;
+		let newGraphData: any;
 
 		switch (type) {
 			case 'NODE_SIZE':
@@ -113,25 +110,74 @@ export const useHistoryState = ({
 				break;
 
 			case 'NODE_ADD':
-				newState = { ...nodeData_Graph };
-				newState[id] = value.new.node_data;
-				changeNodeData_Graph(newState);
-				newState = { ...nodeVisualData_Graph };
-				newState[id] = value.new.node_visual;
-				changeVisualData_Graph(newState);
+				let { nodeId, newNode, newNodeVisualData } = value;
+
+				newNodeData = { ...nodeData_Graph };
+				newNodeData[id] = newNode;
+				changeNodeData_Graph(newNodeData);
+
+				newGraphData = { ...nodeVisualData_Graph };
+				newGraphData[id] = newNodeVisualData;
+				changeVisualData_Graph(newGraphData);
+
+				changeAlert('Created new node');
+
+				mutateGraphData(
+					createGraphNode({
+						id,
+						nodeId,
+						nodeVisualData: newGraphData[id],
+						graphViewId,
+					}),
+					{
+						optimisticData: {
+							visualData: newGraphData,
+							nodeData: newNodeData,
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 				break;
 			case 'NODE_ADD_EXISTING':
-				newState = { ...nodeData_Graph };
-				newState[id] = value.new.node_data;
-				if (value.old.node_data)
-					delete newState[value.old.node_data.id];
-				changeNodeData_Graph(newState);
-				newState = { ...nodeVisualData_Graph };
-				newState[id] = value.new.node_visual;
-				if (value.old.node_data)
-					delete newState[value.old.node_data.id];
-				changeVisualData_Graph(newState);
+				console.log('addExistingNode', value);
+
+				newNodeData = { ...nodeData_Graph };
+				newNodeData[value.newNode.id] = value.newNode;
+
+				newGraphData = { ...nodeVisualData_Graph };
+				const defaultVisualData = {
+					x: 50,
+					y: 50,
+					width: 200,
+					height: 100,
+					categorizing_node: value.newNode.id,
+				};
+
+				newGraphData[value.newNode.id] = defaultVisualData;
+				changeNodeData_Graph(newNodeData);
+				changeVisualData_Graph(newGraphData);
+
+				changeAlert('Added node: ' + value.newNode.title);
+
+				mutateGraphData(
+					updateGraphNode({
+						nodeId: value.newNode.id,
+						nodeVisualData: defaultVisualData,
+						graphViewId,
+					}),
+					{
+						optimisticData: {
+							visualData: newGraphData,
+							nodeData: newNodeData,
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
+
 				break;
+
 			case 'NODE_DELETE':
 				newState = { ...nodeData_Graph };
 				delete newState[id];

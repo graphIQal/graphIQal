@@ -30,10 +30,9 @@ export const addNode = (
 	)
 		return;
 
-	let newGraphData = { ...nodeVisualData_Graph };
 	let id = uuidv4();
 
-	newGraphData[id] = {
+	const newNodeVisualData = {
 		x: x,
 		y: y,
 		width: size[0],
@@ -42,9 +41,7 @@ export const addNode = (
 		categorizing_node: id,
 	};
 
-	let newNodeData = { ...nodeData_Graph };
-
-	newNodeData[id] = {
+	const newNode = {
 		id: id,
 		title: '',
 		connections: {},
@@ -52,30 +49,10 @@ export const addNode = (
 		color: 'black',
 	};
 
-	changeAlert('Created new node');
-
-	mutateGraphData(
-		createGraphNode({
-			id,
-			nodeId,
-			nodeVisualData: newGraphData[id],
-			graphViewId,
-		}),
-		{
-			optimisticData: {
-				visualData: newGraphData,
-				nodeData: newNodeData,
-			},
-			populateCache: false,
-			revalidate: false,
-		}
-	);
-
 	addAction(id, 'NODE_ADD', {
-		new: {
-			node_data: newNodeData[id],
-			node_visual: newGraphData[id],
-		},
-		old: {},
+		newNode,
+		newNodeVisualData,
+		// newNodeid: id,
+		nodeId,
 	});
 };

@@ -607,9 +607,43 @@ export const useHistoryState = ({
 
 				break;
 			case 'CONNECTION_DELETE':
-				newState = { ...nodeData_Graph };
-				newState[id].connections[value.endNode] = value.connection;
-				changeNodeData_Graph(nodeData_Graph);
+				mutateGraphData(
+					createConnection({
+						startNode: value.startNode,
+						endNode: value.endNode,
+						type: value.connection.type,
+						content: value.connection.content,
+					}),
+					{
+						optimisticData: (data: any) => {
+							let newnodeData_Graph = { ...data.nodeData };
+
+							newnodeData_Graph[value.startNode].connections[
+								value.endNode
+							] = {
+								startNode: value.startNode,
+								endNode: value.endNode,
+								content: value.connection.content,
+								type: value.connection.type,
+							};
+
+							changeAlert(
+								'Connection of type RELATED added between ' +
+									newnodeData_Graph[value.startNode].title +
+									' and ' +
+									newnodeData_Graph[value.endNode].title
+							);
+
+							return {
+								nodeData: newnodeData_Graph,
+								visualData: data.visualData,
+							};
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
+
 				break;
 
 			case 'CONNECTION_TYPE':

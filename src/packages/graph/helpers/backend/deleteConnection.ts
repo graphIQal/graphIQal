@@ -5,8 +5,7 @@ import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConne
 export const deleteConnection = (
 	startNode: string,
 	endNode: string,
-	viewContext: Partial<State & API>,
-	mutateGraphData: KeyedMutator<any>
+	viewContext: Partial<State & API>
 ) => {
 	const { changeAlert, nodeData_Graph, addAction, changeNodeData_Graph } =
 		viewContext;
@@ -16,6 +15,6 @@ export const deleteConnection = (
 	addAction(startNode, 'CONNECTION_DELETE', {
 		startNode,
 		endNode,
-		// connection: newNodes[start].connections[end],
+		connection: nodeData_Graph[startNode].connections[endNode],
 	});
 };

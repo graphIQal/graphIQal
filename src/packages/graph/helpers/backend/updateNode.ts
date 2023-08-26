@@ -7,8 +7,7 @@ export const updateNode = (
 	type: NodeUpdate,
 	newVal: any,
 	nodeID: string,
-	context: Partial<State & API>,
-	mutateGraphData: KeyedMutator<any>
+	context: Partial<State & API>
 ) => {
 	const {
 		addAction,

@@ -115,6 +115,7 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 					changeVisualData_Graph,
 					nodeVisualData_Graph,
 					nodeData_Graph,
+					nodeId,
 				}),
 		},
 	];

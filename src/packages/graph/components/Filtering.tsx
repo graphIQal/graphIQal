@@ -35,7 +35,6 @@ export const Filtering: React.FC<FilteringProps> = ({
 		nodeVisualData_Graph,
 		nodeData_Graph,
 		history,
-		pointer,
 		undo,
 		redo,
 	} = useGraphViewData();
@@ -47,7 +46,7 @@ export const Filtering: React.FC<FilteringProps> = ({
 			<div className=' absolute top-10 flex flex-row py-2 px-3 justify-between w-full align-middle items-center z-99'>
 				<div className='flex flex-row gap-x-5'>
 					<div className='flex flex-row gap-x-3 align-middle items-center'>
-						<IconCircleButton
+						{/* <IconCircleButton
 							src='save'
 							size={30}
 							onClick={() => {
@@ -61,7 +60,7 @@ export const Filtering: React.FC<FilteringProps> = ({
 									pointer: pointer,
 								});
 							}}
-						/>
+						/> */}
 						<div className='flex flex-row gap-x-1 align-middle items-center'>
 							<IconCircleButton src='undo' onClick={undo} />
 							<IconCircleButton src='redo' onClick={redo} />

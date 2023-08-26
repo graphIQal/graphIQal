@@ -14,16 +14,6 @@ export const addConnection = (
 	if (!changeAlert || !nodeData_Graph || !addAction || !nodeVisualData_Graph)
 		return;
 
-	// Now mutating in the cache
-	// mutateGraphData(createConnection({ startNode, endNode, type: 'RELATED' }), {
-	// 	optimisticData: {
-	// 		visualData: nodeVisualData_Graph,
-	// 		nodeData: newnodeData_Graph,
-	// 	},
-	// 	populateCache: false,
-	// 	revalidate: false,
-	// });
-
 	addAction(startNode, 'CONNECTION_ADD', {
 		startNode: startNode,
 		endNode: endNode,

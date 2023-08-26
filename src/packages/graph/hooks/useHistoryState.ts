@@ -585,9 +585,25 @@ export const useHistoryState = ({
 				);
 				break;
 			case 'CONNECTION_ADD':
-				newState = { ...nodeData_Graph };
-				delete newState[id].connections[value.endNode];
-				changeNodeData_Graph(newState);
+				newNodeData = { ...nodeData_Graph };
+				delete newNodeData[id].connections[value.endNode];
+				changeNodeData_Graph(newNodeData);
+
+				mutateGraphData(
+					deleteConnectionAPI({
+						startNode: value.startNode,
+						endNode: value.endNode,
+						type: 'RELATED',
+					}),
+					{
+						optimisticData: (data: any) => ({
+							nodeData: newNodeData,
+							visualData: data.visualData,
+						}),
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 
 				break;
 			case 'CONNECTION_DELETE':

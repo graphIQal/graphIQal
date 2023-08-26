@@ -511,17 +511,55 @@ export const useHistoryState = ({
 				break;
 
 			case 'NODE_DELETE':
-				newState = { ...nodeData_Graph };
-				newState[id] = value.deletedNode;
-				changeNodeData_Graph(newState);
-				newState = { ...nodeVisualData_Graph };
-				newState[id] = value.deletedVisualNode;
-				changeVisualData_Graph(newState);
+				newNodeData = { ...nodeData_Graph };
+				newNodeData[id] = value.deletedNode;
+				changeNodeData_Graph(newNodeData);
+
+				newVisualData = { ...nodeVisualData_Graph };
+				newVisualData[id] = value.deletedVisualNode;
+				changeVisualData_Graph(newVisualData);
+
+				mutateGraphData(
+					// because we're not deleting the node, the backend equivalent is connecting an existing node back
+					updateGraphNode({
+						nodeId: id,
+						nodeVisualData:
+							value.deletedVisualNode as GraphNodeData,
+						graphViewId,
+					}),
+					{
+						optimisticData: {
+							nodeData: newNodeData,
+							visualData: newVisualData,
+						},
+						populateCache: false,
+						revalidate: true,
+					}
+				);
+
 				break;
 			case 'NODE_COLOR':
-				newState = { ...nodeData_Graph };
-				newState[id].color = value.old.color;
-				changeNodeData_Graph(newState);
+				mutateGraphData(
+					updateNode({
+						nodeId: id,
+						nodeData: { color: value.old.color },
+					}),
+					{
+						optimisticData: (data: any) => {
+							newNodeData = { ...nodeData_Graph };
+							newNodeData[id].color = value.old.color;
+
+							changeNodeData_Graph({ ...newNodeData });
+
+							return {
+								nodeData: newNodeData,
+								visualData: data.visualData,
+							};
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 				break;
 			case 'NODE_ICON':
 				newState = { ...nodeData_Graph };

@@ -4,7 +4,7 @@ type CircleProps = {
 	diameter: number | string;
 	children?: any;
 	backgroundClass: string;
-	onClick: (e: any) => void;
+	// onClick: (e: any) => void;
 	ref?: any;
 };
 
@@ -14,7 +14,7 @@ const Circle: React.FC<CircleProps> = ({
 	diameter,
 	children,
 	backgroundClass,
-	onClick,
+	// onClick,
 	ref,
 }) => {
 	const widthMinClass = 'min-w-[' + diameter + 'px]';
@@ -33,7 +33,7 @@ const Circle: React.FC<CircleProps> = ({
 				maxWidth: diameter,
 			}}
 			ref={ref}
-			onClick={onClick}
+			// onClick={onClick}
 			className={className}
 		>
 			{children}

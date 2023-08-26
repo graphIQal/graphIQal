@@ -10,6 +10,7 @@ import { MutableRefObject, useRef } from 'react';
 import { KeyedMutator } from 'swr';
 import { GraphNodeData, NodeData } from '../graphTypes';
 import { deleteGraphNode } from '@/backend/functions/graph/mutate/deleteGraphNode';
+import { updateNode } from '@/backend/functions/node/mutate/updateNode';
 
 export type Action = {
 	type: ActionChanges;
@@ -211,10 +212,28 @@ export const useHistoryState = ({
 				break;
 
 			case 'NODE_COLOR':
-				newState = { ...nodeData_Graph };
-				newState[id].color = value.new.color;
-				changeNodeData_Graph(newState);
-				break;
+				mutateGraphData(
+					updateNode({
+						nodeId: id,
+						nodeData: { color: value.new.color },
+					}),
+					{
+						optimisticData: (data: any) => {
+							newNodeData = { ...nodeData_Graph };
+							newNodeData[id].color = value.new.color;
+
+							changeNodeData_Graph({ ...newNodeData });
+
+							return {
+								nodeData: newNodeData,
+								visualData: data.visualData,
+							};
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
+
 			case 'NODE_ICON':
 				newState = { ...nodeData_Graph };
 				newState[id].icon = value.new.icon;

@@ -404,8 +404,6 @@ export const useHistoryState = ({
 
 				break;
 			case 'DRAG':
-				console.log('drag');
-
 				newState = { ...nodeVisualData_Graph };
 				newState[id].x = value.new.x;
 				newState[id].y = value.new.y;
@@ -716,29 +714,56 @@ export const useHistoryState = ({
 				break;
 
 			case 'CONNECTION_DIRECTION':
-				newState = { ...nodeData_Graph };
-				newState[value.endNode].connections[id] = value.oldConnection;
-				changeNodeData_Graph(newState);
+				newNodeData = { ...nodeData_Graph };
+				newNodeData[value.originalStartNode].connections[
+					value.originalEndNode
+				] = value.oldConnection;
+
+				delete newNodeData[value.originalEndNode].connections[
+					value.originalStartNode
+				];
+
+				// I don't know why if I delete this it takes one re-render or action for the reverse to show.
+				changeNodeData_Graph(newNodeData);
+
+				mutateGraphData(
+					reverseConnection({
+						startNode: value.originalEndNode,
+						endNode: value.originalStartNode,
+						type: value.type,
+					}),
+					{
+						optimisticData: (data: any) => ({
+							nodeData: newNodeData,
+							visualData: data.visualData,
+						}),
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 				break;
 			case 'DRAG':
 				newState = { ...nodeVisualData_Graph };
 				newState[id].x = value.old.x;
 				newState[id].y = value.old.y;
+
 				changeVisualData_Graph(newState);
-				break;
-			case 'NODE_TITLE':
-				// let undoOps = 0;
-				// for (let i = history.current.length - 1; i > 0; --i) {
-				//   if (history.current[i].type == 'NODE_TITLE' && undoOps < 5) {
-				//     undoOps += 1;
-				//   } else {
-				//     break;
-				//   }
-				// }
-				// pointer.current -= undoOps;
-				newState = { ...nodeData_Graph };
-				newState[id].title = value.oldTitle;
-				changeNodeData_Graph(newState);
+
+				mutateGraphData(
+					updateGraphNode({
+						nodeId: id,
+						nodeVisualData: { x: value.old.x, y: value.old.y },
+						graphViewId,
+					}),
+					{
+						optimisticData: (data: any) => ({
+							nodeData: data.nodeData,
+							visualData: newState,
+						}),
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 				break;
 		}
 	};

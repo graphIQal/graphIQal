@@ -562,9 +562,27 @@ export const useHistoryState = ({
 				);
 				break;
 			case 'NODE_ICON':
-				newState = { ...nodeData_Graph };
-				newState[id].icon = value.old.icon;
-				changeNodeData_Graph(newState);
+				mutateGraphData(
+					updateNode({
+						nodeId: id,
+						nodeData: { icon: value.old.icon },
+					}),
+					{
+						optimisticData: (data: any) => {
+							newNodeData = { ...nodeData_Graph };
+							newNodeData[id].icon = value.old.icon;
+
+							changeNodeData_Graph({ ...newNodeData });
+
+							return {
+								nodeData: newNodeData,
+								visualData: data.visualData,
+							};
+						},
+						populateCache: false,
+						revalidate: false,
+					}
+				);
 				break;
 			case 'CONNECTION_ADD':
 				newState = { ...nodeData_Graph };

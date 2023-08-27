@@ -16,7 +16,7 @@ import {
 	toggleList,
 } from '@udecode/plate';
 import { ReactNode } from 'react';
-import { Transforms } from 'slate';
+import { Editor, Transforms } from 'slate';
 import BlockMenu from '../../../components/organisms/BlockMenu';
 import {
 	ELEMENT_NODELINK,
@@ -92,6 +92,19 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					// Navigate to node
 					router.push(`/${username}/${newId}`, undefined);
 				},
+			},
+		},
+		{
+			key: 'add_node',
+			text: 'Add Node',
+			data: {
+				searchFunction: (search) => {
+					if ('add node'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+				onPress: async () => {},
 			},
 		},
 		{
@@ -354,13 +367,30 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 		<Combobox
 			id='1'
 			onSelectItem={(editor, item) => {
-				// had to go through a SHIT load of stuff, finally figured out undo is working but honestly it's kinda hacky no?
-				// editor.undo();
-
 				// Keep deleting backwards until you see the '/', then delete one more.
-				deleteBackward(editor, { unit: 'word' });
-				// deleteBackward(editor, { unit: 'character' });
-				item.data.onPress();
+				console.log('editor.selection: ', editor.selection);
+
+				if (editor.selection) {
+					while (editor.selection.anchor.offset > 0) {
+						const before = editor.before(editor.selection);
+						if (before) {
+							const beforeRange = editor.range(
+								before,
+								editor.selection
+							);
+							const beforeText = editor.string(beforeRange);
+							console.log(beforeText);
+
+							deleteBackward(editor, { unit: 'character' });
+							if (beforeText === '/') {
+								// The text right before the current selection is '/'
+								console.log('no way ');
+								item.data.onPress();
+								break;
+							}
+						}
+					}
+				}
 
 				// the combobox is getting overridden by the exitbreakline on headers.
 			}}

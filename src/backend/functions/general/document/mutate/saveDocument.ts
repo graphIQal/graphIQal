@@ -54,11 +54,11 @@ export const saveDocument = async ({
 		}
 	)
 		.then((res) => {
-			console.log('saveDocument ', res);
+			// console.log('saveDocument ', res);
 			return res.json();
 		})
 		.then((json) => {
-			console.log(json);
+			// console.log(json);
 			return json;
 		});
 

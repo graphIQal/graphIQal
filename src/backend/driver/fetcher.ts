@@ -1,13 +1,13 @@
 export const fetcher = (url: string) =>
 	fetch(url).then((res) => {
-		console.log('res ', res);
+		// console.log('res ', res);
 		return res.json();
 	});
 
 export const fetcherSingleReturn = (url: string) =>
 	fetch(url)
 		.then((res) => {
-			console.log('res ', res);
+			// console.log('res ', res);
 			return res.json();
 		})
 		.then((json) => {

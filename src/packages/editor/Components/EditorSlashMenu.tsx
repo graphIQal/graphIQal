@@ -19,6 +19,7 @@ import { ReactNode } from 'react';
 import { Editor, Transforms } from 'slate';
 import BlockMenu from '../../../components/organisms/BlockMenu';
 import {
+	ELEMENT_DIVIDER,
 	ELEMENT_NODELINK,
 	MyH1Element,
 	MyH2Element,
@@ -95,16 +96,21 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			},
 		},
 		{
-			key: 'add_node',
-			text: 'Add Node',
+			key: 'divider',
+			text: 'Divider',
 			data: {
 				searchFunction: (search) => {
-					if ('add node'.startsWith(search)) {
+					if ('divider'.startsWith(search)) {
 						return true;
 					}
 					return false;
 				},
-				onPress: async () => {},
+				onPress: async () => {
+					insertNodes(editor, {
+						type: getPluginType(editor, ELEMENT_DIVIDER),
+						children: [{ text: '' }],
+					});
+				},
 			},
 		},
 		{
@@ -137,6 +143,19 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					console.log('okay');
 					toggleList(editor, { type: ELEMENT_LI });
 				},
+			},
+		},
+		{
+			key: 'add_node',
+			text: 'Add Node',
+			data: {
+				searchFunction: (search) => {
+					if ('add node'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+				onPress: async () => {},
 			},
 		},
 		{
@@ -368,7 +387,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			id='1'
 			onSelectItem={(editor, item) => {
 				// Keep deleting backwards until you see the '/', then delete one more.
-				console.log('editor.selection: ', editor.selection);
+				// console.log('editor.selection: ', editor.selection);
 
 				if (editor.selection) {
 					while (editor.selection.anchor.offset > 0) {
@@ -379,7 +398,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								editor.selection
 							);
 							const beforeText = editor.string(beforeRange);
-							console.log(beforeText);
+							// console.log(beforeText);
 
 							deleteBackward(editor, { unit: 'character' });
 							if (beforeText === '/') {
@@ -403,7 +422,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				if (item.data.customRender) return item.data.customRender();
 				return <div>{item.text}</div>;
 			}}
-			searchPattern={'.+'}
+			searchPattern={'\\S+'}
 			filter={(search: string) => (value) =>
 				value.data.searchFunction(
 					getTextAfterTrigger(search.toLowerCase())
@@ -412,3 +431,19 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 		/>
 	);
 };
+
+// On fixing trigger
+// The issue lies in the getTextFromTrigger function. This function is responsible for determining when the combobox should be activated. It does this by checking if the text matches the trigger and searchPattern parameters.
+
+// The trigger parameter is a string that represents the character(s) that should activate the combobox. The searchPattern parameter is a regular expression that represents the pattern of text that should be considered a match.
+
+// The function works by iterating backwards from the current cursor position (at) until it finds a character that doesn't match the searchPattern. It then checks if the resulting text matches the trigger parameter.
+
+// The problem is that the function stops iterating when it encounters a whitespace character, because whitespace characters do not match the searchPattern ('\\S+', which matches any non-whitespace character).
+
+// To fix this, you need to modify the getTextFromTrigger function to keep iterating until it encounters a whitespace character that is not immediately followed by the trigger character. This can be done by adding a check for the trigger character inside the while loop.
+
+// Here's how you can modify the getTextFromTrigger function:
+// }
+
+// This modification will make the function keep iterating when it encounters a whitespace character that is immediately followed by the trigger character, which should make the combobox appear when / is typed after any character.

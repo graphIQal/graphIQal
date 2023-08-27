@@ -23,6 +23,7 @@ import {
 	TodoListElement,
 } from '@udecode/plate';
 import {
+	Divider,
 	H1,
 	H2,
 	H3,
@@ -35,6 +36,7 @@ import {
 import {
 	createMyPluginFactory,
 	createMyPlugins,
+	ELEMENT_DIVIDER,
 	ELEMENT_NODE,
 	ELEMENT_NODELINK,
 	ELEMENT_TITLE,
@@ -75,6 +77,14 @@ const createNodeLinkPlugin = createMyPluginFactory<HotkeyPlugin>({
 	options: {},
 });
 
+const createDividerPlugin = createMyPluginFactory<HotkeyPlugin>({
+	key: ELEMENT_DIVIDER,
+	isElement: true,
+	isLeaf: false,
+	isVoid: true,
+	options: {},
+});
+
 const createListPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_LI,
 	isElement: true,
@@ -111,6 +121,7 @@ export const BlockPlugins = createMyPlugins(
 		createNumberedListPlugin(),
 		createTodoListPlugin(),
 		createCodeBlockPlugin(),
+		createDividerPlugin(),
 	],
 	{
 		components: {
@@ -126,6 +137,7 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_LI]: UL,
 			[ELEMENT_OL]: OL,
 			[ELEMENT_TODO_LI]: TodoListElement,
+			[ELEMENT_DIVIDER]: Divider,
 			// [ELEMENT_LIC]: LI,
 		},
 	}

@@ -69,6 +69,7 @@ export const ELEMENT_TITLE = 'title';
 export const ELEMENT_NODELINK = 'nodelink';
 export const ELEMENT_NODE = 'node';
 export const ELEMENT_CONNECTION = 'connection';
+export const ELEMENT_DIVIDER = 'divider';
 
 export const COMMAND_NEST = 'nested';
 export const COMMAND_TEST = 'test';
@@ -238,6 +239,7 @@ export const BlockwrappedElements = {
 	[ELEMENT_OL]: true,
 	[ELEMENT_TODO_LI]: true,
 	[ELEMENT_NODELINK]: true,
+	[ELEMENT_DIVIDER]: true,
 };
 
 export const NoMarkElements = {

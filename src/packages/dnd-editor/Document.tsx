@@ -171,7 +171,7 @@ const Document: React.FC<{
 						{barComponents.favourite}
 					</div>
 				</div>
-				<div className='relative pl-10 pt-15 pt-10 pr-3 pb-3'>
+				<div className='relative pl-10 pt-15 pt-10 pr-10 pb-3'>
 					<div className='absolute z-10 ml-[14px]'>
 						<EmojiToolbarDropdown
 							pluginKey='emoji'

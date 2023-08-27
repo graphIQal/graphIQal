@@ -59,7 +59,9 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 
 	return (
 		<div
-			className={'group relative flex-row flex ' + elementId}
+			className={
+				'group relative flex-row flex box-border w-full ' + elementId
+			}
 			ref={multiRootRef}
 		>
 			<div
@@ -88,7 +90,7 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 				</div>
 			</div>
 
-			<div ref={blockRef} className='w-full relative'>
+			<div ref={blockRef} className='w-full relative overflow-wrap'>
 				{children}
 
 				{!!dropLine && (

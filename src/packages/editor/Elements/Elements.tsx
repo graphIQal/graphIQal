@@ -49,6 +49,19 @@ export const NodeLink = (props: any) => {
 	);
 };
 
+export const Divider = (props: any) => {
+	console.log('divider');
+
+	return (
+		<div
+			className='border-t border-gray-300 my-4 h-0 w-full'
+			contentEditable={false}
+		>
+			{props.children}
+		</div>
+	);
+};
+
 export const TitleElement = (props: any) => {
 	// Showing untitled if title is empty.
 

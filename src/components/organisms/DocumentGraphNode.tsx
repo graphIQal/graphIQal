@@ -20,9 +20,11 @@ import { createNormalizeTypesPlugin } from '@udecode/plate';
 import { withDraggable } from '../../packages/dnd-editor/components/withDraggable';
 import { TitleElementGraph } from '../../packages/graph/graphEditor/GraphElements';
 import { saveDocument } from '@/backend/functions/general/document/mutate/saveDocument';
+import useSWR from 'swr';
+import { fetcherSingleReturn } from '@/backend/driver/fetcher';
 
 const DocumentGraphNode: React.FC<{}> = ({}) => {
-	const { title, id, icon, node_data } = useContext(
+	const { title, id, icon } = useContext(
 		GraphNodeContext
 	) as GraphNodeContextInterface;
 
@@ -34,10 +36,56 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 
 	const [document, setdocument] = useState([]);
 
-	// console.log('node_data ', node_data);
+	const {
+		data: nodeDataSWR,
+		isLoading,
+		error,
+		mutate: SWRmutateCurrNode,
+	} = useSWR(id ? `/api/username/${id}` : null, fetcherSingleReturn, {
+		revalidateOnMount: true,
+		revalidateOnFocus: false,
+	});
 
-	if ('title' in node_data && !node_data.document) {
-		node_data.document = `
+	// I need to mutate new nodes w/ a default document or smth.
+
+	if (isLoading || !nodeDataSWR) {
+		return <div></div>;
+		// nodeDataSWR.n = {
+		// 	document: `
+		// 		[
+		// 			{
+		// 				"type": "block",
+		// 				"id": "${v4()}",
+		// 				"children": [
+		// 					{ "type": "p", "id": "${v4()}", "children": [{ "text": "" }] }
+		// 				]
+		// 			}
+		// 		]`,
+		// 	icon: 'node',
+		// 	color: 'black',
+		// 	title: 'loading...',
+		// };
+	}
+
+	console.log(nodeDataSWR);
+
+	if (nodeDataSWR && 'title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
+		console.log('new document');
+		nodeDataSWR.n.document = `
+		[
+			{
+				"type": "block",
+				"id": "${v4()}",
+				"children": [
+					{ "type": "p", "id": "${v4()}", "children": [{ "text": "" }] }
+				]
+			}
+		]`;
+	}
+
+	if (nodeDataSWR && 'title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
+		console.log('new document');
+		nodeDataSWR.n.document = `
 		[
 			{
 				"type": "block",
@@ -80,7 +128,7 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 				className={'w-full h-full flex justify-items-stretch flex-row '}
 			>
 				<div className='flex flex-row gap-x-3 w-full h-fit items-center overflow-y-scroll ml-2'>
-					{node_data.document && (
+					{nodeDataSWR.n.document && (
 						<EditorComponent
 							key={id}
 							id={'graph_' + id}
@@ -88,36 +136,34 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 								{
 									type: 'title',
 									id: 'Node Title',
-									children: [{ text: node_data.title }],
+									children: [{ text: nodeDataSWR.n.title }],
 								} as MyTitleElement,
-								...createInitialValue(node_data.document),
+								...createInitialValue(nodeDataSWR.n.document),
 							]}
 							value={document}
 							setValue={setdocument}
 							save={async (params) => {
-								// const newData = {
-								// 	connectedNodes:
-								// 		nodeDataSWR.connectedNodes,
-								// 	n: {
-								// 		...nodeDataSWR.n,
-								// 		title: params.title,
-								// 		document: JSON.stringify(
-								// 			params.document.slice(1)
-								// 		),
-								// 	},
-								// };
-								// await SWRmutateCurrNode(
+								const newData = {
+									connectedNodes: nodeDataSWR.connectedNodes,
+									n: {
+										...nodeDataSWR.n,
+										title: params.title,
+										document: JSON.stringify(
+											params.document.slice(1)
+										),
+									},
+								};
 								const realParams = {
 									...params,
 									nodeId: id,
-									// title: title,
 								};
-								saveDocument(realParams);
-								// 	{
-								// 		optimisticData: newData,
-								// 		populateCache: false,
-								// 	}
-								// );
+								await SWRmutateCurrNode(
+									saveDocument(realParams),
+									{
+										optimisticData: newData,
+										populateCache: false,
+									}
+								);
 							}}
 							customElements={{
 								[ELEMENT_BLOCK]: withDraggable(Block),

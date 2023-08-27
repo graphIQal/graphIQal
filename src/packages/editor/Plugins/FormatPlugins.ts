@@ -51,6 +51,11 @@ const resetBlockTypesCommonRule = {
 	defaultType: ELEMENT_PARAGRAPH,
 };
 
+const listsOnly = {
+	types: [ELEMENT_BLOCKQUOTE, ELEMENT_LI, ELEMENT_OL, ELEMENT_TODO_LI],
+	defaultType: ELEMENT_PARAGRAPH,
+};
+
 export const FormatPlugins = createMyPlugins([
 	// createTrailingBlockPlugin({ options: { type: ELEMENT_PARAGRAPH } }),
 	createSoftBreakPlugin(),
@@ -58,7 +63,7 @@ export const FormatPlugins = createMyPlugins([
 		options: {
 			rules: [
 				{
-					...resetBlockTypesCommonRule,
+					...listsOnly,
 					hotkey: 'Enter',
 					predicate: isBlockAboveEmpty,
 				},
@@ -93,7 +98,7 @@ export const FormatPlugins = createMyPlugins([
 						],
 					},
 					// relative: true,
-					level: 1,
+					level: 0,
 				},
 			],
 		},

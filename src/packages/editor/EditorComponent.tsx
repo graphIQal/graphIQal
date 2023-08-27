@@ -177,7 +177,21 @@ const EditorComponent: React.FC<{
 		<div className='pb-[50%]'>
 			<Plate<MyValue>
 				editorRef={editorRef}
-				editableProps={editableProps}
+				editableProps={{
+					...editableProps,
+					onBlur: () => {
+						clearTimeout(intervalRef.current);
+						save({
+							nodeId,
+							username,
+							document: value,
+							title: value[0].children[0].text as string,
+							history: editorRef.current?.history
+								? editorRef.current.history
+								: null,
+						});
+					},
+				}}
 				initialValue={initialValue}
 				onChange={(docValue) => {
 					console.log(docValue);

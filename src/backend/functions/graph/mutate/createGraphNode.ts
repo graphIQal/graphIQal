@@ -55,7 +55,7 @@ export const createGraphNode = async ({
 
 	const body = `
 		MERGE (n: Node {id: "${id}"})
-		SET n.title = '', n.icon = 'node', n.color = 'black'
+		SET n.title = 'Untitled', n.icon = 'node', n.color = 'black'
 
 		MERGE (currentNode: Node {id: "${nodeId}"})
 		MERGE (currentNode)-[:HAS]->(n)

@@ -110,7 +110,7 @@ export const useHistoryState = ({
 							};
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -142,7 +142,7 @@ export const useHistoryState = ({
 							nodeData: newNodeData,
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;
@@ -210,7 +210,7 @@ export const useHistoryState = ({
 							};
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -235,7 +235,7 @@ export const useHistoryState = ({
 							};
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;
@@ -259,7 +259,7 @@ export const useHistoryState = ({
 							};
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;
@@ -296,7 +296,7 @@ export const useHistoryState = ({
 							};
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -331,7 +331,7 @@ export const useHistoryState = ({
 							visualData: data.visualData,
 						}),
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -368,7 +368,7 @@ export const useHistoryState = ({
 							...data,
 						}),
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;
@@ -398,7 +398,7 @@ export const useHistoryState = ({
 							visualData: data.visualData,
 						}),
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -422,7 +422,7 @@ export const useHistoryState = ({
 							visualData: newState,
 						}),
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;
@@ -493,7 +493,7 @@ export const useHistoryState = ({
 							};
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -520,7 +520,7 @@ export const useHistoryState = ({
 							visualData: newVisualData,
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -545,7 +545,7 @@ export const useHistoryState = ({
 							visualData: newVisualData,
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -598,7 +598,7 @@ export const useHistoryState = ({
 							};
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;
@@ -621,7 +621,7 @@ export const useHistoryState = ({
 							};
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;
@@ -642,7 +642,7 @@ export const useHistoryState = ({
 							visualData: data.visualData,
 						}),
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -681,7 +681,7 @@ export const useHistoryState = ({
 							};
 						},
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 
@@ -708,7 +708,7 @@ export const useHistoryState = ({
 							...data,
 						}),
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;
@@ -738,7 +738,7 @@ export const useHistoryState = ({
 							visualData: data.visualData,
 						}),
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;
@@ -761,7 +761,7 @@ export const useHistoryState = ({
 							visualData: newState,
 						}),
 						populateCache: false,
-						revalidate: false,
+						revalidate: true,
 					}
 				);
 				break;

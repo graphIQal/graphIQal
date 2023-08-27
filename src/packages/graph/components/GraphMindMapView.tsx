@@ -116,17 +116,12 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 		items.push({
 			text: 'Delete Connection',
 			onPress: () =>
-				deleteConnection(
-					from,
-					to,
-					{
-						changeAlert,
-						nodeData_Graph,
-						addAction,
-						changeNodeData_Graph,
-					},
-					mutateGraphData
-				),
+				deleteConnection(from, to, {
+					changeAlert,
+					nodeData_Graph,
+					addAction,
+					changeNodeData_Graph,
+				}),
 			icon: 'remove',
 		});
 
@@ -157,17 +152,12 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 										from: string,
 										to: string
 									) =>
-										deleteConnection(
-											from,
-											to,
-											{
-												changeAlert,
-												nodeData_Graph,
-												addAction,
-												changeNodeData_Graph,
-											},
-											mutateGraphData
-										)
+										deleteConnection(from, to, {
+											changeAlert,
+											nodeData_Graph,
+											addAction,
+											changeNodeData_Graph,
+										})
 									}
 								/>
 							</div>

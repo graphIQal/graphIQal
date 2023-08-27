@@ -356,7 +356,10 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			onSelectItem={(editor, item) => {
 				// had to go through a SHIT load of stuff, finally figured out undo is working but honestly it's kinda hacky no?
 				// editor.undo();
+
+				// Keep deleting backwards until you see the '/', then delete one more.
 				deleteBackward(editor, { unit: 'word' });
+				// deleteBackward(editor, { unit: 'character' });
 				item.data.onPress();
 
 				// the combobox is getting overridden by the exitbreakline on headers.

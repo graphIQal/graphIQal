@@ -126,7 +126,6 @@ const SearchBar: React.FC = () => {
 						session?.user?.homenodeId
 							? session?.user?.homenodeId
 							: 'username',
-						'',
 						{
 							id: result.id,
 							title: result.title,

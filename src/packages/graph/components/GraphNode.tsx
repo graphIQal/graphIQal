@@ -33,6 +33,8 @@ import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
 import DocumentGraphNode from '../../../components/organisms/DocumentGraphNode';
 import { deleteNode } from '../helpers/backend/deleteNode';
 import { updateNode } from '../helpers/backend/updateNode';
+import useSWR from 'swr';
+import { fetcherSingleReturn } from '@/backend/driver/fetcher';
 
 export interface NodeProps {
 	children: ReactNode;
@@ -40,6 +42,7 @@ export interface NodeProps {
 }
 export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 	const nodeInfo = useContext(GraphNodeContext) as GraphNodeContextInterface;
+
 	const { canDrag, setCanDrag, hideSourceOnDrag } = useContext(
 		GraphActionContext
 	) as GraphActionContextInterface;
@@ -53,6 +56,7 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 
 	const { nodeInFocusId, nodeVisualData_Graph, addAction, nodeData_Graph } =
 		useGraphViewData();
+
 	const {
 		changeNodeInFocusId,
 		changeAlert,
@@ -162,6 +166,16 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 	} else {
 		// collapsed = nodeInfo.width * nodeInfo.height < 20000;
 	}
+
+	// const {
+	// 	data: nodeDataSWR,
+	// 	isLoading,
+	// 	error,
+	// 	mutate: SWRmutateCurrNode,
+	// } = useSWR(id ? `/api/username/${id}` : null, fetcherSingleReturn, {
+	// 	revalidateOnMount: true,
+	// 	revalidateOnFocus: false,
+	// });
 
 	return (
 		<div>

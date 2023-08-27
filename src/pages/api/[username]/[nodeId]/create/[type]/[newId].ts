@@ -22,7 +22,7 @@ export default async function handler(
 
 	const cypher = `
 			MATCH (currentNode: Node {id: $nodeId})
-			MERGE (n: Node {id: $newId, title: ""})
+			MERGE (n: Node {id: $newId, title: "Untitled"})
 			MERGE (currentNode)-[:${params.type}]->(n)
 			RETURN n
 			`;

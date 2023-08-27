@@ -78,8 +78,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 							changeNodeData_Graph,
 							addAction,
 							changeAlert,
-						},
-						mutateGraphData
+						}
 					),
 			});
 			if (
@@ -108,8 +107,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 							changeNodeData_Graph,
 							addAction,
 							changeAlert,
-						},
-						mutateGraphData
+						}
 					),
 			});
 		}

@@ -285,7 +285,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 
 	return (
 		<DndProvider backend={HTML5Backend}>
-			<div className='h-screen overflow-y-auto max-h-full max-x-full overflow-x-hidden'>
+			<div className='h-screen overflow-y-hidden max-h-screen max-x-full overflow-x-hidden'>
 				<SideBar favData={favData} connectionMap={connectionMap} />
 				<Modal open={isSettingsOpen} setOpen={setisSettingsOpen}>
 					<SettingsPanel />
@@ -331,7 +331,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 				{mainViewTabs.map((tab, i) => {
 					return (
 						<div
-							className=' h-screen'
+							className=' h-screen pb-10'
 							key={i}
 							style={{
 								display:

@@ -8,6 +8,7 @@ import {
 	ELEMENT_NODELINK,
 	ELEMENT_TITLE,
 	MyTitleElement,
+	defaultDocument,
 } from '../../packages/editor/plateTypes';
 import GraphNodeContext, {
 	GraphNodeContextInterface,
@@ -36,19 +37,19 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 
 	const [document, setdocument] = useState([]);
 
-	const {
+	let {
 		data: nodeDataSWR,
 		isLoading,
 		error,
 		mutate: SWRmutateCurrNode,
 	} = useSWR(id ? `/api/username/${id}` : null, fetcherSingleReturn, {
 		revalidateOnMount: true,
-		revalidateOnFocus: false,
+		revalidateOnFocus: true,
 	});
 
 	// I need to mutate new nodes w/ a default document or smth.
 
-	if (isLoading || !nodeDataSWR) {
+	if (isLoading) {
 		return <div></div>;
 		// nodeDataSWR.n = {
 		// 	document: `
@@ -67,34 +68,21 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 		// };
 	}
 
-	console.log(nodeDataSWR);
-
-	if (nodeDataSWR && 'title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
-		console.log('new document');
-		nodeDataSWR.n.document = `
-		[
-			{
-				"type": "block",
-				"id": "${v4()}",
-				"children": [
-					{ "type": "p", "id": "${v4()}", "children": [{ "text": "" }] }
-				]
-			}
-		]`;
+	if (!nodeDataSWR) {
+		nodeDataSWR = {
+			n: {
+				id: id,
+				title: 'Untitled',
+				icon: 'node',
+				color: 'black',
+				document: defaultDocument,
+			},
+			connections: [],
+		};
 	}
 
 	if (nodeDataSWR && 'title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
-		console.log('new document');
-		nodeDataSWR.n.document = `
-		[
-			{
-				"type": "block",
-				"id": "${v4()}",
-				"children": [
-					{ "type": "p", "id": "${v4()}", "children": [{ "text": "" }] }
-				]
-			}
-		]`;
+		nodeDataSWR.n.document = defaultDocument;
 	}
 
 	const createInitialValue = (content: string) => {

@@ -10,8 +10,7 @@ export const updateConnection = (
 	type: LineUpdate,
 	lineID: string | number,
 	newVal: any,
-	context: Partial<State & API>,
-	mutateGraphData: KeyedMutator<any>
+	context: Partial<State & API>
 ) => {
 	const { nodeData_Graph, changeNodeData_Graph, addAction, changeAlert } =
 		context;
@@ -37,13 +36,7 @@ export const updateConnection = (
 					newData[newVal.arrowEnd].connections[newVal.arrowStart]
 				)
 			) {
-				updateConnection(
-					'reverse',
-					'',
-					newVal,
-					context,
-					mutateGraphData
-				);
+				updateConnection('reverse', '', newVal, context);
 				return;
 			}
 

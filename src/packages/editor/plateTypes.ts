@@ -62,6 +62,7 @@ import {
 //   TExcalidrawElement,
 // } from '@udecode/plate-ui-excalidraw';
 import { CSSProperties } from 'styled-components';
+import { v4 } from 'uuid';
 
 export const ELEMENT_BLOCK = 'block';
 export const ELEMENT_TITLE = 'title';
@@ -336,3 +337,14 @@ export const createMyPlugins = (
 ) => createPlugins<MyValue, MyEditor>(plugins, options);
 
 export type MyAutoformatRule = AutoformatRule<MyValue, MyEditor>;
+
+export const defaultDocument = `
+[
+	{
+		"type": "block",
+		"id": "${v4()}",
+		"children": [
+			{ "type": "p", "id": "${v4()}", "children": [{ "text": "" }] }
+		]
+	}
+]`;

@@ -21,7 +21,7 @@ import { useHistoryState } from '../hooks/useHistoryState';
 import { useResize } from '../hooks/useResize';
 import { usePanAndZoom } from '../hooks/zoomAndPan/usePanAndZoom';
 import { GraphMindMapView } from './GraphMindMapView';
-import useSWR, { KeyedMutator } from 'swr';
+import useSWR, { KeyedMutator, useSWRConfig } from 'swr';
 import { fetcher } from '@/backend/driver/fetcher';
 
 export const GraphContainer: React.FC = () => {
@@ -59,8 +59,10 @@ export const GraphContainer: React.FC = () => {
 	const nodeDataRef = useRef(nodeData_Graph);
 	const visualDataRef = useRef(nodeVisualData_Graph);
 
+	const { mutate } = useSWRConfig();
+
+	// Could not call useSWR and make a custom mutateGraphData but w/e
 	const {
-		data,
 		mutate: mutateGraphData,
 		// error: nodeError,
 		// isLoading: nodeDataLoading,
@@ -68,8 +70,17 @@ export const GraphContainer: React.FC = () => {
 		graphViewId && nodeId
 			? `/api/${username}/${nodeId}/graph/${graphViewId}`
 			: null,
-		fetcher
+		fetcher,
+		{}
 	);
+
+	// const mutateGraphData = (params) =>
+	// 	mutate(
+	// 		graphViewId && nodeId
+	// 			? `/api/${username}/${nodeId}/graph/${graphViewId}`
+	// 			: null,
+	// 		...params
+	// 	);
 
 	useEffect(() => {
 		nodeDataRef.current = nodeData_Graph;
@@ -192,7 +203,7 @@ export const GraphContainer: React.FC = () => {
 			endNode.current !== '' &&
 			startNode.current != endNode.current
 		) {
-			addConnection(startNode.current, endNode.current, mutateGraphData, {
+			addConnection(startNode.current, endNode.current, {
 				addAction,
 				nodeData_Graph,
 				nodeVisualData_Graph,
@@ -207,7 +218,7 @@ export const GraphContainer: React.FC = () => {
 		translateX,
 		translateY,
 		scale,
-		mutateGraphData
+		mutate
 	);
 
 	//Resizing

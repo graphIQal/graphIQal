@@ -2,28 +2,25 @@
  * Hooks and helper for drawing event handling.
  */
 
+import { useViewData } from '@/components/context/ViewContext';
 import { MutableRefObject, useCallback, useContext } from 'react';
-import { addNode } from '../../helpers/backend/addNode';
-import { updateConnection } from '../../helpers/backend/updateConnection';
+import { ScopedMutator } from 'swr/_internal';
 import DrawingContext, {
 	DrawingContextInterface,
 } from '../../context/GraphDrawingContext';
+import {
+	useGraphViewAPI,
+	useGraphViewData,
+} from '../../context/GraphViewContext';
+import { addNode } from '../../helpers/backend/addNode';
+import { updateConnection } from '../../helpers/backend/updateConnection';
 import {
 	calcArrowStart,
 	isArrow,
 	isCircle,
 } from '../../helpers/frontend/drawingEvents';
 import { snapToGrid } from '../../helpers/frontend/snapToGrid';
-import GraphActionContext, {
-	GraphActionContextInterface,
-} from '../../context/GraphActionContext';
 import { useVerticalOffset } from '../useVerticalOffset';
-import {
-	useGraphViewAPI,
-	useGraphViewData,
-} from '../../context/GraphViewContext';
-import { KeyedMutator } from 'swr';
-import { useViewData } from '@/components/context/ViewContext';
 
 export type Coord = {
 	x: number;
@@ -38,7 +35,7 @@ export const useDrawingEnd = (
 	translateX: number,
 	translateY: number,
 	scale: number,
-	mutateGraphData: KeyedMutator<any>
+	mutate: ScopedMutator<any>
 ) => {
 	const { graphViewId, nodeData_Graph, addAction, nodeVisualData_Graph } =
 		useGraphViewData();
@@ -82,7 +79,7 @@ export const useDrawingEnd = (
 						nodeData_Graph,
 						nodeId,
 					},
-					mutateGraphData,
+					// mutate,
 					newSize,
 					snappedX,
 					snappedY
@@ -126,8 +123,7 @@ export const useDrawingEnd = (
 										changeNodeData_Graph,
 										addAction,
 										changeAlert,
-									},
-									mutateGraphData
+									}
 								);
 								break;
 							}

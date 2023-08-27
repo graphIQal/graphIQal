@@ -5,7 +5,6 @@ import { API, State } from '../../context/GraphViewContext';
 export const addConnection = (
 	startNode: string,
 	endNode: string,
-	mutateGraphData: KeyedMutator<any>,
 	context: Partial<State & API>
 ) => {
 	const { nodeData_Graph, nodeVisualData_Graph, addAction, changeAlert } =

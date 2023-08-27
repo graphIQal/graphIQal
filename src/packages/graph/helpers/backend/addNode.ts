@@ -3,10 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { KeyedMutator } from 'swr';
 import { createGraphNode } from '@/backend/functions/graph/mutate/createGraphNode';
 import { API, State } from '../../context/GraphViewContext';
+import { ScopedMutator } from 'swr/_internal';
+import { defaultDocument } from '@/packages/editor/plateTypes';
+import { mutate } from 'swr';
 
 export const addNode = (
 	context: Partial<State & API & { nodeId: string }>,
-	mutateGraphData: KeyedMutator<any>,
+	// mutate: ScopedMutator<any>,
 	size: number[],
 	x: number,
 	y: number
@@ -44,15 +47,46 @@ export const addNode = (
 	const newNode = {
 		id: id,
 		title: '',
-		connections: {},
 		icon: 'node',
 		color: 'black',
+		connections: {},
+		document: defaultDocument,
 	};
 
-	addAction(id, 'NODE_ADD', {
-		newNode,
-		newNodeVisualData,
-		// newNodeid: id,
-		nodeId,
-	});
+	console.log(` mutate /api/username/${id}`);
+
+	mutate(
+		`/api/username/${id}`,
+		addAction(id, 'NODE_ADD', {
+			newNode,
+			newNodeVisualData,
+			// newNodeid: id,
+			nodeId,
+		}),
+		{
+			// optimisticData: {
+			// 	n: {
+			// 		id: id,
+			// 		title: '',
+			// 		icon: 'node',
+			// 		color: 'black',
+			// 		document: defaultDocument,
+			// 	},
+			// 	connections: [],
+			// },
+			// populateCache: () => {
+			// 	console.log('populating cache');
+			// 	return {
+			// 		n: {
+			// 			id: id,
+			// 			title: '',
+			// 			icon: 'node',
+			// 			color: 'black',
+			// 			document: defaultDocument,
+			// 		},
+			// 		connections: [],
+			// 	};
+			// },
+		}
+	);
 };

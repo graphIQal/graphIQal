@@ -4,6 +4,7 @@ import {
 	CodeSyntaxLeaf,
 	createCodeBlockPlugin,
 	createHeadingPlugin,
+	createLinkPlugin,
 	// createListPlugin,
 	createParagraphPlugin,
 	createPlateUI,
@@ -16,9 +17,11 @@ import {
 	ELEMENT_H3,
 	ELEMENT_LI,
 	ELEMENT_LIC,
+	ELEMENT_LINK,
 	ELEMENT_OL,
 	ELEMENT_TODO_LI,
 	HotkeyPlugin,
+	LinkElement,
 	onKeyDownToggleElement,
 	TodoListElement,
 } from '@udecode/plate';
@@ -122,6 +125,7 @@ export const BlockPlugins = createMyPlugins(
 		createTodoListPlugin(),
 		createCodeBlockPlugin(),
 		createDividerPlugin(),
+		createLinkPlugin(),
 	],
 	{
 		components: {
@@ -138,6 +142,7 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_OL]: OL,
 			[ELEMENT_TODO_LI]: TodoListElement,
 			[ELEMENT_DIVIDER]: Divider,
+			[ELEMENT_LINK]: LinkElement,
 			// [ELEMENT_LIC]: LI,
 		},
 	}

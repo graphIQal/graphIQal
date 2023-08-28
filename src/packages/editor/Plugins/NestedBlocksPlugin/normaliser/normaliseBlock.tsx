@@ -34,8 +34,6 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 	return ([node, path]: TNodeEntry) => {
 		normalizeNode([node, path]);
-		console.log('[node, path]');
-		console.log([node, path]);
 
 		// if (!isElement(node)) {
 		// 	normalizeNode([node, path]);
@@ -72,8 +70,8 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			// Children should all be code lines
 			const children = getChildren([node, path]);
 
-			console.log('children: ', children);
 			if (children.length === 0) {
+				// If there are no children, delete the block
 				console.log(path);
 				editor.removeNodes({ at: path });
 			} else {

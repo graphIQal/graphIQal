@@ -67,11 +67,11 @@ export const EditorFloatingMenu = ({ children }: { children?: ReactNode }) => {
 				icon={<FormatStrikethrough />}
 				// tooltip={underlineTooltip}
 			/>
-			<MarkToolbarButton
+			{/* <MarkToolbarButton
 				type={getPluginType(editor, MARK_CUT)}
 				icon={<Cut />}
 				// tooltip={underlineTooltip}
-			/>
+			/> */}
 			{children}
 		</BalloonToolbar>
 	);

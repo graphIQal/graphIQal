@@ -75,7 +75,7 @@ export const COMMAND_NEST = 'nested';
 export const COMMAND_TEST = 'test';
 
 // marks
-export const MARK_CUT = 'cut';
+export const ELEMENT_CUT = 'cut';
 
 /**
  * Text

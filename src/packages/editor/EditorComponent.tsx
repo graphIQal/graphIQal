@@ -1,7 +1,6 @@
 import {
 	createComboboxPlugin,
 	createNodeIdPlugin,
-	onKeyDownToggleMark,
 	Plate,
 	ToggleMarkPlugin,
 } from '@udecode/plate';
@@ -14,7 +13,7 @@ import { editableProps } from './editableProps';
 import {
 	createMyPluginFactory,
 	createMyPlugins,
-	MARK_CUT,
+	ELEMENT_CUT,
 	MyEditor,
 	MyPlatePlugin,
 	MyValue,
@@ -25,6 +24,7 @@ import { FormatPlugins } from './Plugins/FormatPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 
+import IconCircleButton from '@/components/molecules/IconCircleButton';
 import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import { useViewData } from '../../components/context/ViewContext';
@@ -113,14 +113,22 @@ const EditorComponent: React.FC<{
 	// const cutTextPlugin = useMemo(
 	// 	() =>
 	const cutTextPlugin = createMyPluginFactory<ToggleMarkPlugin>({
-		key: MARK_CUT,
-		isElement: false,
-		isLeaf: true,
+		key: ELEMENT_CUT,
+		isElement: true,
+		isLeaf: false,
+		isInline: true,
+		isVoid: true,
 		options: {
 			hotkey: 'mod+g',
 		},
 		handlers: {
-			onKeyDown: onKeyDownToggleMark,
+			onKeyDown: (editor) => (event) => {
+				if (event.key === 'g' && (event.ctrlKey || event.metaKey)) {
+					event.preventDefault();
+					const cutTextNode = { type: ELEMENT_CUT, children: [] };
+					editor.wrapNodes(cutTextNode);
+				}
+			},
 		},
 		// query: (el) => !someHtmlElement(el, (node) => node.style.fontWeight === 'normal'),
 		component: (props) => {
@@ -212,7 +220,17 @@ const EditorComponent: React.FC<{
 				plugins={[...plugins, cutTextPlugin()]}
 				id={id}
 			>
-				<EditorFloatingMenu />
+				<EditorFloatingMenu>
+					<IconCircleButton
+						// type={getPluginType(editor, MARK_CUT)}
+						onClick={() => {
+							console.log('ok');
+						}}
+						circle={false}
+						src={'cut'}
+						// tooltip={underlineTooltip}
+					/>
+				</EditorFloatingMenu>
 				<EditorSlashMenu />
 			</Plate>
 		</div>

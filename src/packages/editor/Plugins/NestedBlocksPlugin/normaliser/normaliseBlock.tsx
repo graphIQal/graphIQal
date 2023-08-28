@@ -34,8 +34,8 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 	return ([node, path]: TNodeEntry) => {
 		normalizeNode([node, path]);
-		// console.log('[node, path]');
-		// console.log([node, path]);
+		console.log('[node, path]');
+		console.log([node, path]);
 
 		// if (!isElement(node)) {
 		// 	normalizeNode([node, path]);
@@ -72,30 +72,38 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			// Children should all be code lines
 			const children = getChildren([node, path]);
 
-			// children returns array of tuples [child, path]
-			// gets data of first child, makes sure it's blockwrapped element
-			const firstChildType = children[0][0].type as string;
+			console.log('children: ', children);
+			if (children.length === 0) {
+				console.log(path);
+				editor.removeNodes({ at: path });
+			} else {
+				// children returns array of tuples [child, path]
+				// gets data of first child, makes sure it's blockwrapped element
+				const firstChildType = children[0][0].type as string;
 
-			if (!(firstChildType in BlockwrappedElements)) {
-				wrapNodes(
-					editor,
-					{
-						type: ELEMENT_PARAGRAPH,
-						id: '',
-						children: [],
-					} as MyParagraphElement,
-					{ at: children[0][1] }
-				);
-			}
-
-			// Iterates through remaining children, and they should not be a wrappedElementType. They should be a block
-			for (let i = 1; i < children.length; i++) {
-				if ((children[i][0].type as string) in BlockwrappedElements) {
-					setNodes<TElement>(
+				if (!(firstChildType in BlockwrappedElements)) {
+					wrapNodes(
 						editor,
-						{ type: ELEMENT_BLOCK },
-						{ at: children[i][1] }
+						{
+							type: ELEMENT_PARAGRAPH,
+							id: '',
+							children: [],
+						} as MyParagraphElement,
+						{ at: children[0][1] }
 					);
+				}
+
+				// Iterates through remaining children, and they should not be a wrappedElementType. They should be a block
+				for (let i = 1; i < children.length; i++) {
+					if (
+						(children[i][0].type as string) in BlockwrappedElements
+					) {
+						setNodes<TElement>(
+							editor,
+							{ type: ELEMENT_BLOCK },
+							{ at: children[i][1] }
+						);
+					}
 				}
 			}
 		}

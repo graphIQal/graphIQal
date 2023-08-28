@@ -57,7 +57,7 @@ const listsOnly = {
 };
 
 export const FormatPlugins = createMyPlugins([
-	// createTrailingBlockPlugin({ options: { type: ELEMENT_PARAGRAPH } }),
+	createTrailingBlockPlugin({ options: { type: ELEMENT_BLOCK } }),
 	createSoftBreakPlugin(),
 	createResetNodePlugin({
 		options: {

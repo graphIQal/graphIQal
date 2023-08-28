@@ -54,6 +54,7 @@ export const Divider = (props: any) => {
 
 	return (
 		<div
+			{...props.attributes}
 			className='border-t border-gray-300 my-4 h-0 w-full'
 			contentEditable={false}
 		>

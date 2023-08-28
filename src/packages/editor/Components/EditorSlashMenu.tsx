@@ -15,9 +15,10 @@ import {
 	setNodes,
 	toggleList,
 } from '@udecode/plate';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { Editor, Transforms } from 'slate';
 import BlockMenu from '../../../components/organisms/BlockMenu';
+
 import {
 	ELEMENT_DIVIDER,
 	ELEMENT_NODELINK,
@@ -27,6 +28,7 @@ import {
 	MyNodeLinkElement,
 	useMyPlateEditorRef,
 } from '../plateTypes';
+
 import { createNodeInDocument } from '../../../backend/functions/node/mutate/createNodeInDocument';
 import { useViewData } from '../../../components/context/ViewContext';
 import { v4 as uuidv4 } from 'uuid';
@@ -54,6 +56,8 @@ type item = {
 	};
 };
 
+// const [comboBoxOpen, setComboBoxOpen] = useState(false);
+
 export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	const router = useRouter();
 	const editor = useMyPlateEditorRef();
@@ -65,7 +69,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			text: 'Create Node',
 			data: {
 				searchFunction: (search) => {
-					console.log('search ', search);
+					// console.log('search ', search);
 					if ('create node'.startsWith(search)) {
 						return true;
 					}
@@ -155,7 +159,9 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					}
 					return false;
 				},
-				onPress: async () => {},
+				onPress: async () => {
+					// setComboBoxOpen(true);
+				},
 			},
 		},
 		{
@@ -383,52 +389,61 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	};
 
 	return (
-		<Combobox
-			id='1'
-			onSelectItem={(editor, item) => {
-				// Keep deleting backwards until you see the '/', then delete one more.
-				// console.log('editor.selection: ', editor.selection);
+		<>
+			<Combobox
+				id='1'
+				onSelectItem={(editor, item) => {
+					// Keep deleting backwards until you see the '/', then delete one more.
+					// console.log('editor.selection: ', editor.selection);
 
-				if (editor.selection) {
-					while (editor.selection.anchor.offset > 0) {
-						const before = editor.before(editor.selection);
-						if (before) {
-							const beforeRange = editor.range(
-								before,
-								editor.selection
-							);
-							const beforeText = editor.string(beforeRange);
-							// console.log(beforeText);
+					if (editor.selection) {
+						while (editor.selection.anchor.offset > 0) {
+							const before = editor.before(editor.selection);
+							if (before) {
+								const beforeRange = editor.range(
+									before,
+									editor.selection
+								);
+								const beforeText = editor.string(beforeRange);
+								// console.log(beforeText);
 
-							deleteBackward(editor, { unit: 'character' });
-							if (beforeText === '/') {
-								// The text right before the current selection is '/'
-								console.log('no way ');
-								item.data.onPress();
-								break;
+								deleteBackward(editor, { unit: 'character' });
+								if (beforeText === '/') {
+									// The text right before the current selection is '/'
+									item.data.onPress();
+									break;
+								}
 							}
 						}
 					}
-				}
 
-				// the combobox is getting overridden by the exitbreakline on headers.
-			}}
-			trigger={trigger}
-			component={(store) => {
-				return <BlockMenu></BlockMenu>;
-			}}
-			items={items}
-			onRenderItem={({ search, item }) => {
-				if (item.data.customRender) return item.data.customRender();
-				return <div>{item.text}</div>;
-			}}
-			searchPattern={'\\S+'}
-			filter={(search: string) => (value) =>
-				value.data.searchFunction(
-					getTextAfterTrigger(search.toLowerCase())
-				)}
-			// value.toLowerCase().startsWith(search.toLowerCase())}
-		/>
+					// the combobox is getting overridden by the exitbreakline on headers.
+				}}
+				trigger={trigger}
+				component={(store) => {
+					return <BlockMenu></BlockMenu>;
+				}}
+				items={items}
+				onRenderItem={({ search, item }) => {
+					if (item.data.customRender) return item.data.customRender();
+					return <div>{item.text}</div>;
+				}}
+				searchPattern={'\\S+'}
+				filter={(search: string) => (value) =>
+					value.data.searchFunction(
+						getTextAfterTrigger(search.toLowerCase())
+					)}
+				// value.toLowerCase().startsWith(search.toLowerCase())}
+			/>{' '}
+			{/* <Combobox
+				id={'nodes'}
+				controlled
+				onSelectItem={() => {
+					console.log('hmm');
+				}}
+				// {...props}
+			/> */}
+		</>
 	);
 };
 

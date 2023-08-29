@@ -2,10 +2,13 @@ import { updateView } from '@/packages/graph/helpers/backend/updateView';
 import React, { useEffect, useState } from 'react';
 import { useToggle } from '../../helpers/hooks/useToggle';
 import IconCircleButton from '../molecules/IconCircleButton';
+import { KeyedMutator } from 'swr';
+import { updateGraphView } from '@/backend/functions/graph/mutate/updateGraphView';
 
 type TabProps = {
+	mutateGraphViews: KeyedMutator<any>;
 	id: string;
-	label: string;
+	title: string;
 	selected: boolean;
 	index: number;
 	currTab: number;
@@ -17,7 +20,7 @@ type TabProps = {
 };
 const Tab: React.FC<TabProps> = ({
 	id,
-	label,
+	title,
 	selected,
 	index,
 	currTab,
@@ -28,6 +31,7 @@ const Tab: React.FC<TabProps> = ({
 	onClick = (index: number) => {
 		setCurrTab(index);
 	},
+	mutateGraphViews,
 }) => {
 	// const [showDel, setShowDel] = useState(false);
 
@@ -77,18 +81,49 @@ const Tab: React.FC<TabProps> = ({
 						className='outline-none border-none'
 						onBlur={(e: any) => {
 							console.log('update');
-							updateView('TAB_NAME', {
-								tabs: tabs,
-								setTabs: setTabs,
-								newLabel: e.target.value,
-								index: index,
-							});
+							let newTabs = [...tabs];
+							newTabs[index].title = e.target.value;
+							setTabs(newTabs);
+							// console.log('new tabs ' + newTabs[index].title);
+
+							mutateGraphViews(
+								updateGraphView({
+									graphViewId: id,
+									graphViewData: { title: e.target.value },
+								}),
+								{
+									optimisticData: (data: any) => {
+										const newData = [...data];
+										// console.log('new rendering');
+										// console.log(newData);
+										// console.log(
+										// 	e.target.value,
+										// 	newData[index]
+										// );
+										newData[index - 1].g.properties.title =
+											e.target.value;
+										// for (const x of newData) {
+										// 	console.log(x, newData[x])
+										// 	if (
+										// 		newData[x].g.properties.id ===
+										// 		id
+										// 	) {
+										// 		newData[x].g.properties.title =
+										// 			e.target.value;
+										// 	}
+										// }
+										return newData;
+									},
+									revalidate: true,
+									populateCache: false,
+								}
+							);
 						}}
-						defaultValue={label}
+						defaultValue={title}
 						autoFocus={true}
 					/>
 				) : (
-					<h3>{label}</h3>
+					<h3>{title}</h3>
 				)}
 			</div>
 			{viewType === 'graph' && (

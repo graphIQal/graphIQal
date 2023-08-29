@@ -312,7 +312,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 										shallow={true}
 									>
 										<Tab
-											label={tab.title}
+											title={tab.title}
 											id={tab.viewId}
 											selected={
 												mainViewTabs[currTab].viewId ===
@@ -325,6 +325,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 											setTabs={setMainViewTabs}
 											onClick={() => null}
 											viewType={tab.viewType}
+											mutateGraphViews={mutateGraphViews}
 										/>
 									</Link>
 								</div>

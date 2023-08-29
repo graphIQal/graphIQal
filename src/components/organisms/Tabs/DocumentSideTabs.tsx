@@ -104,7 +104,7 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 						return (
 							<div key={index}>
 								<Tab
-									label={tab.label}
+									title={tab.label}
 									selected={index == currTab}
 									index={index}
 									currTab={currTab}

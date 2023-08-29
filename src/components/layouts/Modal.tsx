@@ -21,7 +21,7 @@ const Modal: React.FC<ModalProps> = (props) => {
 			</div>
 		</div>
 	) : (
-		<div></div>
+		<div className='absolute'></div>
 	);
 	return result;
 };

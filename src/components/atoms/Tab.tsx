@@ -4,6 +4,30 @@ import { useToggle } from '../../helpers/hooks/useToggle';
 import IconCircleButton from '../molecules/IconCircleButton';
 import { KeyedMutator } from 'swr';
 import { updateGraphView } from '@/backend/functions/graph/mutate/updateGraphView';
+import Modal from '../layouts/Modal';
+import {
+	AlertDialog,
+	AlertDialogTrigger,
+	AlertDialogContent,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogCancel,
+	AlertDialogAction,
+} from '../ui/alert-dialog';
+
+import { Icons } from '../icons';
+import { Button } from '../ui/button';
+import {
+	Dialog,
+	DialogTrigger,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+	DialogFooter,
+} from '../ui/dialog';
 
 type TabProps = {
 	mutateGraphViews: KeyedMutator<any>;
@@ -127,13 +151,77 @@ const Tab: React.FC<TabProps> = ({
 				)}
 			</div>
 			{viewType === 'graph' && (
-				<IconCircleButton
-					src='close'
-					circle={false}
-					onClick={() => setshowDelModal(true)}
-					// onClick={() => onClose(index)}
-				/>
+				<>
+					{/* <Dialog>
+						<DialogTrigger asChild>
+							<Icons.close className='h-4 w-4' />
+						</DialogTrigger>
+						<DialogContent className='sm:max-w-[425px]'>
+							<DialogHeader>
+								<DialogTitle>
+									Delete this Graph View?
+								</DialogTitle>
+								<DialogDescription>
+									This action cannot be undone. This will
+									permanently delete this graph view (nodes
+									will not be deleted).
+								</DialogDescription>
+							</DialogHeader>
+
+							<DialogFooter>
+								<Button
+									variant='destructive'
+									onClick={() => console.log('test')}
+								>
+									Delete
+								</Button>
+							</DialogFooter>
+						</DialogContent>
+					</Dialog> */}
+					<AlertDialog>
+						<AlertDialogTrigger>
+							<Icons.close className='h-4 w-4' />
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>
+									Delete this Graph View?
+								</AlertDialogTitle>
+								<AlertDialogDescription>
+									This action cannot be undone. This will
+									permanently delete this graph view (nodes
+									will not be deleted).
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction
+									className='bg-red-900'
+									onClick={() => console.log('test')}
+								>
+									Delete
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
+				</>
 			)}
+
+			{/* <Modal open={showDelModal} setOpen={setshowDelModal}>
+				<p>
+					this will delete the graph view permanently (but not the
+					nodes inside), are you sure?
+				</p>
+				<button onClick={() => setshowDelModal(false)}>Cancel</button>
+				<button
+					onClick={() => {
+						setshowDelModal(false);
+						onClose(index);
+					}}
+				>
+					Proceed
+				</button>
+			</Modal> */}
 		</div>
 	);
 };

@@ -28,6 +28,7 @@ import {
 	DialogDescription,
 	DialogFooter,
 } from '../ui/dialog';
+import { deleteGraphView } from '@/backend/functions/graph/mutate/deleteGraphView';
 
 type TabProps = {
 	mutateGraphViews: KeyedMutator<any>;
@@ -197,7 +198,30 @@ const Tab: React.FC<TabProps> = ({
 								<AlertDialogCancel>Cancel</AlertDialogCancel>
 								<AlertDialogAction
 									className='bg-red-900'
-									onClick={() => console.log('test')}
+									onClick={() => {
+										mutateGraphViews(
+											deleteGraphView({
+												graphViewId: id,
+											}),
+											{
+												optimisticData: (data: any) => {
+													// tabs data
+													let newTabs = [...tabs];
+													newTabs.splice(index, 1);
+													setTabs(newTabs);
+
+													// useSWR data
+													const newData = [...data];
+													newData.splice(
+														index - 1,
+														1
+													);
+													return newData;
+												},
+												populateCache: false,
+											}
+										);
+									}}
 								>
 									Delete
 								</AlertDialogAction>

@@ -49,6 +49,19 @@ export const NodeLink = (props: any) => {
 	);
 };
 
+export const CutText = (props: any, showCutText: boolean) => {
+	console.log('cut plugin', props);
+	console.log('showCutText ', showCutText);
+
+	return !showCutText ? (
+		<span className='text-lining' {...props.attributes}>
+			{props.children}
+		</span>
+	) : (
+		<span contentEditable={false}>{props.children}</span>
+	);
+};
+
 export const Divider = (props: any) => {
 	console.log('divider');
 

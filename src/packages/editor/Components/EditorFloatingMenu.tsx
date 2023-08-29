@@ -6,6 +6,7 @@ import { FormatStrikethrough } from '@styled-icons/material/FormatStrikethrough'
 import { TippyProps } from '@tippyjs/react';
 import {
 	BalloonToolbar,
+	BlockToolbarButton,
 	getPluginType,
 	MARK_BOLD,
 	MARK_ITALIC,
@@ -13,7 +14,7 @@ import {
 	MARK_UNDERLINE,
 	MarkToolbarButton,
 } from '@udecode/plate';
-import { MARK_CUT, useMyPlateEditorRef } from '../plateTypes';
+import { ELEMENT_CUT, useMyPlateEditorRef } from '../plateTypes';
 import { Cut } from '@styled-icons/ionicons-sharp/Cut';
 
 export const markTooltip: TippyProps = {
@@ -67,11 +68,11 @@ export const EditorFloatingMenu = ({ children }: { children?: ReactNode }) => {
 				icon={<FormatStrikethrough />}
 				// tooltip={underlineTooltip}
 			/>
-			{/* <MarkToolbarButton
-				type={getPluginType(editor, MARK_CUT)}
+			<BlockToolbarButton
+				type={getPluginType(editor, ELEMENT_CUT)}
 				icon={<Cut />}
 				// tooltip={underlineTooltip}
-			/> */}
+			/>
 			{children}
 		</BalloonToolbar>
 	);

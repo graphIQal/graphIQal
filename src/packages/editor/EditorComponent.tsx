@@ -28,6 +28,7 @@ import IconCircleButton from '@/components/molecules/IconCircleButton';
 import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import { useViewData } from '../../components/context/ViewContext';
+import { CutText } from './Elements/Elements';
 
 const EditorComponent: React.FC<{
 	value: any[];
@@ -97,6 +98,7 @@ const EditorComponent: React.FC<{
 	const onUnload = () => {
 		// code to save progress to local storage....
 		if (value.length > 0) {
+			console.log('on Unload save');
 			clearTimeout(intervalRef.current);
 			save({
 				nodeId,
@@ -110,14 +112,17 @@ const EditorComponent: React.FC<{
 		}
 	};
 
-	// const cutTextPlugin = useMemo(
-	// 	() =>
+	// okay, so there's 2 solutions I can think of for the cut text plugin.
+	// Because we're saving the content, we need it to be void consistently when invisible.
+	// So we probably actually have to go through the entire document and then turn them from void to non-void elements.
+	// Or, we could go through and move them from children to an invisible content uneditable element.
+	// All in all, this does mean that simply toggling their visibility won't be helpful, because they're still in slate flow.
 	const cutTextPlugin = createMyPluginFactory<ToggleMarkPlugin>({
 		key: ELEMENT_CUT,
 		isElement: true,
 		isLeaf: false,
 		isInline: true,
-		isVoid: true,
+		isVoid: !showCutText,
 		options: {
 			hotkey: 'mod+g',
 		},
@@ -126,24 +131,11 @@ const EditorComponent: React.FC<{
 				if (event.key === 'g' && (event.ctrlKey || event.metaKey)) {
 					event.preventDefault();
 					const cutTextNode = { type: ELEMENT_CUT, children: [] };
-					editor.wrapNodes(cutTextNode);
+					editor.wrapNodes(cutTextNode, { split: true });
 				}
 			},
 		},
-		// query: (el) => !someHtmlElement(el, (node) => node.style.fontWeight === 'normal'),
-		component: (props) => {
-			console.log('cut plugin', props);
-			console.log('showCutText ', showCutText);
-
-			return !showCutText ? (
-				<span className='text-lining'>{props.children}</span>
-			) : (
-				<span>{props.children}</span>
-			);
-		},
 	});
-	// ,[showCutText];
-	// );
 
 	const plugins = useMemo(
 		() =>
@@ -170,6 +162,7 @@ const EditorComponent: React.FC<{
 				{
 					components: {
 						...customElements,
+						[ELEMENT_CUT]: (props) => CutText(props, showCutText),
 					},
 				}
 			),
@@ -221,15 +214,13 @@ const EditorComponent: React.FC<{
 				id={id}
 			>
 				<EditorFloatingMenu>
-					<IconCircleButton
+					{/* <IconCircleButton
 						// type={getPluginType(editor, MARK_CUT)}
-						onClick={() => {
-							console.log('ok');
-						}}
+						onClick={() => {}}
 						circle={false}
 						src={'cut'}
 						// tooltip={underlineTooltip}
-					/>
+					/> */}
 				</EditorFloatingMenu>
 				<EditorSlashMenu />
 			</Plate>

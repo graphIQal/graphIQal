@@ -51,6 +51,7 @@ type historyStateInput = {
 	mutateGraphData: KeyedMutator<any>;
 	graphViewId: string;
 };
+
 export const useHistoryState = ({
 	changeNodeData_Graph,
 	changeVisualData_Graph,
@@ -129,13 +130,16 @@ export const useHistoryState = ({
 
 				changeAlert('Created new node');
 
+				// mutate('username/$nodeid/$graphviewId, )
 				mutateGraphData(
+					// backend -> server
 					createGraphNode({
 						id,
 						nodeId,
 						nodeVisualData: newGraphData[id],
 						graphViewId,
 					}),
+					// frontend
 					{
 						optimisticData: {
 							visualData: newGraphData,

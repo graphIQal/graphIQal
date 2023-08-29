@@ -2,8 +2,6 @@ import { TippyProps } from '@tippyjs/react';
 import {
 	Combobox,
 	deleteBackward,
-	deleteText,
-	ELEMENT_CODE_BLOCK,
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
@@ -15,8 +13,7 @@ import {
 	setNodes,
 	toggleList,
 } from '@udecode/plate';
-import { ReactNode, useState } from 'react';
-import { Editor, Transforms } from 'slate';
+import { ReactNode } from 'react';
 import BlockMenu from '../../../components/organisms/BlockMenu';
 
 import {
@@ -24,15 +21,14 @@ import {
 	ELEMENT_NODELINK,
 	MyH1Element,
 	MyH2Element,
-	MyH3Element,
 	MyNodeLinkElement,
 	useMyPlateEditorRef,
 } from '../plateTypes';
 
+import { useRouter } from 'next/router';
+import { v4 as uuidv4 } from 'uuid';
 import { createNodeInDocument } from '../../../backend/functions/node/mutate/createNodeInDocument';
 import { useViewData } from '../../../components/context/ViewContext';
-import { v4 as uuidv4 } from 'uuid';
-import { useRouter } from 'next/router';
 import { formatList } from '../Plugins/Autoformat/autoformatUtils';
 
 export const markTooltip: TippyProps = {

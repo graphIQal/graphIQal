@@ -1,9 +1,20 @@
-export const createGraphView = async (username: string, nodeId: string) => {
+export const createGraphView = async ({
+	graphViewId,
+	nodeId,
+	username,
+}: {
+	username: string;
+	graphViewId: string;
+	nodeId: string;
+}) => {
 	console.log('createGraphView');
 
-	const res = await fetch(`/api/${username}/${nodeId}/graph/create`, {
-		method: 'POST',
-	})
+	const res = await fetch(
+		`/api/${username}/${nodeId}/graph/${graphViewId}/create`,
+		{
+			method: 'POST',
+		}
+	)
 		.then((res) => {
 			console.log('res create', res);
 			return res.json();

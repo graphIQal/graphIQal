@@ -11,7 +11,7 @@ export const fetcherSingleReturn = (url: string) =>
 			return res.json();
 		})
 		.then((json) => {
-			console.log('json: ', json);
+			// console.log('json: ', json);
 
 			if (json.length > 0) return json[0];
 

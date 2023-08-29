@@ -13,7 +13,7 @@ import Modal from '../../layouts/Modal';
 import SettingsPanel from '../Settings';
 import IconButton from '../../atoms/IconButton';
 import { useSession } from 'next-auth/react';
-import useSWR from 'swr';
+import useSWR, { KeyedMutator } from 'swr';
 import { fetcher, fetcherSingleReturn } from '../../../backend/driver/fetcher';
 import { SideBar } from '../sidebar-navigator';
 import { formatNodeConnectionstoMap } from '../../../helpers/frontend/formatNodeConnectionstoMap.ts';
@@ -32,6 +32,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 type MainTabsProps = {
 	mainViewTabs: MainTabProps[];
 	setMainViewTabs: (val: MainTabProps[]) => void;
+	mutateGraphViews: KeyedMutator<any>;
 };
 
 export type MainTabProps = {
@@ -42,6 +43,7 @@ export type MainTabProps = {
 const MainTabs: React.FC<MainTabsProps> = ({
 	mainViewTabs,
 	setMainViewTabs,
+	mutateGraphViews,
 }) => {
 	const {
 		changeWindowVar,
@@ -291,7 +293,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 					<SettingsPanel />
 				</Modal>
 				<div className='w-screen h-10 bg-blue-50'>
-					<Tabs>
+					<Tabs mutateGraphViews={mutateGraphViews}>
 						{mainViewTabs.map((tab, index) => {
 							if (index === 0 && nodeDataSWR)
 								tab.title = nodeDataSWR.n.title;
@@ -311,6 +313,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 									>
 										<Tab
 											label={tab.title}
+											id={tab.viewId}
 											selected={
 												mainViewTabs[currTab].viewId ===
 												tab.viewId
@@ -321,6 +324,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 											tabs={mainViewTabs}
 											setTabs={setMainViewTabs}
 											onClick={() => null}
+											viewType={tab.viewType}
 										/>
 									</Link>
 								</div>

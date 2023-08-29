@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { fetcherAll } from '../../backend/driver/fetcher';
+import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
 import MainTabs, {
 	MainTabProps,
 } from '../../components/organisms/Tabs/MainTabs';
@@ -16,10 +16,16 @@ const Home: React.FC = () => {
 	const router = useRouter();
 	const { nodeId, username } = router.query;
 
-	const { data, error, isLoading } = useSWR(
-		[nodeId ? `/api/${username}/${nodeId}/document` : null],
-		fetcherAll
+	const {
+		data,
+		error,
+		isLoading,
+		mutate: mutateGraphViews,
+	} = useSWR(
+		[nodeId ? `/api/${username}/${nodeId}/getGraphviews` : null],
+		fetcher
 	);
+
 	let newTabs: MainTabProps[] = [
 		{
 			title: 'Document',
@@ -38,12 +44,15 @@ const Home: React.FC = () => {
 	const [tabs, setTabs] = useState<MainTabProps[]>(newTabs);
 
 	useEffect(() => {
-		if (!data || !data[0] || data[0].err) return;
+		if (!data || data.err) return;
+
+		console.log('data');
+		console.log(data);
 
 		if (!isLoading) {
-			if (data[0]) {
+			if (data) {
 				let includedIDs: { [key: string]: boolean } = {};
-				data[0].map((record: any, index: number) => {
+				data.map((record: any, index: number) => {
 					if (!includedIDs[record.g.properties.id]) {
 						includedIDs[record.g.properties.id] = true;
 
@@ -56,12 +65,17 @@ const Home: React.FC = () => {
 				});
 			}
 		}
+		console.log('newTabs ', newTabs);
 		setTabs(newTabs);
-	}, [data && data[0]]);
+	}, [data]);
 
 	return (
 		<ViewDataProvider>
-			<MainTabs mainViewTabs={tabs} setMainViewTabs={setTabs} />
+			<MainTabs
+				mainViewTabs={tabs}
+				setMainViewTabs={setTabs}
+				mutateGraphViews={mutateGraphViews}
+			/>
 		</ViewDataProvider>
 	);
 };

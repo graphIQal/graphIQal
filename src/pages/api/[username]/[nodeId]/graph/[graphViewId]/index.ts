@@ -21,17 +21,17 @@ export default async function handler(
 	RETURN node {.*}, relationship {.*}, collect(r {startNode: startNode(r).id, endNode: endNode(r).id, type: type(r)}) AS connections
 	`;
 
-	const data: any = await write(cypher as string, params);
+	const data = await write(cypher as string, params);
 
 	if ('err' in data) {
+		console.log('huh');
 		res.status(400).json(data);
 	} else {
+		console.log('else');
 		let nodeData = {} as { [key: string]: NodeData };
 		let visualData = {} as { [key: string]: GraphNodeData };
 
 		if (data.length === 0) return { nodeData, visualData };
-
-		console.log(data);
 
 		for (let node in data) {
 			const nodeDataResponse = data;
@@ -53,6 +53,7 @@ export default async function handler(
 				nodeDataResponse[node].relationship;
 		}
 
+		console.log('data: ', { nodeData, visualData });
 		res.status(200).json({ nodeData, visualData });
 	}
 }

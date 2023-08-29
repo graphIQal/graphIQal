@@ -9,23 +9,15 @@ export default async function handler(
 ) {
 	const params = req.query;
 
-	// Add Hash for password}
 	const cypher = `
-	MATCH (o:Node {id: $currentNodeId})
-	MATCH (g:GRAPH_VIEW {id: $graphViewId})
-
-	MERGE (o)-[r:HAS]->(n:Node {title: $nodeTitle, id: randomUuid()})<-[r:HAS {
-		x_size: $x_size,
-		y_size: $y_size,
-		x_cell: $x_cell,
-		y_cell: $y_cell,
-		collapsed: "true
-	}]-(g)
+	MATCH (n:Node {id: $nodeId})
+    MERGE (n)-[r:VIEW]-(g:GRAPH_VIEW {title: "Graph View", id: $graphViewId})
 
 	RETURN n, g
 	`;
 
-	// const result: any = await write(cypher as string, params);
+	const result: any = await write(cypher as string, params);
 
-	res.status(200).json({ ...params });
+	res.status(200).json(result);
+	// res.status(200).json({ cypher, params });
 }

@@ -55,7 +55,6 @@ const GraphSplitPaneWrapper: React.FC<{
 
 	const {
 		data,
-		mutate: mutateGraphData,
 		// error: nodeError,
 		// isLoading: nodeDataLoading,
 	} = useSWR(

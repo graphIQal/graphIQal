@@ -1,5 +1,3 @@
-import { createConnection } from '@/backend/functions/node/mutate/createConnection';
-import { KeyedMutator } from 'swr';
 import { API, State } from '../../context/GraphViewContext';
 
 export const addConnection = (

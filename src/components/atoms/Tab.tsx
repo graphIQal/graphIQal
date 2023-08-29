@@ -1,8 +1,10 @@
 import { updateView } from '@/packages/graph/helpers/backend/updateView';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useToggle } from '../../helpers/hooks/useToggle';
+import IconCircleButton from '../molecules/IconCircleButton';
 
 type TabProps = {
+	id: string;
 	label: string;
 	selected: boolean;
 	index: number;
@@ -11,8 +13,10 @@ type TabProps = {
 	tabs: any;
 	setTabs: (val: any) => void;
 	onClick?: (val: number) => void;
+	viewType: 'document' | 'graph';
 };
 const Tab: React.FC<TabProps> = ({
+	id,
 	label,
 	selected,
 	index,
@@ -20,6 +24,7 @@ const Tab: React.FC<TabProps> = ({
 	setCurrTab,
 	tabs,
 	setTabs,
+	viewType,
 	onClick = (index: number) => {
 		setCurrTab(index);
 	},
@@ -34,6 +39,7 @@ const Tab: React.FC<TabProps> = ({
 	};
 
 	const { value: isEditing, toggle: toggleIsEditing } = useToggle();
+	const [showDelModal, setshowDelModal] = useState(false);
 
 	useEffect(() => {
 		const listenerFunc = (ev: any) => {
@@ -69,14 +75,15 @@ const Tab: React.FC<TabProps> = ({
 				{isEditing ? (
 					<input
 						className='outline-none border-none'
-						onBlur={(e: any) =>
+						onBlur={(e: any) => {
+							console.log('update');
 							updateView('TAB_NAME', {
 								tabs: tabs,
 								setTabs: setTabs,
 								newLabel: e.target.value,
 								index: index,
-							})
-						}
+							});
+						}}
 						defaultValue={label}
 						autoFocus={true}
 					/>
@@ -84,13 +91,14 @@ const Tab: React.FC<TabProps> = ({
 					<h3>{label}</h3>
 				)}
 			</div>
-			{/* {showDel && (
-        <IconCircleButton
-          src='close'
-          circle={false}
-          onClick={() => onClose(index)}
-        />
-      )} */}
+			{viewType === 'graph' && (
+				<IconCircleButton
+					src='close'
+					circle={false}
+					onClick={() => setshowDelModal(true)}
+					// onClick={() => onClose(index)}
+				/>
+			)}
 		</div>
 	);
 };

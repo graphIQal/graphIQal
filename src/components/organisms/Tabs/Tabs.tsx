@@ -1,11 +1,16 @@
-import React, { useContext, useState } from 'react';
-import IconCircleButton from '../../molecules/IconCircleButton';
-import { Dropdown, ItemProps } from '../Dropdown';
+import React from 'react';
+import { KeyedMutator } from 'swr';
+import { v4 } from 'uuid';
 import { createGraphView } from '../../../backend/functions/graph/mutate/createGraphView';
 import { useToggle } from '../../../helpers/hooks/useToggle';
 import { useViewData } from '../../context/ViewContext';
+import IconCircleButton from '../../molecules/IconCircleButton';
+import { Dropdown, ItemProps } from '../Dropdown';
 
-export const Tabs: React.FC<{ children: any }> = ({ children }) => {
+export const Tabs: React.FC<{
+	children: any;
+	mutateGraphViews: KeyedMutator<any>;
+}> = ({ children, mutateGraphViews }) => {
 	const { windowVar, username, nodeId } = useViewData();
 	const { value: showDropdown, toggle: setShowDropdown } = useToggle();
 	if (!windowVar) return <div></div>;
@@ -14,7 +19,27 @@ export const Tabs: React.FC<{ children: any }> = ({ children }) => {
 		{
 			text: 'Empty graph',
 			onPress: () => {
-				createGraphView(username, nodeId);
+				const id = v4();
+				mutateGraphViews(
+					createGraphView({ username, nodeId, graphViewId: id }),
+					{
+						optimisticData: (data: any) => {
+							return [
+								...data,
+								{
+									g: {
+										properties: {
+											id: id,
+											title: 'Graph View',
+										},
+									},
+								},
+							];
+						},
+						revalidate: true,
+						populateCache: false,
+					}
+				);
 			},
 		},
 		{ text: 'Duplicate graph', onPress: () => null },

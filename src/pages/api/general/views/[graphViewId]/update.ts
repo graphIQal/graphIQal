@@ -12,4 +12,5 @@ export default async function handler(
 	const result: any = await write(body as string);
 
 	res.status(200).json(result);
+	// res.status(200).json({ body });
 }

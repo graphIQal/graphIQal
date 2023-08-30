@@ -98,7 +98,7 @@ const EditorComponent: React.FC<{
 	const onUnload = () => {
 		// code to save progress to local storage....
 		if (value.length > 0) {
-			console.log('on Unload save');
+			console.log('on Unload save, ', nodeId);
 			clearTimeout(intervalRef.current);
 			save({
 				nodeId,

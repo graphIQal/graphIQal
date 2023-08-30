@@ -23,12 +23,14 @@ const SearchBar: React.FC = () => {
 
 	const { nodeData_Graph, nodeVisualData_Graph, addAction } =
 		useGraphViewData();
+
 	const {
 		changeNodeData_Graph,
 		changeVisualData_Graph,
 		changeAlert,
 		changeNodeInFocusId,
 	} = useGraphViewAPI();
+
 	useEffect(() => {
 		const listenerFunc = (evt: any) => {
 			evt.stopImmediatePropagation();

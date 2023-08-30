@@ -26,25 +26,8 @@ export const saveDocument = async ({
 	)
 		return;
 
-	console.log('saveDocument', nodeId, title, history);
-
-	// const blockMutates = [];
-
-	// if (history.redos.length > 0) {
-	// 	// save last redo
-	// 	blockMutates.push(
-	// 		...Object.keys(
-	// 			history.redos[history.redos.length - 1].changedBlocks
-	// 		)
-	// 	);
-	// } else {
-	// 	// save last undo
-	// 	blockMutates.push(
-	// 		...Object.keys(
-	// 			history.undos[history.undos.length - 2].changedBlocks
-	// 		)
-	// 	);
-	// }
+	console.log('saveDocument', nodeId, title);
+	console.log(history);
 
 	const res = await fetch(
 		`/api/${username}/${nodeId}/document/save/${title}`,
@@ -54,11 +37,11 @@ export const saveDocument = async ({
 		}
 	)
 		.then((res) => {
-			// console.log('saveDocument ', res);
+			console.log('saveDocument ', res);
 			return res.json();
 		})
 		.then((json) => {
-			// console.log(json);
+			console.log('saveDocumentJson', json);
 			return json;
 		});
 

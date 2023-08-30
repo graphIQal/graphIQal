@@ -1,25 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
-import EditorComponent from '../../../packages/editor/EditorComponent';
-import Graph from '../../../packages/graph/components/GraphSplitPaneWrapper';
-import Tab from '../../atoms/Tab';
-import { Tabs } from './Tabs';
-import SearchBar from '../SearchBar';
 import router from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { SidePanel } from '../../templates/SidePanel';
 
-import ConnectionListItem from '../ConnectionList/ConnectionListItem';
-import {
-	connectedNode_type,
-	getNodeData_type,
-} from '../../../backend/functions/node/query/useGetNodeData';
-import { SelectableList } from '../../templates/SelectableList';
+import { getNodeData_type } from '../../../backend/functions/node/query/useGetNodeData';
 import { addExistingNodeToGraph } from '../../../helpers/frontend/addExistingNodeToGraph';
-import { useViewData } from '../../context/ViewContext';
 import {
 	useGraphViewAPI,
 	useGraphViewData,
 } from '../../../packages/graph/context/GraphViewContext';
+import { useViewData } from '../../context/ViewContext';
+import { SelectableList } from '../../templates/SelectableList';
 import { renderConnections } from './RenderConnections';
+import { SideTabs } from './SideTabs';
+import SideTab from '@/components/atoms/SideTab';
 
 export type SideTabProps = {
 	label: string;
@@ -150,11 +143,11 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
 
 	return (
 		<>
-			<Tabs>
+			<SideTabs>
 				{tabs.map((tab, index) => {
 					return (
 						<div key={index}>
-							<Tab
+							<SideTab
 								title={tab.label}
 								selected={index == currTab}
 								index={index}
@@ -166,7 +159,7 @@ const GraphSideTabs: React.FC<{ nodeInFocus_data: getNodeData_type }> = ({
 						</div>
 					);
 				})}
-			</Tabs>
+			</SideTabs>
 
 			{tabs.map((tab, i) => {
 				return (

@@ -8,7 +8,7 @@ import { NodeData } from '../graphTypes';
 export type GraphNodeContextInterface = {
 	id: string;
 	node_data: NodeData;
-	title: string;
+	// title: string;
 	icon: string;
 	color: string;
 	left: number;

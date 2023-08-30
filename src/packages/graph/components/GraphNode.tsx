@@ -125,23 +125,23 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 	];
 
 	// key event: slash to trigger search
-	useEffect(() => {
-		const listenForSlash = (event: any) => {
-			if (event.keyCode == 220) {
-				setShowSearchDropdown(true);
-			}
-		};
-		if (nodeInfo.title == '') {
-			// documentVar.getElementById('node_title')?.focus();
-			documentVar
-				.getElementById('node_title')
-				?.addEventListener('keydown', listenForSlash);
-		}
+	// useEffect(() => {
+	// 	const listenForSlash = (event: any) => {
+	// 		if (event.keyCode == 220) {
+	// 			setShowSearchDropdown(true);
+	// 		}
+	// 	};
+	// 	if (nodeInfo.title == '') {
+	// 		// documentVar.getElementById('node_title')?.focus();
+	// 		documentVar
+	// 			.getElementById('node_title')
+	// 			?.addEventListener('keydown', listenForSlash);
+	// 	}
 
-		return documentVar
-			.getElementById('node_title')
-			?.removeEventListener('keydown', listenForSlash);
-	});
+	// 	return documentVar
+	// 		.getElementById('node_title')
+	// 		?.removeEventListener('keydown', listenForSlash);
+	// });
 
 	//DND dragging hook
 	const [{ isDragging }, drag, preview] = useDragNode(

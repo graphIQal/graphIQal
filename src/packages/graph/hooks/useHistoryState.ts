@@ -120,6 +120,7 @@ export const useHistoryState = ({
 			case 'NODE_ADD':
 				let { nodeId, newNode, newNodeVisualData } = value;
 
+				console.log('newNode: ', newNode);
 				newNodeData = { ...nodeData_Graph };
 				newNodeData[id] = newNode;
 				changeNodeData_Graph(newNodeData);
@@ -142,8 +143,8 @@ export const useHistoryState = ({
 					// frontend
 					{
 						optimisticData: {
-							visualData: newGraphData,
 							nodeData: newNodeData,
+							visualData: newGraphData,
 						},
 						populateCache: false,
 						revalidate: true,

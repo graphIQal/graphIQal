@@ -29,12 +29,6 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 		GraphNodeContext
 	) as GraphNodeContextInterface;
 
-	// const { nodeData_Graph, nodeVisualData_Graph, addAction } =
-	// 	useGraphViewData();
-	// const { changeNodeData_Graph, changeVisualData_Graph, changeAlert } =
-	// 	useGraphViewAPI();
-	// const formRef = useRef<any>(null);
-
 	const [document, setdocument] = useState([]);
 
 	let {

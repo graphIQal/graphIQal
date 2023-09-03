@@ -1,5 +1,6 @@
 import { TippyProps } from '@tippyjs/react';
 import {
+	CheckIcon,
 	Combobox,
 	deleteBackward,
 	ELEMENT_H1,
@@ -10,10 +11,11 @@ import {
 	getPluginType,
 	insertNodes,
 	isSelectionAtBlockStart,
+	PlateEditor,
 	setNodes,
 	toggleList,
 } from '@udecode/plate';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import BlockMenu from '../../../components/organisms/BlockMenu';
 
 import {
@@ -22,6 +24,7 @@ import {
 	MyH1Element,
 	MyH2Element,
 	MyNodeLinkElement,
+	MyValue,
 	useMyPlateEditorRef,
 } from '../plateTypes';
 
@@ -30,6 +33,25 @@ import { v4 as uuidv4 } from 'uuid';
 import { createNodeInDocument } from '../../../backend/functions/node/mutate/createNodeInDocument';
 import { useViewData } from '../../../components/context/ViewContext';
 import { formatList } from '../Plugins/Autoformat/autoformatUtils';
+import {
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { CaretSortIcon } from '@radix-ui/react-icons';
+import {
+	Command,
+	CommandInput,
+	CommandEmpty,
+	CommandGroup,
+	CommandItem,
+} from 'cmdk';
+import { NodeData } from '@/packages/graph/graphTypes';
+import { Button } from '@/components/ui/button';
+import useSWR from 'swr';
+import { useSession } from 'next-auth/react';
+import { fetcher } from '@/backend/driver/fetcher';
 
 export const markTooltip: TippyProps = {
 	arrow: true,
@@ -52,6 +74,13 @@ type item = {
 	};
 };
 
+const getTextAfterTrigger = (search: string, trigger: string) => {
+	const indexOfTrigger = search.lastIndexOf(trigger);
+	return indexOfTrigger !== -1
+		? search.substring(indexOfTrigger + 1)
+		: search;
+};
+
 // const [comboBoxOpen, setComboBoxOpen] = useState(false);
 
 export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
@@ -60,6 +89,48 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	const { nodeId, username } = useViewData();
 
 	const items: item[] = [
+		{
+			key: 'connect',
+			text: 'Connect',
+			data: {
+				searchFunction: (search) => {
+					if ('connect'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+				onPress: () => {
+					const { selection } = editor;
+					if (selection) {
+						let cursor = selection.anchor;
+						let beforeText = '';
+						while (cursor.offset > 0) {
+							const before = editor.before(cursor);
+							if (before) {
+								const beforeRange = editor.range(
+									before,
+									cursor
+								);
+								const text = editor.string(beforeRange);
+								if (text === '/') {
+									break;
+								}
+								beforeText = text + beforeText;
+								cursor = before;
+							}
+						}
+						const match = 'connect'.startsWith(beforeText)
+							? beforeText
+							: '';
+						const remainingText = 'connect'.slice(match.length);
+						editor.insertText(remainingText);
+						editor.insertText(' @');
+					}
+
+					// setnodeSearchOpen(true);
+				},
+			},
+		},
 		{
 			key: '1',
 			text: 'Create Node',
@@ -113,22 +184,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				},
 			},
 		},
-		{
-			key: 'Connect',
-			text: 'Connect',
-			data: {
-				searchFunction: (search) => {
-					if ('connect'.startsWith(search)) {
-						return true;
-					}
-					return false;
-				},
-				onPress: () => {
-					console.log('okay');
-					toggleList(editor, { type: ELEMENT_LI });
-				},
-			},
-		},
+
 		{
 			key: 'nodelink',
 			text: 'NodeLink',
@@ -297,92 +353,57 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 		// 		},
 		// 	},
 		// },
-		{
-			key: 'HAScreate',
-			text: 'Create Node with Connection: HAS',
-			data: {
-				searchFunction: (search) => {
-					const connectionType = search.split(':')[1];
-
-					if (
-						'create:has'.startsWith(search) ||
-						'has'.startsWith(connectionType)
-					) {
-						return true;
-					}
-					return false;
-				},
-				onPress: () => {
-					console.log('okay');
-					// Add to backend
-
-					// Create new page in frontend
-					insertNodes(editor, {
-						type: getPluginType(editor, ELEMENT_NODELINK),
-						children: [{ text: '' }],
-					} as MyNodeLinkElement);
-
-					// Navigate to backend
-				},
-			},
-		},
-		{
-			key: 'IScreate',
-			text: 'Create Node with Connection: IS',
-			data: {
-				searchFunction: (search) => {
-					if (
-						'create:is'.startsWith(search) ||
-						search.endsWith('is')
-					) {
-						return true;
-					}
-					return false;
-				},
-				onPress: () => {
-					console.log('okay');
-
-					// Add to backend
-
-					// Create new page in frontend
-					insertNodes(editor, {
-						type: getPluginType(editor, ELEMENT_NODELINK),
-						children: [{ text: '' }],
-					} as MyNodeLinkElement);
-
-					// Navigate to backend
-				},
-			},
-		},
-		{
-			key: 'ISconnect',
-			text: 'IS : ',
-			data: {
-				searchFunction: (search) => {
-					if (
-						'connect:is'.startsWith(search) ||
-						'is:'.startsWith(search)
-					) {
-						return true;
-					}
-					return false;
-				},
-				onPress: () => {
-					console.log('okay');
-
-					// Add to backend
-				},
-			},
-		},
 	];
+
 	const trigger = '/';
 
-	const getTextAfterTrigger = (search: string) => {
-		const indexOfTrigger = search.lastIndexOf(trigger);
-		return indexOfTrigger !== -1
-			? search.substring(indexOfTrigger + 1)
-			: search;
+	const firstNodeOption = {
+		n: {
+			title: 'Create new node',
+		},
+		text: 'Create new node',
+		key: 'create',
+		onPress: () => console.log('oy'),
 	};
+
+	const defaultOption = {
+		n: {
+			title: '',
+		},
+		text: '',
+		key: 'default',
+		onPress: () => console.log('oy'),
+	};
+
+	// const [nodeSearchOpen, setnodeSearchOpen] = useSate(true);
+	const [searchVal, setsearchVal] = useState<string>('');
+	const [nodeSearchResults, setnodeSearchResults] = useState<
+		(Partial<NodeData> & {
+			text: string;
+			key: string;
+			onPress: () => void;
+		})[]
+	>([firstNodeOption]);
+	const { data: session, status } = useSession();
+
+	const { data: searchResult } = useSWR(
+		searchVal.length > 0
+			? `/api/general/search?homenodeId=${session?.user?.homenodeId}&search=${searchVal}`
+			: null,
+		fetcher,
+		{
+			keepPreviousData: true,
+		}
+	);
+
+	useEffect(() => {
+		console.log('node res: ', searchResult);
+		if (searchResult) {
+			setnodeSearchResults([...searchResult, firstNodeOption]);
+		} else {
+			setnodeSearchResults([firstNodeOption]);
+		}
+	}, [searchResult]);
 
 	return (
 		<>
@@ -391,6 +412,11 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				onSelectItem={(editor, item) => {
 					// Keep deleting backwards until you see the '/', then delete one more.
 					// console.log('editor.selection: ', editor.selection);
+
+					if (item.key === 'connect' || item.key === 'add_node') {
+						item.data.onPress();
+						return;
+					}
 
 					if (editor.selection) {
 						while (editor.selection.anchor.offset > 0) {
@@ -421,24 +447,103 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				}}
 				items={items}
 				onRenderItem={({ search, item }) => {
-					if (item.data.customRender) return item.data.customRender();
+					// if (item.data.customRender) return item.data.customRender();
 					return <div>{item.text}</div>;
 				}}
 				searchPattern={'\\S+'}
 				filter={(search: string) => (value) =>
 					value.data.searchFunction(
-						getTextAfterTrigger(search.toLowerCase())
+						getTextAfterTrigger(search.toLowerCase(), trigger)
 					)}
-				// value.toLowerCase().startsWith(search.toLowerCase())}
-			/>{' '}
-			{/* <Combobox
-				id={'nodes'}
-				controlled
-				onSelectItem={() => {
-					console.log('hmm');
+			/>
+			<Combobox
+				id='nodeSearch'
+				onSelectItem={(editor, item) => {
+					// Keep deleting backwards until you see the '/', then delete one more.
+					// console.log('editor.selection: ', editor.selection);
+
+					if (editor.selection) {
+						while (editor.selection.anchor.offset > 0) {
+							const before = editor.before(editor.selection);
+							if (before) {
+								const beforeRange = editor.range(
+									before,
+									editor.selection
+								);
+								const beforeText = editor.string(beforeRange);
+								// console.log(beforeText);
+
+								deleteBackward(editor, { unit: 'character' });
+								if (beforeText === '@') {
+									// The text right before the current selection is '/'
+									break;
+								}
+							}
+						}
+					}
+
+					// the combobox is getting overridden by the exitbreakline on headers.
 				}}
-				// {...props}
-			/> */}
+				trigger={'@'}
+				component={(store) => {
+					return <BlockMenu></BlockMenu>;
+				}}
+				items={nodeSearchResults}
+				// items={items}
+				onRenderItem={({ search, item }) => {
+					//
+					if (item.key === 'default')
+						return <div>{item.n.title}</div>;
+				}}
+				searchPattern={'.+'}
+				filter={(search: string) => (value) => {
+					const searchPattern = getTextAfterTrigger(
+						search.toLowerCase(),
+						'@'
+					);
+					console.log('searchPattern: ', searchPattern);
+					setsearchVal(searchPattern);
+					return true;
+				}}
+			/>
+			{/* <Popover open={nodeSearchOpen} onOpenChange={setnodeSearchOpen}>
+				<PopoverTrigger asChild>
+					<Button
+						variant='outline'
+						role='combobox'
+						// aria-expanded={open}
+						className='w-[200px] justify-between'
+					>
+						{'Select framework...'}
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent className='w-[200px] p-0'>
+					<Command>
+						<CommandInput
+							placeholder='Search for node'
+							className='h-9'
+						/>
+						<CommandEmpty>No framework found.</CommandEmpty>
+						<CommandGroup>
+							{nodeSearchResults.map((node) => (
+								<CommandItem
+									key={node.id}
+									onSelect={(currentValue) => {
+										// setValue(
+										// 	currentValue === value
+										// 		? ''
+										// 		: currentValue
+										// );
+										setnodeSearchOpen(false);
+									}}
+								>
+									{node.title}
+								</CommandItem>
+							))}
+						</CommandGroup>
+					</Command>
+				</PopoverContent>
+			</Popover> */}
 		</>
 	);
 };

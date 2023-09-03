@@ -58,7 +58,7 @@ export const updateGraphNode = async ({
 			return res.json();
 		})
 		.then((json) => {
-			console.log('json: ', json);
+			// console.log('json: ', json);
 			return json;
 		});
 

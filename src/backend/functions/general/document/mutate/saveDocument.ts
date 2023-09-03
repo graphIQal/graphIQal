@@ -26,8 +26,8 @@ export const saveDocument = async ({
 	)
 		return;
 
-	console.log('saveDocument', nodeId, title);
-	console.log(history);
+	// console.log('saveDocument', nodeId, title);
+	// console.log(history);
 
 	const res = await fetch(
 		`/api/${username}/${nodeId}/document/save/${title}`,
@@ -37,11 +37,11 @@ export const saveDocument = async ({
 		}
 	)
 		.then((res) => {
-			console.log('saveDocument ', res);
+			// console.log('saveDocument ', res);
 			return res.json();
 		})
 		.then((json) => {
-			console.log('saveDocumentJson', json);
+			// console.log('saveDocumentJson', json);
 			return json;
 		});
 

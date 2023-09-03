@@ -25,7 +25,7 @@ import useSWR from 'swr';
 import { fetcherSingleReturn } from '@/backend/driver/fetcher';
 
 const DocumentGraphNode: React.FC<{}> = ({}) => {
-	const { title, id, icon } = useContext(
+	const { id, icon } = useContext(
 		GraphNodeContext
 	) as GraphNodeContextInterface;
 
@@ -43,41 +43,17 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 
 	// I need to mutate new nodes w/ a default document or smth.
 
-	if (isLoading) {
+	if (isLoading || !nodeDataSWR) {
 		return <div></div>;
-		// nodeDataSWR.n = {
-		// 	document: `
-		// 		[
-		// 			{
-		// 				"type": "block",
-		// 				"id": "${v4()}",
-		// 				"children": [
-		// 					{ "type": "p", "id": "${v4()}", "children": [{ "text": "" }] }
-		// 				]
-		// 			}
-		// 		]`,
-		// 	icon: 'node',
-		// 	color: 'black',
-		// 	title: 'loading...',
-		// };
 	}
 
-	if (!nodeDataSWR) {
-		nodeDataSWR = {
-			n: {
-				id: id,
-				title: 'Untitled',
-				icon: 'node',
-				color: 'black',
-				document: defaultDocument,
-			},
-			connections: [],
-		};
-	}
+	// console.log('nodeDataSWR ', nodeDataSWR);
 
-	if (nodeDataSWR && 'title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
+	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
 		nodeDataSWR.n.document = defaultDocument;
 	}
+
+	// console.log('nodeDataSWR ', nodeDataSWR);
 
 	const createInitialValue = (content: string) => {
 		const value = JSON.parse(content);

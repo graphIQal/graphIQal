@@ -25,6 +25,19 @@ import { Undo } from '@styled-icons/icomoon/Undo';
 import { Cut } from '@styled-icons/ionicons-sharp/Cut';
 import { Settings } from '@styled-icons/material/Settings';
 import { Thealgorithms } from '@styled-icons/simple-icons/Thealgorithms';
+import {
+	Divide,
+	FileSymlink,
+	Heading1,
+	Heading2,
+	Heading3,
+	List,
+	ListTodo,
+	Minus,
+	PlusCircle,
+	Slash,
+	Workflow,
+} from 'lucide-react';
 
 export const Icons: { [key: string]: any } = {
 	plus: Plus,
@@ -55,4 +68,13 @@ export const Icons: { [key: string]: any } = {
 	ArrowRight: ArrowRight,
 	Cut: Cut,
 	node: CircularGraph,
+	connect: Workflow,
+	minus: Minus,
+	nodeLink: FileSymlink,
+	plusCircle: PlusCircle,
+	header1: Heading1,
+	header2: Heading2,
+	header3: Heading3,
+	blist: List,
+	todolist: ListTodo,
 };

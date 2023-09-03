@@ -45,7 +45,7 @@ module.exports = {
 				xxs: 0.25 * UNIT + 'em',
 				xs: 0.5 * UNIT + 'em',
 				sm: 0.75 * UNIT + 'em',
-				md: 1.25 * UNIT + 'em',
+				md: 1 * UNIT + 'em',
 				lg: 2 * UNIT + 'em',
 				xl: 3.25 * UNIT + 'em',
 				xxl: 5.25 * UNIT + 'em',
@@ -55,7 +55,7 @@ module.exports = {
 					TEXT_BASE_SIZE / (TEXT_SCALE_RATIO * TEXT_SCALE_RATIO) +
 					'em',
 				sm: TEXT_BASE_SIZE / TEXT_SCALE_RATIO + 'em',
-				md: TEXT_BASE_SIZE * TEXT_SCALE_RATIO + 'em',
+				md: TEXT_BASE_SIZE + 'em',
 				lg: TEXT_BASE_SIZE * TEXT_SCALE_RATIO * TEXT_SCALE_RATIO + 'em',
 				xl:
 					TEXT_BASE_SIZE *

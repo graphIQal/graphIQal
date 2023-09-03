@@ -52,6 +52,8 @@ import { Button } from '@/components/ui/button';
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
 import { fetcher } from '@/backend/driver/fetcher';
+import { Icons } from '@/components/icons';
+import React from 'react';
 
 export const markTooltip: TippyProps = {
 	arrow: true,
@@ -69,8 +71,9 @@ type item = {
 	data: {
 		onPress: () => void;
 		searchFunction: (string: string) => boolean;
-		logoSource?: string;
+		icon?: string;
 		customRender?: () => JSX.Element;
+		subtext: string;
 	};
 };
 
@@ -93,6 +96,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'connect',
 			text: 'Connect',
 			data: {
+				subtext: 'Connect this node to another node',
+				icon: 'connect',
 				searchFunction: (search) => {
 					if ('connect'.startsWith(search)) {
 						return true;
@@ -135,6 +140,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: '1',
 			text: 'Create Node',
 			data: {
+				subtext: '',
+				icon: 'plusCircle',
 				searchFunction: (search) => {
 					// console.log('search ', search);
 					if ('create node'.startsWith(search)) {
@@ -170,6 +177,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'divider',
 			text: 'Divider',
 			data: {
+				subtext: 'Visually divide blocks',
+				icon: 'minus',
 				searchFunction: (search) => {
 					if ('divider'.startsWith(search)) {
 						return true;
@@ -189,6 +198,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'nodelink',
 			text: 'NodeLink',
 			data: {
+				subtext: 'Create a link to a node',
+				icon: 'nodeLink',
 				searchFunction: (search) => {
 					if ('nodelink'.startsWith(search)) {
 						return true;
@@ -205,21 +216,23 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'add_node',
 			text: 'Add Node',
 			data: {
+				subtext: 'Add existing node to document',
+				icon: 'plus',
 				searchFunction: (search) => {
 					if ('add node'.startsWith(search)) {
 						return true;
 					}
 					return false;
 				},
-				onPress: async () => {
-					// setComboBoxOpen(true);
-				},
+				onPress: async () => {},
 			},
 		},
 		{
 			key: 'h1',
 			text: 'Header 1',
 			data: {
+				subtext: 'Big Section Heading',
+				icon: 'header1',
 				searchFunction: (search) => {
 					if (
 						'header'.startsWith(search) ||
@@ -247,6 +260,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'h2',
 			text: 'Header 2',
 			data: {
+				subtext: 'Medium Section Heading',
+				icon: 'header2',
 				searchFunction: (search) => {
 					if (
 						'header'.startsWith(search) ||
@@ -274,6 +289,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'h3',
 			text: 'Header 3',
 			data: {
+				subtext: 'Small Section Heading',
+				icon: 'header3',
 				searchFunction: (search) => {
 					// check if it's a number, if it's a number and not a three or it's 3
 					if (
@@ -302,6 +319,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'blist',
 			text: 'Bullet List',
 			data: {
+				subtext: 'Bulleted List',
+				icon: 'blist',
 				searchFunction: (search) => {
 					if ('Bullet List'.startsWith(search)) {
 						return true;
@@ -317,6 +336,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'tlist',
 			text: 'Todo List',
 			data: {
+				subtext: 'To Do List',
+				icon: 'todolist',
 				searchFunction: (search) => {
 					if (
 						'checkbox'.startsWith(search) ||
@@ -359,9 +380,10 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 	const firstNodeOption = {
 		n: {
-			title: 'Create new node',
+			title: 'New node',
+			icon: 'plusCircle',
 		},
-		text: 'Create new node',
+		text: 'New node',
 		key: 'create',
 		onPress: () => console.log('oy'),
 	};
@@ -447,8 +469,25 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				}}
 				items={items}
 				onRenderItem={({ search, item }) => {
-					// if (item.data.customRender) return item.data.customRender();
-					return <div>{item.text}</div>;
+					return (
+						<div className='flex flex-row x-3 gap-x-2 items-center p-2'>
+							<div className='w-8 h-8 bg-lining rounded-sm flex items-center justify-center'>
+								{item.data.icon ? (
+									React.createElement(Icons[item.data.icon], {
+										className: 'h-4 w-4',
+									})
+								) : (
+									<Icons.node className='h-4 w-4' />
+								)}
+							</div>
+							<div>
+								<div className='text-md'>{item.text}</div>
+								<div className='text-sm opacity-70'>
+									{item.data.subtext}
+								</div>
+							</div>
+						</div>
+					);
 				}}
 				searchPattern={'\\S+'}
 				filter={(search: string) => (value) =>
@@ -462,6 +501,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					// Keep deleting backwards until you see the '/', then delete one more.
 					// console.log('editor.selection: ', editor.selection);
 
+					// Delete until the @
 					if (editor.selection) {
 						while (editor.selection.anchor.offset > 0) {
 							const before = editor.before(editor.selection);
@@ -492,8 +532,30 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				// items={items}
 				onRenderItem={({ search, item }) => {
 					//
-					if (item.key === 'default')
-						return <div>{item.n.title}</div>;
+					console.log('search: ', search);
+
+					console.log(item.n.icon);
+					console.log(item);
+					return (
+						<div className='flex flex-row x-3 gap-x-2 items-center'>
+							{item.n.icon ? (
+								item.n.icon in Icons ? (
+									React.createElement(Icons[item.n.icon], {
+										className: 'h-4 w-4',
+									})
+								) : (
+									<div>{item.n.icon}</div>
+								)
+							) : (
+								<Icons.node className='h-4 w-4' />
+							)}
+							{item.key === 'create'
+								? `new '${search.substring(
+										search.indexOf('@') + 1
+								  )}' node`
+								: item.n.title}
+						</div>
+					);
 				}}
 				searchPattern={'.+'}
 				filter={(search: string) => (value) => {
@@ -501,7 +563,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						search.toLowerCase(),
 						'@'
 					);
-					console.log('searchPattern: ', searchPattern);
+					// console.log('searchPattern: ', searchPattern);
 					setsearchVal(searchPattern);
 					return true;
 				}}

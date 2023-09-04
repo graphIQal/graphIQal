@@ -3,6 +3,7 @@ import {
 	CheckIcon,
 	Combobox,
 	deleteBackward,
+	ELEMENT_BLOCKQUOTE,
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
@@ -139,7 +140,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: '1',
 			text: 'Create Node',
 			n: {
-				subtext: '',
+				subtext: 'Create a new node here',
 				icon: 'plusCircle',
 				searchFunction: (search) => {
 					// console.log('search ', search);
@@ -192,6 +193,26 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				});
 			},
 		},
+		{
+			key: 'quote',
+			text: 'Quote',
+			n: {
+				subtext: 'Capture a quote',
+				icon: 'quote',
+				searchFunction: (search) => {
+					if ('quote'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: async () => {
+				insertNodes(editor, {
+					type: getPluginType(editor, ELEMENT_BLOCKQUOTE),
+					children: [{ text: '' }],
+				});
+			},
+		},
 
 		{
 			key: 'nodelink',
@@ -218,13 +239,37 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				subtext: 'Add existing node to document',
 				icon: 'plus',
 				searchFunction: (search) => {
-					if ('add node'.startsWith(search)) {
+					if ('addnode'.startsWith(search)) {
 						return true;
 					}
 					return false;
 				},
 			},
-			onPress: async () => {},
+			onPress: async () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'addNode'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'addNode'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
 		},
 		{
 			key: 'h1',
@@ -472,9 +517,16 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						<div className='flex flex-row x-3 gap-x-2 items-center p-2'>
 							<div className='w-8 h-8 bg-lining rounded-sm flex items-center justify-center'>
 								{item.n.icon ? (
-									React.createElement(Icons[item.n.icon], {
-										className: 'h-4 w-4',
-									})
+									item.n.icon in Icons ? (
+										React.createElement(
+											Icons[item.n.icon],
+											{
+												className: 'h-4 w-4',
+											}
+										)
+									) : (
+										<div>{item.n.icon}</div>
+									)
 								) : (
 									<Icons.node className='h-4 w-4' />
 								)}
@@ -498,7 +550,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				id='nodeSearch'
 				onSelectItem={(editor, item) => {
 					// Keep deleting backwards until you see the '/', then delete one more.
-					// console.log('editor.selection: ', editor.selection);
+
+					// find id of item
 
 					// Delete until the @
 					if (editor.selection) {
@@ -521,6 +574,62 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						}
 					}
 
+					// find type of command.
+					const { selection } = editor;
+					if (selection) {
+						let cursor = selection.anchor;
+						let beforeText = '';
+						while (cursor.offset > 0) {
+							const before = editor.before(cursor);
+							if (before) {
+								const beforeRange = editor.range(
+									before,
+									cursor
+								);
+								const text = editor.string(beforeRange);
+								if (text === '/') {
+									break;
+								}
+								beforeText = text + beforeText;
+								cursor = before;
+							}
+						}
+
+						console.log('beforeText, ', beforeText);
+						console.log(item);
+
+						// add_node or connect
+						if (beforeText === 'connect ') {
+							console.log('connect_node');
+						} else if (beforeText === 'add_node ') {
+							console.log('add_node');
+						} else {
+							console.log('add node link');
+						}
+
+						if (editor.selection) {
+							while (editor.selection.anchor.offset > 0) {
+								const before = editor.before(editor.selection);
+								if (before) {
+									const beforeRange = editor.range(
+										before,
+										editor.selection
+									);
+									const beforeText =
+										editor.string(beforeRange);
+									// console.log(beforeText);
+
+									deleteBackward(editor, {
+										unit: 'character',
+									});
+									if (beforeText === '/') {
+										// The text right before the current selection is '/'
+										break;
+									}
+								}
+							}
+						}
+					}
 					// the combobox is getting overridden by the exitbreakline on headers.
 				}}
 				trigger={'@'}
@@ -530,11 +639,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				items={nodeSearchResults}
 				// items={items}
 				onRenderItem={({ search, item }) => {
-					//
-					console.log('search: ', search);
-
-					console.log(item.n.icon);
-					console.log(item);
 					return (
 						<div className='flex flex-row x-3 gap-x-2 items-center'>
 							{item.n.icon ? (
@@ -567,44 +671,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					return true;
 				}}
 			/>
-			{/* <Popover open={nodeSearchOpen} onOpenChange={setnodeSearchOpen}>
-				<PopoverTrigger asChild>
-					<Button
-						variant='outline'
-						role='combobox'
-						// aria-expanded={open}
-						className='w-[200px] justify-between'
-					>
-						{'Select framework...'}
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent className='w-[200px] p-0'>
-					<Command>
-						<CommandInput
-							placeholder='Search for node'
-							className='h-9'
-						/>
-						<CommandEmpty>No framework found.</CommandEmpty>
-						<CommandGroup>
-							{nodeSearchResults.map((node) => (
-								<CommandItem
-									key={node.id}
-									onSelect={(currentValue) => {
-										// setValue(
-										// 	currentValue === value
-										// 		? ''
-										// 		: currentValue
-										// );
-										setnodeSearchOpen(false);
-									}}
-								>
-									{node.title}
-								</CommandItem>
-							))}
-						</CommandGroup>
-					</Command>
-				</PopoverContent>
-			</Popover> */}
 		</>
 	);
 };

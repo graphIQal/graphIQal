@@ -36,6 +36,7 @@ import {
 	Minus,
 	PlusCircle,
 	Slash,
+	TextQuote,
 	Workflow,
 } from 'lucide-react';
 
@@ -77,4 +78,5 @@ export const Icons: { [key: string]: any } = {
 	header3: Heading3,
 	blist: List,
 	todolist: ListTodo,
+	quote: TextQuote,
 };

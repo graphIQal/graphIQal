@@ -95,6 +95,7 @@ export const FormatPlugins = createMyPlugins([
 							...KEYS_HEADING,
 							ELEMENT_TITLE,
 							ELEMENT_NODELINK,
+							ELEMENT_BLOCKQUOTE,
 						],
 					},
 					// relative: true,

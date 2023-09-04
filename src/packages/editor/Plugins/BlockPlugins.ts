@@ -2,12 +2,14 @@ import {
 	CodeBlockElement,
 	CodeLineElement,
 	CodeSyntaxLeaf,
+	createBlockquotePlugin,
 	createCodeBlockPlugin,
 	createHeadingPlugin,
 	createLinkPlugin,
 	// createListPlugin,
 	createParagraphPlugin,
 	createPlateUI,
+	ELEMENT_BLOCKQUOTE,
 	ELEMENT_CODE_BLOCK,
 	ELEMENT_CODE_LINE,
 	ELEMENT_CODE_SYNTAX,
@@ -16,7 +18,6 @@ import {
 	ELEMENT_H2,
 	ELEMENT_H3,
 	ELEMENT_LI,
-	ELEMENT_LIC,
 	ELEMENT_LINK,
 	ELEMENT_OL,
 	ELEMENT_TODO_LI,
@@ -26,11 +27,11 @@ import {
 	TodoListElement,
 } from '@udecode/plate';
 import {
+	BlockquoteElement,
 	Divider,
 	H1,
 	H2,
 	H3,
-	LI,
 	NodeLink,
 	OL,
 	TitleElement,
@@ -44,7 +45,6 @@ import {
 	ELEMENT_NODELINK,
 	ELEMENT_TITLE,
 } from '../plateTypes';
-import { normalizeNodeLink } from './NodeLinkPlugin/normalisenodeLink';
 import { withNodeLink } from './NodeLinkPlugin/withNodeLink';
 
 const plateUI = createPlateUI({});
@@ -126,6 +126,7 @@ export const BlockPlugins = createMyPlugins(
 		createCodeBlockPlugin(),
 		createDividerPlugin(),
 		createLinkPlugin(),
+		createBlockquotePlugin(),
 	],
 	{
 		components: {
@@ -143,6 +144,7 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_TODO_LI]: TodoListElement,
 			[ELEMENT_DIVIDER]: Divider,
 			[ELEMENT_LINK]: LinkElement,
+			[ELEMENT_BLOCKQUOTE]: BlockquoteElement,
 			// [ELEMENT_LIC]: LI,
 		},
 	}

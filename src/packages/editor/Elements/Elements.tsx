@@ -126,3 +126,14 @@ export const UL = (props: PlateRenderElementProps) => {
 		</ul>
 	);
 };
+
+export const BlockquoteElement = (props: PlateRenderElementProps) => {
+	return (
+		<div
+			{...props.attributes}
+			className='my-1 border-l-2 border-base_black pl-4 italic'
+		>
+			<blockquote>{props.children}</blockquote>
+		</div>
+	);
+};

@@ -73,6 +73,7 @@ const EditorComponent: React.FC<{
 		// 	editorRef.current?.history.undos[
 		// 		editorRef.current?.history.undos.length - 1
 		// 	];
+		console.log(editorRef.current?.history);
 
 		return () => {
 			window.removeEventListener('beforeunload', onUnload);

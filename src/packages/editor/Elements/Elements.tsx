@@ -16,7 +16,7 @@ export const CodeElement = (props: PlateRenderElementProps) => {
 
 export const Block = (props: PlateRenderElementProps) => {
 	return (
-		<div className='decoration-[0.1px] ' /**{...props.attributes}**/>
+		<div className='decoration-[0.1px] py-1 ' /**{...props.attributes}**/>
 			{props.children}
 		</div>
 	);

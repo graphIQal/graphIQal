@@ -13,6 +13,7 @@ import {
 	isSelectionAtBlockStart,
 	PlateEditor,
 	setNodes,
+	TComboboxItemWithData,
 	toggleList,
 } from '@udecode/plate';
 import { ReactNode, useEffect, useState } from 'react';
@@ -67,15 +68,16 @@ export const markTooltip: TippyProps = {
 type item = {
 	key: string;
 	text: string;
-
-	data: {
-		onPress: () => void;
+	onPress: () => void;
+	n: {
 		searchFunction: (string: string) => boolean;
 		icon?: string;
 		customRender?: () => JSX.Element;
 		subtext: string;
 	};
 };
+
+type ExtendedItem = TComboboxItemWithData<item> & item;
 
 const getTextAfterTrigger = (search: string, trigger: string) => {
 	const indexOfTrigger = search.lastIndexOf(trigger);
@@ -95,7 +97,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 		{
 			key: 'connect',
 			text: 'Connect',
-			data: {
+			n: {
 				subtext: 'Connect this node to another node',
 				icon: 'connect',
 				searchFunction: (search) => {
@@ -104,42 +106,39 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					}
 					return false;
 				},
-				onPress: () => {
-					const { selection } = editor;
-					if (selection) {
-						let cursor = selection.anchor;
-						let beforeText = '';
-						while (cursor.offset > 0) {
-							const before = editor.before(cursor);
-							if (before) {
-								const beforeRange = editor.range(
-									before,
-									cursor
-								);
-								const text = editor.string(beforeRange);
-								if (text === '/') {
-									break;
-								}
-								beforeText = text + beforeText;
-								cursor = before;
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
 							}
+							beforeText = text + beforeText;
+							cursor = before;
 						}
-						const match = 'connect'.startsWith(beforeText)
-							? beforeText
-							: '';
-						const remainingText = 'connect'.slice(match.length);
-						editor.insertText(remainingText);
-						editor.insertText(' @');
 					}
+					const match = 'connect'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
 
-					// setnodeSearchOpen(true);
-				},
+				// setnodeSearchOpen(true);
 			},
 		},
 		{
 			key: '1',
 			text: 'Create Node',
-			data: {
+			n: {
 				subtext: '',
 				icon: 'plusCircle',
 				searchFunction: (search) => {
@@ -149,34 +148,34 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					}
 					return false;
 				},
-				onPress: async () => {
-					// Add to backend
-					const newId = uuidv4();
+			},
+			onPress: async () => {
+				// Add to backend
+				const newId = uuidv4();
 
-					// Create new page in frontend
-					insertNodes(editor, {
-						type: getPluginType(editor, ELEMENT_NODELINK),
-						nodeId: newId,
-						routeString: `/${username}/${newId}`,
-						icon: 'node',
-						children: [{ text: '' }],
-					} as MyNodeLinkElement);
+				// Create new page in frontend
+				insertNodes(editor, {
+					type: getPluginType(editor, ELEMENT_NODELINK),
+					nodeId: newId,
+					routeString: `/${username}/${newId}`,
+					icon: 'node',
+					children: [{ text: '' }],
+				} as MyNodeLinkElement);
 
-					const res = await createNodeInDocument(
-						nodeId,
-						username,
-						'HAS',
-						newId
-					);
-					// Navigate to node
-					router.push(`/${username}/${newId}`, undefined);
-				},
+				const res = await createNodeInDocument(
+					nodeId,
+					username,
+					'HAS',
+					newId
+				);
+				// Navigate to node
+				router.push(`/${username}/${newId}`, undefined);
 			},
 		},
 		{
 			key: 'divider',
 			text: 'Divider',
-			data: {
+			n: {
 				subtext: 'Visually divide blocks',
 				icon: 'minus',
 				searchFunction: (search) => {
@@ -185,19 +184,19 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					}
 					return false;
 				},
-				onPress: async () => {
-					insertNodes(editor, {
-						type: getPluginType(editor, ELEMENT_DIVIDER),
-						children: [{ text: '' }],
-					});
-				},
+			},
+			onPress: async () => {
+				insertNodes(editor, {
+					type: getPluginType(editor, ELEMENT_DIVIDER),
+					children: [{ text: '' }],
+				});
 			},
 		},
 
 		{
 			key: 'nodelink',
 			text: 'NodeLink',
-			data: {
+			n: {
 				subtext: 'Create a link to a node',
 				icon: 'nodeLink',
 				searchFunction: (search) => {
@@ -206,16 +205,16 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					}
 					return false;
 				},
-				onPress: () => {
-					console.log('okay');
-					toggleList(editor, { type: ELEMENT_LI });
-				},
+			},
+			onPress: () => {
+				console.log('okay');
+				toggleList(editor, { type: ELEMENT_LI });
 			},
 		},
 		{
 			key: 'add_node',
 			text: 'Add Node',
-			data: {
+			n: {
 				subtext: 'Add existing node to document',
 				icon: 'plus',
 				searchFunction: (search) => {
@@ -224,13 +223,13 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					}
 					return false;
 				},
-				onPress: async () => {},
 			},
+			onPress: async () => {},
 		},
 		{
 			key: 'h1',
 			text: 'Header 1',
-			data: {
+			n: {
 				subtext: 'Big Section Heading',
 				icon: 'header1',
 				searchFunction: (search) => {
@@ -244,22 +243,22 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						return true;
 					return false;
 				},
-				onPress: () => {
-					if (isSelectionAtBlockStart(editor)) {
-						setNodes(editor, { type: ELEMENT_H1 });
-					} else {
-						insertNodes(editor, {
-							type: getPluginType(editor, ELEMENT_H1),
-							children: [{ text: '' }],
-						} as MyH1Element);
-					}
-				},
+			},
+			onPress: () => {
+				if (isSelectionAtBlockStart(editor)) {
+					setNodes(editor, { type: ELEMENT_H1 });
+				} else {
+					insertNodes(editor, {
+						type: getPluginType(editor, ELEMENT_H1),
+						children: [{ text: '' }],
+					} as MyH1Element);
+				}
 			},
 		},
 		{
 			key: 'h2',
 			text: 'Header 2',
-			data: {
+			n: {
 				subtext: 'Medium Section Heading',
 				icon: 'header2',
 				searchFunction: (search) => {
@@ -273,22 +272,22 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						return true;
 					return false;
 				},
-				onPress: () => {
-					if (isSelectionAtBlockStart(editor)) {
-						setNodes(editor, { type: ELEMENT_H2 });
-					} else {
-						insertNodes(editor, {
-							type: getPluginType(editor, ELEMENT_H2),
-							children: [{ text: '' }],
-						} as MyH2Element);
-					}
-				},
+			},
+			onPress: () => {
+				if (isSelectionAtBlockStart(editor)) {
+					setNodes(editor, { type: ELEMENT_H2 });
+				} else {
+					insertNodes(editor, {
+						type: getPluginType(editor, ELEMENT_H2),
+						children: [{ text: '' }],
+					} as MyH2Element);
+				}
 			},
 		},
 		{
 			key: 'h3',
 			text: 'Header 3',
-			data: {
+			n: {
 				subtext: 'Small Section Heading',
 				icon: 'header3',
 				searchFunction: (search) => {
@@ -303,22 +302,22 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						return true;
 					return false;
 				},
-				onPress: () => {
-					if (isSelectionAtBlockStart(editor)) {
-						setNodes(editor, { type: ELEMENT_H3 });
-					} else {
-						insertNodes(editor, {
-							type: getPluginType(editor, ELEMENT_H3),
-							children: [{ text: '' }],
-						});
-					}
-				},
+			},
+			onPress: () => {
+				if (isSelectionAtBlockStart(editor)) {
+					setNodes(editor, { type: ELEMENT_H3 });
+				} else {
+					insertNodes(editor, {
+						type: getPluginType(editor, ELEMENT_H3),
+						children: [{ text: '' }],
+					});
+				}
 			},
 		},
 		{
 			key: 'blist',
 			text: 'Bullet List',
-			data: {
+			n: {
 				subtext: 'Bulleted List',
 				icon: 'blist',
 				searchFunction: (search) => {
@@ -327,15 +326,15 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					}
 					return false;
 				},
-				onPress: () => {
-					formatList(editor, ELEMENT_LI);
-				},
+			},
+			onPress: () => {
+				formatList(editor, ELEMENT_LI);
 			},
 		},
 		{
 			key: 'tlist',
 			text: 'Todo List',
-			data: {
+			n: {
 				subtext: 'To Do List',
 				icon: 'todolist',
 				searchFunction: (search) => {
@@ -347,9 +346,9 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					}
 					return false;
 				},
-				onPress: () => {
-					formatList(editor, ELEMENT_TODO_LI);
-				},
+			},
+			onPress: () => {
+				formatList(editor, ELEMENT_TODO_LI);
 			},
 		},
 		// {
@@ -436,7 +435,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					// console.log('editor.selection: ', editor.selection);
 
 					if (item.key === 'connect' || item.key === 'add_node') {
-						item.data.onPress();
+						item.onPress();
 						return;
 					}
 
@@ -454,7 +453,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								deleteBackward(editor, { unit: 'character' });
 								if (beforeText === '/') {
 									// The text right before the current selection is '/'
-									item.data.onPress();
+									item.onPress();
 									break;
 								}
 							}
@@ -472,8 +471,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					return (
 						<div className='flex flex-row x-3 gap-x-2 items-center p-2'>
 							<div className='w-8 h-8 bg-lining rounded-sm flex items-center justify-center'>
-								{item.data.icon ? (
-									React.createElement(Icons[item.data.icon], {
+								{item.n.icon ? (
+									React.createElement(Icons[item.n.icon], {
 										className: 'h-4 w-4',
 									})
 								) : (
@@ -483,15 +482,15 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							<div>
 								<div className='text-md'>{item.text}</div>
 								<div className='text-sm opacity-70'>
-									{item.data.subtext}
+									{item.n.subtext}
 								</div>
 							</div>
 						</div>
 					);
 				}}
 				searchPattern={'\\S+'}
-				filter={(search: string) => (value) =>
-					value.data.searchFunction(
+				filter={(search: string) => (item) =>
+					item.n.searchFunction(
 						getTextAfterTrigger(search.toLowerCase(), trigger)
 					)}
 			/>

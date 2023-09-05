@@ -25,6 +25,7 @@ import {
 	ELEMENT_DIVIDER,
 	ELEMENT_NODE,
 	ELEMENT_NODELINK,
+	ELEMENT_NODETITLE,
 	MyEditor,
 	MyH1Element,
 	MyH2Element,
@@ -648,7 +649,10 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								children: item.n.document
 									? [
 											{
-												type: 'p',
+												type: ELEMENT_NODETITLE,
+												icon: item.n.icon
+													? item.n.icon
+													: 'node',
 												id: '${uuidv4()}',
 												children: [
 													{ text: item.n.title },

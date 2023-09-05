@@ -39,6 +39,7 @@ import {
 } from '../editor/plateTypes';
 import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
 import { withDraggable } from './components/withDraggable';
+import { withValidChild } from '../editor/Plugins/Autoformat/withValidChild';
 
 const Document: React.FC<{
 	viewId: string;
@@ -111,7 +112,7 @@ const Document: React.FC<{
 						"id": "${uuidv4()}",
 						"children": [
 							{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
-						]
+					]
 					}
 				]`;
 	}
@@ -269,6 +270,7 @@ const Document: React.FC<{
 											},
 										],
 									},
+									// withOverrides: withValidChild,
 								}),
 							]}
 							showCutText={showCutText}

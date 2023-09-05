@@ -49,7 +49,7 @@ export const NodeLink = (props: any) => {
 	);
 };
 
-export const Node = (props: any) => {
+export const NodeTitle = (props: any) => {
 	// console.log('rendering nodeLink');
 	// console.log(props);
 
@@ -57,7 +57,7 @@ export const Node = (props: any) => {
 
 	return (
 		<div
-			className='border-l-4 border-node cursor-pointer hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
+			className='cursor-pointer hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
 			onClick={() => {
 				// Navigate to node
 				router.push(props.element.routeString, undefined);
@@ -71,6 +71,17 @@ export const Node = (props: any) => {
 				}}
 				circle={false}
 			></IconCircleButton>
+			{props.children}
+		</div>
+	);
+};
+
+export const Node = (props: any) => {
+	const router = useRouter();
+
+	return (
+		<div className='border-l-4 border-node truncate'>
+			<span className=''></span>
 			{props.children}
 		</div>
 	);

@@ -5,6 +5,7 @@ import { v4 } from 'uuid';
 import {
 	BlockElements,
 	ELEMENT_BLOCK,
+	ELEMENT_NODE,
 	ELEMENT_NODELINK,
 	ELEMENT_TITLE,
 	MyTitleElement,
@@ -71,6 +72,7 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 					];
 				} else if (value.type === ELEMENT_BLOCK) {
 					traverse(value.children as BlockElements[]);
+				} else if (value.type === ELEMENT_NODE) {
 				}
 			});
 		}

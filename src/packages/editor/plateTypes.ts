@@ -68,6 +68,7 @@ export const ELEMENT_BLOCK = 'block';
 export const ELEMENT_TITLE = 'title';
 export const ELEMENT_NODELINK = 'nodelink';
 export const ELEMENT_NODE = 'node';
+export const ELEMENT_NODETITLE = 'nodeTitle';
 export const ELEMENT_CONNECTION = 'connection';
 export const ELEMENT_DIVIDER = 'divider';
 

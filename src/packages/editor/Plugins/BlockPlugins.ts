@@ -32,7 +32,9 @@ import {
 	H1,
 	H2,
 	H3,
+	Node,
 	NodeLink,
+	NodeTitle,
 	OL,
 	TitleElement,
 	UL,
@@ -43,6 +45,7 @@ import {
 	ELEMENT_DIVIDER,
 	ELEMENT_NODE,
 	ELEMENT_NODELINK,
+	ELEMENT_NODETITLE,
 	ELEMENT_TITLE,
 } from '../plateTypes';
 import { withNodeLink } from './NodeLinkPlugin/withNodeLink';
@@ -51,6 +54,18 @@ const plateUI = createPlateUI({});
 
 const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODE,
+	isElement: true,
+	isLeaf: false,
+	handlers: {
+		// onKeyDown: onKeyDownToggleElement,
+	},
+	options: {
+		// hotkey: ['cmd+g'],
+	},
+});
+
+const createNodeTitlePlugin = createMyPluginFactory<HotkeyPlugin>({
+	key: ELEMENT_NODETITLE,
 	isElement: true,
 	isLeaf: false,
 	handlers: {
@@ -127,6 +142,7 @@ export const BlockPlugins = createMyPlugins(
 		createDividerPlugin(),
 		createLinkPlugin(),
 		createBlockquotePlugin(),
+		createNodeTitlePlugin(),
 	],
 	{
 		components: {
@@ -145,7 +161,8 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_DIVIDER]: Divider,
 			[ELEMENT_LINK]: LinkElement,
 			[ELEMENT_BLOCKQUOTE]: BlockquoteElement,
-			[ELEMENT_NODE]: BlockquoteElement,
+			[ELEMENT_NODE]: Node,
+			[ELEMENT_NODETITLE]: NodeTitle,
 			// [ELEMENT_LIC]: LI,
 		},
 	}

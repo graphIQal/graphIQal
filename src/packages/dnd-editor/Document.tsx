@@ -34,7 +34,9 @@ import { Block } from '../editor/Elements/Elements';
 import {
 	BlockElements,
 	ELEMENT_BLOCK,
+	ELEMENT_NODE,
 	ELEMENT_NODELINK,
+	ELEMENT_NODETITLE,
 	MyTitleElement,
 } from '../editor/plateTypes';
 import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
@@ -118,8 +120,9 @@ const Document: React.FC<{
 	}
 
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
+	// console.log('connectionMap :', connectionMap);
 
-	const createInitialValue = (content: string) => {
+	const createInitialValue = (content: string): BlockElements[] => {
 		const value = JSON.parse(content);
 
 		function traverse(obj: BlockElements[]) {
@@ -141,6 +144,34 @@ const Document: React.FC<{
 					];
 				} else if (value.type === ELEMENT_BLOCK) {
 					traverse(value.children as BlockElements[]);
+				} else if (value.type === ELEMENT_NODE) {
+					// console.log('ELEMENT_NODE, ', value);
+					value.id = value.nodeId;
+					value.children = [
+						{
+							type: ELEMENT_NODETITLE,
+							routeString: `/${username}/${value.nodeId}`,
+							icon: connectionMap[value.id as string]
+								? connectionMap[value.id as string].icon
+								: 'node',
+							id: value.children[0].id,
+							children: [
+								{
+									text: connectionMap[value.id as string]
+										? connectionMap[value.id as string]
+												.title
+										: 'Untitled',
+								},
+							],
+						},
+					];
+					if (connectionMap[value.id].document) {
+						value.children.push(
+							...createInitialValue(
+								connectionMap[value.id].document
+							)
+						);
+					}
 				}
 			});
 		}

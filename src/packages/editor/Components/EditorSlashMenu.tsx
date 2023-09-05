@@ -54,13 +54,14 @@ import {
 	CommandGroup,
 	CommandItem,
 } from 'cmdk';
-import { NodeData } from '@/packages/graph/graphTypes';
+import { ConnectionTypes, NodeData } from '@/packages/graph/graphTypes';
 import { Button } from '@/components/ui/button';
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
 import { fetcher } from '@/backend/driver/fetcher';
 import { Icons } from '@/components/icons';
 import React from 'react';
+import { createConnection } from '@/backend/functions/node/mutate/createConnection';
 
 export const markTooltip: TippyProps = {
 	arrow: true,
@@ -635,25 +636,41 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							}
 						}
 
+						if (!item.n.id) return;
+
 						// add_node or connect
 						if (beforeText === 'connect ') {
 							console.log('connect_node');
+
+							createConnection({
+								startNode: nodeId,
+								endNode: item.n.id,
+								type: ConnectionTypes.RELATED,
+							});
 						} else if (beforeText === 'addNode ') {
 							console.log('add-node');
 							console.log(item);
+							// create a connection relateds
+							createConnection({
+								startNode: nodeId,
+								endNode: item.n.id,
+								type: ConnectionTypes.RELATED,
+							});
+
 							insertNodes(editor, {
 								type: getPluginType(editor, ELEMENT_NODE),
 								id: item.n.id,
+								nodeId: item.n.id,
 								routeString: `/${username}/${item.n.id}`,
 								icon: item.n.icon ? item.n.icon : 'node',
 								children: item.n.document
 									? [
 											{
 												type: ELEMENT_NODETITLE,
+												routeString: `/${username}/${item.n.id}`,
 												icon: item.n.icon
 													? item.n.icon
 													: 'node',
-												id: '${uuidv4()}',
 												children: [
 													{ text: item.n.title },
 												],

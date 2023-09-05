@@ -1,3 +1,4 @@
+import { NodeData } from '@/packages/graph/graphTypes';
 import { getNodeData_type } from '../../backend/functions/node/query/useGetNodeData';
 
 export type connectionMapType = {

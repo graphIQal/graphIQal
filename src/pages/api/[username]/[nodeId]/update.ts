@@ -18,7 +18,7 @@ export default async function handler(
 	// return;
 	const result = await write(cypher, params);
 
-	console.log(result, cypher);
+	// console.log(result, cypher);
 
 	if ('err' in result) {
 		res.status(400).json(result);

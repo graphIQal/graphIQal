@@ -96,6 +96,7 @@ const EditorComponent: React.FC<{
 			});
 		}
 	};
+
 	const onUnload = () => {
 		// code to save progress to local storage....
 		if (value.length > 0) {

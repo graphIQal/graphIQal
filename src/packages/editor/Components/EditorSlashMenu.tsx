@@ -3,6 +3,7 @@ import {
 	CheckIcon,
 	Combobox,
 	deleteBackward,
+	EditorRefEffect,
 	ELEMENT_BLOCKQUOTE,
 	ELEMENT_H1,
 	ELEMENT_H2,
@@ -22,9 +23,12 @@ import BlockMenu from '../../../components/organisms/BlockMenu';
 
 import {
 	ELEMENT_DIVIDER,
+	ELEMENT_NODE,
 	ELEMENT_NODELINK,
+	MyEditor,
 	MyH1Element,
 	MyH2Element,
+	MyNodeElement,
 	MyNodeLinkElement,
 	MyValue,
 	useMyPlateEditorRef,
@@ -78,7 +82,8 @@ type item = {
 	};
 };
 
-type ExtendedItem = TComboboxItemWithData<item> & item;
+type ExtendedItem = TComboboxItemWithData<item> &
+	item & { n: Partial<NodeData> };
 
 const getTextAfterTrigger = (search: string, trigger: string) => {
 	const indexOfTrigger = search.lastIndexOf(trigger);
@@ -542,16 +547,19 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				}}
 				searchPattern={'\\S+'}
 				filter={(search: string) => (item) =>
-					item.n.searchFunction(
-						getTextAfterTrigger(search.toLowerCase(), trigger)
-					)}
+					item.n.searchFunction
+						? item.n.searchFunction(
+								getTextAfterTrigger(
+									search.toLowerCase(),
+									trigger
+								)
+						  )
+						: true}
 			/>
 			<Combobox
 				id='nodeSearch'
-				onSelectItem={(editor, item) => {
+				onSelectItem={(editor: MyEditor, item: ExtendedItem) => {
 					// Keep deleting backwards until you see the '/', then delete one more.
-
-					// find id of item
 
 					// Delete until the @
 					if (editor.selection) {
@@ -572,6 +580,11 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								}
 							}
 						}
+					}
+
+					// find id of item
+					if (item.key === 'create') {
+						return;
 					}
 
 					// find type of command.
@@ -598,15 +611,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						console.log('beforeText, ', beforeText);
 						console.log(item);
 
-						// add_node or connect
-						if (beforeText === 'connect ') {
-							console.log('connect_node');
-						} else if (beforeText === 'add_node ') {
-							console.log('add_node');
-						} else {
-							console.log('add node link');
-						}
-
 						if (editor.selection) {
 							while (editor.selection.anchor.offset > 0) {
 								const before = editor.before(editor.selection);
@@ -628,6 +632,42 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									}
 								}
 							}
+						}
+
+						// add_node or connect
+						if (beforeText === 'connect ') {
+							console.log('connect_node');
+						} else if (beforeText === 'addNode ') {
+							console.log('add-node');
+							console.log(item);
+							insertNodes(editor, {
+								type: getPluginType(editor, ELEMENT_NODE),
+								id: item.n.id,
+								routeString: `/${username}/${item.n.id}`,
+								icon: item.n.icon ? item.n.icon : 'node',
+								children: item.n.document
+									? [
+											{
+												type: 'p',
+												id: '${uuidv4()}',
+												children: [
+													{ text: item.n.title },
+												],
+											},
+											...JSON.parse(item.n.document),
+									  ]
+									: [{ text: '' }],
+							} as MyNodeElement);
+						} else {
+							// add node link
+							console.log('add node link');
+							insertNodes(editor, {
+								type: getPluginType(editor, ELEMENT_NODELINK),
+								nodeId: item.n.id,
+								routeString: `/${username}/${item.n.id}`,
+								icon: item.n.icon ? item.n.icon : 'node',
+								children: [{ text: item.n.title }],
+							} as MyNodeLinkElement);
 						}
 					}
 					// the combobox is getting overridden by the exitbreakline on headers.

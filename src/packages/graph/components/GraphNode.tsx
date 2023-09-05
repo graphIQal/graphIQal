@@ -258,23 +258,6 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 				</div>
 			</ResizableBox>
 			{/* Search dropdown and Icon/color dropdown */}
-			{/* {showSearchDropdown && (
-				<div
-					className='absolute'
-					style={{
-						left: nodeInfo.left,
-						top: nodeInfo.top + (2 * nodeInfo.height) / 3,
-					}}
-				>
-					<Dropdown
-						windowVar={windowVar}
-						activeIndex={-1}
-						items={searchResults}
-						showDropdown={showSearchDropdown}
-						setShowDropdown={setShowSearchDropdown}
-					/>
-				</div>
-			)} */}
 			{showEditDropdown && (
 				<div
 					className='w-full absolute'

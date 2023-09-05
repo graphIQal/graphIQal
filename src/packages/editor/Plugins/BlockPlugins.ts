@@ -54,10 +54,10 @@ const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	isElement: true,
 	isLeaf: false,
 	handlers: {
-		onKeyDown: onKeyDownToggleElement,
+		// onKeyDown: onKeyDownToggleElement,
 	},
 	options: {
-		hotkey: ['cmd+g'],
+		// hotkey: ['cmd+g'],
 	},
 });
 
@@ -145,6 +145,7 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_DIVIDER]: Divider,
 			[ELEMENT_LINK]: LinkElement,
 			[ELEMENT_BLOCKQUOTE]: BlockquoteElement,
+			[ELEMENT_NODE]: BlockquoteElement,
 			// [ELEMENT_LIC]: LI,
 		},
 	}

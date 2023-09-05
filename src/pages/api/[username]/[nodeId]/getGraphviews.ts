@@ -16,7 +16,7 @@ export default async function handler(
 
 	const result = await read(cypher, params);
 
-	console.log(result);
+	// console.log(result);
 
 	if ('err' in result) {
 		res.status(400).json(result);

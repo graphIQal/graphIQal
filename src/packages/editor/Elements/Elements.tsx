@@ -49,6 +49,33 @@ export const NodeLink = (props: any) => {
 	);
 };
 
+export const Node = (props: any) => {
+	// console.log('rendering nodeLink');
+	// console.log(props);
+
+	const router = useRouter();
+
+	return (
+		<div
+			className='border-l-4 border-node cursor-pointer hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
+			onClick={() => {
+				// Navigate to node
+				router.push(props.element.routeString, undefined);
+			}}
+			contentEditable={false}
+		>
+			<IconCircleButton
+				src={props.element.icon ? props.element.icon : 'node'}
+				onClick={() => {
+					console.log('node implemented yet');
+				}}
+				circle={false}
+			></IconCircleButton>
+			{props.children}
+		</div>
+	);
+};
+
 export const CutText = (props: any, showCutText: boolean) => {
 	console.log('cut plugin', props);
 	console.log('showCutText ', showCutText);

@@ -16,9 +16,8 @@ export default async function handler(
 	`;
 
 	// RETURN r, b { .*, parentNodeId: $nodeId}
-	console.log('test title');
 	const result = await write(cypher, { ...params, body });
 
-	console.log('result: ', result);
+	// console.log('result: ', result);
 	res.status(200).json(result);
 }

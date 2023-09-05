@@ -190,6 +190,9 @@ export interface MyParagraphElement extends BlockElements {
 
 export interface MyNodeElement extends BlockElements {
 	type: typeof ELEMENT_NODE;
+	id: string;
+	routeString: string;
+	icon?: string;
 	children: InlineElements[] | BlockElements[];
 }
 

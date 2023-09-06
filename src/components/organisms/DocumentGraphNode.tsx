@@ -44,17 +44,22 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 
 	// I need to mutate new nodes w/ a default document or smth.
 
-	if (isLoading || !nodeDataSWR) {
+	if (isLoading) {
 		return <div></div>;
 	}
 
-	// console.log('nodeDataSWR ', nodeDataSWR);
-
-	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
-		nodeDataSWR.n.document = defaultDocument;
+	if (!nodeDataSWR) {
+		console.log('noNodeDataSWR ', nodeDataSWR);
+		nodeDataSWR = {
+			n: { icon: 'node', title: 'Untitled', color: 'black' },
+			connectedNodes: [],
+		};
 	}
 
-	// console.log('nodeDataSWR ', nodeDataSWR);
+	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
+		console.log('noDocument ', nodeDataSWR);
+		nodeDataSWR.n.document = defaultDocument;
+	}
 
 	const createInitialValue = (content: string) => {
 		const value = JSON.parse(content);

@@ -43,7 +43,7 @@ export const addNode = (
 
 	const newNode = {
 		id: id,
-		title: '',
+		title: 'Untitled',
 		icon: 'node',
 		color: 'black',
 		connections: {},

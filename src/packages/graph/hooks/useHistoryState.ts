@@ -3,17 +3,17 @@
  */
 
 import { createGraphNode } from '@/backend/functions/graph/mutate/createGraphNode';
+import { deleteGraphNode } from '@/backend/functions/graph/mutate/deleteGraphNode';
 import { updateGraphNode } from '@/backend/functions/graph/mutate/updateGraphNode';
 import { createConnection } from '@/backend/functions/node/mutate/createConnection';
 import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConnection';
+import { deleteDetachNode } from '@/backend/functions/node/mutate/deleteDetachNode';
+import { reverseConnection } from '@/backend/functions/node/mutate/reverseConnection';
+import { changeConnectionType } from '@/backend/functions/node/mutate/updateConnectionType';
+import { updateNode } from '@/backend/functions/node/mutate/updateNode';
 import { MutableRefObject, useRef } from 'react';
 import { KeyedMutator } from 'swr';
 import { GraphNodeData, NodeData } from '../graphTypes';
-import { deleteGraphNode } from '@/backend/functions/graph/mutate/deleteGraphNode';
-import { updateNode } from '@/backend/functions/node/mutate/updateNode';
-import { deleteDetachNode } from '@/backend/functions/node/mutate/deleteDetachNode';
-import { changeConnectionType } from '@/backend/functions/node/mutate/updateConnectionType';
-import { reverseConnection } from '@/backend/functions/node/mutate/reverseConnection';
 
 export type Action = {
 	type: ActionChanges;
@@ -83,6 +83,10 @@ export const useHistoryState = ({
 		let newNodeData: any;
 		let newGraphData: any;
 
+		console.log(action);
+		console.log(nodeData_Graph);
+		console.log(nodeVisualData_Graph);
+
 		switch (type) {
 			case 'NODE_SIZE':
 				mutateGraphData(
@@ -150,6 +154,15 @@ export const useHistoryState = ({
 						revalidate: true,
 					}
 				);
+
+				// mutate(`api/username/${id}`, {
+				// 	optimisticData: {
+				// 		n: { icon: 'node', title: 'Untitled', color: 'black' },
+				// 		connectedNodes: [],
+				// 	},
+				// 	revalidate: true,
+				// });
+
 				break;
 			case 'NODE_ADD_EXISTING':
 				console.log('addExistingNode', value);

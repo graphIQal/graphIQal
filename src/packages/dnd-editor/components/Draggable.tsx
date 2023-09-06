@@ -68,7 +68,7 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 
 		let parentDraggable =
 			e.currentTarget.parentNode.closest('.parentDraggable');
-		console.log('parentDraggable, ', parentDraggable);
+		// console.log('parentDraggable, ', parentDraggable);
 		if (parentDraggable) {
 			parentDraggable.querySelector('.dragHandle').style.opacity = '0';
 		}

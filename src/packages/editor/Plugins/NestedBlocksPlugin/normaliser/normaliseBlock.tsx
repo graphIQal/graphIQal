@@ -8,6 +8,7 @@ import {
 	isMarkActive,
 	removeEditorMark,
 	setNodes,
+	unwrapNodes,
 	wrapNodes,
 } from '@udecode/plate';
 import {
@@ -110,7 +111,9 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 							{ at: children[i][1] }
 						);
 					} else if (children[i][0].type === nodetype) {
-						// unwrapNodes(editor, { at: children[i][1] });
+						console.log('unwrap nodes');
+						console.log(path, [i, 0], children[i]);
+						unwrapNodes(editor, { at: path });
 					}
 				}
 			}

@@ -36,6 +36,7 @@ import {
 	Minus,
 	PlusCircle,
 	Slash,
+	TestTube2,
 	TextQuote,
 	Workflow,
 } from 'lucide-react';
@@ -79,4 +80,5 @@ export const Icons: { [key: string]: any } = {
 	blist: List,
 	todolist: ListTodo,
 	quote: TextQuote,
+	test: TestTube2,
 };

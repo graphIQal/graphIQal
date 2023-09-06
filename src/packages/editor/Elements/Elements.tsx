@@ -79,12 +79,7 @@ export const NodeTitle = (props: any) => {
 export const Node = (props: any) => {
 	const router = useRouter();
 
-	return (
-		<div className='border-l-4 border-node truncate'>
-			<span className=''></span>
-			{props.children}
-		</div>
-	);
+	return <div className='border-l-4 border-node'>{props.children}</div>;
 };
 
 export const CutText = (props: any, showCutText: boolean) => {

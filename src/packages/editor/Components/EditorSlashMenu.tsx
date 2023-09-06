@@ -17,6 +17,7 @@ import {
 	setNodes,
 	TComboboxItemWithData,
 	toggleList,
+	unwrapNodes,
 } from '@udecode/plate';
 import { ReactNode, useEffect, useState } from 'react';
 import BlockMenu from '../../../components/organisms/BlockMenu';
@@ -403,6 +404,23 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				formatList(editor, ELEMENT_TODO_LI);
 			},
 		},
+		{
+			key: 'test',
+			text: 'Test Button',
+			n: {
+				subtext: 'Unwrap [13]',
+				icon: 'test',
+				searchFunction: (search) => {
+					if ('test'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				unwrapNodes(editor, { at: [13] });
+			},
+		},
 		// {
 		// 	key: 'code block',
 		// 	text: 'Code Block',
@@ -450,6 +468,11 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 	// const [nodeSearchOpen, setnodeSearchOpen] = useSate(true);
 	const [searchVal, setsearchVal] = useState<string>('');
+
+	useEffect(() => {
+		console.log('searchVal ', searchVal);
+	}, [searchVal]);
+
 	const [nodeSearchResults, setnodeSearchResults] = useState<
 		(Partial<NodeData> & {
 			text: string;
@@ -457,6 +480,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			onPress: () => void;
 		})[]
 	>([firstNodeOption]);
+
 	const { data: session, status } = useSession();
 
 	const { data: searchResult } = useSWR(
@@ -700,6 +724,16 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				items={nodeSearchResults}
 				// items={items}
 				onRenderItem={({ search, item }) => {
+					if (item.key === 'create') {
+						const searchPattern = getTextAfterTrigger(
+							search.toLowerCase(),
+							'@'
+						);
+						console.log('search, ', searchPattern);
+						setsearchVal(searchPattern);
+						// setsearchVal(search);
+					}
+
 					return (
 						<div className='flex flex-row x-3 gap-x-2 items-center'>
 							{item.n.icon ? (
@@ -723,12 +757,13 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				}}
 				searchPattern={'.+'}
 				filter={(search: string) => (value) => {
-					const searchPattern = getTextAfterTrigger(
-						search.toLowerCase(),
-						'@'
-					);
-					// console.log('searchPattern: ', searchPattern);
-					setsearchVal(searchPattern);
+					// const searchPattern = getTextAfterTrigger(
+					// 	search.toLowerCase(),
+					// 	'@'
+					// );
+					// console.log('filter, ', searchPattern);
+					// // console.log('searchPattern: ', searchPattern);
+					// setsearchVal(searchPattern);
 					return true;
 				}}
 			/>

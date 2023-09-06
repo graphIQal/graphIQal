@@ -49,6 +49,7 @@ import {
 	ELEMENT_TITLE,
 } from '../plateTypes';
 import { withNodeLink } from './NodeLinkPlugin/withNodeLink';
+import { withDraggable } from '@/packages/dnd-editor/components/withDraggable';
 
 const plateUI = createPlateUI({});
 
@@ -161,7 +162,7 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_DIVIDER]: Divider,
 			[ELEMENT_LINK]: LinkElement,
 			[ELEMENT_BLOCKQUOTE]: BlockquoteElement,
-			[ELEMENT_NODE]: Node,
+			[ELEMENT_NODE]: withDraggable(Node),
 			[ELEMENT_NODETITLE]: NodeTitle,
 			// [ELEMENT_LIC]: LI,
 		},

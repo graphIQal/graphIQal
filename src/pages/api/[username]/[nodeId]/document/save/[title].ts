@@ -20,4 +20,5 @@ export default async function handler(
 
 	// console.log('result: ', result);
 	res.status(200).json(result);
+	// res.status(200).json({ cypher, params, body });
 }

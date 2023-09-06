@@ -129,7 +129,7 @@ const Document: React.FC<{
 			if (typeof obj !== 'object' || obj === null) return;
 
 			Object.entries(obj).forEach(([key, value]) => {
-				// Key is either an array index or object key
+				// Key is either an array index or object key»
 				if (value.type === ELEMENT_NODELINK) {
 					value.icon = connectionMap[value.nodeId as string]
 						? connectionMap[value.nodeId as string].icon
@@ -147,6 +147,9 @@ const Document: React.FC<{
 				} else if (value.type === ELEMENT_NODE) {
 					// console.log('ELEMENT_NODE, ', value);
 					value.id = value.nodeId;
+					value.title = connectionMap[value.id as string]
+						? connectionMap[value.id as string].title
+						: 'Untitled';
 					value.children = [
 						{
 							type: ELEMENT_NODETITLE,

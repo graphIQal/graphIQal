@@ -1,6 +1,11 @@
 import { mutate } from 'swr';
 import { History } from 'slate-history';
 import { fetcherAll } from '@/backend/driver/fetcher';
+import {
+	BlockElements,
+	ELEMENT_BLOCK,
+	ELEMENT_NODE,
+} from '@/packages/editor/plateTypes';
 
 export type SaveDocumentInput = {
 	nodeId: string;
@@ -26,8 +31,36 @@ export const saveDocument = async ({
 	)
 		return;
 
-	// console.log('saveDocument', nodeId, title);
-	// console.log(history);
+	const saveNestedNodes = (children: BlockElements[]) => {
+		function traverse(obj: BlockElements[]) {
+			if (typeof obj !== 'object' || obj === null) return;
+
+			Object.entries(obj).forEach(([key, value]) => {
+				// Key is either an array index or object key
+				if (value.type === ELEMENT_NODE && value.nodeId) {
+					// console.log('ELEMENT_NODE, ', value);
+
+					saveDocument({
+						nodeId: value.nodeId as string,
+						username,
+						history: history,
+						document: value.children,
+						title: value.title as string,
+					});
+				} else if (value.type === ELEMENT_BLOCK) {
+					traverse(value.children as BlockElements[]);
+				}
+			});
+		}
+
+		traverse(children);
+	};
+
+	// loop through document, find nodes, and update them.
+
+	console.log('saveDocument', nodeId, title);
+
+	saveNestedNodes(document.slice(1));
 
 	const res = await fetch(
 		`/api/${username}/${nodeId}/document/save/${title}`,
@@ -41,7 +74,7 @@ export const saveDocument = async ({
 			return res.json();
 		})
 		.then((json) => {
-			// console.log('saveDocumentJson', json);
+			console.log('saveDocumentJson', json);
 			return json;
 		});
 

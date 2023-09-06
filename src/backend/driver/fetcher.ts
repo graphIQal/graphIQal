@@ -1,5 +1,7 @@
-export const fetcher = (url: string) =>
-	fetch(url)
+export const fetcher = (url: string) => {
+	console.log(url);
+
+	return fetch(url)
 		.then((res) => {
 			// console.log('res ', res);
 			return res.json();
@@ -8,6 +10,7 @@ export const fetcher = (url: string) =>
 			console.log(json);
 			return json;
 		});
+};
 
 export const fetcherSingleReturn = (url: string) =>
 	fetch(url)

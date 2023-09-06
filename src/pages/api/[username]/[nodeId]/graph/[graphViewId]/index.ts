@@ -24,10 +24,10 @@ export default async function handler(
 	const data = await write(cypher as string, params);
 
 	if ('err' in data) {
-		console.log('huh');
+		// console.log('huh');
 		res.status(400).json(data);
 	} else {
-		console.log('else');
+		// console.log('else');
 		let nodeData = {} as { [key: string]: NodeData };
 		let visualData = {} as { [key: string]: GraphNodeData };
 
@@ -53,7 +53,7 @@ export default async function handler(
 				nodeDataResponse[node].relationship;
 		}
 
-		console.log('data: ', { nodeData, visualData });
+		// console.log('data: ', { nodeData, visualData });
 		res.status(200).json({ nodeData, visualData });
 	}
 }

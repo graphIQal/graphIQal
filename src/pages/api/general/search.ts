@@ -9,9 +9,9 @@ export default async function handler(
 
 	const cypher: string = `
 	MATCH (u: Node {id: "${homenodeId}"})-[*0..]->(n:Node)
-    WHERE toLower(n.title) STARTS WITH toLower("${search}")
+    WHERE toLower(n.title) CONTAINS toLower("${search}")
     RETURN DISTINCT n {.*, key: n.id, text: n.title}
-    LIMIT 100
+    LIMIT 25
 	`;
 
 	const result: any = await read(cypher as string);

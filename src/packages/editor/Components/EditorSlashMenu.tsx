@@ -418,7 +418,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				},
 			},
 			onPress: () => {
-				unwrapNodes(editor, { at: [13] });
+				// unwrapNodes(editor, { at: [13] });
 			},
 		},
 		// {
@@ -687,6 +687,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								nodeId: item.n.id,
 								routeString: `/${username}/${item.n.id}`,
 								icon: item.n.icon ? item.n.icon : 'node',
+								title: item.n.title,
 								children: item.n.document
 									? [
 											{

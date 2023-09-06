@@ -120,6 +120,8 @@ const Document: React.FC<{
 	}
 
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
+	console.log(nodeDataSWR);
+	console.log(connectionMap);
 	// console.log('connectionMap :', connectionMap);
 
 	const createInitialValue = (content: string): BlockElements[] => {
@@ -146,32 +148,34 @@ const Document: React.FC<{
 					traverse(value.children as BlockElements[]);
 				} else if (value.type === ELEMENT_NODE) {
 					// console.log('ELEMENT_NODE, ', value);
-					value.id = value.nodeId;
-					value.title = connectionMap[value.id as string]
-						? connectionMap[value.id as string].title
+					value.title = connectionMap[value.nodeId as string]
+						? connectionMap[value.nodeId as string].title
 						: 'Untitled';
 					value.children = [
 						{
 							type: ELEMENT_NODETITLE,
 							routeString: `/${username}/${value.nodeId}`,
-							icon: connectionMap[value.id as string]
-								? connectionMap[value.id as string].icon
+							icon: connectionMap[value.nodeId as string]
+								? connectionMap[value.nodeId as string].icon
 								: 'node',
 							id: value.children[0].id,
 							children: [
 								{
-									text: connectionMap[value.id as string]
-										? connectionMap[value.id as string]
+									text: connectionMap[value.nodeId as string]
+										? connectionMap[value.nodeId as string]
 												.title
 										: 'Untitled',
 								},
 							],
 						},
 					];
-					if (connectionMap[value.id].document) {
+
+					console.log(value);
+
+					if (connectionMap[value.nodeId].document) {
 						value.children.push(
 							...createInitialValue(
-								connectionMap[value.id].document
+								connectionMap[value.nodeId].document
 							)
 						);
 					}

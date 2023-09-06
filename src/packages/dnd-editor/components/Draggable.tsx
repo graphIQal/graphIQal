@@ -57,20 +57,49 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 
 	const elementId = element.id as string;
 
+	const handleMouseEnter = (e: any) => {
+		// console.log('handle mouse enter, ', elementId, e);
+		e.stopPropagation();
+		e.currentTarget.querySelector('.dragHandle').style.opacity = '1';
+
+		// e.currentTarget
+		// .closest('parentDraggable')
+		// .querySelector('.dragHandle').style.opacity = '1';
+
+		let parentDraggable =
+			e.currentTarget.parentNode.closest('.parentDraggable');
+		console.log('parentDraggable, ', parentDraggable);
+		if (parentDraggable) {
+			parentDraggable.querySelector('.dragHandle').style.opacity = '0';
+		}
+	};
+
+	const handleMouseLeave = (e: any) => {
+		e.stopPropagation();
+		e.currentTarget.querySelector('.dragHandle').style.opacity = '0';
+		// let parentDraggable = e.currentTarget.closest('.parentDraggable');
+		// if (parentDraggable) {
+		// 	parentDraggable.querySelector('.dragHandle').style.opacity = '1';
+		// }
+	};
+
 	return (
 		<div
 			className={
-				'group relative flex-row flex box-border w-full ' + elementId
+				'group relative flex-row flex box-border w-full parentDraggable ' +
+				elementId
 			}
 			ref={multiRootRef}
+			onMouseOver={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
 		>
 			<div
 				className={
-					'flex h-full opacity-0 pointer-events-none cursor-text mr-1 group-hover:opacity-70 '
+					'flex h-full opacity-0 pointer-events-none cursor-text mr-1 dragHandle grouphover:opacity-70'
 				}
 				contentEditable={false}
 			>
-				<div className='flex height[1.5em]'>
+				<div className='flex height[1.5em] '>
 					<div
 						className='pointer-events-auto'
 						ref={multiDragRef}

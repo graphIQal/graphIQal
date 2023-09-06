@@ -120,9 +120,6 @@ const Document: React.FC<{
 	}
 
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
-	console.log(nodeDataSWR);
-	console.log(connectionMap);
-	// console.log('connectionMap :', connectionMap);
 
 	const createInitialValue = (content: string): BlockElements[] => {
 		const value = JSON.parse(content);
@@ -169,8 +166,6 @@ const Document: React.FC<{
 							],
 						},
 					];
-
-					console.log(value);
 
 					if (connectionMap[value.nodeId].document) {
 						value.children.push(
@@ -233,7 +228,6 @@ const Document: React.FC<{
 									<EmojiPicker
 										{...props}
 										onSelectEmoji={async (emoji: Emoji) => {
-											// console.log('emoji', emoji);
 											const newData = {
 												connectedNodes:
 													nodeDataSWR.connectedNodes,

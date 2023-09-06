@@ -26,6 +26,7 @@ import { Cut } from '@styled-icons/ionicons-sharp/Cut';
 import { Settings } from '@styled-icons/material/Settings';
 import { Thealgorithms } from '@styled-icons/simple-icons/Thealgorithms';
 import {
+	Brush,
 	Divide,
 	FileSymlink,
 	Heading1,
@@ -81,4 +82,5 @@ export const Icons: { [key: string]: any } = {
 	todolist: ListTodo,
 	quote: TextQuote,
 	test: TestTube2,
+	brush: Brush,
 };

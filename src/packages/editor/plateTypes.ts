@@ -74,9 +74,10 @@ export const ELEMENT_DIVIDER = 'divider';
 
 export const COMMAND_NEST = 'nested';
 export const COMMAND_TEST = 'test';
+export const ELEMENT_CUT = 'cut';
 
 // marks
-export const ELEMENT_CUT = 'cut';
+export const MARK_COLOUR = 'colour';
 
 /**
  * Text

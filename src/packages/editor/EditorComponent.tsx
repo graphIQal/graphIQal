@@ -114,31 +114,6 @@ const EditorComponent: React.FC<{
 		}
 	};
 
-	// okay, so there's 2 solutions I can think of for the cut text plugin.
-	// Because we're saving the content, we need it to be void consistently when invisible.
-	// So we probably actually have to go through the entire document and then turn them from void to non-void elements.
-	// Or, we could go through and move them from children to an invisible content uneditable element.
-	// All in all, this does mean that simply toggling their visibility won't be helpful, because they're still in slate flow.
-	const cutTextPlugin = createMyPluginFactory<ToggleMarkPlugin>({
-		key: ELEMENT_CUT,
-		isElement: true,
-		isLeaf: false,
-		isInline: true,
-		isVoid: !showCutText,
-		options: {
-			hotkey: 'mod+g',
-		},
-		handlers: {
-			onKeyDown: (editor) => (event) => {
-				if (event.key === 'g' && (event.ctrlKey || event.metaKey)) {
-					event.preventDefault();
-					const cutTextNode = { type: ELEMENT_CUT, children: [] };
-					editor.wrapNodes(cutTextNode, { split: true });
-				}
-			},
-		},
-	});
-
 	const plugins = useMemo(
 		() =>
 			createMyPlugins(
@@ -212,7 +187,7 @@ const EditorComponent: React.FC<{
 						});
 					}, 2000);
 				}}
-				plugins={[...plugins, cutTextPlugin()]}
+				plugins={[...plugins]}
 				id={id}
 			>
 				<EditorFloatingMenu>

@@ -28,6 +28,8 @@ import {
 } from '@udecode/plate';
 import {
 	BlockquoteElement,
+	CutTextHidden,
+	CutTextShown,
 	Divider,
 	H1,
 	H2,
@@ -42,6 +44,8 @@ import {
 import {
 	createMyPluginFactory,
 	createMyPlugins,
+	ELEMENT_CUT_HIDDEN,
+	ELEMENT_CUT_SHOWN,
 	ELEMENT_DIVIDER,
 	ELEMENT_NODE,
 	ELEMENT_NODELINK,
@@ -129,6 +133,51 @@ const createTodoListPlugin = createMyPluginFactory<HotkeyPlugin>({
 });
 // I can try adding a plugin for the fricking paragraph that makes it an inline plugin? I'm not sure
 
+// okay, so there's 2 solutions I can think of for the cut text plugin.
+// Because we're saving the content, we need it to be void consistently when invisible.
+// So we probably actually have to go through the entire document and then turn them from void to non-void elements.
+// Or, we could go through and move them from children to an invisible content uneditable element.
+// All in all, this does mean that simply toggling their visibility won't be helpful, because they're still in slate flow.
+const cutTextHiddenPlugin = createMyPluginFactory<HotkeyPlugin>({
+	key: ELEMENT_CUT_HIDDEN,
+	isElement: true,
+	isLeaf: false,
+	isInline: true,
+	isVoid: true,
+	// options: {
+	// 	hotkey: 'mod+g',
+	// },
+	// handlers: {
+	// 	onKeyDown: (editor) => (event) => {
+	// 		if (event.key === 'g' && (event.ctrlKey || event.metaKey)) {
+	// 			event.preventDefault();
+	// 			const cutTextNode = { type: ELEMENT_CUT, children: [] };
+	// 			editor.wrapNodes(cutTextNode, { split: true });
+	// 		}
+	// 	},
+	// },
+});
+
+const cutTextShownPlugin = createMyPluginFactory<HotkeyPlugin>({
+	key: ELEMENT_CUT_SHOWN,
+	isElement: true,
+	isLeaf: false,
+	isInline: true,
+	isVoid: false,
+	// options: {
+	// 	hotkey: 'mod+g',
+	// },
+	// handlers: {
+	// 	onKeyDown: (editor) => (event) => {
+	// 		if (event.key === 'g' && (event.ctrlKey || event.metaKey)) {
+	// 			event.preventDefault();
+	// 			const cutTextNode = { type: ELEMENT_CUT, children: [] };
+	// 			editor.wrapNodes(cutTextNode, { split: true });
+	// 		}
+	// 	},
+	// },
+});
+
 export const BlockPlugins = createMyPlugins(
 	[
 		createHeadingPlugin(),
@@ -144,6 +193,8 @@ export const BlockPlugins = createMyPlugins(
 		createLinkPlugin(),
 		createBlockquotePlugin(),
 		createNodeTitlePlugin(),
+		cutTextHiddenPlugin(),
+		cutTextShownPlugin(),
 	],
 	{
 		components: {
@@ -164,7 +215,8 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_BLOCKQUOTE]: BlockquoteElement,
 			[ELEMENT_NODE]: withDraggable(Node),
 			[ELEMENT_NODETITLE]: NodeTitle,
-			// [ELEMENT_LIC]: LI,
+			[ELEMENT_CUT_HIDDEN]: CutTextHidden,
+			[ELEMENT_CUT_SHOWN]: CutTextShown,
 		},
 	}
 );

@@ -170,3 +170,23 @@ export const BlockquoteElement = (props: PlateRenderElementProps) => {
 		</div>
 	);
 };
+
+export const CutTextShown = (props: PlateRenderElementProps) => {
+	return (
+		<div {...props.attributes} className='text-node opacity-70 '>
+			<blockquote>{props.children}</blockquote>
+		</div>
+	);
+};
+
+export const CutTextHidden = (props: PlateRenderElementProps) => {
+	return (
+		<div
+			{...props.attributes}
+			className='text-node opacity-70 hidden '
+			contentEditable={false}
+		>
+			<blockquote>{props.children}</blockquote>
+		</div>
+	);
+};

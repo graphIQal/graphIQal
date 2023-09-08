@@ -141,6 +141,9 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 									key={j}
 									from={node}
 									to={line}
+									connectionData={
+										nodeData_Graph[node].connections[line]
+									}
 									id={node + '_' + line}
 									arrow={isLineDirectional(
 										nodeData_Graph[node].connections[line]

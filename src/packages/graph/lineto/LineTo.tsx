@@ -36,6 +36,8 @@ import {
 	calcAnchor,
 } from './helpers/linePositionHelpers';
 import { useViewData } from '../../../components/context/ViewContext';
+import { ConnectionData } from '../graphTypes';
+import { connectionColours } from '@/theme/colors';
 
 // Default styling stuff
 const defaultAnchor = { x: 0.5, y: 0.5 };
@@ -60,6 +62,7 @@ type LineToPropTypes = {
 	borderWidth?: number;
 	className?: string;
 	zIndex?: number;
+	connectionData: ConnectionData;
 };
 
 export const LineTo: React.FC<LineToPropTypes> = (props) => {
@@ -123,6 +126,7 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
 			deleteConnection={() =>
 				props.deleteConnection(props.from, props.to)
 			}
+			connectionData={props.connectionData}
 		/>
 	);
 };
@@ -144,6 +148,7 @@ type ArrowProps = {
 	borderWidth?: number | undefined;
 	className?: string | undefined;
 	zIndex?: number | undefined;
+	connectionData: ConnectionData;
 };
 
 export const Arrow = ({
@@ -157,6 +162,7 @@ export const Arrow = ({
 	arrow,
 	getDropdownItems,
 	deleteConnection,
+	connectionData,
 }: ArrowProps) => {
 	const offset = useVerticalOffset();
 	const { windowVar, documentVar } = useViewData();
@@ -293,7 +299,7 @@ export const Arrow = ({
 					id={'line' + id}
 					style={{ zIndex: 100 }}
 					onMouseOver={() => setShowDropdown(true)}
-					stroke='black'
+					stroke={connectionColours[connectionData.type]}
 					strokeWidth={strokeWidth}
 					fill='none'
 					d={`

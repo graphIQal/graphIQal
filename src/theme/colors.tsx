@@ -9,14 +9,16 @@ export const colors = [
 ];
 
 export const connectionColours: { [key: string]: string } = {
-	Parents: '#FCDDEC',
-	Children: '#f3ddfc',
-	Is: '#FFF492',
-	Encompasses: '#FF9292',
-	Needed: '#d7f7cb',
-	Needs: '#cdf7cb',
-	Followed: '#f7e4cb',
-	Follows: '#f7f2cb',
-	Related: '#cbf7e7',
-	Custom: '#FFDAC1',
+	PARENTS: '#FCDDEC',
+	CHILDREN: '#f3ddfc',
+	IS: '#FFF492',
+	ENCOMPASSES: '#FF9292',
+	NEEDED: '#d7f7cb',
+	NEEDS: '#cdf7cb',
+	FOLLOWED: '#f7e4cb',
+	FOLLOWS: '#f7f2cb',
+	RELATED: '#cbf7e7',
+	CUSTOM: '#FFDAC1',
 };
+
+// Need to make it dark & higher contrast for the lines

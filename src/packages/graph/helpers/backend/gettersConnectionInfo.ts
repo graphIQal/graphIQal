@@ -76,8 +76,10 @@ export const getIconAndColor = (
 			}
 		}
 	} else {
-		icon = nodeData_Graph[node].icon;
-		color = nodeData_Graph[node].color;
+		icon = nodeData_Graph[node].icon ? nodeData_Graph[node].icon : 'node';
+		color = nodeData_Graph[node].color
+			? nodeData_Graph[node].color
+			: 'black';
 	}
 
 	return {

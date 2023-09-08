@@ -71,7 +71,9 @@ export const renderConnections = (
 		return (
 			<ConnectionSection
 				key={name}
-				colour={connectionColours[sectionDisplayNames[name]]}
+				colour={
+					connectionColours[sectionDisplayNames[name].toUpperCase()]
+				}
 				title={
 					<div className='flex flex-row items-center w-full ' key={i}>
 						<div className='mr-2'>{sectionDisplayNames[name]}</div>

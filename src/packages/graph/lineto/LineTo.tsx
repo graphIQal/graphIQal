@@ -36,9 +36,10 @@ import {
 	calcAnchor,
 } from './helpers/linePositionHelpers';
 import { useViewData } from '../../../components/context/ViewContext';
-import { ConnectionData } from '../graphTypes';
+import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { connectionColours, connectionLineColours } from '@/theme/colors';
-import { mutate } from 'swr';
+import { KeyedMutator, mutate } from 'swr';
+import { updateConnection } from '@/backend/functions/node/mutate/updateConnection';
 
 // Default styling stuff
 const defaultAnchor = { x: 0.5, y: 0.5 };
@@ -64,6 +65,7 @@ type LineToPropTypes = {
 	className?: string;
 	zIndex?: number;
 	connectionData: ConnectionData;
+	mutateGraphData: KeyedMutator<any>;
 };
 
 export const LineTo: React.FC<LineToPropTypes> = (props) => {
@@ -131,6 +133,7 @@ export const LineTo: React.FC<LineToPropTypes> = (props) => {
 				props.deleteConnection(props.from, props.to)
 			}
 			connectionData={props.connectionData}
+			mutateGraphData={props.mutateGraphData}
 		/>
 	);
 };
@@ -153,6 +156,7 @@ type ArrowProps = {
 	className?: string | undefined;
 	zIndex?: number | undefined;
 	connectionData: ConnectionData;
+	mutateGraphData: KeyedMutator<any>;
 };
 
 export const Arrow = ({
@@ -167,6 +171,7 @@ export const Arrow = ({
 	getDropdownItems,
 	deleteConnection,
 	connectionData,
+	mutateGraphData,
 }: ArrowProps) => {
 	const offset = useVerticalOffset();
 	const { windowVar, documentVar } = useViewData();
@@ -333,7 +338,39 @@ export const Arrow = ({
 						);
 						// Update the state when the text is edited
 						setEditableText(e.currentTarget.textContent || '');
-						// mutate();
+
+						mutateGraphData(
+							updateConnection({
+								startNode: connectionData.startNode,
+								endNode: connectionData.endNode,
+								type: connectionData.type,
+								properties: {
+									content: e.currentTarget.textContent || '',
+								},
+							}),
+							{
+								optimisticData: (data: {
+									nodeData: { [key: string]: NodeData };
+									visualData: {
+										[key: string]: GraphNodeData;
+									};
+								}) => {
+									const newNodeData = data.nodeData;
+									newNodeData[
+										connectionData.startNode
+									].connections[
+										connectionData.endNode
+									].content =
+										e.currentTarget.textContent || '';
+
+									return {
+										nodeData: newNodeData,
+										visualData: data.visualData,
+									};
+								},
+								populateCache: false,
+							}
+						);
 					}}
 					className='text-md text-base_black mt-2 cursor-text text-center p-1 w-60 overflow-wrap break-word self-center -translate-x-1/2'
 				>

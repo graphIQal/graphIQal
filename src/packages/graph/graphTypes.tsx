@@ -8,7 +8,7 @@ export const ConnectionTypes = {
 };
 
 export type ConnectionData = {
-	content: string[]; //ids of the blocks of the node's data that are contained in this connection
+	content: string[] | string; //ids of the blocks of the node's data that are contained in this connection
 	startNode: string;
 	endNode: string;
 	type: string;

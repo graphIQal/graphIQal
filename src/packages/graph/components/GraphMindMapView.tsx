@@ -160,6 +160,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 											changeNodeData_Graph,
 										})
 									}
+									mutateGraphData={mutateGraphData}
 								/>
 							</div>
 						);

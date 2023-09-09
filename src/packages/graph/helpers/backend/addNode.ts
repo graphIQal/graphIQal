@@ -52,38 +52,38 @@ export const addNode = (
 
 	console.log(` mutate /api/username/${id}`);
 
-	mutate(
-		`/api/username/${id}`,
-		addAction(id, 'NODE_ADD', {
-			newNode,
-			newNodeVisualData,
-			// newNodeid: id,
-			nodeId,
-		}),
-		{
-			// optimisticData: {
-			// 	n: {
-			// 		id: id,
-			// 		title: '',
-			// 		icon: 'node',
-			// 		color: 'black',
-			// 		document: defaultDocument,
-			// 	},
-			// 	connections: [],
-			// },
-			// populateCache: () => {
-			// 	console.log('populating cache');
-			// 	return {
-			// 		n: {
-			// 			id: id,
-			// 			title: '',
-			// 			icon: 'node',
-			// 			color: 'black',
-			// 			document: defaultDocument,
-			// 		},
-			// 		connections: [],
-			// 	};
-			// },
-		}
-	);
+	// mutate(
+	// 	`/api/username/${id}`,
+	addAction(id, 'NODE_ADD', {
+		newNode,
+		newNodeVisualData,
+		// newNodeid: id,
+		nodeId,
+	});
+	// {
+	// optimisticData: {
+	// 	n: {
+	// 		id: id,
+	// 		title: '',
+	// 		icon: 'node',
+	// 		color: 'black',
+	// 		document: defaultDocument,
+	// 	},
+	// 	connections: [],
+	// },
+	// populateCache: () => {
+	// 	console.log('populating cache');
+	// 	return {
+	// 		n: {
+	// 			id: id,
+	// 			title: '',
+	// 			icon: 'node',
+	// 			color: 'black',
+	// 			document: defaultDocument,
+	// 		},
+	// 		connections: [],
+	// 	};
+	// },
+	// }
+	// );
 };

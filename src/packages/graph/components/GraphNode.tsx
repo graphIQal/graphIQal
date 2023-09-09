@@ -180,7 +180,7 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 	return (
 		<div>
 			<div
-				className=' h-[30px] w-[30px] absolute z-10'
+				className=' h-[30px] w-[30px] absolute z-50'
 				style={{
 					left: nodeInfo.left - OFFSET / 2,
 					top: nodeInfo.top,

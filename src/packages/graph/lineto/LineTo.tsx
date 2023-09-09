@@ -37,7 +37,8 @@ import {
 } from './helpers/linePositionHelpers';
 import { useViewData } from '../../../components/context/ViewContext';
 import { ConnectionData } from '../graphTypes';
-import { connectionColours } from '@/theme/colors';
+import { connectionColours, connectionLineColours } from '@/theme/colors';
+import { mutate } from 'swr';
 
 // Default styling stuff
 const defaultAnchor = { x: 0.5, y: 0.5 };
@@ -67,6 +68,9 @@ type LineToPropTypes = {
 
 export const LineTo: React.FC<LineToPropTypes> = (props) => {
 	if (props.from == props.to) return <div></div>;
+
+	console.log('connectionData ', props.connectionData);
+
 	const [fromAnchor, setFromAnchor] = useState<any>();
 	const [toAnchor, setToAnchor] = useState<any>();
 	const offset = useVerticalOffset();
@@ -257,10 +261,18 @@ export const Arrow = ({
 			numPointsInTriangleCallback;
 	}, []);
 
+	const [editableText, setEditableText] = useState(
+		connectionData.content
+			? Array.isArray(connectionData.content)
+				? connectionData.type
+				: connectionData.content
+			: connectionData.type
+	);
+
 	return (
 		<div className='relative'>
 			<div
-				className='absolute w-max z-30'
+				className='absolute w-max flex flex-col '
 				style={{
 					left: (p1.x + p4.x) / 2 + canvasXOffset - 15,
 					top: (p1.y + p4.y) / 2 + canvasYOffset - 15,
@@ -282,6 +294,51 @@ export const Arrow = ({
 						setShowDropdown={setShowDropdown}
 					/>
 				)}
+				{/* Editable text */}
+				<div
+					// ref={editableTextRef}
+					onDoubleClick={(e) => {
+						e.currentTarget.setAttribute('contentEditable', 'true');
+						e.currentTarget.classList.add(
+							'bg-blue-100',
+							'border',
+							'border-base_black',
+							'rounded'
+						);
+						// Focus and place cursor at end of text
+						e.currentTarget.focus();
+						const range = document.createRange();
+						range.selectNodeContents(e.currentTarget);
+						range.collapse(false);
+						const sel = window.getSelection();
+						sel?.removeAllRanges();
+						sel?.addRange(range);
+					}}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault();
+							e.currentTarget.blur();
+						}
+					}}
+					onBlur={(e) => {
+						e.currentTarget.setAttribute(
+							'contentEditable',
+							'false'
+						);
+						e.currentTarget.classList.remove(
+							'bg-blue-100',
+							'border',
+							'border-base_black',
+							'rounded'
+						);
+						// Update the state when the text is edited
+						setEditableText(e.currentTarget.textContent || '');
+						// mutate();
+					}}
+					className='text-md text-base_black mt-2 cursor-text text-center p-1 w-60 overflow-wrap break-word self-center -translate-x-1/2'
+				>
+					{editableText}
+				</div>
 			</div>
 
 			<svg
@@ -299,8 +356,8 @@ export const Arrow = ({
 					id={'line' + id}
 					style={{ zIndex: 100 }}
 					onMouseOver={() => setShowDropdown(true)}
-					stroke={connectionColours[connectionData.type]}
-					strokeWidth={strokeWidth}
+					stroke={connectionLineColours[connectionData.type]}
+					strokeWidth={strokeWidth * 2}
 					fill='none'
 					d={`
       M 
@@ -318,7 +375,7 @@ export const Arrow = ({
       L ${arrowHeadEndingSize} ${arrowHeadEndingSize / 2}
       L ${(arrowHeadEndingSize / 5) * 2} ${arrowHeadEndingSize}`}
 						fill='none'
-						stroke='black'
+						stroke={connectionLineColours[connectionData.type]}
 						strokeWidth={strokeWidth}
 						style={{
 							transform: `translate(${x}px, ${y}px) rotate(${angle}deg)`,

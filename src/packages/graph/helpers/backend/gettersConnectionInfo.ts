@@ -41,7 +41,8 @@ export const isLineDirectional = (connection: ConnectionData) => {
 	return (
 		connection.type == ConnectionTypes.HAS ||
 		connection.type == ConnectionTypes.NEEDS ||
-		connection.type == ConnectionTypes.FOLLOWS
+		connection.type == ConnectionTypes.FOLLOWS ||
+		connection.type == ConnectionTypes.IS
 	);
 };
 

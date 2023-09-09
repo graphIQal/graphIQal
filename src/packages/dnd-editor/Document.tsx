@@ -120,6 +120,7 @@ const Document: React.FC<{
 	}
 
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
+	console.log(connectionMap);
 
 	const createInitialValue = (content: string): BlockElements[] => {
 		const value = JSON.parse(content);
@@ -167,12 +168,16 @@ const Document: React.FC<{
 						},
 					];
 
-					if (connectionMap[value.nodeId].document) {
-						value.children.push(
-							...createInitialValue(
-								connectionMap[value.nodeId].document
-							)
-						);
+					console.log(value.nodeId);
+					if (connectionMap[value.nodeId]) {
+						if (connectionMap[value.nodeId].document) {
+							value.children.push(
+								...createInitialValue(
+									connectionMap[value.nodeId].document
+								)
+							);
+						} else {
+						}
 					}
 				}
 			});

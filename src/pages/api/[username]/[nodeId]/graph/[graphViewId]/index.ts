@@ -18,7 +18,7 @@ export default async function handler(
 	const cypher = `
 	MATCH (g:GRAPH_VIEW {id: $graphViewId})-[relationship:HAS]-(node), (node)-[r]-(d:Node)
 
-	RETURN node {.*}, relationship {.*}, collect(r {startNode: startNode(r).id, endNode: endNode(r).id, type: type(r)}) AS connections
+	RETURN node {.*}, relationship {.*}, collect(r {.*, startNode: startNode(r).id, endNode: endNode(r).id, type: type(r)}) AS connections
 	`;
 
 	const data = await write(cypher as string, params);
@@ -41,7 +41,6 @@ export default async function handler(
 					nodeDataResponse[node].connections[connection].endNode
 				] = {
 					...nodeDataResponse[node].connections[connection],
-					content: [],
 				};
 			}
 			nodeData[nodeDataResponse[node].node.id] = {

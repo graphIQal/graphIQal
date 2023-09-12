@@ -83,4 +83,5 @@ export const Icons: { [key: string]: any } = {
 	quote: TextQuote,
 	test: TestTube2,
 	brush: Brush,
+	edit: Pencil,
 };

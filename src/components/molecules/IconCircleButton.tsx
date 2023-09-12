@@ -30,7 +30,7 @@ import { CircularGraph } from '@styled-icons/entypo/CircularGraph';
 import { Cut } from '@styled-icons/ionicons-sharp/Cut';
 
 type NodeButtonProps = {
-	onClick: () => void;
+	onClick: (e?: any) => void;
 	src: string;
 	selected?: boolean;
 	size?: number;
@@ -56,7 +56,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		console.log('handleClick');
 		e.stopPropagation();
 		e.preventDefault();
-		onClick();
+		onClick(e);
 	};
 
 	const icons: { [key: string]: JSX.Element } = {

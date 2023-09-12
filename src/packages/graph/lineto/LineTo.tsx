@@ -40,6 +40,7 @@ import { ConnectionData, GraphNodeData, NodeData } from '../graphTypes';
 import { connectionColours, connectionLineColours } from '@/theme/colors';
 import { KeyedMutator, mutate } from 'swr';
 import { updateConnection } from '@/backend/functions/node/mutate/updateConnection';
+import { Icons } from '@/components/icons';
 
 // Default styling stuff
 const defaultAnchor = { x: 0.5, y: 0.5 };
@@ -70,8 +71,6 @@ type LineToPropTypes = {
 
 export const LineTo: React.FC<LineToPropTypes> = (props) => {
 	if (props.from == props.to) return <div></div>;
-
-	console.log('connectionData ', props.connectionData);
 
 	const [fromAnchor, setFromAnchor] = useState<any>();
 	const [toAnchor, setToAnchor] = useState<any>();
@@ -266,18 +265,16 @@ export const Arrow = ({
 			numPointsInTriangleCallback;
 	}, []);
 
+	console.log(connectionData);
+	console.log(connectionData.content ? connectionData.content : '');
 	const [editableText, setEditableText] = useState(
-		connectionData.content
-			? Array.isArray(connectionData.content)
-				? connectionData.type
-				: connectionData.content
-			: connectionData.type
+		connectionData.content ? connectionData.content : ''
 	);
 
 	return (
 		<div className='relative'>
 			<div
-				className='absolute w-max flex flex-col '
+				className='absolute flex flex-row flex-start align-top'
 				style={{
 					left: (p1.x + p4.x) / 2 + canvasXOffset - 15,
 					top: (p1.y + p4.y) / 2 + canvasYOffset - 15,
@@ -299,84 +296,142 @@ export const Arrow = ({
 						setShowDropdown={setShowDropdown}
 					/>
 				)}
-				{/* Editable text */}
-				<div
-					// ref={editableTextRef}
-					onDoubleClick={(e) => {
-						e.currentTarget.setAttribute('contentEditable', 'true');
-						e.currentTarget.classList.add(
-							'bg-blue-100',
-							'border',
-							'border-base_black',
-							'rounded'
-						);
-						// Focus and place cursor at end of text
-						e.currentTarget.focus();
-						const range = document.createRange();
-						range.selectNodeContents(e.currentTarget);
-						range.collapse(false);
-						const sel = window.getSelection();
-						sel?.removeAllRanges();
-						sel?.addRange(range);
-					}}
-					onKeyDown={(e) => {
-						if (e.key === 'Enter') {
-							e.preventDefault();
-							e.currentTarget.blur();
-						}
-					}}
-					onBlur={(e) => {
-						e.currentTarget.setAttribute(
-							'contentEditable',
-							'false'
-						);
-						e.currentTarget.classList.remove(
-							'bg-blue-100',
-							'border',
-							'border-base_black',
-							'rounded'
-						);
-						// Update the state when the text is edited
-						setEditableText(e.currentTarget.textContent || '');
-
-						mutateGraphData(
-							updateConnection({
-								startNode: connectionData.startNode,
-								endNode: connectionData.endNode,
-								type: connectionData.type,
-								properties: {
-									content: e.currentTarget.textContent || '',
-								},
-							}),
-							{
-								optimisticData: (data: {
-									nodeData: { [key: string]: NodeData };
-									visualData: {
-										[key: string]: GraphNodeData;
-									};
-								}) => {
-									const newNodeData = data.nodeData;
-									newNodeData[
-										connectionData.startNode
-									].connections[
-										connectionData.endNode
-									].content =
-										e.currentTarget.textContent || '';
-
-									return {
-										nodeData: newNodeData,
-										visualData: data.visualData,
-									};
-								},
-								populateCache: false,
+				<div className='flex flex-col'>
+					{/* Editable text */}
+					{editableText === '' ? (
+						<IconCircleButton
+							// className='w-4 h-4 cursor-pointer icon-class'
+							circle={true}
+							src='draw'
+							onClick={(e: any) => {
+								e.stopPropagation();
+								const div = e.currentTarget.nextSibling;
+								if (div) {
+									div.setAttribute('contentEditable', 'true');
+									div.classList.add(
+										// 'bg-blue-100',
+										'border',
+										'border-base_black',
+										'rounded'
+									);
+									div.focus();
+									const range = document.createRange();
+									range.selectNodeContents(div);
+									range.collapse(false);
+									const sel = window.getSelection();
+									sel?.removeAllRanges();
+									sel?.addRange(range);
+								}
+							}}
+						/>
+					) : (
+						<div className='h-8'></div>
+					)}
+					<div
+						// ref={editableTextRef}
+						onDoubleClick={(e) => {
+							e.currentTarget.setAttribute(
+								'contentEditable',
+								'true'
+							);
+							e.currentTarget.classList.add(
+								// 'bg-blue-100',
+								'border',
+								'border-base_black',
+								'rounded'
+							);
+							// Focus and place cursor at end of text
+							e.currentTarget.focus();
+							const range = document.createRange();
+							range.selectNodeContents(e.currentTarget);
+							range.collapse(false);
+							const sel = window.getSelection();
+							sel?.removeAllRanges();
+							sel?.addRange(range);
+						}}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter') {
+								e.preventDefault();
+								e.currentTarget.blur();
 							}
-						);
-					}}
-					className='text-md text-base_black mt-2 cursor-text text-center p-1 w-60 overflow-wrap break-word self-center -translate-x-1/2'
-				>
-					{editableText}
+						}}
+						onBlur={(e) => {
+							e.currentTarget.setAttribute(
+								'contentEditable',
+								'false'
+							);
+							e.currentTarget.classList.remove(
+								'bg-blue-100',
+								'border',
+								'border-base_black',
+								'rounded'
+							);
+							// Update the state when the text is edited
+							setEditableText(e.currentTarget.textContent || '');
+
+							mutateGraphData(
+								updateConnection({
+									startNode: connectionData.startNode,
+									endNode: connectionData.endNode,
+									type: connectionData.type,
+									properties: {
+										content:
+											e.currentTarget.textContent || '',
+									},
+								}),
+								{
+									optimisticData: (data: {
+										nodeData: { [key: string]: NodeData };
+										visualData: {
+											[key: string]: GraphNodeData;
+										};
+									}) => {
+										const newNodeData = data.nodeData;
+										newNodeData[
+											connectionData.startNode
+										].connections[
+											connectionData.endNode
+										].content =
+											e.currentTarget.textContent || '';
+
+										return {
+											nodeData: newNodeData,
+											visualData: data.visualData,
+										};
+									},
+									populateCache: false,
+								}
+							);
+						}}
+						className='text-md text-base_black mt-2 cursor-text text-center p-1 w-60 overflow-wrap break-word self-center -translate-x-1/2'
+						style={{
+							color: connectionLineColours[connectionData.type],
+						}}
+					>
+						{editableText}
+					</div>
 				</div>
 			</div>
+			{/* {editableText || (
+						<IconCircleButton
+							src={'draw'}
+							onClick={(e) => {
+								e.stopPropagation();
+								const div = e.currentTarget.parentElement;
+								console.log(div);
+								if (div) {
+									div.setAttribute('contentEditable', 'true');
+									div.focus();
+									const range = document.createRange();
+									range.selectNodeContents(div);
+									range.collapse(false);
+									const sel = window.getSelection();
+									sel?.removeAllRanges();
+									sel?.addRange(range);
+								}
+							}}
+						></IconCircleButton>
+					)} */}
 
 			<svg
 				width={canvasWidth}

@@ -404,9 +404,9 @@ export const Arrow = ({
 							);
 						}}
 						className='text-md text-base_black mt-2 cursor-text text-center p-1 w-60 overflow-wrap break-word self-center -translate-x-1/2'
-						style={{
-							color: connectionLineColours[connectionData.type],
-						}}
+						// style={{
+						// 	color: connectionLineColours[connectionData.type],
+						// }}
 					>
 						{editableText}
 					</div>

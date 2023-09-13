@@ -36,6 +36,7 @@ import {
 	ListTodo,
 	Minus,
 	PlusCircle,
+	Send,
 	Slash,
 	TestTube2,
 	TextQuote,
@@ -84,4 +85,5 @@ export const Icons: { [key: string]: any } = {
 	test: TestTube2,
 	brush: Brush,
 	edit: Pencil,
+	send: Send,
 };

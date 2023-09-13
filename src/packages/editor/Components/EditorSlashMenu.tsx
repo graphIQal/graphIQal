@@ -138,10 +138,247 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						: '';
 					const remainingText = 'connect'.slice(match.length);
 					editor.insertText(remainingText);
+					editor.insertText(':');
+					// editor.insertText(' @');
+				}
+
+				// setnodeSearchOpen(true);
+			},
+		},
+		{
+			key: 'connect:is',
+			text: 'Connect with IS',
+			n: {
+				subtext: 'This node IS node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':is') ||
+						search.endsWith(':i') ||
+						search.endsWith(':')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:is'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:is'.slice(match.length);
+					editor.insertText(remainingText);
 					editor.insertText(' @');
 				}
 
 				// setnodeSearchOpen(true);
+			},
+		},
+		{
+			key: 'connect:parent',
+			text: 'Connect to parent node',
+			n: {
+				subtext: 'This node is the Child of node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':') ||
+						search.endsWith(':p') ||
+						search.endsWith(':pa') ||
+						search.endsWith(':par') ||
+						search.endsWith(':pare') ||
+						search.endsWith(':paren') ||
+						search.endsWith(':parent')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:parent'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:parent'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+
+				// setnodeSearchOpen(true);
+			},
+		},
+		{
+			key: 'connect:child',
+			text: 'Connect to child node',
+			n: {
+				subtext: 'This node is the Parent of node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':') ||
+						search.endsWith(':c') ||
+						search.endsWith(':ch') ||
+						search.endsWith(':chi') ||
+						search.endsWith(':chil') ||
+						search.endsWith(':child')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:parent'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:parent'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+
+				// setnodeSearchOpen(true);
+			},
+		},
+		{
+			key: 'connect:needs',
+			text: 'Connect to needed node',
+			n: {
+				subtext: 'This node NEEDS node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':') ||
+						search.endsWith(':n') ||
+						search.endsWith(':ne') ||
+						search.endsWith(':nee') ||
+						search.endsWith(':need') ||
+						search.endsWith(':needs')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:needs'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:needs'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
+		},
+		{
+			key: 'connect:related',
+			text: 'Connect to related node',
+			n: {
+				subtext: 'This node is RELATED to node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':') ||
+						search.endsWith(':r') ||
+						search.endsWith(':re') ||
+						search.endsWith(':rel') ||
+						search.endsWith(':rela') ||
+						search.endsWith(':relat') ||
+						search.endsWith(':relate') ||
+						search.endsWith(':related')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:related'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:related'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
 			},
 		},
 		{
@@ -274,6 +511,45 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						? beforeText
 						: '';
 					const remainingText = 'addNode'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
+		},
+		{
+			key: 'send',
+			text: 'Send block to',
+			n: {
+				subtext: 'Send Block to',
+				icon: 'send',
+				searchFunction: (search) => {
+					if ('send to'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'send'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'send'.slice(match.length);
 					editor.insertText(remainingText);
 					editor.insertText(' @');
 				}
@@ -510,7 +786,11 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					// Keep deleting backwards until you see the '/', then delete one more.
 					// console.log('editor.selection: ', editor.selection);
 
-					if (item.key === 'connect' || item.key === 'add_node') {
+					if (
+						item.key === 'connect' ||
+						item.key === 'add_node' ||
+						item.key.startsWith('connect')
+					) {
 						item.onPress();
 						return;
 					}
@@ -704,6 +984,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									  ]
 									: [{ text: '' }],
 							} as MyNodeElement);
+						} else if (beforeText === 'send ') {
+							// Send block to node inbox
 						} else {
 							// add node link
 							console.log('add node link');

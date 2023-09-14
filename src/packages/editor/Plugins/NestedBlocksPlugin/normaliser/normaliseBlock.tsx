@@ -30,8 +30,8 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 
 	return ([node, path]: TNodeEntry) => {
 		normalizeNode([node, path]);
-		console.log('normalise: ', editor.children);
-		console.log([node, path]);
+		// console.log('normalise: ', editor.children);
+		// console.log([node, path]);
 
 		const isBlock = node.type === blockType;
 
@@ -47,14 +47,14 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 		}
 
 		if ((node.type as string) in BlockwrappedElements) {
-			console.log('blockwrapped');
+			// console.log('blockwrapped');
 			// console.log('blockWrapped');
 			// Normalise p's so that they automatically lift if they're second.
 			// The trick is that something that is indented will actually already be wrapped in a block, but a automatically generated p will be naked.
 
 			// Check if it's the first item in a block. If so ignore.
 			if (path[path.length - 1] === 0) return;
-			console.log('actually blockwrapped');
+			// console.log('actually blockwrapped');
 			// // Wrap in block
 
 			// if (node.type === 'li') {
@@ -74,16 +74,16 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			// outdent node to carry all children nodes.
 			outdent(editor);
 		} else if (isBlock) {
-			console.log('isBlock');
+			// console.log('isBlock');
 			// Children should all be code lines
 			const children = getChildren([node, path]);
 
 			if (children.length === 0) {
 				// If there are no children, delete the block
-				console.log('deleting child');
+				// console.log('deleting child');
 				editor.removeNodes({ at: path });
 			} else {
-				console.log('checking blockChildren');
+				// console.log('checking blockChildren');
 				// children returns array of tuples [child, path]
 				// gets data of first child, makes sure it's blockwrapped element
 				const firstChildType = children[0][0].type as string;
@@ -111,8 +111,8 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 							{ at: children[i][1] }
 						);
 					} else if (children[i][0].type === nodetype) {
-						console.log('unwrap nodes');
-						console.log(path, [i, 0], children[i]);
+						// console.log('unwrap nodes');
+						// console.log(path, [i, 0], children[i]);
 						unwrapNodes(editor, { at: path });
 					}
 				}

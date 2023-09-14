@@ -169,6 +169,7 @@ export interface BlockElements
 export interface MyBlockElement extends BlockElements {
 	type: typeof ELEMENT_BLOCK;
 	children: BlockElements[];
+	id: string;
 }
 
 export interface MyTitleElement extends BlockElements {

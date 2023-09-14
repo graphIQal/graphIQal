@@ -13,7 +13,8 @@ import { editableProps } from './editableProps';
 import {
 	createMyPluginFactory,
 	createMyPlugins,
-	ELEMENT_CUT,
+	ELEMENT_CUT_SHOWN,
+	ELEMENT_CUT_HIDDEN,
 	MyEditor,
 	MyPlatePlugin,
 	MyValue,
@@ -57,9 +58,7 @@ const EditorComponent: React.FC<{
 	const editorRef = useRef<MyEditor | null>(null);
 
 	useEffect(() => {
-		// console.log('on Mount');
 		setValue(initialValue);
-		// console.log(nodeId, value, initialValue);
 	}, []);
 
 	useEffect(() => {
@@ -139,7 +138,6 @@ const EditorComponent: React.FC<{
 				{
 					components: {
 						...customElements,
-						[ELEMENT_CUT]: (props) => CutText(props, showCutText),
 					},
 				}
 			),

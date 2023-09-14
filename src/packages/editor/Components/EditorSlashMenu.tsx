@@ -63,6 +63,10 @@ import { fetcher } from '@/backend/driver/fetcher';
 import { Icons } from '@/components/icons';
 import React from 'react';
 import { createConnection } from '@/backend/functions/node/mutate/createConnection';
+import { getClosestBlock } from '../helpers/getClosestBlock';
+import { getClosestNodeBlock } from '../helpers/getClosestNodeBlock';
+import { useToast } from '@/components/ui/use-toast';
+import NodeIcon from '@/components/atoms/NodeIcon';
 
 export const markTooltip: TippyProps = {
 	arrow: true,
@@ -100,7 +104,8 @@ const getTextAfterTrigger = (search: string, trigger: string) => {
 export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	const router = useRouter();
 	const editor = useMyPlateEditorRef();
-	const { nodeId, username } = useViewData();
+	const { nodeId, username, currNode_data } = useViewData();
+	const { toast } = useToast();
 
 	const items: item[] = [
 		{
@@ -149,7 +154,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'connect:is',
 			text: 'Connect with IS',
 			n: {
-				subtext: 'This node IS node @',
+				subtext: 'This node IS type of node @',
 				icon: 'connect',
 				searchFunction: (search) => {
 					if (
@@ -463,7 +468,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			key: 'nodelink',
 			text: 'NodeLink',
 			n: {
-				subtext: 'Create a link to a node',
+				subtext: 'Add a link to a node',
 				icon: 'nodeLink',
 				searchFunction: (search) => {
 					if ('nodelink'.startsWith(search)) {
@@ -473,8 +478,29 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				},
 			},
 			onPress: () => {
-				console.log('okay');
-				toggleList(editor, { type: ELEMENT_LI });
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'nodeLink'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'nodeLink'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
 			},
 		},
 		{
@@ -745,10 +771,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	// const [nodeSearchOpen, setnodeSearchOpen] = useSate(true);
 	const [searchVal, setsearchVal] = useState<string>('');
 
-	useEffect(() => {
-		console.log('searchVal ', searchVal);
-	}, [searchVal]);
-
 	const [nodeSearchResults, setnodeSearchResults] = useState<
 		(Partial<NodeData> & {
 			text: string;
@@ -770,7 +792,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	);
 
 	useEffect(() => {
-		console.log('node res: ', searchResult);
+		// console.log('node res: ', searchResult);
 		if (searchResult) {
 			setnodeSearchResults([...searchResult, firstNodeOption]);
 		} else {
@@ -789,6 +811,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					if (
 						item.key === 'connect' ||
 						item.key === 'add_node' ||
+						item.key === 'send' ||
+						item.key === 'nodelink' ||
 						item.key.startsWith('connect')
 					) {
 						item.onPress();
@@ -938,19 +962,67 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									}
 								}
 							}
+						} else {
+							return;
 						}
 
 						if (!item.n.id) return;
 
 						// add_node or connect
-						if (beforeText === 'connect ') {
-							console.log('connect_node');
+						if (beforeText.startsWith('connect')) {
+							// Find closestNode
+							let node = getClosestNodeBlock(
+								editor.selection.anchor.path,
+								editor
+							);
 
-							createConnection({
-								startNode: nodeId,
-								endNode: item.n.id,
-								type: ConnectionTypes.RELATED,
-							});
+							console.log('connect_node');
+							console.log(node);
+							node = node ? node.id : nodeId;
+
+							if (beforeText.endsWith('is ')) {
+								console.log('is');
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon icon='node' />
+											<span>
+												{editor.children[0].children[0]
+													.text + ' is '}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'Connection of type IS created ',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 2000);
+
+								// createConnection({
+								// 	startNode: nodeId,
+								// 	endNode: item.n.id,
+								// 	type: ConnectionTypes.IS,
+								// });
+							} else if (beforeText.endsWith('parent ')) {
+								console.log('parent');
+							} else if (beforeText.endsWith('child ')) {
+								console.log('child');
+							} else if (beforeText.endsWith('needed ')) {
+								console.log('needed');
+							} else {
+								// do 'related;
+								console.log('related');
+							}
+
+							// createConnection({
+							// 	startNode: nodeId,
+							// 	endNode: item.n.id,
+							// 	type: ConnectionTypes.RELATED,
+							// });
 						} else if (beforeText === 'addNode ') {
 							console.log('add-node');
 							console.log(item);
@@ -1012,24 +1084,13 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							search.toLowerCase(),
 							'@'
 						);
-						console.log('search, ', searchPattern);
+						// console.log('search, ', searchPattern);
 						setsearchVal(searchPattern);
-						// setsearchVal(search);
 					}
 
 					return (
 						<div className='flex flex-row x-3 gap-x-2 items-center'>
-							{item.n.icon ? (
-								item.n.icon in Icons ? (
-									React.createElement(Icons[item.n.icon], {
-										className: 'h-4 w-4',
-									})
-								) : (
-									<div>{item.n.icon}</div>
-								)
-							) : (
-								<Icons.node className='h-4 w-4' />
-							)}
+							<NodeIcon icon={item.n.icon} />
 							{item.key === 'create'
 								? `new '${search.substring(
 										search.indexOf('@') + 1

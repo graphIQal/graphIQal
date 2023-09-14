@@ -37,8 +37,9 @@
 
 .separator-col {
   @apply border-lining;
-  @apply border-l;
+  @apply border-r;
   cursor: col-resize;
+  padding-left:2px;
 }
 
 .separator-row {

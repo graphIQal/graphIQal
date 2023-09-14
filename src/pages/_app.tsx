@@ -23,6 +23,7 @@ import { SessionProvider } from 'next-auth/react';
 import { SWRConfig } from 'swr';
 import { usePersistentSWRCache } from '../helpers/hooks/useSWRCache';
 import { AppProps } from 'next/app';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function MyApp({
 	Component,
@@ -45,6 +46,7 @@ export default function MyApp({
 						<Window>
 							<View>
 								<Component {...pageProps} />
+								<Toaster />
 							</View>
 						</Window>
 					</SessionProvider>

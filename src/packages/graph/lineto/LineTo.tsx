@@ -265,8 +265,8 @@ export const Arrow = ({
 			numPointsInTriangleCallback;
 	}, []);
 
-	console.log(connectionData);
-	console.log(connectionData.content ? connectionData.content : '');
+	// console.log(connectionData);
+	// console.log(connectionData.content ? connectionData.content : '');
 	const [editableText, setEditableText] = useState(
 		connectionData.content ? connectionData.content : ''
 	);

@@ -120,7 +120,7 @@ const Document: React.FC<{
 	}
 
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
-	console.log(connectionMap);
+	// console.log(connectionMap);
 
 	const createInitialValue = (content: string): BlockElements[] => {
 		const value = JSON.parse(content);
@@ -168,11 +168,13 @@ const Document: React.FC<{
 						},
 					];
 
-					console.log(value.nodeId);
+					// @ts-ignore
 					if (connectionMap[value.nodeId]) {
+						// @ts-ignore
 						if (connectionMap[value.nodeId].document) {
 							value.children.push(
 								...createInitialValue(
+									// @ts-ignore
 									connectionMap[value.nodeId].document
 								)
 							);

@@ -988,7 +988,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 											<NodeIcon icon='node' />
 											<span>
 												{editor.children[0].children[0]
-													.text + ' is '}
+													.text + ' is now a '}
 											</span>
 											<NodeIcon icon={item.n.icon} />
 											<span>{item.n.title}</span>
@@ -1002,20 +1002,118 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									dismiss();
 								}, 2000);
 
-								// createConnection({
-								// 	startNode: nodeId,
-								// 	endNode: item.n.id,
-								// 	type: ConnectionTypes.IS,
-								// });
+								createConnection({
+									startNode: node,
+									endNode: item.n.id,
+									type: ConnectionTypes.IS,
+								});
 							} else if (beforeText.endsWith('parent ')) {
-								console.log('parent');
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon icon='node' />
+											<span>
+												{editor.children[0].children[0]
+													.text +
+													' is now a child of '}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'Connection of type HAS created ',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 2000);
+
+								createConnection({
+									startNode: item.n.id,
+									endNode: node,
+									type: ConnectionTypes.HAS,
+								});
 							} else if (beforeText.endsWith('child ')) {
-								console.log('child');
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon icon='node' />
+											<span>
+												{editor.children[0].children[0]
+													.text +
+													' is now a parent of '}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'Connection of type HAS created ',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 2000);
+
+								createConnection({
+									startNode: node,
+									endNode: item.n.id,
+									type: ConnectionTypes.HAS,
+								});
 							} else if (beforeText.endsWith('needed ')) {
-								console.log('needed');
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon icon='node' />
+											<span>
+												{editor.children[0].children[0]
+													.text + ' needs '}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'Connection of type NEEDS created ',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 2000);
+
+								createConnection({
+									startNode: node,
+									endNode: item.n.id,
+									type: ConnectionTypes.NEEDS,
+								});
 							} else {
 								// do 'related;
-								console.log('related');
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon icon='node' />
+											<span>
+												{editor.children[0].children[0]
+													.text + ' related '}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'Connection of type RELATED created ',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 2000);
+
+								createConnection({
+									startNode: node,
+									endNode: item.n.id,
+									type: ConnectionTypes.RELATED,
+								});
 							}
 
 							// createConnection({

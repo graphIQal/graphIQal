@@ -132,21 +132,29 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 
 	return (
 		<div className='relative' id={'container' + graphViewId}>
-			{Object.keys(nodeData_Graph).map(function (node, i) {
-				return Object.keys(nodeData_Graph[node].connections).map(
-					(line, j) => {
+			{Object.keys(nodeData_Graph).map(function (startNode, i) {
+				return Object.keys(nodeData_Graph[startNode].connections)
+					.filter(
+						(endNode) =>
+							nodeData_Graph[startNode] && nodeData_Graph[endNode]
+					)
+					.map((line, j) => {
 						return (
 							<div key={j}>
 								<LineTo
 									key={j}
-									from={node}
+									from={startNode}
 									to={line}
 									connectionData={
-										nodeData_Graph[node].connections[line]
+										nodeData_Graph[startNode].connections[
+											line
+										]
 									}
-									id={node + '_' + line}
+									id={startNode + '_' + line}
 									arrow={isLineDirectional(
-										nodeData_Graph[node].connections[line]
+										nodeData_Graph[startNode].connections[
+											line
+										]
 									)}
 									getDropDownItems={getDropdownItems}
 									deleteConnection={(
@@ -164,8 +172,7 @@ export const GraphMindMapView: React.FC<MindMapProps> = ({
 								/>
 							</div>
 						);
-					}
-				);
+					});
 			})}
 			{Object.keys(nodeVisualData_Graph).map((node) => {
 				// const title = nodeData_Graph[node].title;

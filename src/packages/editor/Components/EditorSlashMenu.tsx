@@ -104,7 +104,7 @@ const getTextAfterTrigger = (search: string, trigger: string) => {
 export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	const router = useRouter();
 	const editor = useMyPlateEditorRef();
-	const { nodeId, username, currNode_data } = useViewData();
+	const { nodeId, username } = useViewData();
 	const { toast } = useToast();
 
 	const items: item[] = [
@@ -1000,7 +1000,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 								setTimeout(() => {
 									dismiss();
-								}, 2000);
+								}, 3000);
 
 								createConnection({
 									startNode: node,
@@ -1027,7 +1027,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 								setTimeout(() => {
 									dismiss();
-								}, 2000);
+								}, 3000);
 
 								createConnection({
 									startNode: item.n.id,
@@ -1054,7 +1054,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 								setTimeout(() => {
 									dismiss();
-								}, 2000);
+								}, 3000);
 
 								createConnection({
 									startNode: node,
@@ -1080,7 +1080,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 								setTimeout(() => {
 									dismiss();
-								}, 2000);
+								}, 3000);
 
 								createConnection({
 									startNode: node,
@@ -1107,7 +1107,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 								setTimeout(() => {
 									dismiss();
-								}, 2000);
+								}, 3000);
 
 								createConnection({
 									startNode: node,

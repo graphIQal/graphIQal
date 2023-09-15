@@ -296,7 +296,7 @@ export const Arrow = ({
 						setShowDropdown={setShowDropdown}
 					/>
 				)}
-				<div className='flex flex-col'>
+				<div className='flex'>
 					{/* Editable text */}
 					{editableText === '' ? (
 						<IconCircleButton
@@ -403,7 +403,7 @@ export const Arrow = ({
 								}
 							);
 						}}
-						className='text-md text-base_black mt-2 cursor-text text-center p-1 w-60 overflow-wrap break-word self-center -translate-x-1/2'
+						className='text-md text-base_black cursor-text p-1 w-60 overflow-wrap break-word self-center '
 						// style={{
 						// 	color: connectionLineColours[connectionData.type],
 						// }}

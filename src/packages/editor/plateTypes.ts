@@ -199,6 +199,7 @@ export interface MyNodeElement extends BlockElements {
 	routeString: string;
 	icon?: string;
 	children: InlineElements[] | BlockElements[];
+	id: string;
 }
 
 export interface MyConnectionElement extends BlockElements {

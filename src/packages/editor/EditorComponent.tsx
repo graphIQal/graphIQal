@@ -171,6 +171,8 @@ const EditorComponent: React.FC<{
 				initialValue={initialValue}
 				onChange={(docValue) => {
 					console.log(docValue);
+					console.log(JSON.stringify(docValue[1].children));
+					console.log(JSON.stringify(docValue[2].children));
 					setValue(docValue);
 					clearTimeout(intervalRef.current);
 					intervalRef.current = setTimeout(() => {

@@ -60,6 +60,12 @@ const Document: React.FC<{
 		{ revalidateOnMount: true, revalidateOnFocus: false }
 	);
 
+	const { data: documentData, mutate: mutateDocument } = useSWR(
+		[nodeId ? `/api/username/${nodeId}/document` : null],
+		fetcherSingleReturn,
+		{ revalidateOnMount: true, revalidateOnFocus: true }
+	);
+
 	const [document, setdocument] = useState([]);
 	const [shelf, setshelf] = useState([]);
 	const [showCutText, setshowCutText] = useState(false);

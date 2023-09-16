@@ -57,7 +57,7 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 	}
 
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
-		console.log('noDocument ', nodeDataSWR);
+		// console.log('noDocument ', nodeDataSWR);
 		nodeDataSWR.n.document = defaultDocument;
 	}
 

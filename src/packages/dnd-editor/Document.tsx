@@ -17,7 +17,7 @@ import {
 	createNormalizeTypesPlugin,
 } from '@udecode/plate';
 import useSWR from 'swr';
-import { fetcherSingleReturn } from '../../backend/driver/fetcher';
+import { fetcher, fetcherSingleReturn } from '../../backend/driver/fetcher';
 import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
 import { saveShelf } from '../../backend/functions/general/document/mutate/saveShelf';
 import { useViewData } from '../../components/context/ViewContext';
@@ -57,29 +57,21 @@ const Document: React.FC<{
 	} = useSWR(
 		[nodeId ? `/api/username/${nodeId}` : null],
 		fetcherSingleReturn,
-		{ revalidateOnMount: true, revalidateOnFocus: false }
+		{
+			revalidateOnMount: true,
+			revalidateOnFocus: false,
+		}
 	);
 
-	const { data: documentData, mutate: mutateDocument } = useSWR(
-		[nodeId ? `/api/username/${nodeId}/document` : null],
-		fetcherSingleReturn,
-		{ revalidateOnMount: true, revalidateOnFocus: true }
-	);
+	// const { data: documentData, mutate: mutateDocument } = useSWR(
+	// 	[nodeId ? `/api/username/${nodeId}/document` : null],
+	// 	fetcherSingleReturn,
+	// 	{ revalidateOnMount: true, revalidateOnFocus: true }
+	// );
 
 	const [document, setdocument] = useState([]);
 	const [shelf, setshelf] = useState([]);
 	const [showCutText, setshowCutText] = useState(false);
-
-	// const {
-	// 	data: nodeDataSWR,
-	// 	trigger,
-	// 	isMutating,
-	// 	reset,
-	// } = useSWRMutation(`/api/username/${nodeId}`, fetcherSingleReturn);
-
-	// useEffect(() => {
-	// 	console.log('nodeId, ', nodeId);
-	// }, [nodeId]);
 
 	if (isLoading || !nodeDataSWR) {
 		return (
@@ -98,18 +90,21 @@ const Document: React.FC<{
 		);
 	}
 
-	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
-		nodeDataSWR.n.document = `
-		[
-			{
-				"type": "block",
-				"id": "${uuidv4()}",
-				"children": [
-					{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
-				]
-			}
-		]`;
-	}
+	console.log('nodeDataSWR');
+	console.log(nodeDataSWR);
+
+	// if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
+	// 	nodeDataSWR.n.document = `
+	// 	[
+	// 		{
+	// 			"type": "block",
+	// 			"id": "${uuidv4()}",
+	// 			"children": [
+	// 				{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
+	// 			]
+	// 		}
+	// 	]`;
+	// }
 
 	// useEffect(() => {
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.shelf) {
@@ -274,14 +269,15 @@ const Document: React.FC<{
 						// <PlateProvider>
 						<EditorComponent
 							key={nodeId}
-							initialValue={[
-								{
-									type: 'title',
-									id: 'Node Title',
-									children: [{ text: nodeDataSWR.n.title }],
-								} as MyTitleElement,
-								...createInitialValue(nodeDataSWR.n.document),
-							]}
+							initialValue={nodeDataSWR.document}
+							// initialValue={[
+							// 	{
+							// 		type: 'title',
+							// 		id: 'Node Title',
+							// 		children: [{ text: nodeDataSWR.n.title }],
+							// 	} as MyTitleElement,
+							// 	...createInitialValue(nodeDataSWR.n.document),
+							// ]}
 							value={document}
 							setValue={setdocument}
 							id={'documentId'}

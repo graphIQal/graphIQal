@@ -1,6 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { read } from '../../../../../backend/driver/helpers';
-import { Block, MyTitleElement } from '@/packages/editor/plateTypes';
+import {
+	Block,
+	ELEMENT_NODE,
+	MyTitleElement,
+} from '@/packages/editor/plateTypes';
 // import { write } from '../../../../../backend/driver/helpers';
 
 export default async function handler(
@@ -8,7 +12,6 @@ export default async function handler(
 	res: NextApiResponse
 ) {
 	const params = req.query;
-	const body = req.body;
 
 	const cypher: string = `
 	MATCH path = (n:Node {id: $nodeId})-[r:CHILD_BLOCK|NEXT_BLOCK*0..]->(p)
@@ -18,7 +21,7 @@ export default async function handler(
 	RETURN value;
 	`;
 
-	const data = await read(cypher, { ...params, body: body });
+	const data = await read(cypher, { ...params });
 
 	if ('err' in data) {
 		// console.log('huh');
@@ -34,8 +37,8 @@ export default async function handler(
 			} as MyTitleElement,
 		];
 
-		console.log('document data');
-		console.log(JSON.stringify(blockData, null, 2));
+		// console.log('document data');
+		// console.log(JSON.stringify(blockData, null, 2));
 
 		// all we do is pass in the level, and we push it using recursion.
 		const traverseBlocks = (currLevel: Block[], obj: any) => {
@@ -46,7 +49,19 @@ export default async function handler(
 			const { _type, _id, next_block, child_block, children, ...rest } =
 				obj;
 			console.log(children);
-			currLevel.push({ ...rest, children: JSON.parse(children) });
+
+			if (_type === 'Node') {
+				// Add a nodeLink
+				currLevel.push({
+					...rest,
+					children: { text: 'nodelink' },
+					nodeId: obj.id,
+					routeString: '/' + params.username + '/' + obj.id,
+					type: ELEMENT_NODE,
+				});
+			} else {
+				currLevel.push({ ...rest, children: JSON.parse(children) });
+			}
 
 			// First child = children;
 			// Go into CHILD_BLOCKs for next child
@@ -57,22 +72,27 @@ export default async function handler(
 				);
 			}
 
+			// Go into NEXT_BLOCK to add to the document
 			if (obj.next_block) {
 				traverseBlocks(currLevel, obj.next_block[0]);
 			}
 
-			// Go into NEXT_BLOCK to add to the document
-			console.log('current document');
-			console.log(document);
+			// console.log('current document');
+			// console.log(document);
 		};
 
-		traverseBlocks(document, blockData.next_block[0]);
+		if (blockData.next_block) {
+			traverseBlocks(document, blockData.next_block[0]);
+		} else {
+			// Do I need to do anything? I think returning a blank document is okay because it's a valid document, and historyedit will automatically send it.
+		}
+
 		// console.log('data: ', { nodeData, visualData });
 		console.log('output document');
 		console.log(JSON.stringify(document, null, 2));
 
+		// if there are no blocks
+
 		res.status(200).json(document);
 	}
-
-	// res.status(200).json(result);
 }

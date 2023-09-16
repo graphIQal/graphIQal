@@ -1095,7 +1095,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 											<NodeIcon icon='node' />
 											<span>
 												{editor.children[0].children[0]
-													.text + ' related '}
+													.text +
+													' is now related to '}
 											</span>
 											<NodeIcon icon={item.n.icon} />
 											<span>{item.n.title}</span>

@@ -49,7 +49,7 @@ const DocumentGraphNode: React.FC<{}> = ({}) => {
 	}
 
 	if (!nodeDataSWR) {
-		console.log('noNodeDataSWR ', nodeDataSWR);
+		// console.log('noNodeDataSWR ', nodeDataSWR);
 		nodeDataSWR = {
 			n: { icon: 'node', title: 'Untitled', color: 'black' },
 			connectedNodes: [],

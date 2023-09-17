@@ -1,5 +1,5 @@
 export const fetcher = (url: string) => {
-	console.log(url);
+	// console.log(url);
 
 	return fetch(url)
 		.then((res) => {
@@ -7,7 +7,7 @@ export const fetcher = (url: string) => {
 			return res.json();
 		})
 		.then((json) => {
-			console.log(json);
+			// console.log(json);
 			return json;
 		});
 };

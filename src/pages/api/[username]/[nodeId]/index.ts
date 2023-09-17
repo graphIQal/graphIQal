@@ -2,9 +2,11 @@ import {
 	Block,
 	MyTitleElement,
 	ELEMENT_NODE,
+	BlockElements,
+	ELEMENT_BLOCK,
 } from '@/packages/editor/plateTypes';
 import { getNodeData_cypher } from '../../../../backend/cypher-generation/cypherGenerators';
-import { read } from '../../../../backend/driver/helpers';
+import { read, write } from '../../../../backend/driver/helpers';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -28,6 +30,87 @@ export default async function handler(
 
 	const data = await read(cypher, params);
 
+	const resArray: string[] = [];
+
+	const wholeDocumentSave = async (
+		currentBlock: BlockElements[],
+		prevBlockId: string
+	) => {
+		for (const block of currentBlock) {
+			let cypherQuery = '';
+
+			// if (
+			// 	!(block.type === ELEMENT_BLOCK || block.type === ELEMENT_NODE)
+			// ) {
+			// 	console.log("this shouldn't ever happen");
+			// 	return;
+			// }
+
+			// Use the existing ID for the block
+			let blockId = block.id;
+
+			if (block.type === 'node') {
+				blockId = block.nodeId;
+				cypherQuery += `
+				MERGE (b:Node {id: "${blockId}"})
+				SET b.type = "${block.type}", b.children = $children
+				`;
+			} else {
+				cypherQuery += `
+				MERGE (b:Block {id: "${blockId}"})
+				SET b.type = "${block.type}", b.children = $children
+				`;
+			}
+
+			// Create a new node for the block
+
+			// Connect the block to the previous block
+			cypherQuery += `
+			MERGE (p {id: "${prevBlockId}"})
+			MERGE (p)-[r:NEXT_BLOCK]->(b)
+		  `;
+
+			// If the block has children, recursively save them
+			if (block.children && block.children.length > 1) {
+				// Create the child block
+
+				const firstChildBlock: BlockElements = block
+					.children[1] as BlockElements;
+
+				cypherQuery += `
+				MERGE (c:Block {id: "${firstChildBlock.id}"})
+				SET c.type = "${firstChildBlock.type}", c.children = $firstBlockChildren
+				MERGE (b)-[r:CHILD_BLOCK]->(c)
+				`;
+
+				console.log('write: ', cypherQuery);
+				resArray.push(cypherQuery);
+				// const result = await write(cypherQuery, {
+				// 	firstBlockChildren: JSON.stringify(
+				// 		firstChildBlock.children
+				// 	),
+				// 	children: JSON.stringify([block.children[0]]),
+				// });
+				// console.log(result);
+
+				wholeDocumentSave(
+					block.children.splice(2) as BlockElements[],
+					firstChildBlock.id
+				);
+			} else {
+				console.log('write: ', cypherQuery);
+				resArray.push(cypherQuery);
+				// const result = await write(cypherQuery, {
+				// 	children: JSON.stringify([block.children[0]]),
+				// });
+				// console.log(result);
+			}
+
+			// Update the previous block ID for the next iteration
+			prevBlockId = blockId;
+		}
+	};
+
 	if ('err' in data) {
 		// console.log('huh');
 		res.status(400).json({ data, cypher, params });
@@ -47,13 +130,13 @@ export default async function handler(
 
 		// all we do is pass in the level, and we push it using recursion.
 		const traverseBlocks = (currLevel: Block[], obj: any) => {
-			console.log('traverse');
-			console.log(obj);
+			// console.log('traverse');
+			// console.log(obj);
 
 			// Pushes the current node onto the list
 			const { _type, _id, next_block, child_block, children, ...rest } =
 				obj;
-			console.log(children);
+			// console.log(children);
 
 			if (_type === 'Node') {
 				// Add a nodeLink
@@ -92,10 +175,18 @@ export default async function handler(
 			// Do I need to do anything? I think returning a blank document is okay because it's a valid document, and historyedit will automatically send it.
 		}
 
-		console.log('output document');
-		console.log(JSON.stringify(document, null, 2));
+		// console.log('output document');
+		// console.log(JSON.stringify(document, null, 2));
 
 		// if there are no blocks
+		if (document.length === 1) {
+			if (data[0].n.document) {
+				const originalDoc = JSON.parse(data[0].n.document);
+				const cypher = wholeDocumentSave(originalDoc, data[0].n.id);
+				// console.log('conversion cypher');
+				// console.log(cypher);
+			}
+		}
 
 		// console.log('data');
 		// console.log({
@@ -109,6 +200,7 @@ export default async function handler(
 				n: data[0].n,
 				connectedNodes: data[0].connectedNodes,
 				document,
+				resArray,
 			},
 		]);
 	}

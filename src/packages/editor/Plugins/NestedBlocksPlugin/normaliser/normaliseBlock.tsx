@@ -20,6 +20,8 @@ import {
 	NoMarkElements,
 } from '../../../plateTypes';
 import { outdent } from '../transforms/outdent';
+import { randomUUID } from 'crypto';
+import { v4 } from 'uuid';
 
 // I will normalise the block by setting the first block to text and all future blocks as children
 export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
@@ -65,8 +67,9 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 				editor,
 				{
 					type: ELEMENT_BLOCK,
-					id: '',
+					// id: '',
 					children: [],
+					// peepee: 'honk' + v4(),
 				},
 				{ at: path }
 			);

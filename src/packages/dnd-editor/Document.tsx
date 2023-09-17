@@ -90,8 +90,8 @@ const Document: React.FC<{
 		);
 	}
 
-	console.log('nodeDataSWR');
-	console.log(nodeDataSWR);
+	// console.log('nodeDataSWR');
+	// console.log(nodeDataSWR);
 
 	// if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
 	// 	nodeDataSWR.n.document = `
@@ -269,15 +269,15 @@ const Document: React.FC<{
 						// <PlateProvider>
 						<EditorComponent
 							key={nodeId}
-							initialValue={nodeDataSWR.document}
-							// initialValue={[
-							// 	{
-							// 		type: 'title',
-							// 		id: 'Node Title',
-							// 		children: [{ text: nodeDataSWR.n.title }],
-							// 	} as MyTitleElement,
-							// 	...createInitialValue(nodeDataSWR.n.document),
-							// ]}
+							// initialValue={nodeDataSWR.document}
+							initialValue={[
+								{
+									type: 'title',
+									id: 'Node Title',
+									children: [{ text: nodeDataSWR.n.title }],
+								} as MyTitleElement,
+								...createInitialValue(nodeDataSWR.n.document),
+							]}
 							value={document}
 							setValue={setdocument}
 							id={'documentId'}

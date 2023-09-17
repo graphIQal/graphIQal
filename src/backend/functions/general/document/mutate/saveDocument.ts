@@ -62,21 +62,21 @@ export const saveDocument = async ({
 
 	saveNestedNodes(document.slice(1));
 
-	const res = await fetch(
-		`/api/${username}/${nodeId}/document/save/${title}`,
-		{
-			method: 'POST',
-			body: JSON.stringify(document.slice(1)),
-		}
-	)
-		.then((res) => {
-			// console.log('saveDocument ', res);
-			return res.json();
-		})
-		.then((json) => {
-			console.log('saveDocumentJson', json);
-			return json;
-		});
+	// const res = await fetch(
+	// 	`/api/${username}/${nodeId}/document/save/${title}`,
+	// 	{
+	// 		method: 'POST',
+	// 		body: JSON.stringify(document.slice(1)),
+	// 	}
+	// )
+	// 	.then((res) => {
+	// 		// console.log('saveDocument ', res);
+	// 		return res.json();
+	// 	})
+	// 	.then((json) => {
+	// 		console.log('saveDocumentJson', json);
+	// 		return json;
+	// 	});
 
-	return res;
+	// return res;
 };

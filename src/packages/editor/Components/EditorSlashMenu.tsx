@@ -1,7 +1,6 @@
-import { TippyProps } from '@tippyjs/react';
 import {
-	CheckIcon,
-	Combobox,
+	// CheckIcon,
+	// Combobox,
 	deleteBackward,
 	EditorRefEffect,
 	ELEMENT_BLOCKQUOTE,
@@ -67,15 +66,16 @@ import { getClosestBlock } from '../helpers/getClosestBlock';
 import { getClosestNodeBlock } from '../helpers/getClosestNodeBlock';
 import { useToast } from '@/components/ui/use-toast';
 import NodeIcon from '@/components/atoms/NodeIcon';
+import { Combobox } from '@/components/plate-ui/combobox';
 
-export const markTooltip: TippyProps = {
-	arrow: true,
-	delay: 0,
-	duration: [200, 0],
-	hideOnClick: false,
-	offset: [0, 17],
-	placement: 'top',
-};
+// export const markTooltip: TippyProps = {
+// 	arrow: true,
+// 	delay: 0,
+// 	duration: [200, 0],
+// 	hideOnClick: false,
+// 	offset: [0, 17],
+// 	placement: 'top',
+// };
 
 type item = {
 	key: string;
@@ -849,7 +849,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				items={items}
 				onRenderItem={({ search, item }) => {
 					return (
-						<div className='flex flex-row x-3 gap-x-2 items-center p-2'>
+						<div className='flex flex-row x-3 gap-x-2 items-center px-2'>
 							<div className='w-8 h-8 bg-lining rounded-sm flex items-center justify-center'>
 								{item.n.icon ? (
 									item.n.icon in Icons ? (

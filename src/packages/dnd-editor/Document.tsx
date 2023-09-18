@@ -10,12 +10,9 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { updateNodeFields } from '@/backend/functions/general/document/mutate/updateNodeFields';
-import {
-	Emoji,
-	EmojiPicker,
-	EmojiToolbarDropdown,
-	createNormalizeTypesPlugin,
-} from '@udecode/plate';
+import { createNormalizeTypesPlugin } from '@udecode/plate';
+import { useEmojiDropdownMenuState, Emoji } from '@udecode/plate-emoji';
+
 import useSWR from 'swr';
 import { fetcher, fetcherSingleReturn } from '../../backend/driver/fetcher';
 import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
@@ -42,6 +39,13 @@ import {
 import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
 import { withDraggable } from './components/withDraggable';
 import { withValidChild } from '../editor/Plugins/Autoformat/withValidChild';
+import { EmojiDropdownMenu } from '@/components/plate-ui/emoji-dropdown-menu';
+import { EmojiToolbarDropdown } from '@/components/plate-ui/emoji-toolbar-dropdown';
+import { EmojiPicker } from '@/components/plate-ui/emoji-picker';
+import {
+	emojiCategoryIcons,
+	emojiSearchIcons,
+} from '@/components/plate-ui/emoji-icons';
 
 const Document: React.FC<{
 	viewId: string;
@@ -72,6 +76,10 @@ const Document: React.FC<{
 	const [document, setdocument] = useState([]);
 	const [shelf, setshelf] = useState([]);
 	const [showCutText, setshowCutText] = useState(false);
+
+	const { isOpen, setIsOpen, emojiPickerState } = useEmojiDropdownMenuState();
+
+	console.log(emojiPickerState);
 
 	if (isLoading || !nodeDataSWR) {
 		return (
@@ -216,6 +224,67 @@ const Document: React.FC<{
 				<div className='relative pl-10 pt-15 pt-10 pr-10 pb-3'>
 					<div className='absolute z-10 ml-[14px]'>
 						<EmojiToolbarDropdown
+							control={
+								// <ToolbarButton
+								// 	pressed={isOpen}
+								// 	isDropdown
+								// 	tooltip='Emoji'
+								// 	{...props}
+								// >
+								// 	<Icons.emoji />
+								// </ToolbarButton>
+								<div className='text-xl'>
+									<IconCircleButton
+										src={
+											nodeDataSWR && nodeDataSWR.n.icon
+												? nodeDataSWR.n.icon
+												: 'node'
+										}
+										onClick={() => setIsOpen(!isOpen)}
+										circle={false}
+									/>
+								</div>
+							}
+							isOpen={isOpen}
+							setIsOpen={setIsOpen}
+						>
+							<EmojiPicker
+								{...emojiPickerState}
+								isOpen={isOpen}
+								setIsOpen={setIsOpen}
+								onSelectEmoji={async (emoji: Emoji) => {
+									const newData = {
+										connectedNodes:
+											nodeDataSWR.connectedNodes,
+										n: {
+											...nodeDataSWR.n,
+											icon: emoji.skins[0].native,
+										},
+									};
+
+									await SWRmutateCurrNode(
+										updateNodeFields({
+											nodeId,
+											username,
+											fieldValObj: {
+												icon: emoji.skins[0].native,
+											},
+										}),
+										{
+											optimisticData: newData,
+											populateCache: false,
+										}
+									);
+								}}
+								icons={{
+									categories: emojiCategoryIcons,
+									search: emojiSearchIcons,
+								}}
+								// settings={options?.settings}
+							/>
+						</EmojiToolbarDropdown>
+
+						{/* <EmojiToolbarDropdown
 							pluginKey='emoji'
 							closeOnSelect={true}
 							icon={
@@ -263,7 +332,7 @@ const Document: React.FC<{
 									/>
 								</div>
 							)}
-						></EmojiToolbarDropdown>
+						></EmojiToolbarDropdown> */}
 					</div>
 					{nodeDataSWR.n.document && (
 						// <PlateProvider>

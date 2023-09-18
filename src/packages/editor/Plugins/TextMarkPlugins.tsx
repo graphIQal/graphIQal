@@ -3,7 +3,7 @@ import {
 	createBoldPlugin,
 	createCodePlugin,
 	createItalicPlugin,
-	createPlateUI,
+	// createPlateUI,
 	createStrikethroughPlugin,
 	createSubscriptPlugin,
 	createSuperscriptPlugin,
@@ -41,6 +41,6 @@ export const TextMarkPlugins = createMyPlugins(
 		createColourTextPlugin(),
 	],
 	{
-		components: createPlateUI({}),
+		// components: createPlateUI({}),
 	}
 );

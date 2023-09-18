@@ -5,8 +5,9 @@ import { title } from 'process';
 import { useViewData } from '../../context/ViewContext';
 import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft';
 import { ArrowRight } from '@styled-icons/fa-solid/ArrowRight';
-import { ChevronDownIcon } from '@udecode/plate';
+// import { ChevronDownIcon } from '@udecode/plate';
 import { connectionColours } from '@/theme/colors';
+import { Icons } from '@/components/icons';
 
 type ConnectionSectionProps = {
 	title: string | JSX.Element;
@@ -41,7 +42,7 @@ const ConnectionSection: React.FC<ConnectionSectionProps> = ({
 				className='border-lining cursor-pointer flex items-center h-10 px-2 w-full '
 				onClick={toggleAccordion}
 			>
-				<ChevronDownIcon
+				<Icons.chevronDown
 					className={`h-4 w-4 mr-1 shrink-0 text-muted-foreground transition-transform duration-200 ${
 						isOpen ? 'rotate-180' : 'rotate-0'
 					}`}

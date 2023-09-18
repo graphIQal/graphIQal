@@ -20,7 +20,7 @@ const BlockMenu: React.FC<BlockMenuProps> = ({ items }) => {
 			return (
 				<ToolbarButton
 					key={i}
-					className='menu_item first:rounded-l-text_box last:rounded-r-text_box'
+					className='menu_item first:rounded-l-text_box last:rounded-r-text_box '
 					item={it}
 				/>
 			);

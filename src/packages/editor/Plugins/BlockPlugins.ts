@@ -1,14 +1,14 @@
 import {
-	CodeBlockElement,
-	CodeLineElement,
-	CodeSyntaxLeaf,
+	// CodeBlockElement,
+	// CodeLineElement,
+	// CodeSyntaxLeaf,
 	createBlockquotePlugin,
 	createCodeBlockPlugin,
 	createHeadingPlugin,
 	createLinkPlugin,
 	// createListPlugin,
 	createParagraphPlugin,
-	createPlateUI,
+	// createPlateUI,
 	ELEMENT_BLOCKQUOTE,
 	ELEMENT_CODE_BLOCK,
 	ELEMENT_CODE_LINE,
@@ -22,9 +22,9 @@ import {
 	ELEMENT_OL,
 	ELEMENT_TODO_LI,
 	HotkeyPlugin,
-	LinkElement,
+	// LinkElement,
 	onKeyDownToggleElement,
-	TodoListElement,
+	// TodoListElement,
 } from '@udecode/plate';
 import {
 	BlockquoteElement,
@@ -54,8 +54,8 @@ import {
 } from '../plateTypes';
 import { withNodeLink } from './NodeLinkPlugin/withNodeLink';
 import { withDraggable } from '@/packages/dnd-editor/components/withDraggable';
-
-const plateUI = createPlateUI({});
+import { TodoListElement } from '@/components/plate-ui/todo-list-element';
+import { LinkElement } from '@/components/plate-ui/link-element';
 
 const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODE,
@@ -199,9 +199,9 @@ export const BlockPlugins = createMyPlugins(
 	{
 		components: {
 			// ...createPlateUI({}),
-			[ELEMENT_CODE_BLOCK]: CodeBlockElement,
-			[ELEMENT_CODE_LINE]: CodeLineElement,
-			[ELEMENT_CODE_SYNTAX]: CodeSyntaxLeaf,
+			// [ELEMENT_CODE_BLOCK]: CodeBlockElement,
+			// [ELEMENT_CODE_LINE]: CodeLineElement,
+			// [ELEMENT_CODE_SYNTAX]: CodeSyntaxLeaf,
 			[ELEMENT_TITLE]: TitleElement,
 			[ELEMENT_NODELINK]: NodeLink,
 			[ELEMENT_H1]: H1,

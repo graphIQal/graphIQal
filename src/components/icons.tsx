@@ -27,6 +27,8 @@ import { Settings } from '@styled-icons/material/Settings';
 import { Thealgorithms } from '@styled-icons/simple-icons/Thealgorithms';
 import {
 	Brush,
+	ChevronDown,
+	Delete,
 	Divide,
 	FileSymlink,
 	Heading1,
@@ -86,4 +88,6 @@ export const Icons: { [key: string]: any } = {
 	brush: Brush,
 	edit: Pencil,
 	send: Send,
+	chevronDown: ChevronDown,
+	clear: Delete,
 };

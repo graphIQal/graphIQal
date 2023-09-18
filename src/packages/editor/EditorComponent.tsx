@@ -131,6 +131,7 @@ const EditorComponent: React.FC<{
 					createNodeIdPlugin({
 						options: {
 							idCreator: uuidv4,
+							// disableInsertOverrides: false
 						},
 					}),
 					...customPlugins,
@@ -188,15 +189,7 @@ const EditorComponent: React.FC<{
 				plugins={[...plugins]}
 				id={id}
 			>
-				<EditorFloatingMenu>
-					{/* <IconCircleButton
-						// type={getPluginType(editor, MARK_CUT)}
-						onClick={() => {}}
-						circle={false}
-						src={'cut'}
-						// tooltip={underlineTooltip}
-					/> */}
-				</EditorFloatingMenu>
+				{/* <EditorFloatingMenu></EditorFloatingMenu> */}
 				<EditorSlashMenu />
 			</Plate>
 		</div>

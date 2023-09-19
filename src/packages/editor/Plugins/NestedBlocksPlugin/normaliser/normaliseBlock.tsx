@@ -91,6 +91,9 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 				// gets data of first child, makes sure it's blockwrapped element
 				const firstChildType = children[0][0].type as string;
 
+				if (firstChildType === blockType)
+					editor.unwrapNodes({ at: [...path, 0] });
+
 				// if (!(firstChildType in BlockwrappedElements)) {
 				// 	wrapNodes(
 				// 		editor,

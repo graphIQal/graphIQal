@@ -79,8 +79,6 @@ const Document: React.FC<{
 
 	const { isOpen, setIsOpen, emojiPickerState } = useEmojiDropdownMenuState();
 
-	console.log(emojiPickerState);
-
 	if (isLoading || !nodeDataSWR) {
 		return (
 			<SplitPane className='split-pane-row'>
@@ -98,8 +96,8 @@ const Document: React.FC<{
 		);
 	}
 
-	// console.log('nodeDataSWR');
-	// console.log(nodeDataSWR);
+	console.log('nodeDataSWR');
+	console.log(nodeDataSWR);
 
 	// if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
 	// 	nodeDataSWR.n.document = `

@@ -27,6 +27,7 @@ import { Settings } from '@styled-icons/material/Settings';
 import { Thealgorithms } from '@styled-icons/simple-icons/Thealgorithms';
 import {
 	Brush,
+	Check,
 	ChevronDown,
 	Delete,
 	Divide,
@@ -90,4 +91,5 @@ export const Icons: { [key: string]: any } = {
 	send: Send,
 	chevronDown: ChevronDown,
 	clear: Delete,
+	check: Check,
 };

@@ -4,6 +4,7 @@ import {
 	ELEMENT_NODE,
 	BlockElements,
 	ELEMENT_BLOCK,
+	ELEMENT_NODETITLE,
 } from '@/packages/editor/plateTypes';
 import { getNodeData_cypher } from '../../../../backend/cypher-generation/cypherGenerators';
 import { read, write } from '../../../../backend/driver/helpers';
@@ -31,6 +32,7 @@ export default async function handler(
 	const data = await read(cypher, params);
 
 	const resArray: string[] = [];
+	const resNodes: any[] = [];
 
 	const wholeDocumentSave = async (
 		currentBlock: BlockElements[],
@@ -53,7 +55,7 @@ export default async function handler(
 				blockId = block.nodeId;
 				cypherQuery += `
 				MERGE (b:Node {id: "${blockId}"})
-				SET b.type = "${block.type}", b.children = $children
+				SET b.children = $children
 				`;
 			} else {
 				cypherQuery += `
@@ -80,18 +82,20 @@ export default async function handler(
 				cypherQuery += `
 				MERGE (c:Block {id: "${firstChildBlock.id}"})
 				SET c.type = "${firstChildBlock.type}", c.children = $firstBlockChildren
-				MERGE (b)-[r:CHILD_BLOCK]->(c)
+				MERGE (b)-[cr:CHILD_BLOCK]->(c)
+				RETURN b
 				`;
 
 				console.log('write: ', cypherQuery);
 				resArray.push(cypherQuery);
-				// const result = await write(cypherQuery, {
-				// 	firstBlockChildren: JSON.stringify(
-				// 		firstChildBlock.children
-				// 	),
-				// 	children: JSON.stringify([block.children[0]]),
-				// });
-				// console.log(result);
+				const result = await write(cypherQuery, {
+					firstBlockChildren: JSON.stringify(
+						firstChildBlock.children
+					),
+					children: JSON.stringify([block.children[0]]),
+				});
+				console.log(result);
+				resNodes.push(result);
 
 				wholeDocumentSave(
 					block.children.splice(2) as BlockElements[],
@@ -99,11 +103,15 @@ export default async function handler(
 				);
 			} else {
 				console.log('write: ', cypherQuery);
+				cypherQuery += `
+				RETURN b
+				`;
 				resArray.push(cypherQuery);
-				// const result = await write(cypherQuery, {
-				// 	children: JSON.stringify([block.children[0]]),
-				// });
-				// console.log(result);
+				const result = await write(cypherQuery, {
+					children: JSON.stringify([block.children[0]]),
+				});
+				console.log(result);
+				resNodes.push(result);
 			}
 
 			// Update the previous block ID for the next iteration
@@ -130,8 +138,8 @@ export default async function handler(
 
 		// all we do is pass in the level, and we push it using recursion.
 		const traverseBlocks = (currLevel: Block[], obj: any) => {
-			// console.log('traverse');
-			// console.log(obj);
+			console.log('traverse');
+			console.log(obj);
 
 			// Pushes the current node onto the list
 			const { _type, _id, next_block, child_block, children, ...rest } =
@@ -142,7 +150,19 @@ export default async function handler(
 				// Add a nodeLink
 				currLevel.push({
 					...rest,
-					children: { text: 'nodelink' },
+					children: [
+						{
+							type: ELEMENT_NODETITLE,
+							routeString: `/${params.username}/${obj.id}`,
+							icon: obj.icon,
+							id: obj.id + '1',
+							children: [
+								{
+									text: obj.title ? obj.title : 'Untitled',
+								},
+							],
+						},
+					],
 					nodeId: obj.id,
 					routeString: '/' + params.username + '/' + obj.id,
 					type: ELEMENT_NODE,
@@ -175,8 +195,8 @@ export default async function handler(
 			// Do I need to do anything? I think returning a blank document is okay because it's a valid document, and historyedit will automatically send it.
 		}
 
-		// console.log('output document');
-		// console.log(JSON.stringify(document, null, 2));
+		console.log('output document');
+		console.log(JSON.stringify(document, null, 2));
 
 		// if there are no blocks
 		if (document.length === 1) {
@@ -201,6 +221,7 @@ export default async function handler(
 				connectedNodes: data[0].connectedNodes,
 				document,
 				resArray,
+				resNodes,
 			},
 		]);
 	}

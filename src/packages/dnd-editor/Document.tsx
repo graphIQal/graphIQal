@@ -333,18 +333,18 @@ const Document: React.FC<{
 						></EmojiToolbarDropdown> */}
 					</div>
 					{nodeDataSWR.n.document && (
-						// <PlateProvider>
+						// <PlateProvidxer>
 						<EditorComponent
 							key={nodeId}
-							// initialValue={nodeDataSWR.document}
-							initialValue={[
-								{
-									type: 'title',
-									id: 'Node Title',
-									children: [{ text: nodeDataSWR.n.title }],
-								} as MyTitleElement,
-								...createInitialValue(nodeDataSWR.n.document),
-							]}
+							initialValue={nodeDataSWR.document}
+							// initialValue={[
+							// 	{
+							// 		type: 'title',
+							// 		id: 'Node Title',
+							// 		children: [{ text: nodeDataSWR.n.title }],
+							// 	} as MyTitleElement,
+							// 	...createInitialValue(nodeDataSWR.n.document),
+							// ]}
 							value={document}
 							setValue={setdocument}
 							id={'documentId'}

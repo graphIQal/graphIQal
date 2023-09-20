@@ -129,7 +129,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 		mutate: mutateFav,
 	} = useSWR(
 		status === 'authenticated' && session?.user?.favouritesId
-			? '/api/username/' + session.user.favouritesId
+			? '/api/username/' + session.user.favouritesId + '/favourites'
 			: null,
 		fetcherSingleReturn,
 		{ revalidateOnMount: true }

@@ -14,6 +14,7 @@ import {
 	isSelectionAtBlockStart,
 	PlateEditor,
 	setNodes,
+	someNode,
 	TComboboxItemWithData,
 	toggleList,
 	unwrapNodes,
@@ -586,7 +587,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			text: 'Header 1',
 			n: {
 				subtext: 'Big Section Heading',
-				icon: 'header1',
+				icon: 'h1',
 				searchFunction: (search) => {
 					if (
 						'header'.startsWith(search) ||
@@ -615,7 +616,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			text: 'Header 2',
 			n: {
 				subtext: 'Medium Section Heading',
-				icon: 'header2',
+				icon: 'h2',
 				searchFunction: (search) => {
 					if (
 						'header'.startsWith(search) ||
@@ -644,7 +645,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			text: 'Header 3',
 			n: {
 				subtext: 'Small Section Heading',
-				icon: 'header3',
+				icon: 'h3',
 				searchFunction: (search) => {
 					// check if it's a number, if it's a number and not a three or it's 3
 					if (
@@ -1125,6 +1126,34 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						} else if (beforeText === 'addNode ') {
 							console.log('add-node');
 							console.log(item);
+
+							if (
+								someNode(editor, {
+									match: { id: item.n.id },
+									at: [],
+								})
+							) {
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon icon='node' />
+											<span>{'Can\t add add'}</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'An infinite loop would be created because current node already in ' +
+										item.n.title,
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 3000);
+
+								return;
+							}
+
 							// create a connection relateds
 							createConnection({
 								startNode: nodeId,

@@ -31,6 +31,10 @@ export const saveDocument = async ({
 	)
 		return;
 
+	// only have to worry about the latest save.
+
+	// Should definitely revalidate document/save document on unload.
+
 	const saveNestedNodes = (children: BlockElements[]) => {
 		function traverse(obj: BlockElements[]) {
 			if (typeof obj !== 'object' || obj === null) return;
@@ -62,21 +66,21 @@ export const saveDocument = async ({
 
 	saveNestedNodes(document.slice(1));
 
-	// const res = await fetch(
-	// 	`/api/${username}/${nodeId}/document/save/${title}`,
-	// 	{
-	// 		method: 'POST',
-	// 		body: JSON.stringify(document.slice(1)),
-	// 	}
-	// )
-	// 	.then((res) => {
-	// 		// console.log('saveDocument ', res);
-	// 		return res.json();
-	// 	})
-	// 	.then((json) => {
-	// 		console.log('saveDocumentJson', json);
-	// 		return json;
-	// 	});
+	const res = await fetch(
+		`/api/${username}/${nodeId}/document/save/${title}`,
+		{
+			method: 'POST',
+			body: JSON.stringify(document.slice(1)),
+		}
+	)
+		.then((res) => {
+			// console.log('saveDocument ', res);
+			return res.json();
+		})
+		.then((json) => {
+			console.log('saveDocumentJson', json);
+			return json;
+		});
 
-	// return res;
+	return res;
 };

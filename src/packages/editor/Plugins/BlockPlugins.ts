@@ -20,6 +20,7 @@ import {
 	ELEMENT_LI,
 	ELEMENT_LINK,
 	ELEMENT_OL,
+	ELEMENT_PARAGRAPH,
 	ELEMENT_TODO_LI,
 	HotkeyPlugin,
 	// LinkElement,
@@ -56,6 +57,7 @@ import { withNodeLink } from './NodeLinkPlugin/withNodeLink';
 import { withDraggable } from '@/packages/dnd-editor/components/withDraggable';
 import { TodoListElement } from '@/components/plate-ui/todo-list-element';
 import { LinkElement } from '@/components/plate-ui/link-element';
+import { ParagraphElement } from '@/components/plate-ui/paragraph-element';
 
 const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODE,
@@ -202,6 +204,7 @@ export const BlockPlugins = createMyPlugins(
 			// [ELEMENT_CODE_BLOCK]: CodeBlockElement,
 			// [ELEMENT_CODE_LINE]: CodeLineElement,
 			// [ELEMENT_CODE_SYNTAX]: CodeSyntaxLeaf,
+			[ELEMENT_PARAGRAPH]: ParagraphElement,
 			[ELEMENT_TITLE]: TitleElement,
 			[ELEMENT_NODELINK]: NodeLink,
 			[ELEMENT_H1]: H1,

@@ -96,21 +96,21 @@ const Document: React.FC<{
 		);
 	}
 
-	console.log('nodeDataSWR');
-	console.log(nodeDataSWR);
+	// console.log('nodeDataSWR');
+	// console.log(nodeDataSWR);
 
-	// if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
-	// 	nodeDataSWR.n.document = `
-	// 	[
-	// 		{
-	// 			"type": "block",
-	// 			"id": "${uuidv4()}",
-	// 			"children": [
-	// 				{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
-	// 			]
-	// 		}
-	// 	]`;
-	// }
+	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
+		nodeDataSWR.n.document = `
+		[
+			{
+				"type": "block",
+				"id": "${uuidv4()}",
+				"children": [
+					{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
+				]
+			}
+		]`;
+	}
 
 	// useEffect(() => {
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.shelf) {
@@ -336,15 +336,15 @@ const Document: React.FC<{
 						// <PlateProvidxer>
 						<EditorComponent
 							key={nodeId}
-							initialValue={nodeDataSWR.document}
-							// initialValue={[
-							// 	{
-							// 		type: 'title',
-							// 		id: 'Node Title',
-							// 		children: [{ text: nodeDataSWR.n.title }],
-							// 	} as MyTitleElement,
-							// 	...createInitialValue(nodeDataSWR.n.document),
-							// ]}
+							// initialValue={nodeDataSWR.document}
+							initialValue={[
+								{
+									type: 'title',
+									id: 'Node Title',
+									children: [{ text: nodeDataSWR.n.title }],
+								} as MyTitleElement,
+								...createInitialValue(nodeDataSWR.n.document),
+							]}
 							value={document}
 							setValue={setdocument}
 							id={'documentId'}

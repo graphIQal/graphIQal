@@ -96,8 +96,6 @@ export const CutText = (props: any, showCutText: boolean) => {
 };
 
 export const Divider = (props: any) => {
-	console.log('divider');
-
 	return (
 		<div
 			{...props.attributes}

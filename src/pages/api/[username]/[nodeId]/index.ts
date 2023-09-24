@@ -138,8 +138,8 @@ export default async function handler(
 
 		// all we do is pass in the level, and we push it using recursion.
 		const traverseBlocks = (currLevel: Block[], obj: any) => {
-			console.log('traverse');
-			console.log(obj);
+			// console.log('traverse');
+			// console.log(obj);
 
 			// Pushes the current node onto the list
 			const { _type, _id, next_block, child_block, children, ...rest } =
@@ -199,19 +199,19 @@ export default async function handler(
 		console.log(JSON.stringify(document, null, 2));
 
 		// if there are no blocks
-		if (document.length === 1) {
-			if (data[0].n.document) {
-				const originalDoc = JSON.parse(data[0].n.document);
-				const cypher = wholeDocumentSave(originalDoc, data[0].n.id);
-				// console.log('conversion cypher');
-				// console.log(cypher);
-			}
-		}
+
+		// if (document.length === 1) {
+		// 	if (data[0].n.document) {
+		// 		const originalDoc = JSON.parse(data[0].n.document);
+		// 		const cypher = wholeDocumentSave(originalDoc, data[0].n.id);
+		// 		// console.log('conversion cypher');
+		// 		// console.log(cypher);
+		// 	}
+		// }
 
 		// console.log('data');
 		// console.log({
 		// 	n: data[0].n,
-		// 	connectedNodes: data[0].connectedNodes,
 		// 	document,
 		// });
 

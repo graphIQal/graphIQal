@@ -1,5 +1,12 @@
 import {
 	HotkeyPlugin,
+	MARK_BOLD,
+	MARK_ITALIC,
+	MARK_STRIKETHROUGH,
+	MARK_SUBSCRIPT,
+	MARK_SUPERSCRIPT,
+	MARK_UNDERLINE,
+	PlateLeaf,
 	createBoldPlugin,
 	createCodePlugin,
 	createItalicPlugin,
@@ -8,9 +15,9 @@ import {
 	createSubscriptPlugin,
 	createSuperscriptPlugin,
 	createUnderlinePlugin,
+	withProps,
 } from '@udecode/plate';
 import {
-	ELEMENT_TITLE,
 	MARK_COLOUR,
 	createMyPluginFactory,
 	createMyPlugins,
@@ -41,6 +48,17 @@ export const TextMarkPlugins = createMyPlugins(
 		createColourTextPlugin(),
 	],
 	{
-		// components: createPlateUI({}),
+		components: {
+			[MARK_BOLD]: withProps(PlateLeaf, { as: 'strong' }),
+			[MARK_ITALIC]: withProps(PlateLeaf, { as: 'em' }),
+			[MARK_STRIKETHROUGH]: withProps(PlateLeaf, { as: 's' }),
+			[MARK_SUBSCRIPT]: withProps(PlateLeaf, { as: 'sub' }),
+			[MARK_SUPERSCRIPT]: withProps(PlateLeaf, { as: 'sup' }),
+			[MARK_UNDERLINE]: withProps(PlateLeaf, { as: 'u' }),
+			// [MARK_CODE]: CodeLeaf,
+			// [MARK_HIGHLIGHT]: HighlightLeaf,
+			// [MARK_KBD]: KbdLeaf,
+			// [MARK_COMMENT]: CommentLeaf,
+		},
 	}
 );

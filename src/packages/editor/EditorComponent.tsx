@@ -30,6 +30,8 @@ import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import { useViewData } from '../../components/context/ViewContext';
 import { CutText } from './Elements/Elements';
+import { FloatingToolbar } from '@/components/plate-ui/floating-toolbar';
+import { FloatingToolbarButtons } from '@/components/plate-ui/floating-toolbar-buttons';
 
 const EditorComponent: React.FC<{
 	value: any[];
@@ -67,12 +69,10 @@ const EditorComponent: React.FC<{
 
 		console.log('editorRef');
 		console.log(editorRef.current?.history);
-
 		// const lastUndo =
 		// 	editorRef.current?.history.undos[
 		// 		editorRef.current?.history.undos.length - 1
 		// 	];
-		console.log(editorRef.current?.history);
 
 		return () => {
 			window.removeEventListener('beforeunload', onUnload);
@@ -81,7 +81,8 @@ const EditorComponent: React.FC<{
 	}, [value]);
 
 	const onRouterUnload = (url: string, { shallow }: { shallow: boolean }) => {
-		if (value.length > 0 && !shallow) {
+		console.log('routerUnload', shallow, url);
+		if (value.length > 0) {
 			console.log('unshallow, save');
 			clearTimeout(intervalRef.current);
 			save({
@@ -192,6 +193,9 @@ const EditorComponent: React.FC<{
 				id={id}
 			>
 				{/* <EditorFloatingMenu></EditorFloatingMenu> */}
+				<FloatingToolbar>
+					<FloatingToolbarButtons />
+				</FloatingToolbar>
 				<EditorSlashMenu />
 			</Plate>
 		</div>

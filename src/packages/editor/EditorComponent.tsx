@@ -2,19 +2,14 @@ import {
 	createComboboxPlugin,
 	createNodeIdPlugin,
 	Plate,
-	ToggleMarkPlugin,
 } from '@udecode/plate';
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import { SaveDocumentInput } from '../../backend/functions/general/document/mutate/saveDocument';
-import { EditorFloatingMenu } from './Components/EditorFloatingMenu';
 import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
 import {
-	createMyPluginFactory,
 	createMyPlugins,
-	ELEMENT_CUT_SHOWN,
-	ELEMENT_CUT_HIDDEN,
 	MyEditor,
 	MyPlatePlugin,
 	MyValue,
@@ -25,13 +20,11 @@ import { FormatPlugins } from './Plugins/FormatPlugins';
 import { createBlockPlugin } from './Plugins/NestedBlocksPlugin/BlockPlugin';
 import { TextMarkPlugins } from './Plugins/TextMarkPlugins';
 
-import IconCircleButton from '@/components/molecules/IconCircleButton';
+import { FloatingToolbar } from '@/components/plate-ui/floating-toolbar';
+import { FloatingToolbarButtons } from '@/components/plate-ui/floating-toolbar-buttons';
 import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import { useViewData } from '../../components/context/ViewContext';
-import { CutText } from './Elements/Elements';
-import { FloatingToolbar } from '@/components/plate-ui/floating-toolbar';
-import { FloatingToolbarButtons } from '@/components/plate-ui/floating-toolbar-buttons';
 
 const EditorComponent: React.FC<{
 	value: any[];
@@ -192,7 +185,6 @@ const EditorComponent: React.FC<{
 				plugins={[...plugins]}
 				id={id}
 			>
-				{/* <EditorFloatingMenu></EditorFloatingMenu> */}
 				<FloatingToolbar>
 					<FloatingToolbarButtons />
 				</FloatingToolbar>

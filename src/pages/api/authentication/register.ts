@@ -45,7 +45,6 @@ export default async function handler(
 		name: $name,
 		homenodeId : $homenodeId,
 		homelessnodeId: $homelessnodeId,
-		favourites: []
 	})
 
 	CREATE (n:Node {title: $homenodeName})
@@ -57,7 +56,7 @@ export default async function handler(
 	MERGE (n)-[:RELATED]-(h)
 
 	CREATE (f:Node {title: "Favourites"})
-	SET f.id = $favouritesId, f.favourites = []
+	SET f.id = $favouritesId, f.favourites = [], f.icon = "star"
 	MERGE (f)-[:HAS]->(n)
 	MERGE (f)-[:HAS]->(h)
 	

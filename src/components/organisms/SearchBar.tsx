@@ -1,22 +1,17 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import IconTitle from '../molecules/IconTitle';
-import TextButton from '../molecules/TextButton';
-import IconCircleButton from '../molecules/IconCircleButton';
-import { GraphNode } from '../../packages/graph/components/GraphNode';
-import CollapsedGraphNode from './CollapsedGraphNode';
-import { OnHoverMenu } from './OnHoverMenu';
+import { useSession } from 'next-auth/react';
 import router from 'next/router';
-import { NodeData } from '../../packages/graph/graphTypes';
-import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
-import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
-import { fetcher, fetcherAll } from '../../backend/driver/fetcher';
+import React, { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
-import { useViewData } from '../context/ViewContext';
+import { fetcherAll } from '../../backend/driver/fetcher';
+import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
+import { checkIfVisible } from '../../helpers/frontend/checkIfVisible';
 import {
 	useGraphViewAPI,
 	useGraphViewData,
 } from '../../packages/graph/context/GraphViewContext';
-import { useSession } from 'next-auth/react';
+import { useViewData } from '../context/ViewContext';
+import IconCircleButton from '../molecules/IconCircleButton';
+import { OnHoverMenu } from './OnHoverMenu';
 
 const SearchBar: React.FC = () => {
 	const [showSearchBar, setShowSearchBar] = useState(false);

@@ -109,6 +109,18 @@ module.exports = {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				// Connection Colours
+				PARENTS: '#FCDDEC',
+				CHILDREN: '#f3ddfc',
+				IS: '#FFF492',
+				ENCOMPASSES: '#FF9292',
+				NEEDED: '#d7f7cb',
+				NEEDS: '#cdf7cb',
+				FOLLOWED: '#f7e4cb',
+				FOLLOWS: '#f7f2cb',
+				RELATED: '#cbf7e7',
+				CUSTOM: '#FFDAC1',
+				// Shadcn colours
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',

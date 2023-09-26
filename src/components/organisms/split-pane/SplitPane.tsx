@@ -5,11 +5,11 @@ import React, {
 	useRef,
 	useState,
 } from 'react';
+import { useViewData } from '../../context/ViewContext';
 import IconTitle from '../../molecules/IconTitle';
 import SplitPaneContext, {
 	SplitPaneContextInterface,
 } from './SplitPaneContext';
-import { useViewData } from '../../context/ViewContext';
 
 type SplitPaneProps = {
 	children: any;

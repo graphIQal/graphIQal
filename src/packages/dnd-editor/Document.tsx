@@ -46,6 +46,8 @@ import {
 	emojiCategoryIcons,
 	emojiSearchIcons,
 } from '@/components/plate-ui/emoji-icons';
+import { connectionCategorisation } from '@/components/organisms/Tabs/RenderConnections';
+import { ConnectedNodesTag } from '@/components/molecules/ConnectedNodesTag';
 
 const Document: React.FC<{
 	viewId: string;
@@ -125,6 +127,19 @@ const Document: React.FC<{
 					}
 				]`;
 	}
+
+	const titles = [
+		'bg-PARENTS',
+		'bg-CHILDREN',
+		'bg-IS',
+		'bg-ENCOMPASSES',
+		'bg-NEEDED',
+		'bg-NEEDS',
+		'bg-FOLLOWED',
+		'bg-FOLLOWS',
+		'bg-RELATED',
+		'bg-CUSTOM',
+	];
 
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
 	// console.log(connectionMap);
@@ -219,7 +234,29 @@ const Document: React.FC<{
 						{barComponents.favourite}
 					</div>
 				</div>
-				<div className='relative pl-10 pt-15 pt-10 pr-10 pb-3'>
+				<div className='relative pl-10 pt-15 pt-10 pr-10 pb-3 '>
+					<div className='flex flex-row gap-2 mb-4 w-full overflow-x-scroll'>
+						{connectionCategorisation(
+							nodeDataSWR.connectedNodes
+						).map((item) => (
+							<ConnectedNodesTag
+								type={item.type}
+								nodes={item.nodes}
+							/>
+						))}
+						{/* {Object.entries(connectionMap).map(([connectionType, nodes]) => (
+							<div key={connectionType}>
+								<h3>{connectionType}</h3>
+								<div className='flex flex-wrap'>
+									{nodes.map((node) => (
+										<span key={node.id} className='tag'>
+											{node.title}
+										</span>
+									))}
+								</div>
+							</div>
+						))} */}
+					</div>
 					<div className='absolute z-10 ml-[14px]'>
 						<EmojiToolbarDropdown
 							control={
@@ -430,6 +467,7 @@ const Document: React.FC<{
 				/>
 				{/* If I put shelf inside documentSideTabs it has issues with setting state and I'm not sure why tbh */}
 				{/* I suspect this might be because it gets rendered in tabs after the fact. */}
+
 				<Divider className='separator-row' />
 				<div className='py-4 px-2 '>
 					<div className='ml-[14px]'>

@@ -106,3 +106,56 @@ export const renderConnections = (
 		);
 	});
 };
+
+export const connectionCategorisation = (
+	connectedNodes: connectedNode_type[]
+): { type: string; nodes: connectedNode_type[] }[] => {
+	const items: any[] = [];
+
+	const sectionDisplayNames: { [key: string]: string } = {
+		'To-HAS': 'Parents',
+		'From-HAS': 'Children',
+		'To-IS': 'Is',
+		'From-IS': 'Encompasses',
+		'To-NEEDS': 'Needed',
+		'From-NEEDS': 'Needs',
+		'To-FOLLOWS': 'Followed',
+		'From-FOLLOWS': 'Follows',
+		'To-RELATED': 'Related',
+		'From-RELATED': 'Related',
+		'To-CUSTOM': 'Custom',
+		'From-CUSTOM': 'Custom',
+	};
+
+	const sections: Record<string, connectedNode_type[]> = {
+		'To-HAS': [],
+		'From-HAS': [],
+		'To-IS': [],
+		'From-IS': [],
+		'To-NEEDS': [],
+		'From-NEEDS': [],
+		'To-FOLLOWS': [],
+		'From-FOLLOWS': [],
+		'To-RELATED': [],
+		'From-RELATED': [],
+		'To-CUSTOM': [],
+		'From-CUSTOM': [],
+	};
+
+	connectedNodes.forEach((connectedNode, i) => {
+		const connectionType = connectedNode.r.type;
+		const sectionKey = `${
+			connectedNode.r.fromNode ? 'From' : 'To'
+		}-${connectionType}`;
+
+		sections[sectionKey].push(connectedNode);
+	});
+
+	return Object.entries(sections).flatMap(([key, nodes]) => {
+		if (nodes.length > 1) {
+			return [{ type: sectionDisplayNames[key], nodes: nodes }];
+		} else {
+			return [];
+		}
+	});
+};

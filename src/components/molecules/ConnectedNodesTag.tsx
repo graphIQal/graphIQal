@@ -22,6 +22,8 @@ import { Tag } from '../ui/tag';
 import IconTitle from './IconTitle';
 import { NodeTitle } from '@/packages/editor/Elements/Elements';
 import { connectionColours } from '@/theme/colors';
+import { Router, useRouter } from 'next/router';
+import { useViewData } from '../context/ViewContext';
 
 export function ConnectedNodesTag({
 	type,
@@ -32,6 +34,9 @@ export function ConnectedNodesTag({
 }) {
 	const [open, setOpen] = React.useState(false);
 	const [value, setValue] = React.useState('');
+
+	const router = useRouter();
+	const { nodeId, username } = useViewData();
 
 	const renderTitles = () => {
 		const outString = nodes.map((node) => (
@@ -70,8 +75,11 @@ export function ConnectedNodesTag({
 							<CommandItem
 								key={node.connected_node.id}
 								onSelect={(id) => {
-									setValue(id === value ? '' : id);
-									setOpen(false);
+									router.push(
+										`/${username}/${node.connected_node.id}`
+									);
+									// setValue(id === value ? '' : id);
+									// setOpen(false);
 								}}
 							>
 								<IconTitle

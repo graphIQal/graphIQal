@@ -19,7 +19,39 @@ export default async function handler(
 		currentBlock: BlockElements[],
 		prevBlockId: string
 	) => {
-		for (const block of currentBlock) {
+		if (currentBlock.length === 0) return;
+
+		const firstBlock = currentBlock[0];
+		const firstBlockId = firstBlock.type === 'node' ? 'Node' : 'Block';
+
+		const result = await write(
+			`
+		OPTIONAL MATCH ({id: "${firstBlockId}"})-[l:NEXT_BLOCK | CHILD_BLOCK {documentId: "${nodeId}"}]-()
+		DELETE l
+		MERGE (p {id: "${prevBlockId}"})
+		MERGE (b:${firstBlock.type === 'node' ? 'Node' : 'Block'} {id: "${
+				firstBlock.id
+			}"})
+
+		SET b.type = "${firstBlock.type}", b.children = $children
+		MERGE (p)-[cr:CHILD_BLOCK]->(b)
+		SET cr.documentId = "${prevBlockId}"
+		RETURN b
+		`,
+			{
+				children: JSON.stringify([firstBlock.children[0]]),
+			}
+		);
+
+		wholeDocumentSave(
+			firstBlock.children.splice(1) as BlockElements[],
+			firstBlockId
+		);
+
+		prevBlockId = firstBlockId;
+
+		for (let i = 1; i < currentBlock.length; i++) {
+			const block = currentBlock[i];
 			let cypherQuery = '';
 
 			// if (
@@ -65,29 +97,9 @@ export default async function handler(
 			if (block.children && block.children.length > 1) {
 				// Create the child block
 
-				const firstChildBlock: BlockElements = block
-					.children[1] as BlockElements;
-
-				cypherQuery += `
-				MERGE (c:${firstChildBlock.type === 'node' ? 'Node' : 'Block'} {id: "${
-					firstChildBlock.id
-				}"})
-				SET c.type = "${firstChildBlock.type}", c.children = $firstBlockChildren
-				MERGE (b)-[cr:CHILD_BLOCK]->(c)
-				SET cr.documentId = "${nodeId}"
-				RETURN b
-				`;
-
-				const result = await write(cypherQuery, {
-					firstBlockChildren: JSON.stringify(
-						firstChildBlock.children
-					),
-					children: JSON.stringify([block.children[0]]),
-				});
-
 				wholeDocumentSave(
 					block.children.splice(2) as BlockElements[],
-					firstChildBlock.id
+					block.id
 				);
 			} else {
 				cypherQuery += `
@@ -109,50 +121,9 @@ export default async function handler(
 	RETURN n
 	`;
 
-	const addFirstBlock = async (block: BlockElements) => {
-		let blockId = block.type === 'node' ? block.nodeId : block.id;
-
-		let cypherQuery = ``;
-		cypherQuery += `
-		// In the future we will turn this to a transaction, and make it so that it connects the previous and next blocks
-		OPTIONAL MATCH ({id: "${blockId}"})-[l:NEXT_BLOCK | CHILD_BLOCK {documentId: "${nodeId}"}]-()
-		DELETE l
-		`;
-
-		if (block.type === 'node') {
-			blockId = block.nodeId;
-			cypherQuery += `
-			MERGE (b:Node {id: "${blockId}"})
-			SET b.children = $children
-			`;
-		} else {
-			cypherQuery += `
-			MERGE (b:Block {id: "${blockId}"})
-			SET b.type = "${block.type}", b.children = $children
-			`;
-		}
-
-		// Connect the block to the previous block
-		cypherQuery += `
-		MERGE (p {id: "${nodeId}"})
-		MERGE (p)-[r:CHILD_BLOCK]->(b)
-		SET r.documentId = "${nodeId}"
-			`;
-
-		const result = write(cypherQuery, {
-			children: JSON.stringify([block.children[0]]),
-		});
-	};
-
 	try {
 		const title = write(cypher, params);
-		if (document.length > 0) {
-			const block = document[0];
-		}
-		const result = await wholeDocumentSave(
-			document.splice(1),
-			nodeId as string
-		);
+		const result = await wholeDocumentSave(document, nodeId as string);
 		res.status(200).json({ result });
 		// res.status(200).json({ result: 'nothing yet' });
 	} catch (e) {

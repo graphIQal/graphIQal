@@ -16,6 +16,7 @@ export default async function handler(
 	res: NextApiResponse
 ) {
 	const params = req.query;
+	const { nodeId } = params;
 	// Find all relevant data to the node
 
 	const cypher: string = `
@@ -44,18 +45,55 @@ export default async function handler(
 		currentBlock: BlockElements[],
 		prevBlockId: string
 	) => {
-		for (const block of currentBlock) {
+		if (currentBlock.length === 0) return;
+
+		const firstBlock = currentBlock[0];
+		const firstBlockId = firstBlock.type === 'node' ? 'Node' : 'Block';
+
+		const result = await write(
+			`
+		MERGE (p {id: "${prevBlockId}"})
+		MERGE (b:${firstBlock.type === 'node' ? 'Node' : 'Block'} {id: "${
+				firstBlock.id
+			}"})
+
+		SET b.type = "${firstBlock.type}", b.children = $children
+		MERGE (p)-[cr:CHILD_BLOCK]->(b)
+		SET cr.documentId = "${prevBlockId}"
+		RETURN b
+		`,
+			{
+				children: JSON.stringify([firstBlock.children[0]]),
+			}
+		);
+
+		wholeDocumentSave(
+			firstBlock.children.splice(1) as BlockElements[],
+			firstBlockId
+		);
+
+		prevBlockId = firstBlockId;
+
+		for (let i = 1; i < currentBlock.length; i++) {
+			const block = currentBlock[i];
 			let cypherQuery = '';
 
 			// if (
 			// 	!(block.type === ELEMENT_BLOCK || block.type === ELEMENT_NODE)
 			// ) {
-			// console.log("this shouldn't ever happen");
+			// 	console.log("this shouldn't ever happen");
 			// 	return;
 			// }
 
 			// Use the existing ID for the block
-			let blockId = block.id;
+			let blockId = block.type === 'node' ? block.nodeId : block.id;
+
+			cypherQuery += `
+			// Need to detach previous blocks 
+			// In the future we will turn this to a transaction, and make it so that it connects the previous and next blocks
+			OPTIONAL MATCH ({id: "${blockId}"})-[l:NEXT_BLOCK | CHILD_BLOCK {documentId: "${nodeId}"}]-()
+			DELETE l
+			`;
 
 			if (block.type === 'node') {
 				blockId = block.nodeId;
@@ -76,48 +114,24 @@ export default async function handler(
 			cypherQuery += `
 			MERGE (p {id: "${prevBlockId}"})
 			MERGE (p)-[r:NEXT_BLOCK]->(b)
-		  `;
+			SET r.documentId = "${nodeId}"
+		  	`;
 
 			// If the block has children, recursively save them
 			if (block.children && block.children.length > 1) {
 				// Create the child block
 
-				const firstChildBlock: BlockElements = block
-					.children[1] as BlockElements;
-
-				cypherQuery += `
-				MERGE (c:${firstChildBlock.type === 'node' ? 'Node' : 'Block'} {id: "${
-					firstChildBlock.id
-				}"})
-				SET c.type = "${firstChildBlock.type}", c.children = $firstBlockChildren
-				MERGE (b)-[cr:CHILD_BLOCK]->(c)
-				RETURN b
-				`;
-
-				resArray.push(cypherQuery);
-				const result = await write(cypherQuery, {
-					firstBlockChildren: JSON.stringify(
-						firstChildBlock.children
-					),
-					children: JSON.stringify([block.children[0]]),
-				});
-				resNodes.push(result);
-
 				wholeDocumentSave(
 					block.children.splice(2) as BlockElements[],
-					firstChildBlock.id
+					block.id
 				);
 			} else {
-				// console.log('write: ', cypherQuery);
 				cypherQuery += `
 				RETURN b
 				`;
-				resArray.push(cypherQuery);
 				const result = await write(cypherQuery, {
 					children: JSON.stringify([block.children[0]]),
 				});
-				// console.log(result);
-				resNodes.push(result);
 			}
 
 			// Update the previous block ID for the next iteration
@@ -144,8 +158,8 @@ export default async function handler(
 
 		// all we do is pass in the level, and we push it using recursion.
 		const traverseBlocks = (currLevel: Block[], obj: any) => {
-			// console.log('traverse');
-			// console.log(obj);
+			console.log('traverse');
+			console.log(obj);
 
 			// Pushes the current node onto the list
 			let { _type, _id, next_block, child_block, children, ...rest } =
@@ -203,7 +217,7 @@ export default async function handler(
 		if (document.length === 1) {
 			if (data[0].n.document) {
 				const originalDoc = JSON.parse(data[0].n.document);
-				const cypher = wholeDocumentSave(originalDoc, data[0].n.id);
+				const req = wholeDocumentSave(originalDoc, data[0].n.id);
 			}
 		}
 

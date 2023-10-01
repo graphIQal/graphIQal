@@ -50,7 +50,7 @@ export default async function handler(
 			// if (
 			// 	!(block.type === ELEMENT_BLOCK || block.type === ELEMENT_NODE)
 			// ) {
-			// 	console.log("this shouldn't ever happen");
+			// console.log("this shouldn't ever happen");
 			// 	return;
 			// }
 
@@ -86,13 +86,14 @@ export default async function handler(
 					.children[1] as BlockElements;
 
 				cypherQuery += `
-				MERGE (c:Block {id: "${firstChildBlock.id}"})
+				MERGE (c:${firstChildBlock.type === 'node' ? 'Node' : 'Block'} {id: "${
+					firstChildBlock.id
+				}"})
 				SET c.type = "${firstChildBlock.type}", c.children = $firstBlockChildren
 				MERGE (b)-[cr:CHILD_BLOCK]->(c)
 				RETURN b
 				`;
 
-				console.log('write: ', cypherQuery);
 				resArray.push(cypherQuery);
 				const result = await write(cypherQuery, {
 					firstBlockChildren: JSON.stringify(
@@ -100,7 +101,6 @@ export default async function handler(
 					),
 					children: JSON.stringify([block.children[0]]),
 				});
-				console.log(result);
 				resNodes.push(result);
 
 				wholeDocumentSave(
@@ -108,7 +108,7 @@ export default async function handler(
 					firstChildBlock.id
 				);
 			} else {
-				console.log('write: ', cypherQuery);
+				// console.log('write: ', cypherQuery);
 				cypherQuery += `
 				RETURN b
 				`;
@@ -116,7 +116,7 @@ export default async function handler(
 				const result = await write(cypherQuery, {
 					children: JSON.stringify([block.children[0]]),
 				});
-				console.log(result);
+				// console.log(result);
 				resNodes.push(result);
 			}
 
@@ -148,9 +148,10 @@ export default async function handler(
 			// console.log(obj);
 
 			// Pushes the current node onto the list
-			const { _type, _id, next_block, child_block, children, ...rest } =
+			let { _type, _id, next_block, child_block, children, ...rest } =
 				obj;
 			// console.log(children);
+			if (children === undefined) children = '[]';
 
 			if (_type === 'Node') {
 				// Add a nodeLink
@@ -190,9 +191,6 @@ export default async function handler(
 			if (obj.next_block) {
 				traverseBlocks(currLevel, obj.next_block[0]);
 			}
-
-			// console.log('current document');
-			// console.log(document);
 		};
 
 		if (blockData.next_block) {
@@ -200,26 +198,14 @@ export default async function handler(
 		} else {
 			// Do I need to do anything? I think returning a blank document is okay because it's a valid document, and historyedit will automatically send it.
 		}
-
-		console.log('output document');
-		console.log(JSON.stringify(document, null, 2));
-
 		// if there are no blocks
 
-		// if (document.length === 1) {
-		// 	if (data[0].n.document) {
-		// 		const originalDoc = JSON.parse(data[0].n.document);
-		// 		const cypher = wholeDocumentSave(originalDoc, data[0].n.id);
-		// 		// console.log('conversion cypher');
-		// 		// console.log(cypher);
-		// 	}
-		// }
-
-		// console.log('data');
-		// console.log({
-		// 	n: data[0].n,
-		// 	document,
-		// });
+		if (document.length === 1) {
+			if (data[0].n.document) {
+				const originalDoc = JSON.parse(data[0].n.document);
+				const cypher = wholeDocumentSave(originalDoc, data[0].n.id);
+			}
+		}
 
 		res.status(200).json([
 			{

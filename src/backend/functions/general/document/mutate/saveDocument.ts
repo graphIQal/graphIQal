@@ -64,7 +64,7 @@ export const saveDocument = async ({
 
 	console.log('saveDocument', nodeId, title);
 
-	saveNestedNodes(document.slice(1));
+	// saveNestedNodes(document.slice(1));
 
 	const res = await fetch(
 		`/api/${username}/${nodeId}/document/save/${title}`,

@@ -46,6 +46,15 @@
 	.collapsed_node {
 		font-size: calc(theme(fontSize[sm]));
 	}
+	
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
+	
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
 }
 
 .container {

@@ -43,7 +43,6 @@ export function ConnectedNodesTag({
 			<IconTitle
 				icon={node.connected_node.icon}
 				title={node.connected_node.title + ', '}
-				textClasses={'mr-1'}
 			/>
 		));
 

@@ -1,23 +1,19 @@
 import {
-	// CheckIcon,
-	// Combobox,
 	deleteBackward,
-	EditorRefEffect,
 	ELEMENT_BLOCKQUOTE,
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
 	ELEMENT_LI,
 	ELEMENT_TODO_LI,
+	getPath,
 	getPluginType,
 	insertNodes,
 	isSelectionAtBlockStart,
-	PlateEditor,
+	removeNodes,
 	setNodes,
 	someNode,
 	TComboboxItemWithData,
-	toggleList,
-	unwrapNodes,
 } from '@udecode/plate';
 import { ReactNode, useEffect, useState } from 'react';
 import BlockMenu from '../../../components/organisms/BlockMenu';
@@ -27,47 +23,34 @@ import {
 	ELEMENT_NODE,
 	ELEMENT_NODELINK,
 	ELEMENT_NODETITLE,
+	MyBlockElement,
 	MyEditor,
 	MyH1Element,
 	MyH2Element,
 	MyNodeElement,
 	MyNodeLinkElement,
-	MyValue,
 	useMyPlateEditorRef,
 } from '../plateTypes';
 
+import { fetcher, fetcherSingleReturn } from '@/backend/driver/fetcher';
+import { addBlockToInbox } from '@/backend/functions/node/mutate/addBlockToInbox';
+import { createConnection } from '@/backend/functions/node/mutate/createConnection';
+import NodeIcon from '@/components/atoms/NodeIcon';
+import { Icons } from '@/components/icons';
+import IconTitle from '@/components/molecules/IconTitle';
+import { Combobox } from '@/components/plate-ui/combobox';
+import { useToast } from '@/components/ui/use-toast';
+import { ConnectionTypes, NodeData } from '@/packages/graph/graphTypes';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import React from 'react';
+import useSWR from 'swr';
 import { v4 as uuidv4 } from 'uuid';
 import { createNodeInDocument } from '../../../backend/functions/node/mutate/createNodeInDocument';
 import { useViewData } from '../../../components/context/ViewContext';
-import { formatList } from '../Plugins/Autoformat/autoformatUtils';
-import {
-	Popover,
-	PopoverTrigger,
-	PopoverContent,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { CaretSortIcon } from '@radix-ui/react-icons';
-import {
-	Command,
-	CommandInput,
-	CommandEmpty,
-	CommandGroup,
-	CommandItem,
-} from 'cmdk';
-import { ConnectionTypes, NodeData } from '@/packages/graph/graphTypes';
-import { Button } from '@/components/ui/button';
-import useSWR from 'swr';
-import { useSession } from 'next-auth/react';
-import { fetcher } from '@/backend/driver/fetcher';
-import { Icons } from '@/components/icons';
-import React from 'react';
-import { createConnection } from '@/backend/functions/node/mutate/createConnection';
 import { getClosestBlock } from '../helpers/getClosestBlock';
 import { getClosestNodeBlock } from '../helpers/getClosestNodeBlock';
-import { useToast } from '@/components/ui/use-toast';
-import NodeIcon from '@/components/atoms/NodeIcon';
-import { Combobox } from '@/components/plate-ui/combobox';
+import { formatList } from '../Plugins/Autoformat/autoformatUtils';
 
 // export const markTooltip: TippyProps = {
 // 	arrow: true,
@@ -90,8 +73,7 @@ type item = {
 	};
 };
 
-type ExtendedItem = TComboboxItemWithData<item> &
-	item & { n: Partial<NodeData> };
+type ExtendedItem = TComboboxItemWithData<item> & item & { n: NodeData };
 
 const getTextAfterTrigger = (search: string, trigger: string) => {
 	const indexOfTrigger = search.lastIndexOf(trigger);
@@ -106,6 +88,16 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	const router = useRouter();
 	const editor = useMyPlateEditorRef();
 	const { nodeId, username } = useViewData();
+
+	const { data: nodeDataSWR, isLoading } = useSWR(
+		[nodeId ? `/api/username/${nodeId}` : null],
+		fetcherSingleReturn,
+		{
+			revalidateOnMount: false,
+			revalidateOnFocus: false,
+		}
+	);
+
 	const { toast } = useToast();
 
 	const items: item[] = [
@@ -395,7 +387,10 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				icon: 'plusCircle',
 				searchFunction: (search) => {
 					// console.log('search ', search);
-					if ('create node'.startsWith(search)) {
+					if (
+						'create node'.startsWith(search) ||
+						'page'.startsWith(search)
+					) {
 						return true;
 					}
 					return false;
@@ -986,7 +981,9 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								const { dismiss } = toast({
 									title: (
 										<div>
-											<NodeIcon icon='node' />
+											<NodeIcon
+												icon={nodeDataSWR.n.icon}
+											/>
 											<span>
 												{editor.children[0].children[0]
 													.text + ' is now a '}
@@ -1012,7 +1009,9 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								const { dismiss } = toast({
 									title: (
 										<div>
-											<NodeIcon icon='node' />
+											<NodeIcon
+												icon={nodeDataSWR.n.icon}
+											/>
 											<span>
 												{editor.children[0].children[0]
 													.text +
@@ -1039,7 +1038,9 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								const { dismiss } = toast({
 									title: (
 										<div>
-											<NodeIcon icon='node' />
+											<NodeIcon
+												icon={nodeDataSWR.n.icon}
+											/>
 											<span>
 												{editor.children[0].children[0]
 													.text +
@@ -1066,7 +1067,9 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								const { dismiss } = toast({
 									title: (
 										<div>
-											<NodeIcon icon='node' />
+											<NodeIcon
+												icon={nodeDataSWR.n.icon}
+											/>
 											<span>
 												{editor.children[0].children[0]
 													.text + ' needs '}
@@ -1093,7 +1096,9 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								const { dismiss } = toast({
 									title: (
 										<div>
-											<NodeIcon icon='node' />
+											<NodeIcon
+												icon={nodeDataSWR.n.icon}
+											/>
 											<span>
 												{editor.children[0].children[0]
 													.text +
@@ -1186,6 +1191,51 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							} as MyNodeElement);
 						} else if (beforeText === 'send ') {
 							// Send block to node inbox
+							if (editor.selection) {
+								const selection = getPath(
+									editor,
+									editor.selection.anchor
+								);
+
+								const closestBlock = getClosestBlock(
+									selection,
+									editor
+								);
+
+								if (closestBlock) {
+									removeNodes(editor, {
+										at: closestBlock[1],
+									});
+
+									// Attach block to inbox
+									addBlockToInbox({
+										nodeId: item.n.id,
+										block: closestBlock[0] as MyBlockElement,
+										nodeName: nodeDataSWR.n.title,
+										icon: nodeDataSWR.n.icon,
+										originNodeId: nodeDataSWR.n.id,
+									});
+								}
+
+								const { dismiss } = toast({
+									title: (
+										<span className='flex flex-row'>
+											<span>Block sent to </span>
+											<IconTitle
+												icon={item.n.icon}
+												title={item.n.title}
+											/>
+											<span>'s inbox</span>
+										</span>
+									),
+									description:
+										'Undo will not unsend the block! Resolve in inbox!',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 3000);
+							}
 						} else {
 							// add node link
 							console.log('add node link');

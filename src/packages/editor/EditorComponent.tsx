@@ -54,6 +54,7 @@ const EditorComponent: React.FC<{
 
 	useEffect(() => {
 		setValue(initialValue);
+		window.onbeforeunload = () => true;
 	}, []);
 
 	useEffect(() => {
@@ -127,7 +128,7 @@ const EditorComponent: React.FC<{
 							idKey: 'id',
 							idCreator: uuidv4,
 							disableInsertOverrides: false,
-							reuseId: true,
+							// reuseId: true,
 						},
 					}),
 					...customPlugins,

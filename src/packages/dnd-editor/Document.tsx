@@ -235,7 +235,7 @@ const Document: React.FC<{
 					</div>
 				</div>
 				<div className='relative pl-10 pt-15 pt-10 pr-10 pb-3 '>
-					<div className='flex flex-row gap-2 mb-4 w-full overflow-x-scroll'>
+					<div className='flex flex-row gap-2 mb-4 w-full overflow-x-scroll scrollbar-hide'>
 						{connectionCategorisation(
 							nodeDataSWR.connectedNodes
 						).map((item) => (
@@ -244,18 +244,6 @@ const Document: React.FC<{
 								nodes={item.nodes}
 							/>
 						))}
-						{/* {Object.entries(connectionMap).map(([connectionType, nodes]) => (
-							<div key={connectionType}>
-								<h3>{connectionType}</h3>
-								<div className='flex flex-wrap'>
-									{nodes.map((node) => (
-										<span key={node.id} className='tag'>
-											{node.title}
-										</span>
-									))}
-								</div>
-							</div>
-						))} */}
 					</div>
 					<div className='absolute z-10 ml-[14px]'>
 						<EmojiToolbarDropdown

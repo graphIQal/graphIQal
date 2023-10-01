@@ -34,6 +34,12 @@ export default async function handler(
 	const resArray: string[] = [];
 	const resNodes: any[] = [];
 
+	// I NEED TO MAKE THE FIRST BLOCKS A CHILD BLOCK
+	// because there can be a next-block in a node, in fact there can be multiple next_blocks for a node if it's part of multiple documents.
+	// We will in fact need a fix for this.
+	// It probably makes the most sense to include a property in the NEXT_BLOCK relationship about the document this NEXT_BLOCK is in.
+	// That might help with other things such as duplicate blocks and stuff.
+
 	const wholeDocumentSave = async (
 		currentBlock: BlockElements[],
 		prevBlockId: string

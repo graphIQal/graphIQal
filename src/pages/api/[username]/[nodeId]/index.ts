@@ -10,6 +10,7 @@ import { getNodeData_cypher } from '../../../../backend/cypher-generation/cypher
 import { read, write } from '../../../../backend/driver/helpers';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
+// import { wholeDocumentSave } from '@/backend/functions/general/document/mutate/wholeDocumentSave';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -41,109 +42,9 @@ export default async function handler(
 	// It probably makes the most sense to include a property in the NEXT_BLOCK relationship about the document this NEXT_BLOCK is in.
 	// That might help with other things such as duplicate blocks and stuff.
 
-	const wholeDocumentSave = async (
-		currentBlock: BlockElements[],
-		prevBlockId: string
-	) => {
-		if (currentBlock.length === 0) return;
-
-		const firstBlock = currentBlock[0];
-		const firstBlockId = firstBlock.type === 'node' ? 'Node' : 'Block';
-
-		const result = await write(
-			`
-		MERGE (p {id: "${prevBlockId}"})
-		MERGE (b:${firstBlock.type === 'node' ? 'Node' : 'Block'} {id: "${
-				firstBlock.id
-			}"})
-
-		SET b.type = "${firstBlock.type}", b.children = $children
-		MERGE (p)-[cr:CHILD_BLOCK]->(b)
-		SET cr.documentId = "${prevBlockId}"
-		RETURN b
-		`,
-			{
-				children: JSON.stringify([firstBlock.children[0]]),
-			}
-		);
-
-		wholeDocumentSave(
-			firstBlock.children.splice(1) as BlockElements[],
-			firstBlockId
-		);
-
-		prevBlockId = firstBlockId;
-
-		for (let i = 1; i < currentBlock.length; i++) {
-			const block = currentBlock[i];
-			let cypherQuery = '';
-
-			// if (
-			// 	!(block.type === ELEMENT_BLOCK || block.type === ELEMENT_NODE)
-			// ) {
-			// 	console.log("this shouldn't ever happen");
-			// 	return;
-			// }
-
-			// Use the existing ID for the block
-			let blockId = block.type === 'node' ? block.nodeId : block.id;
-
-			cypherQuery += `
-			// Need to detach previous blocks 
-			// In the future we will turn this to a transaction, and make it so that it connects the previous and next blocks
-			OPTIONAL MATCH ({id: "${blockId}"})-[l:NEXT_BLOCK | CHILD_BLOCK {documentId: "${nodeId}"}]-()
-			DELETE l
-			`;
-
-			if (block.type === 'node') {
-				blockId = block.nodeId;
-				cypherQuery += `
-				MERGE (b:Node {id: "${blockId}"})
-				SET b.children = $children
-				`;
-			} else {
-				cypherQuery += `
-				MERGE (b:Block {id: "${blockId}"})
-				SET b.type = "${block.type}", b.children = $children
-				`;
-			}
-
-			// Create a new node for the block
-
-			// Connect the block to the previous block
-			cypherQuery += `
-			MERGE (p {id: "${prevBlockId}"})
-			MERGE (p)-[r:NEXT_BLOCK]->(b)
-			SET r.documentId = "${nodeId}"
-		  	`;
-
-			// If the block has children, recursively save them
-			if (block.children && block.children.length > 1) {
-				// Create the child block
-
-				wholeDocumentSave(
-					block.children.splice(2) as BlockElements[],
-					block.id
-				);
-			} else {
-				cypherQuery += `
-				RETURN b
-				`;
-				const result = await write(cypherQuery, {
-					children: JSON.stringify([block.children[0]]),
-				});
-			}
-
-			// Update the previous block ID for the next iteration
-			prevBlockId = blockId;
-		}
-	};
-
 	if ('err' in data) {
-		// console.log('huh');
 		res.status(400).json({ data, cypher, params });
 	} else {
-		// console.log('else');
 		const blockData = data[0].value;
 		const document: Block[] = [
 			{
@@ -158,12 +59,20 @@ export default async function handler(
 
 		// all we do is pass in the level, and we push it using recursion.
 		const traverseBlocks = (currLevel: Block[], obj: any) => {
-			console.log('traverse');
-			console.log(obj);
+			// console.log('traverse');
+			// console.log(obj);
 
 			// Pushes the current node onto the list
-			let { _type, _id, next_block, child_block, children, ...rest } =
-				obj;
+			let {
+				_type,
+				_id,
+				next_block,
+				child_block,
+				children,
+				'next_block.documentId': _,
+				'child_block.documentId': __,
+				...rest
+			} = obj;
 			// console.log(children);
 			if (children === undefined) children = '[]';
 
@@ -207,17 +116,134 @@ export default async function handler(
 			}
 		};
 
-		if (blockData.next_block) {
-			traverseBlocks(document, blockData.next_block[0]);
+		if (blockData.child_block) {
+			traverseBlocks(document, blockData.child_block[0]);
 		} else {
 			// Do I need to do anything? I think returning a blank document is okay because it's a valid document, and historyedit will automatically send it.
 		}
 		// if there are no blocks
 
+		const wholeDocumentSave = async (
+			currentBlock: BlockElements[],
+			prevBlockId: string,
+			nodeId: string
+		) => {
+			if (currentBlock.length === 0) return;
+
+			const firstBlock = currentBlock[0];
+
+			let cypherQuery = ``;
+
+			if (firstBlock.type === 'node') {
+				cypherQuery += `
+				OPTIONAL MATCH (Node {id: "${firstBlock.nodeId}"})-[l:NEXT_BLOCK {documentId: "${nodeId}"}]-()
+				DELETE l
+				`;
+				nodeId = firstBlock.nodeId as string;
+			} else {
+				cypherQuery += `
+				OPTIONAL MATCH (Block {id: "${firstBlock.id}"})-[l:NEXT_BLOCK | CHILD_BLOCK]-()
+				DELETE l
+				`;
+			}
+
+			cypherQuery += `
+			MERGE (p {id: "${prevBlockId}"})
+			MERGE (b:${firstBlock.type === 'node' ? 'Node' : 'Block'} {id: "${
+				firstBlock.id
+			}"})
+			SET b.type = "${firstBlock.type}", b.children = $children
+			MERGE (p)-[cr:CHILD_BLOCK]->(b)
+			SET cr.documentId = "${nodeId}"
+			RETURN b
+			`;
+
+			resArray.push(cypherQuery);
+			const result = await write(cypherQuery, {
+				children: JSON.stringify([firstBlock.children[0]]),
+			});
+
+			wholeDocumentSave(
+				firstBlock.children.splice(1) as BlockElements[],
+				firstBlock.id,
+				nodeId
+			);
+
+			prevBlockId = firstBlock.id;
+
+			for (let i = 1; i < currentBlock.length; i++) {
+				const block = currentBlock[i];
+				cypherQuery = '';
+
+				// if (
+				// 	!(block.type === ELEMENT_BLOCK || block.type === ELEMENT_NODE)
+				// ) {
+				// 	console.log("this shouldn't ever happen");
+				// 	return;
+				// }
+
+				// Use the existing ID for the block
+				let blockId = block.type === 'node' ? block.nodeId : block.id;
+
+				if (block.type === 'node') {
+					blockId = block.nodeId;
+					nodeId = block.nodeId as string;
+
+					cypherQuery += `
+					OPTIONAL MATCH (Node {id: "${block.nodeId}"})-[l:NEXT_BLOCK {documentId: "${nodeId}"}]-()
+					DELETE l
+					MERGE (b:Node {id: "${blockId}"})
+					SET b.children = $children
+					`;
+				} else {
+					cypherQuery += `
+					OPTIONAL MATCH (Block {id: "${block.id}"})-[l:NEXT_BLOCK | CHILD_BLOCK]-()
+					DELETE l
+					MERGE (b:Block {id: "${blockId}"})
+					SET b.type = "${block.type}", b.children = $children
+					`;
+				}
+
+				// Create a new node for the block
+
+				// Connect the block to the previous block
+				cypherQuery += `
+				MERGE (p {id: "${prevBlockId}"})
+				MERGE (p)-[r:NEXT_BLOCK]->(b)
+				SET r.documentId = "${nodeId}"
+				RETURN b
+				  `;
+
+				console.log(cypherQuery);
+				resArray.push(cypherQuery);
+				const result = await write(cypherQuery, {
+					children: JSON.stringify([block.children[0]]),
+				});
+
+				// If the block has children, recursively save them
+				if (block.children && block.children.length > 1) {
+					// Create the child block
+
+					wholeDocumentSave(
+						block.children.splice(1) as BlockElements[],
+						block.id,
+						nodeId
+					);
+				}
+
+				// Update the previous block ID for the next iteration
+				prevBlockId = blockId;
+			}
+		};
+
 		if (document.length === 1) {
 			if (data[0].n.document) {
 				const originalDoc = JSON.parse(data[0].n.document);
-				const req = wholeDocumentSave(originalDoc, data[0].n.id);
+				const req = wholeDocumentSave(
+					originalDoc,
+					data[0].n.id,
+					nodeId as string
+				);
 			}
 		}
 

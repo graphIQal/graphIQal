@@ -54,7 +54,6 @@ const EditorComponent: React.FC<{
 
 	useEffect(() => {
 		setValue(initialValue);
-		window.onbeforeunload = () => true;
 	}, []);
 
 	useEffect(() => {

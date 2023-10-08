@@ -152,7 +152,7 @@ export const connectionCategorisation = (
 	});
 
 	return Object.entries(sections).flatMap(([key, nodes]) => {
-		if (nodes.length > 1) {
+		if (nodes.length > 0) {
 			return [{ type: sectionDisplayNames[key], nodes: nodes }];
 		} else {
 			return [];

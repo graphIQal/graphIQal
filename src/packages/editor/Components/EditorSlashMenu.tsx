@@ -48,8 +48,11 @@ import useSWR from 'swr';
 import { v4 as uuidv4 } from 'uuid';
 import { createNodeInDocument } from '../../../backend/functions/node/mutate/createNodeInDocument';
 import { useViewData } from '../../../components/context/ViewContext';
-import { getClosestBlock } from '../helpers/getClosestBlock';
-import { getClosestNodeBlock } from '../helpers/getClosestNodeBlock';
+import {
+	getClosestBlock,
+	getClosestNode,
+	getClosestNodeId,
+} from '../helpers/getClosestBlock';
 import { formatList } from '../Plugins/Autoformat/autoformatUtils';
 
 // export const markTooltip: TippyProps = {
@@ -539,7 +542,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			},
 		},
 		{
-			key: 'send',
+			key: 'send_block',
 			text: 'Send block to',
 			n: {
 				subtext: 'Send Block to',
@@ -568,10 +571,49 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							cursor = before;
 						}
 					}
-					const match = 'send'.startsWith(beforeText)
+					const match = 'send_block'.startsWith(beforeText)
 						? beforeText
 						: '';
-					const remainingText = 'send'.slice(match.length);
+					const remainingText = 'send_block'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
+		},
+		{
+			key: 'send_node',
+			text: 'Send Node to',
+			n: {
+				subtext: 'Send Node to',
+				icon: 'send',
+				searchFunction: (search) => {
+					if ('send node to'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'send_node'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'send_node'.slice(match.length);
 					editor.insertText(remainingText);
 					editor.insertText(' @');
 				}
@@ -807,7 +849,8 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					if (
 						item.key === 'connect' ||
 						item.key === 'add_node' ||
-						item.key === 'send' ||
+						item.key === 'send_node' ||
+						item.key === 'send_block' ||
 						item.key === 'nodelink' ||
 						item.key.startsWith('connect')
 					) {
@@ -967,13 +1010,14 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						// add_node or connect
 						if (beforeText.startsWith('connect')) {
 							// Find closestNode
-							let node = getClosestNodeBlock(
+							let node = getClosestNodeId(
 								editor.selection.anchor.path,
 								editor
 							);
 
 							console.log('connect_node');
 							console.log(node);
+
 							node = node ? node.id : nodeId;
 
 							if (beforeText.endsWith('is ')) {
@@ -1159,11 +1203,11 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								return;
 							}
 
-							// create a connection relateds
+							// create a connection HAS
 							createConnection({
 								startNode: nodeId,
 								endNode: item.n.id,
-								type: ConnectionTypes.RELATED,
+								type: ConnectionTypes.HAS,
 							});
 
 							insertNodes(editor, {
@@ -1189,7 +1233,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									  ]
 									: [{ text: '' }],
 							} as MyNodeElement);
-						} else if (beforeText === 'send ') {
+						} else if (beforeText === 'send_block ') {
 							// Send block to node inbox
 							if (editor.selection) {
 								const selection = getPath(
@@ -1211,7 +1255,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									addBlockToInbox({
 										nodeId: item.n.id,
 										block: closestBlock[0] as MyBlockElement,
-										nodeName: nodeDataSWR.n.title,
+										nodeTitle: nodeDataSWR.n.title,
 										icon: nodeDataSWR.n.icon,
 										originNodeId: nodeDataSWR.n.id,
 									});
@@ -1221,6 +1265,56 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									title: (
 										<span className='flex flex-row'>
 											<span>Block sent to </span>
+											<IconTitle
+												icon={item.n.icon}
+												title={item.n.title}
+											/>
+											<span>'s inbox</span>
+										</span>
+									),
+									description:
+										'Undo will not unsend the block! Resolve in inbox!',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 3000);
+							}
+						} else if (beforeText === 'send_node ') {
+							// Send block to node inbox
+							if (editor.selection) {
+								const selection = getPath(
+									editor,
+									editor.selection.anchor
+								);
+
+								const closestNode = getClosestNode(
+									selection,
+									editor
+								);
+
+								console.log('closestNode');
+								console.log(closestNode);
+
+								if (closestNode) {
+									removeNodes(editor, {
+										at: closestNode[1],
+									});
+
+									// Attach block to inbox
+									addBlockToInbox({
+										nodeId: item.n.id,
+										block: closestNode[0] as MyBlockElement,
+										nodeTitle: nodeDataSWR.n.title,
+										icon: nodeDataSWR.n.icon,
+										originNodeId: nodeDataSWR.n.id,
+									});
+								}
+
+								const { dismiss } = toast({
+									title: (
+										<span className='flex flex-row'>
+											<span>Node sent to </span>
 											<IconTitle
 												icon={item.n.icon}
 												title={item.n.title}

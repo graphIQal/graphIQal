@@ -59,72 +59,6 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 		onClick(e);
 	};
 
-	const icons: { [key: string]: JSX.Element } = {
-		plus: <Plus color={!selected ? color : 'white'} size={iconSize} />,
-		draw: <Pencil color={!selected ? color : 'white'} size={iconSize} />,
-		undo: <Undo color={!selected ? color : 'white'} size={iconSize} />,
-		redo: <Redo color={!selected ? color : 'white'} size={iconSize} />,
-		spotlight: (
-			<Flashlight color={!selected ? color : 'white'} size={iconSize} />
-		),
-		navigation: (
-			<Navigation color={!selected ? color : 'white'} size={iconSize} />
-		),
-		expand: (
-			<ArrowsAngleExpand
-				color={!selected ? color : 'white'}
-				size={iconSize}
-			/>
-		),
-		remove: <Trash color={!selected ? color : 'white'} size={iconSize} />,
-		connection: (
-			<Connectdevelop
-				color={!selected ? color : 'white'}
-				size={iconSize}
-			/>
-		),
-		close: (
-			<CloseOutline color={!selected ? color : 'white'} size={iconSize} />
-		),
-		block: <Cube size={'1em'} color={!selected ? color : 'white'} />,
-		graph: (
-			<CircularGraph size={'1em'} color={!selected ? color : 'white'} />
-		),
-		angleRight: (
-			<AngleRight size={'1em'} color={!selected ? color : 'white'} />
-		),
-		angleLeft: (
-			<AngleLeft size={'1em'} color={!selected ? color : 'white'} />
-		),
-		angleDown: (
-			<AngleDown size={'1em'} color={!selected ? color : 'white'} />
-		),
-		save: <Save size={'1em'} color={!selected ? color : 'white'} />,
-		data: <Data size={'1em'} color={!selected ? color : 'white'} />,
-		algo: (
-			<Thealgorithms size={'1em'} color={!selected ? color : 'white'} />
-		),
-		checklist: (
-			<CardChecklist size={'1em'} color={!selected ? color : 'white'} />
-		),
-		star: selected ? (
-			<Star size={'1em'} color={color} />
-		) : (
-			<HollowStar size={'1em'} />
-		),
-		menu: (
-			<MenuOutline size={iconSize} color={!selected ? color : 'white'} />
-		),
-		settings: (
-			<Settings size={iconSize} color={!selected ? color : 'white'} />
-		),
-		search: <Search size={iconSize} color={color} />,
-		ArrowLeft: <ArrowLeft size={iconSize} color={color} />,
-		ArrowRight: <ArrowRight size={iconSize} color={color} />,
-		Cut: <Cut size={iconSize} color={selected ? color : 'black'} />,
-		node: <CircularGraph size={iconSize} color={'black'} />,
-	};
-
 	return (
 		<div
 			className='hover:cursor-pointer hover:opacity-80 inline-block'
@@ -135,11 +69,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 				<Circle
 					// onClick={handleClick}
 					diameter={size}
-					children={
-						<IconButton
-							src={src in icons ? icons[src] : <span>{src}</span>}
-						/>
-					}
+					children={<IconButton src={src} onClick={() => {}} />}
 					backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
 				/>
 			) : (
@@ -150,15 +80,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 						height: size + 'px',
 					}}
 				>
-					{src in icons ? (
-						icons[src]
-					) : (
-						<span
-						// style={{ fontSize: size }}
-						>
-							{src}
-						</span>
-					)}
+					<IconButton src={src} onClick={() => {}} />
 				</div>
 			)}
 		</div>

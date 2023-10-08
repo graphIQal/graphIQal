@@ -19,7 +19,7 @@ export default async function handler(
 
 	const result = await write(cypher, {
 		...params,
-		children: JSON.stringify(children),
+		children: children,
 	});
 
 	res.status(200).json(result);

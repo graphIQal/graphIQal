@@ -1,20 +1,20 @@
 import { SaveDocumentInput } from './saveDocument';
 
-export const saveShelf = async ({
+export const saveInbox = async ({
 	nodeId,
 	username,
 	document,
 	title = 'untitled',
 }: SaveDocumentInput) => {
-	console.log('saveShelf');
+	console.log('saveInbox');
 	// console.log(JSON.stringify(document));
 
-	const res = await fetch(`/api/${username}/${nodeId}/shelf/save`, {
+	const res = await fetch(`/api/${username}/${nodeId}/inbox/save`, {
 		method: 'POST',
 		body: JSON.stringify(document),
 	})
 		.then((res) => {
-			console.log('saveShelf ', res);
+			console.log('saveInbox ', res);
 			return res.json();
 		})
 		.then((json) => {

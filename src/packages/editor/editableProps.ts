@@ -5,5 +5,5 @@ export const editableProps: TEditableProps<MyValue> = {
 	spellCheck: true,
 	autoFocus: false,
 	readOnly: false,
-	placeholder: 'Type…',
+	// placeholder: 'Type…',
 };

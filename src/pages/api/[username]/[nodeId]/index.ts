@@ -195,14 +195,14 @@ export default async function handler(
 			// console.log(document);
 		};
 
-		if (blockData.next_block) {
-			traverseBlocks(document, blockData.next_block[0]);
-		} else {
-			// Do I need to do anything? I think returning a blank document is okay because it's a valid document, and historyedit will automatically send it.
-		}
+		// if (blockData.next_block) {
+		// 	traverseBlocks(document, blockData.next_block[0]);
+		// } else {
+		// 	// Do I need to do anything? I think returning a blank document is okay because it's a valid document, and historyedit will automatically send it.
+		// }
 
-		console.log('output document');
-		console.log(JSON.stringify(document, null, 2));
+		// console.log('output document');
+		// console.log(JSON.stringify(document, null, 2));
 
 		// if there are no blocks
 
@@ -225,9 +225,9 @@ export default async function handler(
 			{
 				n: data[0].n,
 				connectedNodes: data[0].connectedNodes,
-				document,
-				resArray,
-				resNodes,
+				// document,
+				// resArray,
+				// resNodes,
 			},
 		]);
 	}

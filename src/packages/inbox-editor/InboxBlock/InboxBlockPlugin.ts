@@ -3,11 +3,11 @@ import React from 'react';
 import { withDraggable } from '../../dnd-editor/components/withDraggable';
 import { createMyPluginFactory, ELEMENT_BLOCK } from '../../editor/plateTypes';
 import { withBlock } from '../../editor/Plugins/NestedBlocksPlugin/withBlock';
-import { ShelfBlock } from './ShelfBlock';
+import { InboxBlock } from './InboxBlock';
 
 export const createShelfBlockPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_BLOCK,
-	component: withDraggable(ShelfBlock),
+	component: withDraggable(InboxBlock),
 	isElement: true,
 	handlers: {
 		onKeyDown: onKeyDownToggleElement,

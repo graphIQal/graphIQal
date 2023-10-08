@@ -11,12 +11,19 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { updateNodeFields } from '@/backend/functions/general/document/mutate/updateNodeFields';
 import { createNormalizeTypesPlugin } from '@udecode/plate';
-import { useEmojiDropdownMenuState, Emoji } from '@udecode/plate-emoji';
+import { Emoji, useEmojiDropdownMenuState } from '@udecode/plate-emoji';
 
+import { ConnectedNodesTag } from '@/components/molecules/ConnectedNodesTag';
+import { connectionCategorisation } from '@/components/organisms/Tabs/RenderConnections';
+import {
+	emojiCategoryIcons,
+	emojiSearchIcons,
+} from '@/components/plate-ui/emoji-icons';
+import { EmojiPicker } from '@/components/plate-ui/emoji-picker';
+import { EmojiToolbarDropdown } from '@/components/plate-ui/emoji-toolbar-dropdown';
 import useSWR from 'swr';
-import { fetcher, fetcherSingleReturn } from '../../backend/driver/fetcher';
+import { fetcherSingleReturn } from '../../backend/driver/fetcher';
 import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
-import { saveShelf } from '../../backend/functions/general/document/mutate/saveShelf';
 import { useViewData } from '../../components/context/ViewContext';
 import IconCircleButton from '../../components/molecules/IconCircleButton';
 import DocumentSideTabs from '../../components/organisms/Tabs/DocumentSideTabs';
@@ -27,7 +34,7 @@ import SplitPane, {
 } from '../../components/organisms/split-pane/SplitPane';
 import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
 import EditorComponent from '../editor/EditorComponent';
-import { Block } from '../editor/Elements/Elements';
+import { Block, InboxBlock, InboxNode } from '../editor/Elements/Elements';
 import {
 	BlockElements,
 	ELEMENT_BLOCK,
@@ -36,18 +43,9 @@ import {
 	ELEMENT_NODETITLE,
 	MyTitleElement,
 } from '../editor/plateTypes';
-import { ShelfBlock } from '../shelf-editor/ShelfBlock/ShelfBlock';
+import Inbox from '../inbox-editor/Inbox';
 import { withDraggable } from './components/withDraggable';
-import { withValidChild } from '../editor/Plugins/Autoformat/withValidChild';
-import { EmojiDropdownMenu } from '@/components/plate-ui/emoji-dropdown-menu';
-import { EmojiToolbarDropdown } from '@/components/plate-ui/emoji-toolbar-dropdown';
-import { EmojiPicker } from '@/components/plate-ui/emoji-picker';
-import {
-	emojiCategoryIcons,
-	emojiSearchIcons,
-} from '@/components/plate-ui/emoji-icons';
-import { connectionCategorisation } from '@/components/organisms/Tabs/RenderConnections';
-import { ConnectedNodesTag } from '@/components/molecules/ConnectedNodesTag';
+import { saveInbox } from '@/backend/functions/general/document/mutate/saveInbox';
 
 const Document: React.FC<{
 	viewId: string;
@@ -69,13 +67,9 @@ const Document: React.FC<{
 		}
 	);
 
-	// const { data: documentData, mutate: mutateDocument } = useSWR(
-	// 	[nodeId ? `/api/username/${nodeId}/document` : null],
-	// 	fetcherSingleReturn,
-	// 	{ revalidateOnMount: true, revalidateOnFocus: true }
-	// );
-
 	const [document, setdocument] = useState([]);
+	const [inbox, setinbox] = useState([]);
+
 	const [shelf, setshelf] = useState([]);
 	const [showCutText, setshowCutText] = useState(false);
 
@@ -98,8 +92,8 @@ const Document: React.FC<{
 		);
 	}
 
-	// console.log('nodeDataSWR');
-	// console.log(nodeDataSWR);
+	console.log('nodeDataSWR');
+	console.log(nodeDataSWR);
 
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
 		nodeDataSWR.n.document = `
@@ -115,14 +109,14 @@ const Document: React.FC<{
 	}
 
 	// useEffect(() => {
-	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.shelf) {
-		nodeDataSWR.n.shelf = `
+	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.inbox) {
+		nodeDataSWR.n.inbox = `
 				[
 					{
 						"type": "block",
 						"id": "${uuidv4()}",
 						"children": [
-							{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
+							{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "Your inbox is empty!" }] }
 					]
 					}
 				]`;
@@ -143,7 +137,6 @@ const Document: React.FC<{
 
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
 	// console.log(connectionMap);
-
 	const createInitialValue = (content: string): BlockElements[] => {
 		const value = JSON.parse(content);
 
@@ -168,6 +161,8 @@ const Document: React.FC<{
 					traverse(value.children as BlockElements[]);
 				} else if (value.type === ELEMENT_NODE) {
 					// console.log('ELEMENT_NODE, ', value);
+
+					// Make a fetch and return it instead (if not part of connectionTitle)
 					value.title = connectionMap[value.nodeId as string]
 						? connectionMap[value.nodeId as string].title
 						: 'Untitled';
@@ -306,59 +301,8 @@ const Document: React.FC<{
 								// settings={options?.settings}
 							/>
 						</EmojiToolbarDropdown>
-
-						{/* <EmojiToolbarDropdown
-							pluginKey='emoji'
-							closeOnSelect={true}
-							icon={
-								<div className='text-xl'>
-									<IconCircleButton
-										src={
-											nodeDataSWR && nodeDataSWR.n.icon
-												? nodeDataSWR.n.icon
-												: 'node'
-										}
-										onClick={() => {}}
-										circle={false}
-									/>
-								</div>
-							}
-							EmojiPickerComponent={(props) => (
-								<div className='text-[14px]'>
-									<EmojiPicker
-										{...props}
-										onSelectEmoji={async (emoji: Emoji) => {
-											const newData = {
-												connectedNodes:
-													nodeDataSWR.connectedNodes,
-												n: {
-													...nodeDataSWR.n,
-													icon: emoji.skins[0].native,
-												},
-											};
-
-											await SWRmutateCurrNode(
-												updateNodeFields({
-													nodeId,
-													username,
-													fieldValObj: {
-														icon: emoji.skins[0]
-															.native,
-													},
-												}),
-												{
-													optimisticData: newData,
-													populateCache: false,
-												}
-											);
-										}}
-									/>
-								</div>
-							)}
-						></EmojiToolbarDropdown> */}
 					</div>
 					{nodeDataSWR.n.document && (
-						// <PlateProvidxer>
 						<EditorComponent
 							key={nodeId}
 							// initialValue={nodeDataSWR.document}
@@ -408,7 +352,6 @@ const Document: React.FC<{
 							]}
 							showCutText={showCutText}
 						/>
-						// </PlateProvider>
 					)}
 				</div>
 			</SplitPaneLeft>
@@ -427,55 +370,49 @@ const Document: React.FC<{
 						/>
 					</div>
 				</div>
-				<DocumentSideTabs
-					editorComponent={
-						nodeDataSWR.n.shelf ? (
-							<>
-								<EditorComponent
-									key={nodeDataSWR.n.id + 'shelf'}
-									initialValue={[
-										...createInitialValue(
-											nodeDataSWR.n.shelf
-										),
-									]}
-									value={shelf}
-									setValue={setshelf}
-									id={'shelfDocument'}
-									save={saveShelf}
-									customElements={{
-										[ELEMENT_BLOCK]:
-											withDraggable(ShelfBlock),
-									}}
-								/>
-							</>
-						) : (
-							<></>
-						)
-					}
-				/>
+				<DocumentSideTabs />
 				{/* If I put shelf inside documentSideTabs it has issues with setting state and I'm not sure why tbh */}
 				{/* I suspect this might be because it gets rendered in tabs after the fact. */}
-
 				<Divider className='separator-row' />
 				<div className='py-4 px-2 '>
 					<div className='ml-[14px]'>
-						<h2 className='font-bold ml-1 text-md'>Shelf</h2>
-					</div>
-					{nodeDataSWR.n.shelf && (
+						<h2 className='font-bold ml-1 text-md'>Inbox</h2>
 						<EditorComponent
-							key={nodeDataSWR.n.id + 'shelf'}
-							initialValue={[
-								...createInitialValue(nodeDataSWR.n.shelf),
-							]}
-							value={shelf}
-							setValue={setshelf}
+							key={nodeId + '-inbox'}
+							value={inbox}
+							setValue={setinbox}
 							id={'shelfDocument'}
-							save={saveShelf}
-							customElements={{
-								[ELEMENT_BLOCK]: withDraggable(ShelfBlock),
+							save={async (params) => {
+								const newData = {
+									connectedNodes: nodeDataSWR.connectedNodes,
+									n: {
+										...nodeDataSWR.n,
+										inbox: JSON.stringify(params.document),
+									},
+								};
+
+								// await SWRmutateCurrNode(saveInbox(params), {
+								// 	optimisticData: newData,
+								// 	populateCache: false,
+								// });
 							}}
-						/>
-					)}
+							customElements={{
+								[ELEMENT_BLOCK]: withDraggable(InboxBlock),
+								[ELEMENT_NODE]: withDraggable(InboxNode),
+								// [ELEMENT_INBOX_BLOCK]
+							}}
+							initialValue={
+								nodeDataSWR.n.inbox
+									? [
+											...createInitialValue(
+												nodeDataSWR.n.inbox
+											),
+									  ]
+									: []
+							}
+							customPlugins={[]}
+						></EditorComponent>
+					</div>
 				</div>
 			</SplitPaneRight>
 		</SplitPane>

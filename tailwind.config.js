@@ -100,6 +100,7 @@ module.exports = {
 				secondary_black: '#242425',
 				action: '#1A57F2',
 				yellow: '#FFCB45',
+				highlight: 'rgba(251, 200, 19, 0.3)',
 				lining: '#DADCE0',
 				node: '#4362B1',
 				selected_white: '#F5F6F7',

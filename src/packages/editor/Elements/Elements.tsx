@@ -1,3 +1,4 @@
+import IconButton from '@/components/atoms/IconButton';
 import IconCircleButton from '@/components/molecules/IconCircleButton';
 import { PlateRenderElementProps } from '@udecode/plate';
 import { useRouter } from 'next/router';
@@ -77,8 +78,6 @@ export const NodeTitle = (props: any) => {
 };
 
 export const Node = (props: any) => {
-	const router = useRouter();
-
 	return <div className='border-l-4 border-node'>{props.children}</div>;
 };
 
@@ -185,6 +184,100 @@ export const CutTextHidden = (props: PlateRenderElementProps) => {
 			contentEditable={false}
 		>
 			<blockquote>{props.children}</blockquote>
+		</div>
+	);
+};
+
+// Inbox
+
+export const InboxNode = (props: any) => {
+	const sentMetada = props.element.sentMetadata;
+
+	return (
+		<div className='my-1 rounded-md' {...props.attributes}>
+			{sentMetada && (
+				<div
+					className='bg-highlight flex-row text-sm justify-between p-2 rounded-t-md'
+					style={{
+						display: 'flex',
+						justifyContent: 'space-between',
+						alignItems: 'center',
+					}}
+					contentEditable={false}
+				>
+					<span>
+						{`Sent from ${sentMetada.icon} `}
+						<strong>{`${sentMetada.title}`} </strong>
+						on
+						<strong>{` ${new Date(
+							sentMetada.timestamp
+						).toLocaleDateString('en-US', {
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric',
+						})}`}</strong>
+					</span>
+					<IconButton
+						onClick={() => console.log('Check button clicked')}
+						src='check'
+						hoverText='Check'
+					/>
+				</div>
+			)}
+			<div className='border-l-4 border-node'>{props.children}</div>
+		</div>
+	);
+};
+
+export const InboxBlock = (props: any) => {
+	// const [{ opacity }, drag, preview] = useDrag(() => ({
+	// 	type: ItemTypes.block,
+	// 	collect: (monitor) => ({
+	// 		opacity: monitor.isDragging() ? 0.4 : 1,
+	// 	}),
+	// }));
+
+	// console.log(props);
+	const sentMetada = props.element.sentMetadata;
+
+	return (
+		<div className='my-1 rounded-md ' {...props.attributes}>
+			{sentMetada && (
+				<div
+					className='bg-highlight flex-row text-sm justify-between p-2 rounded-t-md'
+					style={{
+						display: 'flex',
+						justifyContent: 'space-between',
+						alignItems: 'center',
+					}}
+					contentEditable={false}
+				>
+					<span>
+						{`Sent from ${sentMetada.icon} `}
+						<strong>{`${sentMetada.title}`} </strong>
+						on
+						<strong>{` ${new Date(
+							sentMetada.timestamp
+						).toLocaleDateString('en-US', {
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric',
+						})}`}</strong>
+					</span>
+					<IconButton
+						onClick={() => console.log('Check button clicked')}
+						src='check'
+						hoverText='Check'
+					/>
+				</div>
+			)}
+			<div
+				className={
+					'p-1 ' + (sentMetada ? 'border-base_black border-l-4' : '')
+				}
+			>
+				{props.children}
+			</div>
 		</div>
 	);
 };

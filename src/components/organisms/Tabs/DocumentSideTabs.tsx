@@ -23,12 +23,14 @@ export type SideTabPropsDoc = {
 };
 
 type DocumentSideTabsInput = {
-	editorComponent: JSX.Element;
+	// editorComponent: JSX.Element;
 };
 
-const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
-	editorComponent,
-}) => {
+const DocumentSideTabs: React.FC<DocumentSideTabsInput> = (
+	{
+		// editorComponent,
+	}
+) => {
 	const { username, currNode_data, nodeId } = useViewData();
 	const router = useRouter();
 
@@ -85,7 +87,7 @@ const DocumentSideTabs: React.FC<DocumentSideTabsInput> = ({
 		{
 			label: 'Connections',
 			viewType: 'connections',
-			component: <div>{editorComponent}</div>,
+			component: <div></div>,
 		},
 		// {
 		// 	label: 'Content',

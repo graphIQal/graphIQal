@@ -46,6 +46,7 @@ import {
 import Inbox from '../inbox-editor/Inbox';
 import { withDraggable } from './components/withDraggable';
 import { saveInbox } from '@/backend/functions/general/document/mutate/saveInbox';
+import { Icons } from '@/components/icons';
 
 const Document: React.FC<{
 	viewId: string;
@@ -374,44 +375,41 @@ const Document: React.FC<{
 				{/* If I put shelf inside documentSideTabs it has issues with setting state and I'm not sure why tbh */}
 				{/* I suspect this might be because it gets rendered in tabs after the fact. */}
 				<Divider className='separator-row' />
-				<div className='py-4 px-2 '>
-					<div className='ml-[14px]'>
-						<h2 className='font-bold ml-1 text-md'>Inbox</h2>
-						<EditorComponent
-							key={nodeId + '-inbox'}
-							value={inbox}
-							setValue={setinbox}
-							id={'shelfDocument'}
-							save={async (params) => {
-								const newData = {
-									connectedNodes: nodeDataSWR.connectedNodes,
-									n: {
-										...nodeDataSWR.n,
-										inbox: JSON.stringify(params.document),
-									},
-								};
-
-								await SWRmutateCurrNode(saveInbox(params), {
-									optimisticData: newData,
-									populateCache: false,
-								});
-							}}
-							customElements={{
-								[ELEMENT_BLOCK]: withDraggable(InboxBlock),
-								[ELEMENT_NODE]: withDraggable(InboxNode),
-							}}
-							initialValue={
-								nodeDataSWR.n.inbox
-									? [
-											...createInitialValue(
-												nodeDataSWR.n.inbox
-											),
-									  ]
-									: []
-							}
-							customPlugins={[]}
-						></EditorComponent>
+				<div className='py-4 pr-2 px-2'>
+					<div className='font-bold ml-5 text-md flex pb-1'>
+						<Icons.inbox />
+						<span className='ml-2'>Inbox </span>
 					</div>
+					<EditorComponent
+						key={nodeId + '-inbox'}
+						value={inbox}
+						setValue={setinbox}
+						id={'shelfDocument'}
+						save={async (params) => {
+							const newData = {
+								connectedNodes: nodeDataSWR.connectedNodes,
+								n: {
+									...nodeDataSWR.n,
+									inbox: JSON.stringify(params.document),
+								},
+							};
+
+							await SWRmutateCurrNode(saveInbox(params), {
+								optimisticData: newData,
+								populateCache: false,
+							});
+						}}
+						customElements={{
+							[ELEMENT_BLOCK]: withDraggable(InboxBlock),
+							[ELEMENT_NODE]: withDraggable(InboxNode),
+						}}
+						initialValue={
+							nodeDataSWR.n.inbox
+								? [...createInitialValue(nodeDataSWR.n.inbox)]
+								: []
+						}
+						customPlugins={[]}
+					></EditorComponent>
 				</div>
 			</SplitPaneRight>
 		</SplitPane>

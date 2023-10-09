@@ -62,7 +62,7 @@
     "slate": "^0.94.1",
     "slate-history": "^0.93.0",
     "slate-hyperscript": "^0.77.0",
-    "slate-react": "^0.95.0",
+    "slate-react": "^0.99.0",
     "styled-components": "^5.3.6",
     "styled-icons": "^10.47.0",
     "swr": "^2.1.5",

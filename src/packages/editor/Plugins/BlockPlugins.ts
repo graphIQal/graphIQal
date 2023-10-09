@@ -1,18 +1,15 @@
+import { LinkElement } from '@/components/plate-ui/link-element';
+import { ParagraphElement } from '@/components/plate-ui/paragraph-element';
+import { TodoListElement } from '@/components/plate-ui/todo-list-element';
+import { withDraggable } from '@/packages/dnd-editor/components/withDraggable';
 import {
-	// CodeBlockElement,
-	// CodeLineElement,
-	// CodeSyntaxLeaf,
 	createBlockquotePlugin,
 	createCodeBlockPlugin,
 	createHeadingPlugin,
-	createLinkPlugin,
 	// createListPlugin,
 	createParagraphPlugin,
 	// createPlateUI,
 	ELEMENT_BLOCKQUOTE,
-	ELEMENT_CODE_BLOCK,
-	ELEMENT_CODE_LINE,
-	ELEMENT_CODE_SYNTAX,
 	// createTodoListPlugin,
 	ELEMENT_H1,
 	ELEMENT_H2,
@@ -23,10 +20,10 @@ import {
 	ELEMENT_PARAGRAPH,
 	ELEMENT_TODO_LI,
 	HotkeyPlugin,
-	// LinkElement,
-	onKeyDownToggleElement,
-	// TodoListElement,
+	RenderAfterEditable,
+	createLinkPlugin,
 } from '@udecode/plate';
+// import { createLinkPlugin } from '@udecode/plate-link';
 import {
 	BlockquoteElement,
 	CutTextHidden,
@@ -52,12 +49,10 @@ import {
 	ELEMENT_NODELINK,
 	ELEMENT_NODETITLE,
 	ELEMENT_TITLE,
+	MyValue,
 } from '../plateTypes';
 import { withNodeLink } from './NodeLinkPlugin/withNodeLink';
-import { withDraggable } from '@/packages/dnd-editor/components/withDraggable';
-import { TodoListElement } from '@/components/plate-ui/todo-list-element';
-import { LinkElement } from '@/components/plate-ui/link-element';
-import { ParagraphElement } from '@/components/plate-ui/paragraph-element';
+import { LinkFloatingToolbar } from '@/components/plate-ui/link-floating-toolbar';
 
 const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODE,
@@ -192,7 +187,10 @@ export const BlockPlugins = createMyPlugins(
 		createTodoListPlugin(),
 		createCodeBlockPlugin(),
 		createDividerPlugin(),
-		createLinkPlugin(),
+		createLinkPlugin({
+			renderAfterEditable:
+				LinkFloatingToolbar as RenderAfterEditable<MyValue>,
+		}),
 		createBlockquotePlugin(),
 		createNodeTitlePlugin(),
 		cutTextHiddenPlugin(),

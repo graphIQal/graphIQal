@@ -1,6 +1,10 @@
 import IconButton from '@/components/atoms/IconButton';
 import IconCircleButton from '@/components/molecules/IconCircleButton';
-import { PlateRenderElementProps } from '@udecode/plate';
+import {
+	PlateRenderElementProps,
+	findNodePath,
+	removeNodes,
+} from '@udecode/plate';
 import { useRouter } from 'next/router';
 
 // ELEMENTS
@@ -78,7 +82,7 @@ export const NodeTitle = (props: any) => {
 };
 
 export const Node = (props: any) => {
-	return <div className='border-l-4 border-node'>{props.children}</div>;
+	return <div className='border-l-4 border-node mt-2'>{props.children}</div>;
 };
 
 export const CutText = (props: any, showCutText: boolean) => {
@@ -197,7 +201,7 @@ export const InboxNode = (props: any) => {
 		<div className='my-1 rounded-md' {...props.attributes}>
 			{sentMetada && (
 				<div
-					className='bg-highlight flex-row text-sm justify-between p-2 rounded-t-md'
+					className='bg-highlight flex-row text-sm justify-between p-2 rounded-t-md border-node border-l-4'
 					style={{
 						display: 'flex',
 						justifyContent: 'space-between',
@@ -218,7 +222,13 @@ export const InboxNode = (props: any) => {
 						})}`}</strong>
 					</span>
 					<IconButton
-						onClick={() => console.log('Check button clicked')}
+						onClick={() => {
+							const path = findNodePath(
+								props.editor,
+								props.element
+							);
+							if (path) removeNodes(props.editor, { at: path });
+						}}
 						src='check'
 						hoverText='Check'
 					/>
@@ -237,14 +247,18 @@ export const InboxBlock = (props: any) => {
 	// 	}),
 	// }));
 
-	// console.log(props);
 	const sentMetada = props.element.sentMetadata;
 
 	return (
 		<div className='my-1 rounded-md ' {...props.attributes}>
 			{sentMetada && (
 				<div
-					className='bg-highlight flex-row text-sm justify-between p-2 rounded-t-md'
+					className={
+						'bg-highlight flex-row text-sm justify-between p-2 rounded-t-md ' +
+						(findNodePath(props.editor, props.element)?.length === 1
+							? 'border-base_black border-l-4'
+							: '')
+					}
 					style={{
 						display: 'flex',
 						justifyContent: 'space-between',
@@ -265,15 +279,24 @@ export const InboxBlock = (props: any) => {
 						})}`}</strong>
 					</span>
 					<IconButton
-						onClick={() => console.log('Check button clicked')}
+						onClick={() => {
+							const path = findNodePath(
+								props.editor,
+								props.element
+							);
+							if (path) removeNodes(props.editor, { at: path });
+						}}
 						src='check'
-						hoverText='Check'
+						hoverText='Removes block from inbox'
 					/>
 				</div>
 			)}
 			<div
 				className={
-					'p-1 ' + (sentMetada ? 'border-base_black border-l-4' : '')
+					'p-1 ' +
+					(findNodePath(props.editor, props.element)?.length === 1
+						? 'border-base_black border-l-4'
+						: '')
 				}
 			>
 				{props.children}

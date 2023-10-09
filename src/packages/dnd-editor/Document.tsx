@@ -391,15 +391,14 @@ const Document: React.FC<{
 									},
 								};
 
-								// await SWRmutateCurrNode(saveInbox(params), {
-								// 	optimisticData: newData,
-								// 	populateCache: false,
-								// });
+								await SWRmutateCurrNode(saveInbox(params), {
+									optimisticData: newData,
+									populateCache: false,
+								});
 							}}
 							customElements={{
 								[ELEMENT_BLOCK]: withDraggable(InboxBlock),
 								[ELEMENT_NODE]: withDraggable(InboxNode),
-								// [ELEMENT_INBOX_BLOCK]
 							}}
 							initialValue={
 								nodeDataSWR.n.inbox

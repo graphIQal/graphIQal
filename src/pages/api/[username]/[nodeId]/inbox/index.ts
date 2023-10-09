@@ -22,9 +22,6 @@ export default async function handler(
 
 	const result = await read(cypher, params);
 
-	console.log(cypher);
-	console.log(params);
-
 	res.status(200).json(result);
 	// res.status(200).json({ cypher, children });
 }

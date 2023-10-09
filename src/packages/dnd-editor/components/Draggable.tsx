@@ -95,7 +95,7 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 		>
 			<div
 				className={
-					'flex h-full opacity-0 pointer-events-none cursor-text mr-1 dragHandle grouphover:opacity-70'
+					'flex h-full opacity-0 pointer-events-none cursor-text mr-1 mt-2 pt-[4px] dragHandle grouphover:opacity-70'
 				}
 				contentEditable={false}
 			>

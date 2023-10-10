@@ -14,6 +14,7 @@ import {
 import {
 	BlockwrappedElements,
 	ELEMENT_BLOCK,
+	ELEMENT_GROUP,
 	ELEMENT_NODE,
 	MyEditor,
 	MyValue,
@@ -27,6 +28,7 @@ import { v4 } from 'uuid';
 export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 	const blockType = getPluginType(editor, ELEMENT_BLOCK);
 	const nodetype = getPluginType(editor, ELEMENT_NODE);
+	const groupType = getPluginType(editor, ELEMENT_GROUP);
 
 	const { normalizeNode } = editor;
 
@@ -116,7 +118,10 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 							{ type: ELEMENT_BLOCK },
 							{ at: children[i][1] }
 						);
-					} else if (children[i][0].type === nodetype) {
+					} else if (
+						children[i][0].type === nodetype ||
+						children[i][0].type === groupType
+					) {
 						// console.log('unwrap nodes');
 						// console.log(path, [i, 0], children[i]);
 						unwrapNodes(editor, { at: path });

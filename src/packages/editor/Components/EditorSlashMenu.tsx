@@ -5,6 +5,7 @@ import {
 	ELEMENT_H2,
 	ELEMENT_H3,
 	ELEMENT_LI,
+	ELEMENT_TABLE,
 	ELEMENT_TODO_LI,
 	getPath,
 	getPluginType,
@@ -20,11 +21,13 @@ import BlockMenu from '../../../components/organisms/BlockMenu';
 
 import {
 	ELEMENT_DIVIDER,
+	ELEMENT_GROUP,
 	ELEMENT_NODE,
 	ELEMENT_NODELINK,
 	ELEMENT_NODETITLE,
 	MyBlockElement,
 	MyEditor,
+	MyGroupElement,
 	MyH1Element,
 	MyH2Element,
 	MyNodeElement,
@@ -147,239 +150,29 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			},
 		},
 		{
-			key: 'connect:is',
-			text: 'Connect with IS',
+			key: 'group',
+			text: 'Group',
 			n: {
-				subtext: 'This node IS type of node @',
-				icon: 'connect',
+				subtext: 'Create a group',
+				icon: 'group',
 				searchFunction: (search) => {
-					if (
-						search.endsWith(':is') ||
-						search.endsWith(':i') ||
-						search.endsWith(':')
-					) {
+					if ('group'.startsWith(search)) {
 						return true;
 					}
 					return false;
 				},
 			},
-			onPress: () => {
-				const { selection } = editor;
-				if (selection) {
-					let cursor = selection.anchor;
-					let beforeText = '';
-					while (cursor.offset > 0) {
-						const before = editor.before(cursor);
-						if (before) {
-							const beforeRange = editor.range(before, cursor);
-							const text = editor.string(beforeRange);
-							if (text === '/') {
-								break;
-							}
-							beforeText = text + beforeText;
-							cursor = before;
-						}
-					}
-					const match = 'connect:is'.startsWith(beforeText)
-						? beforeText
-						: '';
-					const remainingText = 'connect:is'.slice(match.length);
-					editor.insertText(remainingText);
-					editor.insertText(' @');
-				}
+			onPress: async () => {
+				// Add to backend
+				const newId = uuidv4();
 
-				// setnodeSearchOpen(true);
-			},
-		},
-		{
-			key: 'connect:parent',
-			text: 'Connect to parent node',
-			n: {
-				subtext: 'This node is the Child of node @',
-				icon: 'connect',
-				searchFunction: (search) => {
-					if (
-						search.endsWith(':') ||
-						search.endsWith(':p') ||
-						search.endsWith(':pa') ||
-						search.endsWith(':par') ||
-						search.endsWith(':pare') ||
-						search.endsWith(':paren') ||
-						search.endsWith(':parent')
-					) {
-						return true;
-					}
-					return false;
-				},
-			},
-			onPress: () => {
-				const { selection } = editor;
-				if (selection) {
-					let cursor = selection.anchor;
-					let beforeText = '';
-					while (cursor.offset > 0) {
-						const before = editor.before(cursor);
-						if (before) {
-							const beforeRange = editor.range(before, cursor);
-							const text = editor.string(beforeRange);
-							if (text === '/') {
-								break;
-							}
-							beforeText = text + beforeText;
-							cursor = before;
-						}
-					}
-					const match = 'connect:parent'.startsWith(beforeText)
-						? beforeText
-						: '';
-					const remainingText = 'connect:parent'.slice(match.length);
-					editor.insertText(remainingText);
-					editor.insertText(' @');
-				}
-
-				// setnodeSearchOpen(true);
-			},
-		},
-		{
-			key: 'connect:child',
-			text: 'Connect to child node',
-			n: {
-				subtext: 'This node is the Parent of node @',
-				icon: 'connect',
-				searchFunction: (search) => {
-					if (
-						search.endsWith(':') ||
-						search.endsWith(':c') ||
-						search.endsWith(':ch') ||
-						search.endsWith(':chi') ||
-						search.endsWith(':chil') ||
-						search.endsWith(':child')
-					) {
-						return true;
-					}
-					return false;
-				},
-			},
-			onPress: () => {
-				const { selection } = editor;
-				if (selection) {
-					let cursor = selection.anchor;
-					let beforeText = '';
-					while (cursor.offset > 0) {
-						const before = editor.before(cursor);
-						if (before) {
-							const beforeRange = editor.range(before, cursor);
-							const text = editor.string(beforeRange);
-							if (text === '/') {
-								break;
-							}
-							beforeText = text + beforeText;
-							cursor = before;
-						}
-					}
-					const match = 'connect:parent'.startsWith(beforeText)
-						? beforeText
-						: '';
-					const remainingText = 'connect:parent'.slice(match.length);
-					editor.insertText(remainingText);
-					editor.insertText(' @');
-				}
-
-				// setnodeSearchOpen(true);
-			},
-		},
-		{
-			key: 'connect:needs',
-			text: 'Connect to needed node',
-			n: {
-				subtext: 'This node NEEDS node @',
-				icon: 'connect',
-				searchFunction: (search) => {
-					if (
-						search.endsWith(':') ||
-						search.endsWith(':n') ||
-						search.endsWith(':ne') ||
-						search.endsWith(':nee') ||
-						search.endsWith(':need') ||
-						search.endsWith(':needs')
-					) {
-						return true;
-					}
-					return false;
-				},
-			},
-			onPress: () => {
-				const { selection } = editor;
-				if (selection) {
-					let cursor = selection.anchor;
-					let beforeText = '';
-					while (cursor.offset > 0) {
-						const before = editor.before(cursor);
-						if (before) {
-							const beforeRange = editor.range(before, cursor);
-							const text = editor.string(beforeRange);
-							if (text === '/') {
-								break;
-							}
-							beforeText = text + beforeText;
-							cursor = before;
-						}
-					}
-					const match = 'connect:needs'.startsWith(beforeText)
-						? beforeText
-						: '';
-					const remainingText = 'connect:needs'.slice(match.length);
-					editor.insertText(remainingText);
-					editor.insertText(' @');
-				}
-			},
-		},
-		{
-			key: 'connect:related',
-			text: 'Connect to related node',
-			n: {
-				subtext: 'This node is RELATED to node @',
-				icon: 'connect',
-				searchFunction: (search) => {
-					if (
-						search.endsWith(':') ||
-						search.endsWith(':r') ||
-						search.endsWith(':re') ||
-						search.endsWith(':rel') ||
-						search.endsWith(':rela') ||
-						search.endsWith(':relat') ||
-						search.endsWith(':relate') ||
-						search.endsWith(':related')
-					) {
-						return true;
-					}
-					return false;
-				},
-			},
-			onPress: () => {
-				const { selection } = editor;
-				if (selection) {
-					let cursor = selection.anchor;
-					let beforeText = '';
-					while (cursor.offset > 0) {
-						const before = editor.before(cursor);
-						if (before) {
-							const beforeRange = editor.range(before, cursor);
-							const text = editor.string(beforeRange);
-							if (text === '/') {
-								break;
-							}
-							beforeText = text + beforeText;
-							cursor = before;
-						}
-					}
-					const match = 'connect:related'.startsWith(beforeText)
-						? beforeText
-						: '';
-					const remainingText = 'connect:related'.slice(match.length);
-					editor.insertText(remainingText);
-					editor.insertText(' @');
-				}
+				// Create new page in frontend
+				insertNodes(editor, {
+					type: getPluginType(editor, ELEMENT_GROUP),
+					id: newId,
+					children: [{ text: '' }],
+					filters: {},
+				} as MyGroupElement);
 			},
 		},
 		{
@@ -462,7 +255,26 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				});
 			},
 		},
-
+		// {
+		// 	key: 'table',
+		// 	text: 'Table',
+		// 	n: {
+		// 		subtext: 'Create a table',
+		// 		icon: 'table',
+		// 		searchFunction: (search) => {
+		// 			if ('table'.startsWith(search)) {
+		// 				return true;
+		// 			}
+		// 			return false;
+		// 		},
+		// 	},
+		// 	onPress: async () => {
+		// 		insertNodes(editor, {
+		// 			type: getPluginType(editor, ELEMENT_TABLE),
+		// 			children: [{ text: '' }],
+		// 		});
+		// 	},
+		// },
 		{
 			key: 'nodelink',
 			text: 'NodeLink',
@@ -759,6 +571,242 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			},
 			onPress: () => {
 				// unwrapNodes(editor, { at: [13] });
+			},
+		},
+		{
+			key: 'connect:is',
+			text: 'Connect with IS',
+			n: {
+				subtext: 'This node IS type of node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':is') ||
+						search.endsWith(':i') ||
+						search.endsWith(':')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:is'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:is'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+
+				// setnodeSearchOpen(true);
+			},
+		},
+		{
+			key: 'connect:parent',
+			text: 'Connect to parent node',
+			n: {
+				subtext: 'This node is the Child of node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':') ||
+						search.endsWith(':p') ||
+						search.endsWith(':pa') ||
+						search.endsWith(':par') ||
+						search.endsWith(':pare') ||
+						search.endsWith(':paren') ||
+						search.endsWith(':parent')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:parent'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:parent'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+
+				// setnodeSearchOpen(true);
+			},
+		},
+		{
+			key: 'connect:child',
+			text: 'Connect to child node',
+			n: {
+				subtext: 'This node is the Parent of node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':') ||
+						search.endsWith(':c') ||
+						search.endsWith(':ch') ||
+						search.endsWith(':chi') ||
+						search.endsWith(':chil') ||
+						search.endsWith(':child')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:parent'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:parent'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+
+				// setnodeSearchOpen(true);
+			},
+		},
+		{
+			key: 'connect:needs',
+			text: 'Connect to needed node',
+			n: {
+				subtext: 'This node NEEDS node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':') ||
+						search.endsWith(':n') ||
+						search.endsWith(':ne') ||
+						search.endsWith(':nee') ||
+						search.endsWith(':need') ||
+						search.endsWith(':needs')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:needs'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:needs'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
+		},
+		{
+			key: 'connect:related',
+			text: 'Connect to related node',
+			n: {
+				subtext: 'This node is RELATED to node @',
+				icon: 'connect',
+				searchFunction: (search) => {
+					if (
+						search.endsWith(':') ||
+						search.endsWith(':r') ||
+						search.endsWith(':re') ||
+						search.endsWith(':rel') ||
+						search.endsWith(':rela') ||
+						search.endsWith(':relat') ||
+						search.endsWith(':relate') ||
+						search.endsWith(':related')
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'connect:related'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'connect:related'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
 			},
 		},
 		// {
@@ -1107,7 +1155,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									endNode: item.n.id,
 									type: ConnectionTypes.HAS,
 								});
-							} else if (beforeText.endsWith('needed ')) {
+							} else if (beforeText.endsWith('needs ')) {
 								const { dismiss } = toast({
 									title: (
 										<div>

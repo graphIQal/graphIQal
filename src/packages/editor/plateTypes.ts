@@ -14,6 +14,7 @@ import {
 	ELEMENT_H1,
 	ELEMENT_H2,
 	ELEMENT_H3,
+	ELEMENT_IMAGE,
 	ELEMENT_LI,
 	ELEMENT_LIC,
 	ELEMENT_LINK,
@@ -63,6 +64,7 @@ import {
 // } from '@udecode/plate-ui-excalidraw';
 import { CSSProperties } from 'styled-components';
 import { v4 } from 'uuid';
+import { ConnectionTypes } from '../graph/graphTypes';
 
 export const ELEMENT_BLOCK = 'block';
 export const ELEMENT_TITLE = 'title';
@@ -71,11 +73,12 @@ export const ELEMENT_NODE = 'node';
 export const ELEMENT_NODETITLE = 'nodeTitle';
 export const ELEMENT_CONNECTION = 'connection';
 export const ELEMENT_DIVIDER = 'divider';
+export const ELEMENT_CUT_SHOWN = 'cut_show';
+export const ELEMENT_CUT_HIDDEN = 'cut_hide';
+export const ELEMENT_GROUP = 'group';
 
 export const COMMAND_NEST = 'nested';
 export const COMMAND_TEST = 'test';
-export const ELEMENT_CUT_SHOWN = 'cut_show';
-export const ELEMENT_CUT_HIDDEN = 'cut_hide';
 
 // marks
 export const MARK_COLOUR = 'colour';
@@ -166,9 +169,32 @@ export interface BlockElements
  * Blocks
  */
 
+export type MyDraggableElement =
+	| typeof ELEMENT_BLOCK
+	| typeof ELEMENT_NODE
+	| typeof ELEMENT_GROUP
+	| typeof ELEMENT_DIVIDER;
+
 export interface MyBlockElement extends BlockElements {
 	type: typeof ELEMENT_BLOCK;
 	children: BlockElements[];
+	id: string;
+}
+
+type Node = {
+	id: string;
+	title: string;
+	icon: string;
+	document: string;
+	[key: string]: any; // This allows for any other properties
+};
+
+export interface MyGroupElement extends BlockElements {
+	type: typeof ELEMENT_GROUP;
+	children: InlineElements[];
+	filters: {
+		[key in ConnectionTypes]?: { type: ConnectionTypes; nodes: Node[] };
+	};
 	id: string;
 }
 
@@ -238,6 +264,7 @@ export type Block =
 
 export const BlockwrappedElements = {
 	[ELEMENT_PARAGRAPH]: true,
+	// [ELEMENT_GROUP]: true,
 	[ELEMENT_H1]: true,
 	[ELEMENT_H2]: true,
 	[ELEMENT_H3]: true,
@@ -249,6 +276,19 @@ export const BlockwrappedElements = {
 	[ELEMENT_TODO_LI]: true,
 	[ELEMENT_NODELINK]: true,
 	[ELEMENT_DIVIDER]: true,
+	[ELEMENT_IMAGE]: true,
+	[ELEMENT_LINK]: true,
+	[ELEMENT_NODETITLE]: true,
+	[ELEMENT_CUT_HIDDEN]: true,
+	[ELEMENT_CUT_SHOWN]: true,
+	// [ELEMENT_UL]: true,
+	// [ELEMENT_TABLE]: true,
+	// [ELEMENT_TH]: true,
+	// [ELEMENT_TR]: true,
+	// [ELEMENT_TD]: true,
+	// [ELEMENT_VIDEO]: true,
+	// [ELEMENT_AUDIO]: true,
+	// [ELEMENT_IFRAME]: true,
 };
 
 export const NoMarkElements = {

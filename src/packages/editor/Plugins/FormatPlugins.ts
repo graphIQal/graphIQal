@@ -8,8 +8,6 @@ import {
 	autoformatSubscriptNumbers,
 	createAutoformatPlugin,
 	createExitBreakPlugin,
-	// createExitBreakPlugin,
-	createNormalizeTypesPlugin,
 	createResetNodePlugin,
 	createSoftBreakPlugin,
 	createTrailingBlockPlugin,
@@ -21,18 +19,13 @@ import {
 	ELEMENT_OL,
 	ELEMENT_PARAGRAPH,
 	ELEMENT_TODO_LI,
-	HotkeyPlugin,
 	isBlockAboveEmpty,
 	isSelectionAtBlockStart,
 	KEYS_HEADING,
-	onKeyDownToggleElement,
 } from '@udecode/plate';
 import {
-	BlockwrappedElements,
-	createMyPluginFactory,
 	createMyPlugins,
 	ELEMENT_BLOCK,
-	ELEMENT_NODE,
 	ELEMENT_NODELINK,
 	ELEMENT_TITLE,
 } from '../plateTypes';

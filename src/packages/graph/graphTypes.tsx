@@ -7,6 +7,39 @@ export const ConnectionTypes = {
 	CUSTOM: 'CUSTOM',
 };
 
+export const DirectionalConnectionTypes = {
+	PARENTS: 'PARENTS',
+	CHILDREN: 'CHILDREN',
+	IS: 'IS',
+	ENCOMPASSES: 'ENCOMPASSES',
+	NEEDED: 'NEEDED',
+	NEEDS: 'NEEDS',
+	FOLLOWED: 'FOLLOWED',
+	FOLLOWS: 'FOLLOWS',
+	RELATED: 'RELATED',
+	CUSTOM: 'CUSTOM',
+};
+
+export type ConnectionTypes =
+	| 'HAS'
+	| 'IS'
+	| 'NEEDS'
+	| 'FOLLOWS'
+	| 'RELATED'
+	| 'CUSTOM';
+
+export type DirectionalConnectionTypes =
+	| 'PARENTS'
+	| 'CHILDREN'
+	| 'IS'
+	| 'ENCOMPASSES'
+	| 'NEEDED'
+	| 'NEEDS'
+	| 'FOLLOWED'
+	| 'FOLLOWS'
+	| 'RELATED'
+	| 'CUSTOM';
+
 export type ConnectionData = {
 	content: string[] | string; //ids of the blocks of the node's data that are contained in this connection
 	startNode: string;
@@ -21,6 +54,7 @@ export type NodeData = {
 	icon: string;
 	color: string;
 	document?: string;
+	[key: string]: any;
 };
 
 export type GraphNodeData = {

@@ -9,16 +9,16 @@ export const colors = [
 ];
 
 export const connectionColours: { [key: string]: string } = {
-	PARENTS: '#FCDDEC',
-	CHILDREN: '#f3ddfc',
-	IS: '#FFF492',
-	ENCOMPASSES: '#FF9292',
-	NEEDED: '#d7f7cb',
-	NEEDS: '#cdf7cb',
-	FOLLOWED: '#f7e4cb',
-	FOLLOWS: '#f7f2cb',
-	RELATED: '#cbf7e7',
-	CUSTOM: '#FFDAC1',
+	PARENTS: '#FFB7DC',
+	CHILDREN: '#FFB7DC',
+	IS: '#D7FFA2',
+	ENCOMPASSES: '#D7FFA2',
+	NEEDED: '#C6BCF9',
+	NEEDS: '#C6BCF9',
+	FOLLOWED: '#ABE0FF',
+	FOLLOWS: '#ABE0FF',
+	RELATED: '#FFFA91',
+	CUSTOM: '#FFBC91',
 };
 
 export const connectionLineColours: { [key: string]: string } = {
@@ -30,7 +30,7 @@ export const connectionLineColours: { [key: string]: string } = {
 	NEEDS: '#adf7ab',
 	FOLLOWED: '#f7d4ab',
 	FOLLOWS: '#f7e2ab',
-	RELATED: '#abf7d7',
+	RELATED: 'rgb(139, 126, 200)',
 	CUSTOM: '#FFBAC1',
 };
 

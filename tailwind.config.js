@@ -111,16 +111,21 @@ module.exports = {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				// Connection Colours
-				PARENTS: '#FCDDEC',
-				CHILDREN: '#f3ddfc',
-				IS: '#FFF492',
-				ENCOMPASSES: '#FF9292',
-				NEEDED: '#d7f7cb',
-				NEEDS: '#cdf7cb',
-				FOLLOWED: '#f7e4cb',
-				FOLLOWS: '#f7f2cb',
-				RELATED: '#cbf7e7',
-				CUSTOM: '#FFDAC1',
+				HAS: '#FFB7DC',
+				PARENTS: '#FFB7DC',
+				CHILDREN: '#FFB7DC',
+
+				IS: '#D7FFA2',
+				ENCOMPASSES: '#D7FFA2',
+
+				NEEDED: '#C6BCF9',
+				NEEDS: '#C6BCF9',
+
+				FOLLOWED: '#ABE0FF',
+				FOLLOWS: '#ABE0FF',
+
+				RELATED: '#FFFA91',
+				CUSTOM: '#FFBC91',
 				// Shadcn colours
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
@@ -172,11 +177,17 @@ module.exports = {
 					from: { height: 'var(--radix-accordion-content-height)' },
 					to: { height: 0 },
 				},
+				pulse: {
+					'0%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(1.1)' },
+					'100%': { transform: 'scale(1)' },
+				},
 			},
 			animation: {
 				wiggle: 'wiggle 200ms ease-in-out',
 				'accordion-down': 'accordion-down 0.4s ease-out',
 				'accordion-up': 'accordion-up 0.4s ease-out',
+				pulse: 'pulse 2s',
 			},
 		},
 	},

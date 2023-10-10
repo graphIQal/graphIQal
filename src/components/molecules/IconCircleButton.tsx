@@ -69,7 +69,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 				<Circle
 					// onClick={handleClick}
 					diameter={size}
-					children={<IconButton src={src} onClick={() => {}} />}
+					children={<IconButton src={src} onClick={handleClick} />}
 					backgroundClass={selected ? 'bg-base_black' : 'bg-white'}
 				/>
 			) : (
@@ -80,7 +80,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 						height: size + 'px',
 					}}
 				>
-					<IconButton src={src} onClick={() => {}} />
+					<IconButton src={src} onClick={handleClick} />
 				</div>
 			)}
 		</div>

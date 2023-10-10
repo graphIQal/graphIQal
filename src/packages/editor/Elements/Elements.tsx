@@ -1,11 +1,20 @@
 import IconButton from '@/components/atoms/IconButton';
+import { Icons } from '@/components/icons';
 import IconCircleButton from '@/components/molecules/IconCircleButton';
+import { Button } from '@/components/ui/button';
 import {
 	PlateRenderElementProps,
 	findNodePath,
 	removeNodes,
 } from '@udecode/plate';
 import { useRouter } from 'next/router';
+import { FilterPopover } from '../Components/Molecules/FilterPopover';
+import { useState } from 'react';
+import {
+	DirectionalConnectionTypes,
+	NodeData,
+} from '@/packages/graph/graphTypes';
+import { FilterTag } from '@/components/molecules/FilterTag';
 
 // ELEMENTS
 // Define a React component renderer for our code blocks.
@@ -83,6 +92,67 @@ export const NodeTitle = (props: any) => {
 
 export const Node = (props: any) => {
 	return <div className='border-l-4 border-node mt-2'>{props.children}</div>;
+};
+
+export const Group = (props: any) => {
+	console.log('group');
+
+	const [filters, setfilters] = useState<{
+		[key: string]: NodeData[];
+	}>(props.element.filters ? props.element.filters : {});
+
+	return (
+		<div
+			{...props.attributes}
+			contentEditable={false}
+			className='border border-lining rounded-md p-2'
+		>
+			{props.children}
+			<div className='text-md font-bold ml-5'>Group</div>
+			<div className='flex-row items-center'>
+				<FilterPopover
+					onCreateFilter={({ nodes, type }) => {
+						if (!(type in filters)) {
+							filters[type] = nodes;
+						} else {
+							nodes.forEach((newNode) => {
+								// Check if the node is already there
+								const nodeExists = filters[type].some(
+									(existingNode: NodeData) =>
+										existingNode.id === newNode.id
+								);
+
+								// If the node is not there, add it to the front
+								if (!nodeExists) {
+									filters[type].unshift(newNode);
+								}
+							});
+						}
+
+						// Update the state
+						setfilters({
+							...filters,
+						});
+					}}
+				/>
+				{Object.entries(filters).map(([type, nodes]) => (
+					<FilterTag nodes={nodes} type={type} />
+				))}
+			</div>
+			<div>
+				<Button
+					className='flex justify-start text-left w-full cursor-pointer'
+					onClick={() => {
+						console.log('add new node');
+					}}
+					variant='ghost'
+				>
+					<Icons.plus className='w-4 h-4 mr-1' />
+					Add new node
+				</Button>
+			</div>
+		</div>
+	);
 };
 
 export const CutText = (props: any, showCutText: boolean) => {

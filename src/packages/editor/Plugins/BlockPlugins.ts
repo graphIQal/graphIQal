@@ -22,6 +22,10 @@ import {
 	HotkeyPlugin,
 	RenderAfterEditable,
 	createLinkPlugin,
+	createImagePlugin,
+	ELEMENT_IMAGE,
+	createMediaEmbedPlugin,
+	ELEMENT_MEDIA_EMBED,
 } from '@udecode/plate';
 // import { createLinkPlugin } from '@udecode/plate-link';
 import {
@@ -29,6 +33,7 @@ import {
 	CutTextHidden,
 	CutTextShown,
 	Divider,
+	Group,
 	H1,
 	H2,
 	H3,
@@ -45,6 +50,7 @@ import {
 	ELEMENT_CUT_HIDDEN,
 	ELEMENT_CUT_SHOWN,
 	ELEMENT_DIVIDER,
+	ELEMENT_GROUP,
 	ELEMENT_NODE,
 	ELEMENT_NODELINK,
 	ELEMENT_NODETITLE,
@@ -53,6 +59,8 @@ import {
 } from '../plateTypes';
 import { withNodeLink } from './NodeLinkPlugin/withNodeLink';
 import { LinkFloatingToolbar } from '@/components/plate-ui/link-floating-toolbar';
+import { ImageElement } from '@/components/plate-ui/image-element';
+import { MediaEmbedElement } from '@/components/plate-ui/media-embed-element';
 
 const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODE,
@@ -128,6 +136,16 @@ const createTodoListPlugin = createMyPluginFactory<HotkeyPlugin>({
 	// withOverrides: withNodeLink,
 	options: {},
 });
+
+const createGroupPlugin = createMyPluginFactory<HotkeyPlugin>({
+	key: ELEMENT_GROUP,
+	isElement: true,
+	isLeaf: false,
+	isVoid: true,
+	// withOverrides: withNodeLink,
+	options: {},
+});
+
 // I can try adding a plugin for the fricking paragraph that makes it an inline plugin? I'm not sure
 
 // okay, so there's 2 solutions I can think of for the cut text plugin.
@@ -177,9 +195,10 @@ const cutTextShownPlugin = createMyPluginFactory<HotkeyPlugin>({
 
 export const BlockPlugins = createMyPlugins(
 	[
+		createNodePlugin(),
+		createGroupPlugin(),
 		createHeadingPlugin(),
 		createParagraphPlugin(),
-		createNodePlugin(),
 		createTitlePlugin(),
 		createNodeLinkPlugin(),
 		createListPlugin(),
@@ -195,6 +214,11 @@ export const BlockPlugins = createMyPlugins(
 		createNodeTitlePlugin(),
 		cutTextHiddenPlugin(),
 		cutTextShownPlugin(),
+		createImagePlugin(),
+		createMediaEmbedPlugin(),
+		// createCaptionPlugin({
+		// 	options: { pluginKeys: [ELEMENT_IMAGE, ELEMENT_MEDIA_EMBED] },
+		// }),
 	],
 	{
 		components: {
@@ -218,6 +242,9 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_NODETITLE]: NodeTitle,
 			[ELEMENT_CUT_HIDDEN]: CutTextHidden,
 			[ELEMENT_CUT_SHOWN]: CutTextShown,
+			[ELEMENT_GROUP]: withDraggable(Group),
+			[ELEMENT_IMAGE]: ImageElement,
+			// [ELEMENT_MEDIA_EMBED]: MediaEmbedElement,
 		},
 	}
 );

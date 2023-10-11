@@ -24,16 +24,18 @@ import { NodeTitle } from '@/packages/editor/Elements/Elements';
 import { connectionColours } from '@/theme/colors';
 import { Router, useRouter } from 'next/router';
 import { useViewData } from '../context/ViewContext';
-import { NodeData } from '@/packages/graph/graphTypes';
 import IconCircleButton from './IconCircleButton';
 import IconButton from '../atoms/IconButton';
+import { NodeDataType } from '@/backend/schema';
 
 export function FilterTag({
 	type,
 	nodes,
+	removeNode,
 }: {
 	type: string;
-	nodes: NodeData[];
+	nodes: NodeDataType[];
+	removeNode: (node: NodeDataType, type: string) => void;
 }) {
 	const [open, setOpen] = React.useState(false);
 	const [value, setValue] = React.useState('');
@@ -60,6 +62,9 @@ export function FilterTag({
 				>
 					<div className='max-w-[150px] truncate overflow-ellipsis flex flex-row'>
 						<span className='font-bold mr-1'>{type + ':'}</span>
+						<span className='shrink-0 w-4 h-4 inline-flex items-center justify-center text-sm border-lining border font-bold leading-none rounded-full '>
+							{nodes.length}
+						</span>
 						{renderTitles()}
 					</div>
 					<ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
@@ -85,9 +90,7 @@ export function FilterTag({
 										title={node.title}
 									/>
 									<IconButton
-										onClick={() => {
-											console.log('delete');
-										}}
+										onClick={() => removeNode(node, type)}
 										src='delete'
 									/>
 								</div>

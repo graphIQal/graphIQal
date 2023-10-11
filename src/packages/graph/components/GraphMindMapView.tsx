@@ -21,10 +21,10 @@ import { deleteConnection } from '../helpers/backend/deleteConnection';
 import { useDrawingCanvas } from '../hooks/drawing/useDrawingCanvas';
 import { handleEndPoint } from '../hooks/drawing/useDrawingEnd';
 import { useDrawingStart } from '../hooks/drawing/useDrawingStart';
-import { ConnectionTypes } from '../graphTypes';
 import GraphNodeContext from '../context/GraphNodeContext';
 import { useGraphViewAPI, useGraphViewData } from '../context/GraphViewContext';
 import { KeyedMutator } from 'swr';
+import { ConnectionTypes } from '@/backend/schema';
 
 type MindMapProps = {
 	points: any;

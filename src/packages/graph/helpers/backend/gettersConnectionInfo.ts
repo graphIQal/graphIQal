@@ -1,6 +1,7 @@
 import { resources } from '@/schemas/Data_structures/DS_schema';
 import { API, State } from '../../context/GraphViewContext';
-import { ConnectionData, ConnectionTypes } from '../../graphTypes';
+import { ConnectionData } from '../../graphTypes';
+import { ConnectionTypes } from '@/backend/schema';
 
 export const getLineEndpointData = (
 	context: Partial<State & API>,

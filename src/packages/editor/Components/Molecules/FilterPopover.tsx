@@ -16,11 +16,6 @@ import {
 import { useRouter } from 'next/router';
 import { useViewData } from '@/components/context/ViewContext';
 import { Icons } from '@/components/icons';
-import {
-	ConnectionTypes,
-	DirectionalConnectionTypes,
-	NodeData,
-} from '@/packages/graph/graphTypes';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
@@ -30,13 +25,14 @@ import { fetcher } from '@/backend/driver/fetcher';
 import { useSession } from 'next-auth/react';
 import IconTitle from '@/components/molecules/IconTitle';
 import { select } from 'slate';
+import { DirectionalConnectionTypes, NodeDataType } from '@/backend/schema';
 // import { useViewData } from '../context/ViewContext';
 
 export function FilterPopover({
 	onCreateFilter,
 }: {
 	onCreateFilter: (filter: {
-		nodes: NodeData[];
+		nodes: NodeDataType[];
 		type: DirectionalConnectionTypes;
 	}) => void;
 }) {
@@ -46,15 +42,15 @@ export function FilterPopover({
 
 	const [relationshipValue, setRelationshipValue] = useState('');
 	const [search, setSearch] = useState('');
-	const [nodes, setnodes] = useState<{ n: NodeData }[]>([]);
+	const [nodes, setnodes] = useState<{ n: NodeDataType }[]>([]);
 	const [error, setError] = useState('');
 
-	const [selectedNodes, setselectedNodes] = useState<NodeData[]>([]);
+	const [selectedNodes, setselectedNodes] = useState<NodeDataType[]>([]);
 
 	const { data: session, status } = useSession();
 
 	const renderTitles = () => {
-		const outString = selectedNodes.map((node: NodeData) => (
+		const outString = selectedNodes.map((node: NodeDataType) => (
 			<IconTitle icon={node.icon} title={node.title + ', '} />
 		));
 
@@ -105,12 +101,7 @@ export function FilterPopover({
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<Button
-					onClick={() => {
-						console.log('add new filter');
-					}}
-					variant='ghost'
-				>
+				<Button variant='ghost'>
 					<Icons.plus className='w-4 h-4 mr-1' />
 					Add filter
 				</Button>

@@ -48,7 +48,6 @@ const IconButton: React.FC<NodeButtonProps> = ({
 	const iconSize = size * 0.5;
 
 	const handleClick = (e: any) => {
-		console.log('handleClick');
 		e.stopPropagation();
 		e.preventDefault();
 		onClick(e);

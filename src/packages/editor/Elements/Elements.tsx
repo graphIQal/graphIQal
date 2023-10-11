@@ -1,5 +1,8 @@
+import { filterSearch } from '@/backend/functions/node/query/filterSearch';
+import { DirectionalConnectionTypes, NodeDataType } from '@/backend/schema';
 import IconButton from '@/components/atoms/IconButton';
 import { Icons } from '@/components/icons';
+import { FilterTag } from '@/components/molecules/FilterTag';
 import IconCircleButton from '@/components/molecules/IconCircleButton';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,13 +11,9 @@ import {
 	removeNodes,
 } from '@udecode/plate';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { FilterPopover } from '../Components/Molecules/FilterPopover';
-import { useState } from 'react';
-import {
-	DirectionalConnectionTypes,
-	NodeData,
-} from '@/packages/graph/graphTypes';
-import { FilterTag } from '@/components/molecules/FilterTag';
 
 // ELEMENTS
 // Define a React component renderer for our code blocks.
@@ -30,16 +29,13 @@ export const CodeElement = (props: PlateRenderElementProps) => {
 
 export const Block = (props: PlateRenderElementProps) => {
 	return (
-		<div className='decoration-[0.1px] pt-2 ' /**{...props.attributes}**/>
+		<div className='decoration-[0.1px] pt-2 ' {...props.attributes}>
 			{props.children}
 		</div>
 	);
 };
 
 export const NodeLink = (props: any) => {
-	// console.log('rendering nodeLink');
-	// console.log(props);
-
 	const router = useRouter();
 
 	return (
@@ -50,6 +46,7 @@ export const NodeLink = (props: any) => {
 				router.push(props.element.routeString, undefined);
 			}}
 			contentEditable={false}
+			{...props.attributes}
 		>
 			<IconCircleButton
 				src={props.element.icon ? props.element.icon : 'node'}
@@ -76,7 +73,8 @@ export const NodeTitle = (props: any) => {
 				// Navigate to node
 				router.push(props.element.routeString, undefined);
 			}}
-			contentEditable={false}
+			// contentEditable={false}
+			{...props.attributes}
 		>
 			<IconCircleButton
 				src={props.element.icon ? props.element.icon : 'node'}
@@ -91,25 +89,39 @@ export const NodeTitle = (props: any) => {
 };
 
 export const Node = (props: any) => {
-	return <div className='border-l-4 border-node mt-2'>{props.children}</div>;
+	return (
+		<div className='border-l-4 border-node mt-2' {...props.attributes}>
+			{props.children}
+		</div>
+	);
 };
 
 export const Group = (props: any) => {
 	console.log('group');
 
 	const [filters, setfilters] = useState<{
-		[key: string]: NodeData[];
+		[key in DirectionalConnectionTypes]: NodeDataType[];
 	}>(props.element.filters ? props.element.filters : {});
+
+	const { data: searchResult, isLoading } = useSWR(
+		[`/api/general/filterSearch`, JSON.stringify(filters)],
+		([url, token]) => filterSearch(JSON.parse(token)),
+		{
+			keepPreviousData: true,
+		}
+	);
+
+	console.log(searchResult);
 
 	return (
 		<div
 			{...props.attributes}
 			contentEditable={false}
-			className='border border-lining rounded-md p-2'
+			className='border border-lining rounded-md p-2 mt-2'
 		>
 			{props.children}
 			<div className='text-md font-bold ml-5'>Group</div>
-			<div className='flex-row items-center'>
+			<div className='flex flex-row items-center gap-2 overflow-x-scroll scrollbar-hide'>
 				<FilterPopover
 					onCreateFilter={({ nodes, type }) => {
 						if (!(type in filters)) {
@@ -118,7 +130,7 @@ export const Group = (props: any) => {
 							nodes.forEach((newNode) => {
 								// Check if the node is already there
 								const nodeExists = filters[type].some(
-									(existingNode: NodeData) =>
+									(existingNode: NodeDataType) =>
 										existingNode.id === newNode.id
 								);
 
@@ -133,15 +145,55 @@ export const Group = (props: any) => {
 						setfilters({
 							...filters,
 						});
+						props.element.filters = {
+							...filters,
+						};
 					}}
 				/>
-				{Object.entries(filters).map(([type, nodes]) => (
-					<FilterTag nodes={nodes} type={type} />
-				))}
+				{Object.entries(filters).map(
+					([type, nodes]) =>
+						nodes.length > 0 && (
+							<FilterTag
+								key={type}
+								nodes={nodes}
+								type={type}
+								removeNode={(
+									node: NodeDataType,
+									type: string
+								) => {
+									// Delete the node from filters
+									const updatedNodes = filters[
+										type as DirectionalConnectionTypes
+									].filter(
+										(existingNode: NodeDataType) =>
+											existingNode.id !== node.id
+									);
+									filters[
+										type as DirectionalConnectionTypes
+									] = updatedNodes;
+									setfilters({ ...filters });
+								}}
+							/>
+						)
+				)}
+			</div>
+			<Divider />
+			<div className='flex flex-col gap-2 ml-5 mt-1'>
+				{isLoading && (
+					<Icons.loading className='w-4 h-4 animate-spin' />
+				)}
+				{searchResult &&
+					searchResult.map((node: { n: NodeDataType }) => (
+						<NodeLink
+							key={node.n.id}
+							element={node.n}
+							children={<span>{node.n.title}</span>}
+						/>
+					))}
 			</div>
 			<div>
 				<Button
-					className='flex justify-start text-left w-full cursor-pointer'
+					className='flex justify-start text-left w-full cursor-pointer mt-2'
 					onClick={() => {
 						console.log('add new node');
 					}}

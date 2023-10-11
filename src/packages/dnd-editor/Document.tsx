@@ -48,6 +48,14 @@ import { withDraggable } from './components/withDraggable';
 import { saveInbox } from '@/backend/functions/general/document/mutate/saveInbox';
 import { Icons } from '@/components/icons';
 
+export const emptyDocumentValue = [
+	{
+		type: 'block',
+		id: uuidv4(),
+		children: [{ type: 'p', id: uuidv4(), children: [{ text: '' }] }],
+	},
+];
+
 const Document: React.FC<{
 	viewId: string;
 	barComponents: { [key: string]: JSX.Element };
@@ -93,20 +101,11 @@ const Document: React.FC<{
 		);
 	}
 
-	console.log('nodeDataSWR');
-	console.log(nodeDataSWR);
+	// console.log('nodeDataSWR');
+	// console.log(nodeDataSWR);
 
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
-		nodeDataSWR.n.document = `
-		[
-			{
-				"type": "block",
-				"id": "${uuidv4()}",
-				"children": [
-					{ "type": "p", "id": "${uuidv4()}", "children": [{ "text": "" }] }
-				]
-			}
-		]`;
+		nodeDataSWR.n.document = JSON.stringify(emptyDocumentValue);
 	}
 
 	// useEffect(() => {

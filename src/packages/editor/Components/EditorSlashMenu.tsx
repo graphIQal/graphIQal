@@ -43,7 +43,6 @@ import { Icons } from '@/components/icons';
 import IconTitle from '@/components/molecules/IconTitle';
 import { Combobox } from '@/components/plate-ui/combobox';
 import { useToast } from '@/components/ui/use-toast';
-import { ConnectionTypes, NodeData } from '@/packages/graph/graphTypes';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -57,6 +56,8 @@ import {
 	getClosestNodeId,
 } from '../helpers/getClosestBlock';
 import { formatList } from '../Plugins/Autoformat/autoformatUtils';
+import { ConnectionTypes, NodeDataType } from '@/backend/schema';
+import { emptyDocumentValue } from '@/packages/dnd-editor/Document';
 
 // export const markTooltip: TippyProps = {
 // 	arrow: true,
@@ -79,7 +80,7 @@ type item = {
 	};
 };
 
-type ExtendedItem = TComboboxItemWithData<item> & item & { n: NodeData };
+type ExtendedItem = TComboboxItemWithData<item> & item & { n: NodeDataType };
 
 const getTextAfterTrigger = (search: string, trigger: string) => {
 	const indexOfTrigger = search.lastIndexOf(trigger);
@@ -166,7 +167,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				// Add to backend
 				const newId = uuidv4();
 
-				// Create new page in frontend
 				insertNodes(editor, {
 					type: getPluginType(editor, ELEMENT_GROUP),
 					id: newId,
@@ -213,6 +213,60 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				);
 				// Navigate to node
 				router.push(`/${username}/${newId}`, undefined);
+			},
+		},
+		{
+			key: 'create_inline_node',
+			text: 'Create Inline Node',
+			n: {
+				subtext: 'Create expanded new node here',
+				icon: 'plusCircle',
+				searchFunction: (search) => {
+					// console.log('search ', search);
+					if (
+						'create node inline'.startsWith(search) ||
+						'create inline node '.startsWith(search) ||
+						'page inlne'.startsWith(search)
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: async () => {
+				// Add to backend
+				const newId = uuidv4();
+
+				// Create new page in frontend
+				insertNodes(editor, {
+					type: getPluginType(editor, ELEMENT_NODE),
+					id: newId,
+					nodeId: newId,
+					routeString: `/${username}/${newId}`,
+					icon: 'node',
+					title: 'Untitled',
+					children: [
+						{
+							type: ELEMENT_NODETITLE,
+							routeString: `/${username}/${newId}`,
+							icon: 'node',
+							children: [{ text: 'Untitled' }],
+						},
+						...emptyDocumentValue,
+						...emptyDocumentValue,
+					],
+				} as MyNodeElement);
+
+				editor.move({ distance: 1, unit: 'character', reverse: true });
+
+				const res = await createNodeInDocument(
+					nodeId,
+					username,
+					'HAS',
+					newId
+				);
+				// Navigate to node
+				// router.push(`/${username}/${newId}`, undefined);
 			},
 		},
 		{
@@ -858,7 +912,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	const [searchVal, setsearchVal] = useState<string>('');
 
 	const [nodeSearchResults, setnodeSearchResults] = useState<
-		(Partial<NodeData> & {
+		(Partial<NodeDataType> & {
 			text: string;
 			key: string;
 			onPress: () => void;

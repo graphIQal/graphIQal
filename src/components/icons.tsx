@@ -48,6 +48,7 @@ import {
 	Link,
 	List,
 	ListTodo,
+	Loader2,
 	Minus,
 	MoreHorizontal,
 	Pilcrow,
@@ -133,4 +134,5 @@ export const Icons: { [key: string]: any } = {
 	arrowLeftCircle: ArrowLeftCircle,
 	arrowRightCircle: ArrowRightCircle,
 	warning: AlertCircle,
+	loading: Loader2,
 };

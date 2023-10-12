@@ -47,6 +47,8 @@ import Inbox from '../inbox-editor/Inbox';
 import { withDraggable } from './components/withDraggable';
 import { saveInbox } from '@/backend/functions/general/document/mutate/saveInbox';
 import { Icons } from '@/components/icons';
+import SearchBar from '@/components/organisms/SearchBar';
+import CommandBar from '@/components/organisms/CommandBar';
 
 export const emptyDocumentValue = [
 	{
@@ -229,6 +231,7 @@ const Document: React.FC<{
 						{barComponents.favourite}
 					</div>
 				</div>
+				<CommandBar />
 				<div className='relative pl-10 pt-15 pt-10 pr-10 pb-3 '>
 					<div className='flex flex-row gap-2 mb-4 w-full overflow-x-scroll scrollbar-hide'>
 						{connectionCategorisation(

@@ -9,16 +9,16 @@ export const colors = [
 ];
 
 export const connectionColours: { [key: string]: string } = {
-	PARENTS: '#FFB7DC',
-	CHILDREN: '#FFB7DC',
+	PARENTS: '#FFC7E4',
+	CHILDREN: '#FFC7E4',
 	IS: '#D7FFA2',
 	ENCOMPASSES: '#D7FFA2',
-	NEEDED: '#C6BCF9',
-	NEEDS: '#C6BCF9',
+	NEEDED: '#FFBC91',
+	NEEDS: '#FFBC91',
 	FOLLOWED: '#ABE0FF',
 	FOLLOWS: '#ABE0FF',
 	RELATED: '#FFFA91',
-	CUSTOM: '#FFBC91',
+	CUSTOM: '#D3CBFA',
 };
 
 export const connectionLineColours: { [key: string]: string } = {

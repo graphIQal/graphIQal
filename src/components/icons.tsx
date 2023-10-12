@@ -54,6 +54,7 @@ import {
 	Pilcrow,
 	PlusCircle,
 	Send,
+	SettingsIcon,
 	Slash,
 	Strikethrough,
 	Subscript,
@@ -64,6 +65,7 @@ import {
 	TextQuoteIcon,
 	Underline,
 	Unlink,
+	User,
 	Workflow,
 } from 'lucide-react';
 
@@ -90,7 +92,7 @@ export const Icons: { [key: string]: any } = {
 	star: Star,
 	HollowStar: HollowStar,
 	menu: MenuOutline,
-	settings: Settings,
+	settings: SettingsIcon,
 	search: Search,
 	ArrowLeft: ArrowLeft,
 	ArrowRight: ArrowRight,
@@ -135,4 +137,5 @@ export const Icons: { [key: string]: any } = {
 	arrowRightCircle: ArrowRightCircle,
 	warning: AlertCircle,
 	loading: Loader2,
+	user: User,
 };

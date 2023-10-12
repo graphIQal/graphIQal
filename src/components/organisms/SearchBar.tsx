@@ -30,7 +30,7 @@ const SearchBar: React.FC = () => {
 		const listenerFunc = (evt: any) => {
 			evt.stopImmediatePropagation();
 
-			if (evt.code === 'KeyP' && (evt.ctrlKey || evt.metaKey)) {
+			if (evt.code === 'KeyJ' && (evt.ctrlKey || evt.metaKey)) {
 				evt.preventDefault();
 				setShowSearchBar(true);
 			}

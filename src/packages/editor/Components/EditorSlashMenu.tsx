@@ -171,7 +171,16 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					type: getPluginType(editor, ELEMENT_GROUP),
 					id: newId,
 					children: [{ text: 'Group' }],
-					filters: {},
+					filters: {
+						PARENTS: [
+							{
+								children: nodeDataSWR.n.children,
+								icon: nodeDataSWR.n.icon,
+								id: nodeDataSWR.n.id,
+								title: nodeDataSWR.n.title,
+							},
+						],
+					},
 				} as MyGroupElement);
 			},
 		},

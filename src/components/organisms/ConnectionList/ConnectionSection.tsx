@@ -47,7 +47,7 @@ const ConnectionSection: React.FC<ConnectionSectionProps> = ({
 						isOpen ? 'rotate-180' : 'rotate-0'
 					}`}
 				/>
-				<div className='font-semibold'>{title}</div>
+				<div className='font-bold'>{title}</div>
 			</div>
 			{/* maxHeight must be fixed and same as in taiwind config */}
 			<div

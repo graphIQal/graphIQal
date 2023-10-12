@@ -134,7 +134,7 @@ export const Group = (props: any) => {
 			{...props.attributes}
 			className='border border-lining rounded-md p-2 mt-2'
 		>
-			<div className='text-lg font-bold ml-5'>{props.children}</div>
+			<div className='text-lg font-bold ml-3'>{props.children}</div>
 			<div contentEditable={false}>
 				<div className='flex flex-row items-center gap-2 overflow-x-scroll scrollbar-hide'>
 					<FilterPopover
@@ -192,7 +192,7 @@ export const Group = (props: any) => {
 							)
 					)}
 				</div>
-				<div className='flex flex-col gap-2 ml-5 mt-2'>
+				<div className='flex flex-col gap-2 ml-3 mt-2'>
 					{isLoading && (
 						<Icons.loading className='w-4 h-4 animate-spin' />
 					)}

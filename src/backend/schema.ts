@@ -40,7 +40,7 @@ export type DirectionalConnectionTypes =
 	| 'RELATED'
 	| 'CUSTOM';
 
-export const GetConnectionDirection = (type: DirectionalConnectionTypes) => {
+export const getConnectionDirection = (type: DirectionalConnectionTypes) => {
 	if (
 		type === 'PARENTS' ||
 		type === 'ENCOMPASSES' ||

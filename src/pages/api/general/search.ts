@@ -16,7 +16,8 @@ export default async function handler(
 
 	const result: any = await read(cypher as string);
 
-	console.log('Search Result: ' + search);
-	console.log(result);
+	// console.log('Search Result: ' + search);
+	// console.log(result);
+	// console.log(cypher);
 	res.status(200).json(result);
 }

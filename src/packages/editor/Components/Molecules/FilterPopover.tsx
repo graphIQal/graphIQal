@@ -30,11 +30,13 @@ import { DirectionalConnectionTypes, NodeDataType } from '@/backend/schema';
 
 export function FilterPopover({
 	onCreateFilter,
+	itemName = 'Filter',
 }: {
 	onCreateFilter: (filter: {
 		nodes: NodeDataType[];
 		type: DirectionalConnectionTypes;
 	}) => void;
+	itemName?: string;
 }) {
 	const [open, setOpen] = useState(false);
 	const [relationshipOpen, setrelationshipOpen] = useState(false);
@@ -101,9 +103,9 @@ export function FilterPopover({
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<Button variant='ghost'>
+				<Button variant='ghost' className='shrink-0'>
 					<Icons.plus className='w-4 h-4 mr-1' />
-					Add filter
+					Add {itemName}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className='w-fit' align='start'>
@@ -111,7 +113,7 @@ export function FilterPopover({
 					<div className='space-y-2'>
 						<h4 className='font-medium leading-none'>Filter</h4>
 						<p className='text-sm text-muted-foreground'>
-							Add a new filter
+							Add a new {itemName}
 						</p>
 					</div>
 					<div className='grid gap-2'>
@@ -122,9 +124,6 @@ export function FilterPopover({
 							<PopoverTrigger asChild>
 								<Button
 									className='flex-row justify-start'
-									onClick={() => {
-										console.log('add new filter');
-									}}
 									variant='outline'
 								>
 									<Icons.chevronsUpDown className='w-4 h-4 opacity-50 mr-2' />
@@ -198,9 +197,6 @@ export function FilterPopover({
 							<PopoverTrigger asChild>
 								<Button
 									className='max-w-[400px] truncate overflow-ellipsis flex-row justify-start w-max'
-									onClick={() => {
-										console.log('add new filter');
-									}}
 									variant='outline'
 								>
 									<Icons.search className='w-4 h-4 mr-1 flex-shrink-0' />
@@ -310,7 +306,7 @@ export function FilterPopover({
 							variant='outline'
 						>
 							<Icons.plus className='w-4 h-4 mr-2' />
-							Add Filter
+							Add {itemName}
 						</Button>
 						{error && (
 							<div className='flex flex-row items-center'>

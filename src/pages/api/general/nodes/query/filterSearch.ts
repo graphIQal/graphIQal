@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { read, read_subscribe } from '../../../../../backend/driver/helpers';
 import {
 	DirectionalConnectionTypes,
-	GetConnectionDirection,
+	getConnectionDirection,
 	NodeDataType,
 	convertToConnectionType,
 	isTransitive,
@@ -19,7 +19,7 @@ export default async function handler(
 	let matchClauses = Object.keys(filters)
 		.flatMap((key) => {
 			return filters[key as DirectionalConnectionTypes].map((node) => {
-				let direction = GetConnectionDirection(
+				let direction = getConnectionDirection(
 					key as DirectionalConnectionTypes
 				);
 

@@ -49,6 +49,13 @@ import { saveInbox } from '@/backend/functions/general/document/mutate/saveInbox
 import { Icons } from '@/components/icons';
 import SearchBar from '@/components/organisms/SearchBar';
 import CommandBar from '@/components/organisms/CommandBar';
+import { FilterPopover } from '../editor/Components/Molecules/FilterPopover';
+import { updateConnection } from '@/backend/functions/node/mutate/updateConnection';
+import { createConnection } from '@/backend/functions/node/mutate/createConnection';
+import {
+	convertToConnectionType,
+	getConnectionDirection,
+} from '@/backend/schema';
 
 export const emptyDocumentValue = [
 	{
@@ -103,8 +110,8 @@ const Document: React.FC<{
 		);
 	}
 
-	// console.log('nodeDataSWR');
-	// console.log(nodeDataSWR);
+	console.log('nodeDataSWR');
+	console.log(nodeDataSWR);
 
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
 		nodeDataSWR.n.document = JSON.stringify(emptyDocumentValue);
@@ -242,6 +249,73 @@ const Document: React.FC<{
 								nodes={item.nodes}
 							/>
 						))}
+						<FilterPopover
+							itemName='Connection'
+							onCreateFilter={({ nodes, type }) => {
+								const newData = {
+									connectedNodes: nodeDataSWR.connectedNodes,
+									n: nodeDataSWR.n,
+								};
+
+								const relType = convertToConnectionType(type);
+
+								SWRmutateCurrNode(
+									nodes.forEach((node) => {
+										// Check if the connection already exists
+										const isFrom =
+											getConnectionDirection(type);
+										const startNode = isFrom
+											? nodeId
+											: node.id;
+										const endNode = !isFrom
+											? nodeId
+											: node.id;
+
+										const connectionExists =
+											newData.connectedNodes.some(
+												(connection: any) => {
+													return (
+														connection.startNode ===
+															startNode &&
+														connection.endNode ===
+															endNode &&
+														connection.type ===
+															convertToConnectionType
+													);
+												}
+											);
+
+										// If the connection does not exist, create it and update newData
+										if (!connectionExists) {
+											createConnection({
+												startNode,
+												endNode,
+												type: relType,
+											});
+
+											// Update newData
+											newData.connectedNodes.push({
+												r: { type: relType },
+												connected_node: {
+													...node,
+												},
+											});
+										}
+									}),
+									{ optimisticData: { newData } }
+								);
+
+								// 	// Check if the node is already there
+								// 	const nodeExists = filters[type].some(
+								// 		(existingNode: NodeDataType) =>
+								// 			existingNode.id === newNode.id
+								// 	);
+								// 	// If the node is not there, add it to the front
+								// 	if (!nodeExists) {
+								// 		filters[type].unshift(newNode);
+								// 	}
+							}}
+						/>
 					</div>
 					<div className='absolute z-10 ml-[14px]'>
 						<EmojiToolbarDropdown

@@ -1,6 +1,6 @@
 import {
 	DirectionalConnectionTypes,
-	GetConnectionDirection,
+	getConnectionDirection,
 	NodeDataType,
 	convertToConnectionType,
 	isTransitive,
@@ -18,7 +18,7 @@ export const createFilteredNode = async (
 			const connectionType = convertToConnectionType(
 				key as DirectionalConnectionTypes
 			);
-			const direction = GetConnectionDirection(
+			const direction = getConnectionDirection(
 				key as DirectionalConnectionTypes
 			);
 			const leftArrow = direction === 'to' ? '<-' : '-';

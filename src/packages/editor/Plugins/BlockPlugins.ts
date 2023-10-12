@@ -141,7 +141,7 @@ const createGroupPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_GROUP,
 	isElement: true,
 	isLeaf: false,
-	isVoid: true,
+	isVoid: false,
 	// withOverrides: withNodeLink,
 	options: {},
 });

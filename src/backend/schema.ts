@@ -91,7 +91,7 @@ export type NodeDataType = {
 	id: string;
 	title: string;
 	icon: string;
-	color: string;
+	color?: string;
 	document?: string;
 	inbox?: string;
 	[key: string]: any;

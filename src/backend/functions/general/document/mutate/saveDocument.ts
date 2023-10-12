@@ -4,6 +4,7 @@ import { fetcherAll } from '@/backend/driver/fetcher';
 import {
 	BlockElements,
 	ELEMENT_BLOCK,
+	ELEMENT_GROUP,
 	ELEMENT_NODE,
 } from '@/packages/editor/plateTypes';
 
@@ -43,7 +44,6 @@ export const saveDocument = async ({
 				// Key is either an array index or object key
 				if (value.type === ELEMENT_NODE && value.nodeId) {
 					// console.log('ELEMENT_NODE, ', value);
-
 					saveDocument({
 						nodeId: value.nodeId as string,
 						username,
@@ -53,24 +53,32 @@ export const saveDocument = async ({
 					});
 				} else if (value.type === ELEMENT_BLOCK) {
 					traverse(value.children as BlockElements[]);
+				} else if (value.type === ELEMENT_GROUP) {
+					Object.values(value.filters).forEach((nodes: any) => {
+						nodes.forEach((node: any) => {
+							console.log(node);
+							delete node.document;
+							delete node.inbox;
+						});
+					});
 				}
 			});
 		}
 
 		traverse(children);
+
+		return children;
 	};
 
 	// loop through document, find nodes, and update them.
 
 	console.log('saveDocument', nodeId, title);
 
-	saveNestedNodes(document.slice(1));
-
 	const res = await fetch(
 		`/api/${username}/${nodeId}/document/save/${title}`,
 		{
 			method: 'POST',
-			body: JSON.stringify(document.slice(1)),
+			body: JSON.stringify(saveNestedNodes(document.slice(1))),
 		}
 	)
 		.then((res) => {

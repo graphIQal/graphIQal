@@ -11,7 +11,7 @@ export const filterSearch = async (filters: {
 	)
 		return [];
 
-	const res = await fetch(`/api/general/filterSearch`, {
+	const res = await fetch(`/api/general/nodes/query/filterSearch`, {
 		method: 'POST',
 		body: JSON.stringify(filters),
 	})

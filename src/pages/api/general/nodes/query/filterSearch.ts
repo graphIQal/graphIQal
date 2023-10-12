@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { read, read_subscribe } from '../../../backend/driver/helpers';
+import { read, read_subscribe } from '../../../../../backend/driver/helpers';
 import {
 	DirectionalConnectionTypes,
 	GetConnectionDirection,
@@ -33,7 +33,7 @@ export default async function handler(
 							key as DirectionalConnectionTypes
 						)
 					)
-						? '*0..5'
+						? '*1..5'
 						: ''
 				}]-${direction == 'from' ? '>' : ''}(:Node {id: "${node.id}"})`;
 			});

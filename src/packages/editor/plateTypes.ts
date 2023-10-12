@@ -1,3 +1,4 @@
+import { ConnectionTypes } from '@/backend/schema';
 import {
 	AutoformatRule,
 	createPlateEditor,
@@ -64,7 +65,6 @@ import {
 // } from '@udecode/plate-ui-excalidraw';
 import { CSSProperties } from 'styled-components';
 import { v4 } from 'uuid';
-import { ConnectionTypes } from '../graph/graphTypes';
 
 export const ELEMENT_BLOCK = 'block';
 export const ELEMENT_TITLE = 'title';
@@ -162,6 +162,7 @@ export interface BlockElements
 		MyIndentListProps,
 		MyLineHeightProps {
 	id: PlateId;
+	[key: string]: any;
 	// children: InlineElements[] | BlockElements[];
 }
 

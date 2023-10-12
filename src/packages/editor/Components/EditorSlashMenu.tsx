@@ -170,7 +170,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				insertNodes(editor, {
 					type: getPluginType(editor, ELEMENT_GROUP),
 					id: newId,
-					children: [{ text: '' }],
+					children: [{ text: 'Group' }],
 					filters: {},
 				} as MyGroupElement);
 			},

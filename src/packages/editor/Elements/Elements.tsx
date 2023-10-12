@@ -1,3 +1,4 @@
+import { createFilteredNode } from '@/backend/functions/node/mutate/createFilteredNode';
 import { filterSearch } from '@/backend/functions/node/query/filterSearch';
 import { DirectionalConnectionTypes, NodeDataType } from '@/backend/schema';
 import IconButton from '@/components/atoms/IconButton';
@@ -13,6 +14,7 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
+import { v4 } from 'uuid';
 import { FilterPopover } from '../Components/Molecules/FilterPopover';
 
 // ELEMENTS
@@ -35,7 +37,11 @@ export const Block = (props: PlateRenderElementProps) => {
 	);
 };
 
-export const NodeLink = (props: any) => {
+export const NodeLink = (props: {
+	attributes?: any;
+	children: any;
+	element: { icon: string; routeString: string; [key: string]: any };
+}) => {
 	const router = useRouter();
 
 	return (
@@ -97,13 +103,15 @@ export const Node = (props: any) => {
 };
 
 export const Group = (props: any) => {
-	console.log('group');
-
+	const router = useRouter();
 	const [filters, setfilters] = useState<{
 		[key in DirectionalConnectionTypes]: NodeDataType[];
 	}>(props.element.filters ? props.element.filters : {});
+	const [addingNode, setaddingNode] = useState(false);
 
-	const { data: searchResult, isLoading } = useSWR(
+	const [results, setresults] = useState<{ n: NodeDataType }[]>([]);
+
+	let { data: searchResult, isLoading } = useSWR(
 		[`/api/general/filterSearch`, JSON.stringify(filters)],
 		([url, token]) => filterSearch(JSON.parse(token)),
 		{
@@ -113,95 +121,135 @@ export const Group = (props: any) => {
 
 	console.log(searchResult);
 
+	useEffect(() => {
+		if (searchResult) {
+			setresults(searchResult);
+		} else {
+			setresults([]);
+		}
+	}, [searchResult]);
+
 	return (
 		<div
 			{...props.attributes}
-			contentEditable={false}
 			className='border border-lining rounded-md p-2 mt-2'
 		>
-			{props.children}
-			<div className='text-md font-bold ml-5'>Group</div>
-			<div className='flex flex-row items-center gap-2 overflow-x-scroll scrollbar-hide'>
-				<FilterPopover
-					onCreateFilter={({ nodes, type }) => {
-						if (!(type in filters)) {
-							filters[type] = nodes;
-						} else {
-							nodes.forEach((newNode) => {
-								// Check if the node is already there
-								const nodeExists = filters[type].some(
-									(existingNode: NodeDataType) =>
-										existingNode.id === newNode.id
-								);
-
-								// If the node is not there, add it to the front
-								if (!nodeExists) {
-									filters[type].unshift(newNode);
-								}
-							});
-						}
-
-						// Update the state
-						setfilters({
-							...filters,
-						});
-						props.element.filters = {
-							...filters,
-						};
-					}}
-				/>
-				{Object.entries(filters).map(
-					([type, nodes]) =>
-						nodes.length > 0 && (
-							<FilterTag
-								key={type}
-								nodes={nodes}
-								type={type}
-								removeNode={(
-									node: NodeDataType,
-									type: string
-								) => {
-									// Delete the node from filters
-									const updatedNodes = filters[
-										type as DirectionalConnectionTypes
-									].filter(
+			<div className='text-lg font-bold ml-5'>{props.children}</div>
+			<div contentEditable={false}>
+				<div className='flex flex-row items-center gap-2 overflow-x-scroll scrollbar-hide'>
+					<FilterPopover
+						onCreateFilter={({ nodes, type }) => {
+							if (!(type in filters)) {
+								filters[type] = nodes;
+							} else {
+								nodes.forEach((newNode) => {
+									// Check if the node is already there
+									const nodeExists = filters[type].some(
 										(existingNode: NodeDataType) =>
-											existingNode.id !== node.id
+											existingNode.id === newNode.id
 									);
-									filters[
-										type as DirectionalConnectionTypes
-									] = updatedNodes;
-									setfilters({ ...filters });
+
+									// If the node is not there, add it to the front
+									if (!nodeExists) {
+										filters[type].unshift(newNode);
+									}
+								});
+							}
+
+							// Update the state
+							setfilters({
+								...filters,
+							});
+							props.element.filters = {
+								...filters,
+							};
+						}}
+					/>
+					{Object.entries(filters).map(
+						([type, nodes]) =>
+							nodes.length > 0 && (
+								<FilterTag
+									key={type}
+									nodes={nodes}
+									type={type}
+									removeNode={(
+										node: NodeDataType,
+										type: string
+									) => {
+										// Delete the node from filters
+										const updatedNodes = filters[
+											type as DirectionalConnectionTypes
+										].filter(
+											(existingNode: NodeDataType) =>
+												existingNode.id !== node.id
+										);
+										filters[
+											type as DirectionalConnectionTypes
+										] = updatedNodes;
+										setfilters({ ...filters });
+									}}
+								/>
+							)
+					)}
+				</div>
+				<div className='flex flex-col gap-2 ml-5 mt-2'>
+					{isLoading && (
+						<Icons.loading className='w-4 h-4 animate-spin' />
+					)}
+					{results &&
+						results.map((node: { n: NodeDataType }) => (
+							<NodeLink
+								key={node.n.id}
+								element={{
+									...node.n,
+									routeString: `/username/${node.n.id}`,
 								}}
+								children={<span>{node.n.title}</span>}
 							/>
-						)
-				)}
-			</div>
-			<Divider />
-			<div className='flex flex-col gap-2 ml-5 mt-1'>
-				{isLoading && (
-					<Icons.loading className='w-4 h-4 animate-spin' />
-				)}
-				{searchResult &&
-					searchResult.map((node: { n: NodeDataType }) => (
-						<NodeLink
-							key={node.n.id}
-							element={node.n}
-							children={<span>{node.n.title}</span>}
-						/>
-					))}
-			</div>
-			<div>
-				<Button
-					className='flex justify-start text-left w-full cursor-pointer mt-2'
-					onClick={() => {
-						console.log('add new node');
-					}}
-					variant='ghost'
-				>
-					<Icons.plus className='w-4 h-4 mr-1' />
-					Add new node
-				</Button>
+						))}
+					{addingNode && (
+						<Icons.loading className='w-4 h-4 animate-spin' />
+					)}
+				</div>
+				<div>
+					<Button
+						className='flex justify-start text-left w-full cursor-pointer mt-2'
+						onClick={async () => {
+							// Create a new node in the UI
+							setaddingNode(true);
+							const newId = v4();
+							// Add the new node to your state
+							// This will depend on how you're managing state in your application
+							// Create a new node in the Neo4j database
+							const response = await createFilteredNode(
+								newId,
+								filters
+							);
+							setaddingNode(false);
+
+							if (response.error) {
+								// Handle error
+								console.error(response.error);
+							} else {
+								setresults([
+									...results,
+									{
+										n: {
+											id: newId,
+											icon: 'node',
+											title: 'untitled',
+										},
+									},
+								]);
+								// router.push(`/username/${newId}`, undefined);
+							}
+						}}
+						variant='ghost'
+					>
+						<Icons.plus className='w-4 h-4 mr-1' />
+						Add new node
+					</Button>
+				</div>
 			</div>
 		</div>
 	);

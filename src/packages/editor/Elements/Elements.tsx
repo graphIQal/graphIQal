@@ -103,7 +103,7 @@ export const Node = (props: any) => {
 };
 
 export const Group = (props: any) => {
-	const router = useRouter();
+	// const router = useRouter();
 	const [filters, setfilters] = useState<{
 		[key in DirectionalConnectionTypes]: NodeDataType[];
 	}>(props.element.filters ? props.element.filters : {});
@@ -118,8 +118,6 @@ export const Group = (props: any) => {
 			keepPreviousData: true,
 		}
 	);
-
-	console.log(searchResult);
 
 	useEffect(() => {
 		if (searchResult) {
@@ -225,6 +223,8 @@ export const Group = (props: any) => {
 								newId,
 								filters
 							);
+							console.log('create new node ');
+							console.log(response);
 							setaddingNode(false);
 
 							if (response.error) {

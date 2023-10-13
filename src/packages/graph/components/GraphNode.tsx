@@ -24,7 +24,6 @@ import DrawingContext, {
 import GraphNodeContext, {
 	GraphNodeContextInterface,
 } from '../context/GraphNodeContext';
-import { ConnectionTypes } from '../graphTypes';
 import { useDragNode } from '../hooks/dragging/useDragNode';
 import { OFFSET } from '../hooks/drawing/useDrawingEnd';
 import { useToggle } from '../../../helpers/hooks/useToggle';
@@ -194,7 +193,7 @@ export const GraphNode: FC<NodeProps> = ({ children, updateStartPos }) => {
 				<DragHandle />
 			</div>
 			<div
-				className='z-30 flex flex-row absolute min-w-[30px] max-w-[30px] hover:w-auto hover:max-w-[400px] transition-width duration-300 overflow-hidden  '
+				className='z-30 flex flex-row absolute min-w-[30px] max-w-[30px] hover:w-auto hover:max-w-[400px] transition-width duration-300 overflow-hidden gap-3 '
 				style={{
 					minWidth: 40,
 					minHeight: 40,

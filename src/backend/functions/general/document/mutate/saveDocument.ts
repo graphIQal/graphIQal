@@ -49,7 +49,11 @@ export const saveDocument = async ({
 						username,
 						history: history,
 						document: value.children,
-						title: value.title as string,
+						// @ts-ignore
+						title: value.children[0].children[0].text
+							? // @ts-ignore
+							  (value.children[0].children[0].text as string)
+							: value.title,
 					});
 				} else if (value.type === ELEMENT_BLOCK) {
 					traverse(value.children as BlockElements[]);

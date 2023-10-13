@@ -223,8 +223,6 @@ export const Group = (props: any) => {
 								newId,
 								filters
 							);
-							console.log('create new node ');
-							console.log(response);
 							setaddingNode(false);
 
 							if (response.error) {

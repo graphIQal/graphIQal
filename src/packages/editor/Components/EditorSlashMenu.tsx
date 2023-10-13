@@ -96,7 +96,11 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 	const editor = useMyPlateEditorRef();
 	const { nodeId, username } = useViewData();
 
-	const { data: nodeDataSWR, isLoading } = useSWR(
+	const {
+		data: nodeDataSWR,
+		isLoading,
+		mutate: SWRmutateCurrNode,
+	} = useSWR(
 		[nodeId ? `/api/username/${nodeId}` : null],
 		fetcherSingleReturn,
 		{
@@ -261,8 +265,28 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							icon: 'node',
 							children: [{ text: 'Untitled' }],
 						},
-						...emptyDocumentValue,
-						...emptyDocumentValue,
+						{
+							type: 'block',
+							id: uuidv4(),
+							children: [
+								{
+									type: 'p',
+									id: uuidv4(),
+									children: [{ text: '' }],
+								},
+							],
+						},
+						{
+							type: 'block',
+							id: uuidv4(),
+							children: [
+								{
+									type: 'p',
+									id: uuidv4(),
+									children: [{ text: '' }],
+								},
+							],
+						},
 					],
 				} as MyNodeElement);
 
@@ -274,8 +298,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					'HAS',
 					newId
 				);
-				// Navigate to node
-				// router.push(`/${username}/${newId}`, undefined);
 			},
 		},
 		{
@@ -767,10 +789,10 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							cursor = before;
 						}
 					}
-					const match = 'connect:parent'.startsWith(beforeText)
+					const match = 'connect:child '.startsWith(beforeText)
 						? beforeText
 						: '';
-					const remainingText = 'connect:parent'.slice(match.length);
+					const remainingText = 'connect:child '.slice(match.length);
 					editor.insertText(remainingText);
 					editor.insertText(' @');
 				}

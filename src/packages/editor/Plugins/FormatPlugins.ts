@@ -27,6 +27,7 @@ import {
 	createMyPlugins,
 	ELEMENT_BLOCK,
 	ELEMENT_NODELINK,
+	ELEMENT_NODETITLE,
 	ELEMENT_TITLE,
 } from '../plateTypes';
 import { autoformatLists } from './Autoformat/autoformatLists';
@@ -40,6 +41,8 @@ const resetBlockTypesCommonRule = {
 		ELEMENT_H1,
 		ELEMENT_H2,
 		ELEMENT_H3,
+		ELEMENT_NODETITLE,
+		ELEMENT_NODELINK,
 	],
 	defaultType: ELEMENT_PARAGRAPH,
 };

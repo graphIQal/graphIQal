@@ -5,6 +5,19 @@ import { MyValue } from '../../editor/plateTypes';
 import { useDndNode } from '../hooks/useDnDNode';
 import { getBlockStyles } from './Draggable.styles';
 import { DragHandleProps, DraggableProps } from './Draggable.types';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuPortal,
+	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { UserPlus, Mail, MessageSquare, PlusCircle } from 'lucide-react';
 
 export const DragHandle = ({ styles, ...props }: DragHandleProps) => {
 	return (
@@ -100,22 +113,58 @@ export const Draggable = <V extends MyValue>(props: DraggableProps<V>) => {
 				contentEditable={false}
 			>
 				<div className='flex height[1.5em] '>
-					<div
-						className='pointer-events-auto'
-						ref={multiDragRef}
-						onMouseDown={(e: any) => {
-							// If I want to make multi block selection, I can figure it out based on selected text now.
-							deselect(editor);
-							e.stopPropagation();
-						}}
-					>
-						<DragHandle
-							className='p-0 bg-transparent bg-no-repeat cursor-pointer overflow-hidden outline-none border-none minWidth[18px] height[18px]'
-							onMouseDown={(e: any) => {
-								e.stopPropagation();
-							}}
-						/>
-					</div>
+					<DropdownMenu>
+						<DropdownMenuTrigger>
+							<div
+								className='pointer-events-auto rounded-sm hover:bg-lining'
+								ref={multiDragRef}
+								onMouseDown={(e: any) => {
+									// If I want to make multi block selection, I can figure it out based on selected text now.
+									deselect(editor);
+									e.stopPropagation();
+								}}
+							>
+								<DragHandle
+									className='p-0 bg-transparent bg-no-repeat cursor-pointer overflow-hidden outline-none border-none minWidth[18px] height[18px]'
+									onMouseDown={(e: any) => {
+										e.stopPropagation();
+									}}
+								/>
+							</div>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align='start'>
+							<DropdownMenuLabel>My Account</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							<DropdownMenuSub>
+								<DropdownMenuSubTrigger>
+									<UserPlus className='mr-2 h-4 w-4' />
+									<span>Invite users</span>
+								</DropdownMenuSubTrigger>
+								<DropdownMenuPortal>
+									<DropdownMenuSubContent alignOffset={1}>
+										<DropdownMenuItem>
+											<Mail className='mr-2 h-4 w-4' />
+											<span>Email</span>
+										</DropdownMenuItem>
+										<DropdownMenuItem>
+											<MessageSquare className='mr-2 h-4 w-4' />
+											<span>Message</span>
+										</DropdownMenuItem>
+										<DropdownMenuSeparator />
+										<DropdownMenuItem>
+											<PlusCircle className='mr-2 h-4 w-4' />
+											<span>More...</span>
+										</DropdownMenuItem>
+									</DropdownMenuSubContent>
+								</DropdownMenuPortal>
+							</DropdownMenuSub>
+
+							<DropdownMenuItem>Profile</DropdownMenuItem>
+							<DropdownMenuItem>Billing</DropdownMenuItem>
+							<DropdownMenuItem>Team</DropdownMenuItem>
+							<DropdownMenuItem>Subscription</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				</div>
 			</div>
 

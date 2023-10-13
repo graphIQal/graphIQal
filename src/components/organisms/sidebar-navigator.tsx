@@ -72,23 +72,25 @@ export const SideBar: React.FC<{
 					<div>⭐️ Favourites</div>
 					{favData.n.favourites.map((nodeId: string) => {
 						return (
-							<NodeLink
-								key={nodeId}
-								element={{
-									routeString:
-										'/' +
-										(session?.user?.name
-											? session?.user?.name
-											: 'username') +
-										'/' +
-										connectionMap[nodeId].id,
-									icon: connectionMap[nodeId].icon,
-								}}
-							>
-								<span className='truncate'>
-									{connectionMap[nodeId].title}
-								</span>
-							</NodeLink>
+							<div className='my-1'>
+								<NodeLink
+									key={nodeId}
+									element={{
+										routeString:
+											'/' +
+											(session?.user?.name
+												? session?.user?.name
+												: 'username') +
+											'/' +
+											connectionMap[nodeId].id,
+										icon: connectionMap[nodeId].icon,
+									}}
+								>
+									<span className='truncate'>
+										{connectionMap[nodeId].title}
+									</span>
+								</NodeLink>
+							</div>
 						);
 					})}
 				</div>

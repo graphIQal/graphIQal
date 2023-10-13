@@ -46,7 +46,7 @@ export const NodeLink = (props: {
 
 	return (
 		<div
-			className='border-l-4 border-node cursor-pointer hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
+			className='border-l-4 border-node cursor-pointer py-1 hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
 			onClick={() => {
 				// Navigate to node
 				router.push(props.element.routeString, undefined);
@@ -74,7 +74,7 @@ export const NodeTitle = (props: any) => {
 
 	return (
 		<div
-			className='cursor-pointer hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
+			className='cursor-pointer hover:bg-lining py-1 font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
 			onClick={() => {
 				// Navigate to node
 				router.push(props.element.routeString, undefined);

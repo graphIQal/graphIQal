@@ -452,7 +452,7 @@ const Document: React.FC<{
 				{/* I suspect this might be because it gets rendered in tabs after the fact. */}
 				<Divider className='separator-row' />
 				<div className='py-4 pr-2 px-2'>
-					<div className='font-bold ml-5 text-md flex pb-1'>
+					<div className='font-bold ml-5 text-md flex pb-2'>
 						<Icons.inbox />
 						<span className='ml-2'>Inbox </span>
 					</div>

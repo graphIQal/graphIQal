@@ -49,7 +49,7 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 	src,
 	selected = false,
 	size = 30,
-	circle = true,
+	circle = false,
 	color = 'black',
 	hoverText = '',
 	className = '',

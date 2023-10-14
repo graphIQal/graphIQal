@@ -74,7 +74,7 @@ export const NodeTitle = (props: any) => {
 
 	return (
 		<div
-			className='cursor-pointer hover:bg-lining py-1 font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
+			className='cursor-pointer hover:bg-lining py-1 font-semibold underline underline-offset-2 decoration-lining decoration-1 overflow-x-auto overflow-ellipsis '
 			onClick={() => {
 				// Navigate to node
 				router.push(props.element.routeString, undefined);

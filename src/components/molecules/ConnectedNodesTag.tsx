@@ -24,13 +24,18 @@ import { NodeTitle } from '@/packages/editor/Elements/Elements';
 import { connectionColours } from '@/theme/colors';
 import { Router, useRouter } from 'next/router';
 import { useViewData } from '../context/ViewContext';
+import IconCircleButton from './IconCircleButton';
+import { deleteConnection } from '@/packages/graph/helpers/backend/deleteConnection';
+import { NodeDataType } from '@/backend/schema';
 
 export function ConnectedNodesTag({
 	type,
 	nodes,
+	removeNode,
 }: {
 	type: string;
 	nodes: connectedNode_type[];
+	removeNode: (node: connectedNode_type, type: string) => void;
 }) {
 	const [open, setOpen] = React.useState(false);
 	const [value, setValue] = React.useState('');
@@ -81,10 +86,16 @@ export function ConnectedNodesTag({
 									// setOpen(false);
 								}}
 							>
-								<IconTitle
-									icon={node.connected_node.icon}
-									title={node.connected_node.title}
-								/>
+								<div className='flex justify-between flex-row w-full hover:cursor-pointer'>
+									<IconTitle
+										icon={node.connected_node.icon}
+										title={node.connected_node.title}
+									/>
+									<IconCircleButton
+										onClick={() => removeNode(node, type)}
+										src='delete'
+									/>
+								</div>
 							</CommandItem>
 						))}
 					</CommandGroup>

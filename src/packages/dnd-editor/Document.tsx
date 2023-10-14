@@ -56,6 +56,8 @@ import {
 	convertToConnectionType,
 	getConnectionDirection,
 } from '@/backend/schema';
+import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConnection';
+import { connectedNode_type } from '@/backend/functions/node/query/useGetNodeData';
 
 export const emptyDocumentValue = [
 	{
@@ -247,6 +249,52 @@ const Document: React.FC<{
 							<ConnectedNodesTag
 								type={item.type}
 								nodes={item.nodes}
+								removeNode={(node, type) => {
+									// Extract startNode and endNode from the node object
+
+									const startNode = node.r.fromNode
+										? nodeId
+										: node.connected_node.id;
+									const endNode = !node.r.fromNode
+										? nodeId
+										: node.connected_node.id;
+
+									// Filter out the current connection from connectedNodes
+									const newData = {
+										connectedNodes:
+											nodeDataSWR.connectedNodes.filter(
+												(
+													connection: connectedNode_type
+												) =>
+													!(
+														connection.r
+															.startNode ===
+															startNode &&
+														connection.r.endNode ===
+															endNode &&
+														connection.r.type ===
+															node.r.type
+													)
+											),
+										n: nodeDataSWR.n,
+									};
+
+									console.log('newData');
+									console.log(newData);
+
+									SWRmutateCurrNode(
+										deleteConnectionAPI({
+											startNode,
+											endNode,
+											type: node.r.type,
+										}),
+										{
+											optimisticData: {
+												newData,
+											},
+										}
+									);
+								}}
 							/>
 						))}
 						<FilterPopover

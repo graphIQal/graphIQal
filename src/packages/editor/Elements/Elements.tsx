@@ -50,7 +50,10 @@ export const ColumnParent = (props: PlateRenderElementProps) => {
 
 export const Column = (props: PlateRenderElementProps) => {
 	return (
-		<div className='decoration-[0.1px] flex-1 ' {...props.attributes}>
+		<div
+			className='decoration-[0.1px] flex-1 border-lining border rounded-md'
+			{...props.attributes}
+		>
 			{props.children}
 		</div>
 	);

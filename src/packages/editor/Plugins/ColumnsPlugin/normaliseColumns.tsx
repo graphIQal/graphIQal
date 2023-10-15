@@ -53,10 +53,20 @@ export const normaliseColumns = <V extends MyValue>(editor: MyEditor) => {
 
 			if (children.length === 0) {
 				// If there are no children, delete the column
-				editor.removeNodes({ at: path });
+				setNodes<TElement>(
+					editor,
+					{ type: ELEMENT_BLOCK },
+					{ at: path }
+				);
 			} else if (children.length === 1) {
-				editor.removeNodes({ at: path });
-				editor.removeNodes({ at: path });
+				console.log('l1');
+				unwrapNodes(editor, { at: children[0][1] });
+				setNodes<TElement>(
+					editor,
+					{ type: ELEMENT_BLOCK },
+					{ at: path }
+				);
+				// unwrapNodes(editor, { at: path });
 			} else {
 				// Iterates through remaining children, and they should not be a column
 

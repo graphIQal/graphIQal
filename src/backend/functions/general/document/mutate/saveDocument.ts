@@ -60,7 +60,7 @@ export const saveDocument = async ({
 				} else if (value.type === ELEMENT_GROUP) {
 					Object.values(value.filters).forEach((nodes: any) => {
 						nodes.forEach((node: any) => {
-							console.log(node);
+							// console.log(node);
 							delete node.document;
 							delete node.inbox;
 						});
@@ -76,10 +76,9 @@ export const saveDocument = async ({
 
 	// loop through document, find nodes, and update them.
 
-	console.log('saveDocument', nodeId, title);
+	// console.log('saveDocument', nodeId, title);
 
 	document = saveNestedNodes(document.slice(1));
-	console.log(document);
 
 	const res = await fetch(
 		`/api/${username}/${nodeId}/document/save/${title}`,

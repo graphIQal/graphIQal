@@ -61,7 +61,7 @@ const EditorComponent: React.FC<{
 		router.events.on('routeChangeStart', onRouterUnload);
 
 		// console.log('editorRef');
-		// console.log(editorRef.current?.history);
+		console.log(editorRef.current?.history);
 
 		return () => {
 			window.removeEventListener('beforeunload', onUnload);

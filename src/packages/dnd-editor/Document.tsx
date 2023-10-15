@@ -112,8 +112,8 @@ const Document: React.FC<{
 		);
 	}
 
-	console.log('nodeDataSWR');
-	console.log(nodeDataSWR);
+	// console.log('nodeDataSWR');
+	// console.log(nodeDataSWR);
 
 	if ('title' in nodeDataSWR.n && !nodeDataSWR.n.document) {
 		nodeDataSWR.n.document = JSON.stringify(emptyDocumentValue);

@@ -12,6 +12,7 @@ import {
 	wrapNodes,
 } from '@udecode/plate';
 import {
+	BlockLevelElements,
 	BlockwrappedElements,
 	ELEMENT_BLOCK,
 	ELEMENT_GROUP,
@@ -119,8 +120,8 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 							{ at: children[i][1] }
 						);
 					} else if (
-						children[i][0].type === nodetype ||
-						children[i][0].type === groupType
+						children[i][0].type !== blockType &&
+						(children[i][0].type as string) in BlockLevelElements
 					) {
 						// console.log('unwrap nodes');
 						// console.log(path, [i, 0], children[i]);

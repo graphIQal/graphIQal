@@ -61,6 +61,10 @@ import { withNodeLink } from './NodeLinkPlugin/withNodeLink';
 import { LinkFloatingToolbar } from '@/components/plate-ui/link-floating-toolbar';
 import { ImageElement } from '@/components/plate-ui/image-element';
 import { MediaEmbedElement } from '@/components/plate-ui/media-embed-element';
+import {
+	createColumnParentPlugin,
+	createColumnsPlugin,
+} from './ColumnsPlugin/ColumnsPlugin';
 
 const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODE,
@@ -216,6 +220,8 @@ export const BlockPlugins = createMyPlugins(
 		cutTextShownPlugin(),
 		createImagePlugin(),
 		createMediaEmbedPlugin(),
+		createColumnParentPlugin(),
+		createColumnsPlugin(),
 		// createCaptionPlugin({
 		// 	options: { pluginKeys: [ELEMENT_IMAGE, ELEMENT_MEDIA_EMBED] },
 		// }),
@@ -244,6 +250,7 @@ export const BlockPlugins = createMyPlugins(
 			[ELEMENT_CUT_SHOWN]: CutTextShown,
 			[ELEMENT_GROUP]: withDraggable(Group),
 			[ELEMENT_IMAGE]: ImageElement,
+
 			// [ELEMENT_MEDIA_EMBED]: MediaEmbedElement,
 		},
 	}

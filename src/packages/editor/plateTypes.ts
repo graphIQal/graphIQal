@@ -76,12 +76,69 @@ export const ELEMENT_DIVIDER = 'divider';
 export const ELEMENT_CUT_SHOWN = 'cut_show';
 export const ELEMENT_CUT_HIDDEN = 'cut_hide';
 export const ELEMENT_GROUP = 'group';
+export const ELEMENT_COLUMN_PARENT = 'column_parent';
+export const ELEMENT_COLUMN = 'column';
 
 export const COMMAND_NEST = 'nested';
 export const COMMAND_TEST = 'test';
 
 // marks
 export const MARK_COLOUR = 'colour';
+
+export type MyDraggableElement =
+	| typeof ELEMENT_BLOCK
+	| typeof ELEMENT_NODE
+	| typeof ELEMENT_GROUP
+	| typeof ELEMENT_DIVIDER;
+
+export const BlockLevelElements = {
+	[ELEMENT_NODE]: true,
+	[ELEMENT_BLOCK]: true,
+	[ELEMENT_GROUP]: true,
+	[ELEMENT_COLUMN_PARENT]: true,
+};
+export const BlockwrappedElements = {
+	[ELEMENT_PARAGRAPH]: true,
+	// [ELEMENT_GROUP]: true,
+	[ELEMENT_H1]: true,
+	[ELEMENT_H2]: true,
+	[ELEMENT_H3]: true,
+	[ELEMENT_BLOCKQUOTE]: true,
+	[ELEMENT_CODE_BLOCK]: true,
+	// [ELEMENT_LIC]: true,
+	[ELEMENT_LI]: true,
+	[ELEMENT_OL]: true,
+	[ELEMENT_TODO_LI]: true,
+	[ELEMENT_NODELINK]: true,
+	[ELEMENT_DIVIDER]: true,
+	[ELEMENT_IMAGE]: true,
+	[ELEMENT_LINK]: true,
+	[ELEMENT_NODETITLE]: true,
+	[ELEMENT_CUT_HIDDEN]: true,
+	[ELEMENT_CUT_SHOWN]: true,
+	// [ELEMENT_UL]: true,
+	// [ELEMENT_TABLE]: true,
+	// [ELEMENT_TH]: true,
+	// [ELEMENT_TR]: true,
+	// [ELEMENT_TD]: true,
+	// [ELEMENT_VIDEO]: true,
+	// [ELEMENT_AUDIO]: true,
+	// [ELEMENT_IFRAME]: true,
+};
+
+export const NoMarkElements = {
+	[ELEMENT_H1]: true,
+	[ELEMENT_H2]: true,
+	[ELEMENT_H3]: true,
+	[ELEMENT_TITLE]: true,
+	[ELEMENT_NODELINK]: true,
+};
+
+export const HeaderElements = {
+	[ELEMENT_H1]: true,
+	[ELEMENT_H2]: true,
+	[ELEMENT_H3]: true,
+};
 
 /**
  * Text
@@ -170,12 +227,6 @@ export interface BlockElements
  * Blocks
  */
 
-export type MyDraggableElement =
-	| typeof ELEMENT_BLOCK
-	| typeof ELEMENT_NODE
-	| typeof ELEMENT_GROUP
-	| typeof ELEMENT_DIVIDER;
-
 export interface MyBlockElement extends BlockElements {
 	type: typeof ELEMENT_BLOCK;
 	children: BlockElements[];
@@ -262,49 +313,6 @@ export type Block =
 	| MyH1Element
 	| MyH2Element
 	| MyH3Element;
-
-export const BlockwrappedElements = {
-	[ELEMENT_PARAGRAPH]: true,
-	// [ELEMENT_GROUP]: true,
-	[ELEMENT_H1]: true,
-	[ELEMENT_H2]: true,
-	[ELEMENT_H3]: true,
-	[ELEMENT_BLOCKQUOTE]: true,
-	[ELEMENT_CODE_BLOCK]: true,
-	// [ELEMENT_LIC]: true,
-	[ELEMENT_LI]: true,
-	[ELEMENT_OL]: true,
-	[ELEMENT_TODO_LI]: true,
-	[ELEMENT_NODELINK]: true,
-	[ELEMENT_DIVIDER]: true,
-	[ELEMENT_IMAGE]: true,
-	[ELEMENT_LINK]: true,
-	[ELEMENT_NODETITLE]: true,
-	[ELEMENT_CUT_HIDDEN]: true,
-	[ELEMENT_CUT_SHOWN]: true,
-	// [ELEMENT_UL]: true,
-	// [ELEMENT_TABLE]: true,
-	// [ELEMENT_TH]: true,
-	// [ELEMENT_TR]: true,
-	// [ELEMENT_TD]: true,
-	// [ELEMENT_VIDEO]: true,
-	// [ELEMENT_AUDIO]: true,
-	// [ELEMENT_IFRAME]: true,
-};
-
-export const NoMarkElements = {
-	[ELEMENT_H1]: true,
-	[ELEMENT_H2]: true,
-	[ELEMENT_H3]: true,
-	[ELEMENT_TITLE]: true,
-	[ELEMENT_NODELINK]: true,
-};
-
-export const HeaderElements = {
-	[ELEMENT_H1]: true,
-	[ELEMENT_H2]: true,
-	[ELEMENT_H3]: true,
-};
 
 export type MyValue = Block[];
 

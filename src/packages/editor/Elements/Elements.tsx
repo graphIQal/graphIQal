@@ -37,6 +37,28 @@ export const Block = (props: PlateRenderElementProps) => {
 	);
 };
 
+export const ColumnParent = (props: PlateRenderElementProps) => {
+	return (
+		<div
+			className='decoration-[0.1px] pt-2 flex flex-row gap-2 border-lining border border-rounded align-top '
+			{...props.attributes}
+		>
+			{props.children}
+		</div>
+	);
+};
+
+export const Column = (props: PlateRenderElementProps) => {
+	return (
+		<div
+			className='decoration-[0.1px] pt-2 flex-1 border-lining border border-rounded'
+			{...props.attributes}
+		>
+			{props.children}
+		</div>
+	);
+};
+
 export const NodeLink = (props: {
 	attributes?: any;
 	children: any;

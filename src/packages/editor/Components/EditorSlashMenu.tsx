@@ -20,6 +20,9 @@ import { ReactNode, useEffect, useState } from 'react';
 import BlockMenu from '../../../components/organisms/BlockMenu';
 
 import {
+	ELEMENT_BLOCK,
+	ELEMENT_COLUMN,
+	ELEMENT_COLUMN_PARENT,
 	ELEMENT_DIVIDER,
 	ELEMENT_GROUP,
 	ELEMENT_NODE,
@@ -47,7 +50,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 import useSWR from 'swr';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, v4 } from 'uuid';
 import { createNodeInDocument } from '../../../backend/functions/node/mutate/createNodeInDocument';
 import { useViewData } from '../../../components/context/ViewContext';
 import {
@@ -337,6 +340,49 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				insertNodes(editor, {
 					type: getPluginType(editor, ELEMENT_BLOCKQUOTE),
 					children: [{ text: '' }],
+				});
+			},
+		},
+		{
+			key: 'column',
+			text: 'Column',
+			n: {
+				subtext: 'Create a Column',
+				icon: 'columns',
+				searchFunction: (search) => {
+					if ('columns'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: async () => {
+				insertNodes(editor, {
+					type: getPluginType(editor, ELEMENT_COLUMN_PARENT),
+					children: [
+						{
+							type: ELEMENT_COLUMN,
+							id: v4(),
+							children: [
+								{
+									type: ELEMENT_BLOCK,
+									children: [{ text: '' }],
+									id: v4(),
+								},
+							],
+						},
+						{
+							type: ELEMENT_COLUMN,
+							id: v4(),
+							children: [
+								{
+									type: ELEMENT_BLOCK,
+									children: [{ text: '' }],
+									id: v4(),
+								},
+							],
+						},
+					],
 				});
 			},
 		},

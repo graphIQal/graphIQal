@@ -35,6 +35,7 @@ import {
 	ChevronDown,
 	ChevronsUpDown,
 	Code,
+	Columns,
 	Delete,
 	Divide,
 	ExternalLink,
@@ -138,4 +139,5 @@ export const Icons: { [key: string]: any } = {
 	warning: AlertCircle,
 	loading: Loader2,
 	user: User,
+	columns: Columns,
 };

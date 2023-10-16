@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { v4 } from 'uuid';
 import { FilterPopover } from '../Components/Molecules/FilterPopover';
+import { ParagraphElement } from '@/components/plate-ui/paragraph-element';
 
 // ELEMENTS
 // Define a React component renderer for our code blocks.
@@ -50,10 +51,7 @@ export const ColumnParent = (props: PlateRenderElementProps) => {
 
 export const Column = (props: PlateRenderElementProps) => {
 	return (
-		<div
-			className='decoration-[0.1px] flex-1 border-lining border rounded-md'
-			{...props.attributes}
-		>
+		<div className='decoration-[0.1px] flex-1' {...props.attributes}>
 			{props.children}
 		</div>
 	);
@@ -365,20 +363,21 @@ export const BlockquoteElement = (props: PlateRenderElementProps) => {
 export const CutTextShown = (props: PlateRenderElementProps) => {
 	return (
 		<div {...props.attributes} className='text-node opacity-70 '>
-			<blockquote>{props.children}</blockquote>
+			{props.children}
 		</div>
 	);
 };
 
 export const CutTextHidden = (props: PlateRenderElementProps) => {
+	console.log(props);
 	return (
-		<div
-			{...props.attributes}
-			className='text-node opacity-70 hidden '
-			contentEditable={false}
-		>
-			<blockquote>{props.children}</blockquote>
-		</div>
+		<span {...props.attributes} className='text-node opacity-70'>
+			<span
+				contentEditable={false}
+				className='w-1 h-1 bg-node rounded-full inline-block mb-3'
+			></span>
+			{props.children}
+		</span>
 	);
 };
 

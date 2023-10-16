@@ -92,7 +92,7 @@ export const saveDocument = async ({
 			return res.json();
 		})
 		.then((json) => {
-			console.log('saveDocumentJson', json);
+			// console.log('saveDocumentJson', json);
 			return json;
 		});
 

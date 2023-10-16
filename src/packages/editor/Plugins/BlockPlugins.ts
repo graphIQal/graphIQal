@@ -26,6 +26,7 @@ import {
 	ELEMENT_IMAGE,
 	createMediaEmbedPlugin,
 	ELEMENT_MEDIA_EMBED,
+	createMentionPlugin,
 } from '@udecode/plate';
 // import { createLinkPlugin } from '@udecode/plate-link';
 import {
@@ -163,6 +164,7 @@ const cutTextHiddenPlugin = createMyPluginFactory<HotkeyPlugin>({
 	isLeaf: false,
 	isInline: true,
 	isVoid: true,
+	component: CutTextHidden,
 	// options: {
 	// 	hotkey: 'mod+g',
 	// },
@@ -179,6 +181,7 @@ const cutTextHiddenPlugin = createMyPluginFactory<HotkeyPlugin>({
 
 const cutTextShownPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_CUT_SHOWN,
+	component: CutTextShown,
 	isElement: true,
 	isLeaf: false,
 	isInline: true,
@@ -222,6 +225,7 @@ export const BlockPlugins = createMyPlugins(
 		createMediaEmbedPlugin(),
 		createColumnParentPlugin(),
 		createColumnsPlugin(),
+		// createMentionPlugin(),
 		// createCaptionPlugin({
 		// 	options: { pluginKeys: [ELEMENT_IMAGE, ELEMENT_MEDIA_EMBED] },
 		// }),

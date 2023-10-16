@@ -73,8 +73,6 @@ export const ELEMENT_NODE = 'node';
 export const ELEMENT_NODETITLE = 'nodeTitle';
 export const ELEMENT_CONNECTION = 'connection';
 export const ELEMENT_DIVIDER = 'divider';
-export const ELEMENT_CUT_SHOWN = 'cut_show';
-export const ELEMENT_CUT_HIDDEN = 'cut_hide';
 export const ELEMENT_GROUP = 'group';
 export const ELEMENT_COLUMN_PARENT = 'column_parent';
 export const ELEMENT_COLUMN = 'column';
@@ -83,6 +81,8 @@ export const COMMAND_NEST = 'nested';
 export const COMMAND_TEST = 'test';
 
 // marks
+export const ELEMENT_CUT_SHOWN = 'cut_show';
+export const ELEMENT_CUT_HIDDEN = 'cut_hide';
 export const MARK_COLOUR = 'colour';
 
 export type MyDraggableElement =
@@ -112,10 +112,7 @@ export const BlockwrappedElements = {
 	[ELEMENT_NODELINK]: true,
 	[ELEMENT_DIVIDER]: true,
 	[ELEMENT_IMAGE]: true,
-	[ELEMENT_LINK]: true,
 	[ELEMENT_NODETITLE]: true,
-	[ELEMENT_CUT_HIDDEN]: true,
-	[ELEMENT_CUT_SHOWN]: true,
 	// [ELEMENT_UL]: true,
 	// [ELEMENT_TABLE]: true,
 	// [ELEMENT_TH]: true,

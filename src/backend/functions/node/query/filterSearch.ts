@@ -19,7 +19,7 @@ export const filterSearch = async (filters: {
 			return res.json();
 		})
 		.then((json) => {
-			console.log(json);
+			// console.log(json);
 			return json;
 		});
 

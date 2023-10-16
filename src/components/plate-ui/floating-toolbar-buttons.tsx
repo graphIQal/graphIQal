@@ -13,11 +13,22 @@ import { Icons } from '@/components/icons';
 import { MarkToolbarButton } from './mark-toolbar-button';
 import { MoreDropdownMenu } from './more-dropdown-menu';
 import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
-import { MARK_COLOUR } from '@/packages/editor/plateTypes';
+import { ELEMENT_CUT_HIDDEN, MARK_COLOUR } from '@/packages/editor/plateTypes';
+import { ToolbarButton } from './toolbar';
+import {
+	collapseSelection,
+	focusEditor,
+	getPluginType,
+	toggleNodeType,
+	useEditorRef,
+	wrapNodes,
+} from '@udecode/plate';
+import { CommentToolbarButton } from './comment-toolbar-button';
 
 export function FloatingToolbarButtons() {
 	// const readOnly = useEditorReadOnly();
 	const readOnly = false;
+	const editor = useEditorRef();
 
 	return (
 		<>
@@ -49,18 +60,39 @@ export function FloatingToolbarButtons() {
 					>
 						<Icons.strikethrough />
 					</MarkToolbarButton>
-					<MarkToolbarButton
+					{/* <MarkToolbarButton
 						nodeType={MARK_CODE}
 						tooltip='Code (⌘+E)'
 					>
 						<Icons.code />
-					</MarkToolbarButton>
+					</MarkToolbarButton> */}
 					<MarkToolbarButton
 						nodeType={MARK_COLOUR}
-						tooltip='Code (⌘+E)'
+						tooltip='Colour (⌘+E)'
 					>
-						<Icons.code />
+						<Icons.color />
 					</MarkToolbarButton>
+					<ToolbarButton
+						onClick={() => {
+							wrapNodes(
+								editor,
+								{
+									type: getPluginType(
+										editor,
+										ELEMENT_CUT_HIDDEN
+									),
+									children: [],
+								},
+								{ split: true }
+							);
+							collapseSelection(editor);
+							focusEditor(editor);
+						}}
+						tooltip='Cut Text (⌘+D)'
+					>
+						<Icons.cut />
+					</ToolbarButton>
+					<CommentToolbarButton />
 				</>
 			)}
 

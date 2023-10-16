@@ -51,6 +51,13 @@ export const normalizeBlock = <V extends MyValue>(editor: MyEditor) => {
 			return;
 		}
 
+		// The problem, I'm pretty sure, is that noramlise block instantly destroys anything that's not a paragraph in it.
+		// I need a normalise paragraph. I need to add a class of inline elements.
+		// So there will be Block-level elements, Block-wrapped elements, and inline-elements.
+		// Block = Node, group, etc.
+		// Blockwrapped = p, divider, basically anything that lives on the first line of a block.
+		// Inline = Things that are wrapped in paragraph. Inline nodes. I need to normalise them so that they're part of
+
 		if ((node.type as string) in BlockwrappedElements) {
 			// console.log('blockwrapped');
 			// console.log('blockWrapped');

@@ -1,8 +1,4 @@
-import useSWR from 'swr';
-import { fetcher } from '../../../driver/fetcher';
-import { jsonToCypher_graphView } from '../../../driver/dataConversion';
-import { GraphNodeData, NodeData } from '../../../../packages/graph/graphTypes';
-import { Action } from '../../../../packages/graph/hooks/useHistoryState';
+import { GraphNodeData } from '../../../../packages/graph/graphTypes';
 
 type createGraphNodeInput = {
 	id: string;

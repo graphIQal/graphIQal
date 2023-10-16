@@ -2,17 +2,10 @@
  * Pill menu for filtering the nodes that are "in view"
  */
 
-import React, { useContext } from 'react';
-import { PillMenu } from '../../../components/molecules/PillMenu';
-import { ItemProps } from '../../../components/organisms/Dropdown';
-import { Tag } from '../../../components/molecules/Tag';
-import TextButton from '../../../components/molecules/TextButton';
-import { createNode } from '@udecode/plate';
-import { saveGraphView } from '../../../backend/functions/graph/mutate/saveGraphView';
-import { applyTags } from '../helpers/Filtering/applyTags';
+import React from 'react';
 import { useViewData } from '../../../components/context/ViewContext';
-import { TitleWithNavigation } from '../../../components/molecules/TitleWithNavigation';
 import IconCircleButton from '../../../components/molecules/IconCircleButton';
+import { ItemProps } from '../../../components/organisms/Dropdown';
 import { useGraphViewData } from '../context/GraphViewContext';
 
 type FilteringProps = {

@@ -1,8 +1,3 @@
-import useSWR from 'swr';
-import { fetcher } from '../../../driver/fetcher';
-import { jsonToCypher_graphView } from '../../../driver/dataConversion';
-import { Action } from '../../../../packages/graph/hooks/useHistoryState';
-
 type deleteGraphViewInput = {
 	graphViewId: string;
 };

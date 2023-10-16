@@ -1,6 +1,3 @@
-import { fetcher } from '../../../driver/fetcher';
-
-import { jsonToCypher_graphView } from '../../../driver/dataConversion';
 import { GraphNodeData, NodeData } from '../../../../packages/graph/graphTypes';
 
 type saveGraphViewInput = {
@@ -19,15 +16,6 @@ export const saveGraphView = async ({
 	graphViewData,
 	nodeData,
 }: saveGraphViewInput) => {
-	// const body = jsonToCypher_graphView({
-	// 	graphViewData,
-	// 	nodeData,
-	// 	graphViewId,
-	// 	nodeId,
-	// 	history,
-	// 	pointer,
-	// });
-
 	// const body = JSON.stringify({ ...nodeData, ...graphViewData });
 	console.log('duplicateGV');
 	// console.log(body);

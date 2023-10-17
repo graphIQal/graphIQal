@@ -1,18 +1,8 @@
-import React, { useState } from 'react';
-import CustomIconCircleButton from '../../components/molecules/CustomIconCircleButton';
-import { Plus } from '@styled-icons/fa-solid/Plus';
-import TextButton from '../../components/molecules/TextButton';
 import { useRouter } from 'next/router';
-import {
-	GenerateCypher,
-	returnCypher,
-} from '../../backend/cypher-generation/cypherGenerators';
+import React, { useState } from 'react';
 // import register from '../api/authentication/register';
-import deleteUser from '../api/general/deleteUser';
-import { login } from '../../backend/functions/authentication';
-import { signIn } from 'next-auth/react';
-import Divider from '../../components/atoms/Divider';
 import Link from 'next/link';
+import Divider from '../../components/atoms/Divider';
 
 //used for dragging
 const SignIn: React.FC = () => {

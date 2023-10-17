@@ -179,7 +179,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					id: newId,
 					children: [{ text: 'Group' }],
 					filters: {
-						PARENTS: [
+						CHILDREN: [
 							{
 								children: nodeDataSWR.n.children,
 								icon: nodeDataSWR.n.icon,
@@ -835,10 +835,10 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							cursor = before;
 						}
 					}
-					const match = 'connect:child '.startsWith(beforeText)
+					const match = 'connect:child'.startsWith(beforeText)
 						? beforeText
 						: '';
-					const remainingText = 'connect:child '.slice(match.length);
+					const remainingText = 'connect:child'.slice(match.length);
 					editor.insertText(remainingText);
 					editor.insertText(' @');
 				}
@@ -1193,9 +1193,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								editor.selection.anchor.path,
 								editor
 							);
-
-							console.log('connect_node');
-							console.log(node);
 
 							node = node ? node.id : nodeId;
 

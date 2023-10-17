@@ -17,6 +17,7 @@ export const createConnection = async ({
 		MERGE (n)-[rel:${type}]->(endNode)
 		`;
 	// SET rel.content = ${content}
+	// console.log(startNode, endNode, type);
 
 	const res = await fetch(`/api/general/nodes/mutate/connection`, {
 		method: 'POST',

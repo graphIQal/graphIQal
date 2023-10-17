@@ -9,6 +9,7 @@ import MainTabs, {
 import { ViewDataProvider } from '../../components/context/ViewContext';
 import Document from '../../packages/dnd-editor/Document';
 import Graph from '../../packages/graph/Graph';
+import { SessionProvider } from 'next-auth/react';
 
 // ('use client');
 
@@ -70,13 +71,15 @@ const Home: React.FC = () => {
 	}, [data]);
 
 	return (
-		<ViewDataProvider>
-			<MainTabs
-				mainViewTabs={tabs}
-				setMainViewTabs={setTabs}
-				mutateGraphViews={mutateGraphViews}
-			/>
-		</ViewDataProvider>
+		<SessionProvider>
+			<ViewDataProvider>
+				<MainTabs
+					mainViewTabs={tabs}
+					setMainViewTabs={setTabs}
+					mutateGraphViews={mutateGraphViews}
+				/>
+			</ViewDataProvider>
+		</SessionProvider>
 	);
 };
 export default Home;

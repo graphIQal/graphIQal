@@ -336,7 +336,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 				{mainViewTabs.map((tab, i) => {
 					return (
 						<div
-							className=' h-screen pb-10'
+							className=' h-screen'
 							key={i}
 							style={{
 								display:

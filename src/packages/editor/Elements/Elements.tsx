@@ -66,12 +66,12 @@ export const NodeLink = (props: {
 
 	return (
 		<div
-			className='border-l-4 border-node cursor-pointer py-1 hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 truncate'
+			className='border-l-4 border-node cursor-pointer py-1 hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 overflow-x-auto overflow-ellipsis'
 			onClick={() => {
 				// Navigate to node
 				router.push(props.element.routeString, undefined);
 			}}
-			contentEditable={false}
+			// contentEditable={false}
 			{...props.attributes}
 		>
 			<IconCircleButton

@@ -107,6 +107,7 @@ const createNodeLinkPlugin = createMyPluginFactory<HotkeyPlugin>({
 	isElement: true,
 	isLeaf: false,
 	withOverrides: withNodeLink,
+	isVoid: false,
 	options: {},
 });
 

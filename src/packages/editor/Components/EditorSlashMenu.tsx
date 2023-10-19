@@ -1469,13 +1469,14 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									editor
 								);
 
-								console.log('closestNode');
-								console.log(closestNode);
-
 								if (closestNode) {
 									removeNodes(editor, {
 										at: closestNode[1],
 									});
+
+									// Add connection to new node.
+
+									// Remove current connection
 
 									// Attach block to inbox
 									addBlockToInbox({
@@ -1485,26 +1486,26 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 										icon: nodeDataSWR.n.icon,
 										originNodeId: nodeDataSWR.n.id,
 									});
+
+									const { dismiss } = toast({
+										title: (
+											<span className='flex flex-row'>
+												<span>Node sent to </span>
+												<IconTitle
+													icon={item.n.icon}
+													title={item.n.title}
+												/>
+												<span>'s inbox</span>
+											</span>
+										),
+										description:
+											'Undo will not unsend the block! Resolve in inbox!',
+									});
+
+									setTimeout(() => {
+										dismiss();
+									}, 3000);
 								}
-
-								const { dismiss } = toast({
-									title: (
-										<span className='flex flex-row'>
-											<span>Node sent to </span>
-											<IconTitle
-												icon={item.n.icon}
-												title={item.n.title}
-											/>
-											<span>'s inbox</span>
-										</span>
-									),
-									description:
-										'Undo will not unsend the block! Resolve in inbox!',
-								});
-
-								setTimeout(() => {
-									dismiss();
-								}, 3000);
 							}
 						} else {
 							// add node link

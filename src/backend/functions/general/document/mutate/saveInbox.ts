@@ -12,7 +12,6 @@ export const saveInbox = async ({
 	title = 'untitled',
 	history,
 }: SaveDocumentInput) => {
-	console.log('saveInbox');
 	if (
 		history === null ||
 		(history.undos.length < 1 && history.redos.length < 1)
@@ -42,8 +41,6 @@ export const saveInbox = async ({
 
 		traverse(children);
 	};
-
-	console.log('saveInbox', nodeId);
 
 	saveNestedNodes(document.slice(1));
 

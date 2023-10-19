@@ -115,7 +115,7 @@ const Document: React.FC<{
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
 					<div className='pl-10 pt-10 pr-3 pb-3 gap-2'>
-						<Skeleton className='h-5 w-full mt-10' />
+						<Skeleton className='h-5 w-full mt-10 mb-2' />
 						<Skeleton className='h-10 w-20 mb-2' />
 						<Skeleton className='h-5 w-full' />
 					</div>
@@ -130,7 +130,6 @@ const Document: React.FC<{
 	}
 
 	if (nodeDataSWR.connectedNodes[0].r === null) {
-		console.log('hmm');
 		router.push('/');
 		return;
 	}
@@ -169,7 +168,6 @@ const Document: React.FC<{
 		'bg-CUSTOM',
 	];
 
-	console.log(nodeDataSWR);
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
 	// console.log(connectionMap);
 	const createInitialValue = (content: string): BlockElements[] => {
@@ -188,7 +186,6 @@ const Document: React.FC<{
 						];
 						return value;
 					} else {
-						console.log('changing value');
 						return emptyDocumentValue[0].children[0];
 					}
 				} else if (value.type === ELEMENT_BLOCK) {
@@ -431,9 +428,6 @@ const Document: React.FC<{
 										n: nodeDataSWR.n,
 									};
 
-									console.log('newData');
-									console.log(newData);
-
 									SWRmutateCurrNode(
 										deleteConnectionAPI({
 											startNode,
@@ -441,9 +435,8 @@ const Document: React.FC<{
 											type: node.r.type,
 										}),
 										{
-											optimisticData: {
-												newData,
-											},
+											optimisticData: newData,
+											populateCache: false,
 										}
 									);
 								}}
@@ -502,7 +495,10 @@ const Document: React.FC<{
 											});
 										}
 									}),
-									{ optimisticData: { newData } }
+									{
+										optimisticData: newData,
+										populateCache: false,
+									}
 								);
 
 								// 	// Check if the node is already there

@@ -294,8 +294,9 @@ const MainTabs: React.FC<MainTabsProps> = ({
 				<div className='w-screen h-10 bg-blue-50'>
 					<Tabs mutateGraphViews={mutateGraphViews}>
 						{mainViewTabs.map((tab, index) => {
-							if (index === 0 && nodeDataSWR)
+							if (index === 0 && nodeDataSWR) {
 								tab.title = nodeDataSWR.n.title;
+							}
 							return (
 								<div key={index}>
 									<Link

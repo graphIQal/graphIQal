@@ -71,15 +71,13 @@ const Home: React.FC = () => {
 	}, [data]);
 
 	return (
-		<SessionProvider>
-			<ViewDataProvider>
-				<MainTabs
-					mainViewTabs={tabs}
-					setMainViewTabs={setTabs}
-					mutateGraphViews={mutateGraphViews}
-				/>
-			</ViewDataProvider>
-		</SessionProvider>
+		<ViewDataProvider>
+			<MainTabs
+				mainViewTabs={tabs}
+				setMainViewTabs={setTabs}
+				mutateGraphViews={mutateGraphViews}
+			/>
+		</ViewDataProvider>
 	);
 };
 export default Home;

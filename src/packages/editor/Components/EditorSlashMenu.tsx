@@ -1509,6 +1509,13 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						} else {
 							// add node link
 							console.log('add node link');
+
+							createConnection({
+								startNode: nodeId,
+								endNode: item.n.id,
+								type: ConnectionTypes.RELATED,
+							});
+
 							insertNodes(editor, {
 								type: getPluginType(editor, ELEMENT_NODELINK),
 								nodeId: item.n.id,

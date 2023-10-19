@@ -274,8 +274,8 @@ export const Group = (props: any) => {
 };
 
 export const CutText = (props: any, showCutText: boolean) => {
-	console.log('cut plugin', props);
-	console.log('showCutText ', showCutText);
+	// console.log('cut plugin', props);
+	// console.log('showCutText ', showCutText);
 
 	return !showCutText ? (
 		<span className='text-lining' {...props.attributes}>
@@ -369,7 +369,6 @@ export const CutTextShown = (props: PlateRenderElementProps) => {
 };
 
 export const CutTextHidden = (props: PlateRenderElementProps) => {
-	console.log(props);
 	return (
 		<span {...props.attributes} className='text-node opacity-70'>
 			<span

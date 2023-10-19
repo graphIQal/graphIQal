@@ -236,7 +236,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
 							}
 						}
 					}}
-					size={30}
+					className='w-5 h-5'
 					src='star'
 					circle={false}
 					color={'#FFCB45'}
@@ -254,10 +254,9 @@ const MainTabs: React.FC<MainTabsProps> = ({
 						console.log('hover on left side for favourites');
 					}}
 					hoverText='Mouse to the left of the window for the favourites sidebar'
-					size={30}
 					src='menu'
-					circle={false}
 					selected={false}
+					className='w-5 h-5'
 				/>
 			),
 			settings: (
@@ -266,11 +265,11 @@ const MainTabs: React.FC<MainTabsProps> = ({
 						setisSettingsOpen(true);
 					}}
 					hoverText='Settings'
-					size={40}
 					src='settings'
 					circle={false}
 					// color={'#FFCB45'}
 					selected={false}
+					className='w-5 h-5'
 				/>
 			),
 			breadcrumb: nodeDataSWR && (

@@ -105,20 +105,13 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 			<CardChecklist size={'1em'} color={!selected ? color : 'white'} />
 		),
 		star: selected ? (
-			<Star size={'1em'} color={color} />
+			<Star className={className} color={color} />
 		) : (
 			<HollowStar size={'1em'} />
-		),
-		menu: (
-			<MenuOutline size={iconSize} color={!selected ? color : 'white'} />
-		),
-		settings: (
-			<Settings size={iconSize} color={!selected ? color : 'white'} />
 		),
 		search: <Search size={iconSize} color={color} />,
 		ArrowLeft: <ArrowLeft size={iconSize} color={color} />,
 		ArrowRight: <ArrowRight size={iconSize} color={color} />,
-		Cut: <Cut size={iconSize} color={selected ? color : 'black'} />,
 		node: <CircularGraph size={iconSize} color={'black'} />,
 	};
 
@@ -131,10 +124,9 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 
 	return (
 		<div
-			className={cn(
-				'hover:cursor-pointer hover:opacity-80 inline-block h-4 w-4 rounded-full ml-1 mr-1',
-				className
-			)}
+			className={
+				'hover:cursor-pointer hover:opacity-80 inline-block rounded-full ml-1 mr-1'
+			}
 			title={hoverText}
 			onClick={handleClick}
 		>
@@ -156,7 +148,9 @@ const IconCircleButton: React.FC<NodeButtonProps> = ({
 					{src in icons ? (
 						icons[src]
 					) : src in Icons ? (
-						React.createElement(Icons[src], {})
+						React.createElement(Icons[src], {
+							className: cn('w-4 h-4', className),
+						})
 					) : (
 						<span>{src}</span>
 					)}

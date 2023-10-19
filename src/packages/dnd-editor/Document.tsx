@@ -13,7 +13,19 @@ import { updateNodeFields } from '@/backend/functions/general/document/mutate/up
 import { createNormalizeTypesPlugin } from '@udecode/plate';
 import { Emoji, useEmojiDropdownMenuState } from '@udecode/plate-emoji';
 
+import { saveInbox } from '@/backend/functions/general/document/mutate/saveInbox';
+import { createConnection } from '@/backend/functions/node/mutate/createConnection';
+import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConnection';
+import { updateNode } from '@/backend/functions/node/mutate/updateNode';
+import { connectedNode_type } from '@/backend/functions/node/query/useGetNodeData';
+import {
+	convertToConnectionType,
+	getConnectionDirection,
+} from '@/backend/schema';
+import { Icons } from '@/components/icons';
 import { ConnectedNodesTag } from '@/components/molecules/ConnectedNodesTag';
+import IconTitle from '@/components/molecules/IconTitle';
+import CommandBar from '@/components/organisms/CommandBar';
 import { connectionCategorisation } from '@/components/organisms/Tabs/RenderConnections';
 import {
 	emojiCategoryIcons,
@@ -21,6 +33,17 @@ import {
 } from '@/components/plate-ui/emoji-icons';
 import { EmojiPicker } from '@/components/plate-ui/emoji-picker';
 import { EmojiToolbarDropdown } from '@/components/plate-ui/emoji-toolbar-dropdown';
+import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { fetcherSingleReturn } from '../../backend/driver/fetcher';
 import { saveDocument } from '../../backend/functions/general/document/mutate/saveDocument';
@@ -33,6 +56,7 @@ import SplitPane, {
 	SplitPaneRight,
 } from '../../components/organisms/split-pane/SplitPane';
 import { formatNodeConnectionstoMap } from '../../helpers/frontend/formatNodeConnectionstoMap.ts';
+import { FilterPopover } from '../editor/Components/Molecules/FilterPopover';
 import EditorComponent from '../editor/EditorComponent';
 import { Block, InboxBlock, InboxNode } from '../editor/Elements/Elements';
 import {
@@ -43,21 +67,9 @@ import {
 	ELEMENT_NODETITLE,
 	MyTitleElement,
 } from '../editor/plateTypes';
-import Inbox from '../inbox-editor/Inbox';
 import { withDraggable } from './components/withDraggable';
-import { saveInbox } from '@/backend/functions/general/document/mutate/saveInbox';
-import { Icons } from '@/components/icons';
-import SearchBar from '@/components/organisms/SearchBar';
-import CommandBar from '@/components/organisms/CommandBar';
-import { FilterPopover } from '../editor/Components/Molecules/FilterPopover';
-import { updateConnection } from '@/backend/functions/node/mutate/updateConnection';
-import { createConnection } from '@/backend/functions/node/mutate/createConnection';
-import {
-	convertToConnectionType,
-	getConnectionDirection,
-} from '@/backend/schema';
-import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConnection';
-import { connectedNode_type } from '@/backend/functions/node/query/useGetNodeData';
+import { detachNode } from '@/backend/functions/node/mutate/detachNode';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const emptyDocumentValue = [
 	{
@@ -95,21 +107,32 @@ const Document: React.FC<{
 
 	const { isOpen, setIsOpen, emojiPickerState } = useEmojiDropdownMenuState();
 
+	const { toast } = useToast();
+	const router = useRouter();
+
 	if (isLoading || !nodeDataSWR) {
 		return (
 			<SplitPane className='split-pane-row'>
 				<SplitPaneLeft>
-					<div className='pl-10 pt-10 pr-3 pb-3'></div>
+					<div className='pl-10 pt-10 pr-3 pb-3 gap-2'>
+						<Skeleton className='h-5 w-full mt-10' />
+						<Skeleton className='h-10 w-20 mb-2' />
+						<Skeleton className='h-5 w-full' />
+					</div>
 				</SplitPaneLeft>
 				<Divider className='separator-col' />
 				<SplitPaneRight>
 					<div className='pl-10 pt-10 pr-3 pb-3'></div>
-					{/* If I put shelf inside documentSideTabs it has issues with setting state and I'm not sure why tbh */}
-					{/* I suspect this might be because it gets rendered in tabs afterthe fact. */}
 					<Divider className='separator-row' />
 				</SplitPaneRight>
 			</SplitPane>
 		);
+	}
+
+	if (nodeDataSWR.connectedNodes[0].r === null) {
+		console.log('hmm');
+		router.push('/');
+		return;
 	}
 
 	// console.log('nodeDataSWR');
@@ -146,59 +169,54 @@ const Document: React.FC<{
 		'bg-CUSTOM',
 	];
 
+	console.log(nodeDataSWR);
 	const connectionMap = formatNodeConnectionstoMap(nodeDataSWR);
 	// console.log(connectionMap);
 	const createInitialValue = (content: string): BlockElements[] => {
-		const value = JSON.parse(content);
+		let value = JSON.parse(content);
 
-		function traverse(obj: BlockElements[]) {
-			if (typeof obj !== 'object' || obj === null) return;
-
-			Object.entries(obj).forEach(([key, value]) => {
-				// Key is either an array index or object key»
+		function traverse(obj: BlockElements[]): BlockElements[] {
+			return obj.map((value) => {
 				if (value.type === ELEMENT_NODELINK) {
-					value.icon = connectionMap[value.nodeId as string]
-						? connectionMap[value.nodeId as string].icon
-						: 'node';
-
-					value.children = [
-						{
-							text: connectionMap[value.nodeId as string]
-								? connectionMap[value.nodeId as string].title
-								: 'Untitled',
-						},
-					];
+					if (connectionMap[value.nodeId as string]) {
+						value.icon = connectionMap[value.nodeId as string].icon;
+						value.children = [
+							{
+								text: connectionMap[value.nodeId as string]
+									.title,
+							},
+						];
+						return value;
+					} else {
+						console.log('changing value');
+						return emptyDocumentValue[0].children[0];
+					}
 				} else if (value.type === ELEMENT_BLOCK) {
-					traverse(value.children as BlockElements[]);
+					value.children = traverse(
+						value.children as BlockElements[]
+					);
+					return value;
 				} else if (value.type === ELEMENT_NODE) {
-					// console.log('ELEMENT_NODE, ', value);
+					if (connectionMap[value.nodeId as string]) {
+						value.title =
+							connectionMap[value.nodeId as string].title;
+						value.children = [
+							{
+								type: ELEMENT_NODETITLE,
+								routeString: `/${username}/${value.nodeId}`,
+								icon: connectionMap[value.nodeId as string]
+									.icon,
+								id: value.children[0].id,
+								children: [
+									{
+										text: connectionMap[
+											value.nodeId as string
+										].title,
+									},
+								],
+							},
+						];
 
-					// Make a fetch and return it instead (if not part of connectionTitle)
-					value.title = connectionMap[value.nodeId as string]
-						? connectionMap[value.nodeId as string].title
-						: 'Untitled';
-					value.children = [
-						{
-							type: ELEMENT_NODETITLE,
-							routeString: `/${username}/${value.nodeId}`,
-							icon: connectionMap[value.nodeId as string]
-								? connectionMap[value.nodeId as string].icon
-								: 'node',
-							id: value.children[0].id,
-							children: [
-								{
-									text: connectionMap[value.nodeId as string]
-										? connectionMap[value.nodeId as string]
-												.title
-										: 'Untitled',
-								},
-							],
-						},
-					];
-
-					// @ts-ignore
-					if (connectionMap[value.nodeId]) {
-						// @ts-ignore
 						if (connectionMap[value.nodeId].document) {
 							value.children.push(
 								...createInitialValue(
@@ -206,14 +224,18 @@ const Document: React.FC<{
 									connectionMap[value.nodeId].document
 								)
 							);
-						} else {
 						}
+						return value;
+					} else {
+						return emptyDocumentValue[0];
 					}
+				} else {
+					return value;
 				}
 			});
 		}
 
-		traverse(value);
+		value = traverse(value);
 
 		return value;
 	};
@@ -226,18 +248,148 @@ const Document: React.FC<{
 						{barComponents.favouriteBar}
 						{barComponents.breadcrumb}
 					</div>
-					<div className='flex flex-row justify-end align-middle items-center'>
+					<div className='flex flex-row justify-end align-middle items-center align-items-center gap-1'>
 						<IconCircleButton
 							onClick={() => {
 								setshowCutText(!showCutText);
 							}}
 							selected={showCutText}
-							src='Cut'
+							src='cut'
+							className='h-5 w-5'
 							circle={false}
 							color={'#FFCB45'}
 						/>
 						{barComponents.settings}
 						{barComponents.favourite}
+						<DropdownMenu>
+							<DropdownMenuTrigger>
+								<div className='h-5 w-5 align-middle mr-3'>
+									<IconCircleButton
+										onClick={() => {}}
+										selected={showCutText}
+										src='dotMenu'
+										color={'#FFCB45'}
+										className='h-5 w-5 self-center'
+									/>
+								</div>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent>
+								<DropdownMenuLabel>
+									Node Settings
+								</DropdownMenuLabel>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem
+									onClick={async () => {
+										const tempCopy = nodeDataSWR;
+
+										// Find a parent node
+										const parentNode =
+											nodeDataSWR.connectedNodes.find(
+												(node: connectedNode_type) =>
+													node.r.type === 'HAS' &&
+													node.r.fromNode === false
+											);
+
+										await detachNode({ nodeId });
+
+										updateNode({
+											nodeId: nodeId,
+											nodeData: {
+												deleted: false,
+											},
+										});
+
+										// If a parent node exists, navigate to it
+										if (parentNode) {
+											router.push(
+												`/${username}/${parentNode.connected_node.id}`
+											);
+										} else {
+											// If no parent node exists, navigate back to the home node
+											router.push(`/`);
+										}
+
+										const { dismiss } = toast({
+											// @ts-ignore
+											title: (
+												<div className='flex flex-row'>
+													<IconTitle
+														icon={
+															nodeDataSWR.n.icon
+														}
+														title={
+															nodeDataSWR.n
+																.title +
+															' deleted'
+														}
+													/>
+													<Button
+														className='ml-2 inline'
+														variant='outline'
+														onClick={() => {
+															updateNode({
+																nodeId: nodeId,
+																nodeData: {
+																	deleted:
+																		false,
+																},
+															});
+															tempCopy.connectedNodes.forEach(
+																(
+																	node: connectedNode_type
+																) => {
+																	createConnection(
+																		{
+																			startNode:
+																				node
+																					.r
+																					.fromNode
+																					? nodeId
+																					: node
+																							.connected_node
+																							.id,
+																			endNode:
+																				node
+																					.r
+																					.fromNode
+																					? node
+																							.connected_node
+																							.id
+																					: nodeId,
+																			type: node
+																				.r
+																				.type,
+																		}
+																	);
+																}
+															);
+															dismiss();
+														}}
+													>
+														Undo
+													</Button>
+												</div>
+											),
+										});
+
+										setTimeout(() => {
+											dismiss();
+										}, 3000);
+									}}
+								>
+									<Icons.delete className='h-4 w-4 mr-2' />
+									Delete
+								</DropdownMenuItem>
+								<DropdownMenuItem>
+									<Icons.history className='h-4 w-4 mr-2' />
+									Show History
+								</DropdownMenuItem>
+								<DropdownMenuItem>Team</DropdownMenuItem>
+								<DropdownMenuItem>
+									Subscription
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 				</div>
 				<CommandBar />

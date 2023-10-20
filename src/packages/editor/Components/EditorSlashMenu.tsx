@@ -14,6 +14,7 @@ import {
 	removeNodes,
 	setNodes,
 	someNode,
+	TComboboxItemBase,
 	TComboboxItemWithData,
 } from '@udecode/plate';
 import { ReactNode, useEffect, useState } from 'react';
@@ -84,7 +85,8 @@ type item = {
 	};
 };
 
-type ExtendedItem = TComboboxItemWithData<item> & item & { n: NodeDataType };
+type ExtendedItem = TComboboxItemWithData<item> &
+	item & { n: NodeDataType; onPress: () => void };
 
 const getTextAfterTrigger = (search: string, trigger: string) => {
 	const indexOfTrigger = search.lastIndexOf(trigger);
@@ -1291,7 +1293,10 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 		<>
 			<Combobox
 				id='1'
-				onSelectItem={(editor, item) => {
+				onSelectItem={(
+					editor,
+					item: TComboboxItemWithData<ExtendedItem>
+				) => {
 					// Keep deleting backwards until you see the '/', then delete one more.
 					// console.log('editor.selection: ', editor.selection);
 
@@ -1531,7 +1536,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 								createConnection({
 									startNode: item.n.id,
-									endNode: node,
+									endNode: id,
 									type: ConnectionTypes.HAS,
 								});
 							} else if (beforeText.endsWith('child ')) {
@@ -1559,7 +1564,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								}, 3000);
 
 								createConnection({
-									startNode: node,
+									startNode: id,
 									endNode: item.n.id,
 									type: ConnectionTypes.HAS,
 								});
@@ -1587,7 +1592,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								}, 3000);
 
 								createConnection({
-									startNode: node,
+									startNode: id,
 									endNode: item.n.id,
 									type: ConnectionTypes.NEEDS,
 								});
@@ -1617,7 +1622,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								}, 3000);
 
 								createConnection({
-									startNode: node,
+									startNode: id,
 									endNode: item.n.id,
 									type: ConnectionTypes.RELATED,
 								});
@@ -1976,6 +1981,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				component={(store) => {
 					return <BlockMenu></BlockMenu>;
 				}}
+				// @ts-ignore
 				items={nodeSearchResults}
 				// items={items}
 				onRenderItem={({ search, item }) => {
@@ -1990,6 +1996,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 					return (
 						<div className='flex flex-row x-3 gap-x-2 items-center'>
+							{/* @ts-ignore */}
 							<NodeIcon icon={item.n.icon} />
 							{item.key === 'create'
 								? `new '${search.substring(

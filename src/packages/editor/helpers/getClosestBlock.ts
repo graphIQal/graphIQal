@@ -73,7 +73,7 @@ export const getClosestBlock = (
 export const getClosestNode = (
 	path: Path,
 	editor: MyEditor
-): BlockElements | null => {
+): NodeEntry | null => {
 	const ancestors = [path, ...Path.ancestors(path, { reverse: true })];
 	// console.log(ancestors)
 
@@ -89,7 +89,7 @@ export const getClosestNode = (
 				(node[0].type === ELEMENT_NODE ||
 					node[0].type === ELEMENT_NODELINK)
 			) {
-				return node[0];
+				return node;
 			}
 		}
 	}

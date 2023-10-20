@@ -21,6 +21,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import BlockMenu from '../../../components/organisms/BlockMenu';
 
 import {
+	BlockElements,
 	ELEMENT_BLOCK,
 	ELEMENT_COLUMN,
 	ELEMENT_COLUMN_PARENT,
@@ -603,6 +604,33 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					const remainingText = 'send_node'.slice(match.length);
 					editor.insertText(remainingText);
 					editor.insertText(' @');
+				}
+			},
+		},
+		{
+			key: 'close',
+			text: 'Close node',
+			n: {
+				subtext: 'Close current node',
+				icon: 'clear',
+				searchFunction: (search) => {
+					if ('close node'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				if (editor.selection) {
+					const selection = getPath(editor, editor.selection.anchor);
+
+					const closestNode = getClosestNode(selection, editor);
+
+					if (closestNode) {
+						removeNodes(editor, {
+							at: closestNode[1],
+						});
+					}
 				}
 			},
 		},
@@ -1466,10 +1494,14 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						// add_node or connect
 						if (beforeText.startsWith('connect')) {
 							// Find closestNode
-							let node = getClosestNode(
+							let nodeEntry = getClosestNode(
 								editor.selection.anchor.path,
 								editor
 							);
+
+							let node = nodeEntry
+								? (nodeEntry[0] as BlockElements)
+								: null;
 
 							const id = node ? node.nodeId : nodeId;
 
@@ -1788,10 +1820,14 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 							}
 						} else if (beforeText.startsWith('disconnect')) {
 							// Find closestNode
-							let node = getClosestNode(
+							let nodeEntry = getClosestNode(
 								editor.selection.anchor.path,
 								editor
 							);
+
+							let node = nodeEntry
+								? (nodeEntry[0] as BlockElements)
+								: null;
 
 							const id = node ? node.nodeId : nodeId;
 

@@ -61,6 +61,7 @@ import {
 import { formatList } from '../Plugins/Autoformat/autoformatUtils';
 import { ConnectionTypes, NodeDataType } from '@/backend/schema';
 import { emptyDocumentValue } from '@/packages/dnd-editor/Document';
+import { deleteConnectionAPI } from '@/backend/functions/node/mutate/deleteConnection';
 
 // export const markTooltip: TippyProps = {
 // 	arrow: true,
@@ -179,7 +180,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					id: newId,
 					children: [{ text: 'Group' }],
 					filters: {
-						CHILDREN: [
+						PARENTS: [
 							{
 								children: nodeDataSWR.n.children,
 								icon: nodeDataSWR.n.icon,
@@ -301,6 +302,47 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					'HAS',
 					newId
 				);
+			},
+		},
+		{
+			key: 'disconnect',
+			text: 'disconnect',
+			n: {
+				subtext: 'disconnect this node from another node',
+				icon: 'disconnect',
+				searchFunction: (search) => {
+					if ('disconnect'.startsWith(search)) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'disconnect'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'disconnect'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(':');
+				}
+
+				// setnodeSearchOpen(true);
 			},
 		},
 		{
@@ -688,23 +730,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 			},
 		},
 		{
-			key: 'test',
-			text: 'Test Button',
-			n: {
-				subtext: 'Unwrap [13]',
-				icon: 'test',
-				searchFunction: (search) => {
-					if ('test'.startsWith(search)) {
-						return true;
-					}
-					return false;
-				},
-			},
-			onPress: () => {
-				// unwrapNodes(editor, { at: [13] });
-			},
-		},
-		{
 			key: 'connect:is',
 			text: 'Connect with IS',
 			n: {
@@ -712,9 +737,10 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				icon: 'connect',
 				searchFunction: (search) => {
 					if (
-						search.endsWith(':is') ||
-						search.endsWith(':i') ||
-						search.endsWith(':')
+						!search.startsWith('disconnect') &&
+						(search.endsWith('is') ||
+							search.endsWith('i') ||
+							search.endsWith(':'))
 					) {
 						return true;
 					}
@@ -745,25 +771,24 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					editor.insertText(remainingText);
 					editor.insertText(' @');
 				}
-
-				// setnodeSearchOpen(true);
 			},
 		},
 		{
 			key: 'connect:parent',
 			text: 'Connect to parent node',
 			n: {
-				subtext: 'This node is the Child of node @',
+				subtext: 'This node is the Parent of node @',
 				icon: 'connect',
 				searchFunction: (search) => {
 					if (
-						search.endsWith(':') ||
-						search.endsWith(':p') ||
-						search.endsWith(':pa') ||
-						search.endsWith(':par') ||
-						search.endsWith(':pare') ||
-						search.endsWith(':paren') ||
-						search.endsWith(':parent')
+						!search.startsWith('disconnect') &&
+						(search.endsWith('parent') ||
+							search.endsWith('paren') ||
+							search.endsWith('pare') ||
+							search.endsWith('par') ||
+							search.endsWith('pa') ||
+							search.endsWith('p') ||
+							search.endsWith(':'))
 					) {
 						return true;
 					}
@@ -794,8 +819,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					editor.insertText(remainingText);
 					editor.insertText(' @');
 				}
-
-				// setnodeSearchOpen(true);
 			},
 		},
 		{
@@ -806,12 +829,13 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				icon: 'connect',
 				searchFunction: (search) => {
 					if (
-						search.endsWith(':') ||
-						search.endsWith(':c') ||
-						search.endsWith(':ch') ||
-						search.endsWith(':chi') ||
-						search.endsWith(':chil') ||
-						search.endsWith(':child')
+						!search.startsWith('disconnect') &&
+						(search.endsWith(':') ||
+							search.endsWith('c') ||
+							search.endsWith('ch') ||
+							search.endsWith('chi') ||
+							search.endsWith('chil') ||
+							search.endsWith('child'))
 					) {
 						return true;
 					}
@@ -854,12 +878,13 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				icon: 'connect',
 				searchFunction: (search) => {
 					if (
-						search.endsWith(':') ||
-						search.endsWith(':n') ||
-						search.endsWith(':ne') ||
-						search.endsWith(':nee') ||
-						search.endsWith(':need') ||
-						search.endsWith(':needs')
+						!search.startsWith('disconnect') &&
+						(search.endsWith(':') ||
+							search.endsWith('n') ||
+							search.endsWith('ne') ||
+							search.endsWith('nee') ||
+							search.endsWith('need') ||
+							search.endsWith('needs'))
 					) {
 						return true;
 					}
@@ -900,14 +925,15 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 				icon: 'connect',
 				searchFunction: (search) => {
 					if (
-						search.endsWith(':') ||
-						search.endsWith(':r') ||
-						search.endsWith(':re') ||
-						search.endsWith(':rel') ||
-						search.endsWith(':rela') ||
-						search.endsWith(':relat') ||
-						search.endsWith(':relate') ||
-						search.endsWith(':related')
+						!search.startsWith('disconnect') &&
+						(search.endsWith(':') ||
+							search.endsWith('r') ||
+							search.endsWith('re') ||
+							search.endsWith('rel') ||
+							search.endsWith('rela') ||
+							search.endsWith('relat') ||
+							search.endsWith('relate') ||
+							search.endsWith('related'))
 					) {
 						return true;
 					}
@@ -935,6 +961,250 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						? beforeText
 						: '';
 					const remainingText = 'connect:related'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
+		},
+		{
+			key: 'disconnect:is',
+			text: 'Disconnect IS',
+			n: {
+				subtext: 'This node will not be @',
+				icon: 'disconnect',
+				searchFunction: (search) => {
+					if (
+						!search.startsWith('connect') &&
+						(search.endsWith('is') ||
+							search.endsWith('i') ||
+							search.endsWith(':'))
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'disconnect:is'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'disconnect:is'.slice(match.length);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
+		},
+
+		{
+			key: 'disconnect:parent',
+			text: 'Disconnect from parent node',
+			n: {
+				subtext: 'This node will not be the child of node @',
+				icon: 'disconnect',
+				searchFunction: (search) => {
+					if (
+						!search.startsWith('connect') &&
+						(search.endsWith('parent') ||
+							search.endsWith('paren') ||
+							search.endsWith('pare') ||
+							search.endsWith('par') ||
+							search.endsWith('pa') ||
+							search.endsWith('p') ||
+							search.endsWith(':'))
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'disconnect:parent'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'disconnect:parent'.slice(
+						match.length
+					);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
+		},
+		{
+			key: 'disconnect:related',
+			text: 'Disconnect from related node',
+			n: {
+				subtext: 'This node will not be RELATED to node @',
+				icon: 'disconnect',
+				searchFunction: (search) => {
+					if (
+						!search.startsWith('connect') &&
+						(search.endsWith('related') ||
+							search.endsWith('relate') ||
+							search.endsWith('relat') ||
+							search.endsWith('rela') ||
+							search.endsWith('rel') ||
+							search.endsWith('re') ||
+							search.endsWith('r') ||
+							search.endsWith(':'))
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'disconnect:related'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'disconnect:related'.slice(
+						match.length
+					);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
+		},
+		{
+			key: 'disconnect:child',
+			text: 'Disconnect from child node',
+			n: {
+				subtext: 'This node will not be the parent of node @',
+				icon: 'disconnect',
+				searchFunction: (search) => {
+					if (
+						!search.startsWith('connect') &&
+						(search.endsWith('child') ||
+							search.endsWith('chil') ||
+							search.endsWith('chi') ||
+							search.endsWith('ch') ||
+							search.endsWith('c') ||
+							search.endsWith(':'))
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'disconnect:child'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'disconnect:child'.slice(
+						match.length
+					);
+					editor.insertText(remainingText);
+					editor.insertText(' @');
+				}
+			},
+		},
+		{
+			key: 'disconnect:needs',
+			text: 'Disconnect from needed node',
+			n: {
+				subtext: 'This will not NEED node @',
+				icon: 'disconnect',
+				searchFunction: (search) => {
+					if (
+						!search.startsWith('connect') &&
+						(search.endsWith('needs') ||
+							search.endsWith('need') ||
+							search.endsWith('nee') ||
+							search.endsWith('ne') ||
+							search.endsWith('n') ||
+							search.endsWith(':'))
+					) {
+						return true;
+					}
+					return false;
+				},
+			},
+			onPress: () => {
+				const { selection } = editor;
+				if (selection) {
+					let cursor = selection.anchor;
+					let beforeText = '';
+					while (cursor.offset > 0) {
+						const before = editor.before(cursor);
+						if (before) {
+							const beforeRange = editor.range(before, cursor);
+							const text = editor.string(beforeRange);
+							if (text === '/') {
+								break;
+							}
+							beforeText = text + beforeText;
+							cursor = before;
+						}
+					}
+					const match = 'disconnect:needs'.startsWith(beforeText)
+						? beforeText
+						: '';
+					const remainingText = 'disconnect:needs'.slice(
+						match.length
+					);
 					editor.insertText(remainingText);
 					editor.insertText(' @');
 				}
@@ -1027,11 +1297,13 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 
 					if (
 						item.key === 'connect' ||
+						item.key === 'disconnect' ||
 						item.key === 'add_node' ||
 						item.key === 'send_node' ||
 						item.key === 'send_block' ||
 						item.key === 'nodelink' ||
-						item.key.startsWith('connect')
+						item.key.startsWith('connect') ||
+						item.key.startsWith('disconnect')
 					) {
 						item.onPress();
 						return;
@@ -1189,12 +1461,12 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 						// add_node or connect
 						if (beforeText.startsWith('connect')) {
 							// Find closestNode
-							let node = getClosestNodeId(
+							let node = getClosestNode(
 								editor.selection.anchor.path,
 								editor
 							);
 
-							node = node ? node.id : nodeId;
+							const id = node ? node.nodeId : nodeId;
 
 							if (beforeText.endsWith('is ')) {
 								console.log('is');
@@ -1202,11 +1474,19 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									title: (
 										<div>
 											<NodeIcon
-												icon={nodeDataSWR.n.icon}
+												icon={
+													node
+														? node.icon
+														: nodeDataSWR.n.icon
+												}
 											/>
 											<span>
-												{editor.children[0].children[0]
-													.text + ' is now a '}
+												{/* @ts-ignore */}
+												{(node
+													? node.children[0].text
+													: editor.children[0]
+															.children[0].text) +
+													' is now '}
 											</span>
 											<NodeIcon icon={item.n.icon} />
 											<span>{item.n.title}</span>
@@ -1221,7 +1501,7 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 								}, 3000);
 
 								createConnection({
-									startNode: node,
+									startNode: id,
 									endNode: item.n.id,
 									type: ConnectionTypes.IS,
 								});
@@ -1342,12 +1622,6 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 									type: ConnectionTypes.RELATED,
 								});
 							}
-
-							// createConnection({
-							// 	startNode: nodeId,
-							// 	endNode: item.n.id,
-							// 	type: ConnectionTypes.RELATED,
-							// });
 						} else if (beforeText === 'addNode ') {
 							console.log('add-node');
 							console.log(item);
@@ -1506,6 +1780,176 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 										dismiss();
 									}, 3000);
 								}
+							}
+						} else if (beforeText.startsWith('disconnect')) {
+							// Find closestNode
+							let node = getClosestNode(
+								editor.selection.anchor.path,
+								editor
+							);
+
+							const id = node ? node.nodeId : nodeId;
+
+							if (beforeText.endsWith('is ')) {
+								console.log('is');
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon
+												icon={
+													node
+														? node.icon
+														: nodeDataSWR.n.icon
+												}
+											/>
+											<span>
+												{/* @ts-ignore */}
+												{(node
+													? node.children[0].text
+													: editor.children[0]
+															.children[0].text) +
+													' is not '}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description: 'Disconnected type IS ',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 3000);
+
+								deleteConnectionAPI({
+									startNode: id,
+									endNode: item.n.id,
+									type: ConnectionTypes.IS,
+								});
+							} else if (beforeText.endsWith('parent ')) {
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon
+												icon={nodeDataSWR.n.icon}
+											/>
+											<span>
+												{(node
+													? node.children[0].text
+													: editor.children[0]
+															.children[0].text) +
+													' is no longer a child of '}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'Connection of type HAS deleted ',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 3000);
+
+								deleteConnectionAPI({
+									startNode: item.n.id,
+									endNode: id,
+									type: ConnectionTypes.HAS,
+								});
+							} else if (beforeText.endsWith('child ')) {
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon
+												icon={nodeDataSWR.n.icon}
+											/>
+											<span>
+												{editor.children[0].children[0]
+													.text +
+													' is now no longer a parent of '}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'Connection of type HAS deleted ',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 3000);
+
+								deleteConnectionAPI({
+									startNode: id,
+									endNode: item.n.id,
+									type: ConnectionTypes.HAS,
+								});
+							} else if (beforeText.endsWith('needs ')) {
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon
+												icon={nodeDataSWR.n.icon}
+											/>
+											<span>
+												{editor.children[0].children[0]
+													.text + " doesn't need "}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'Connection of type NEEDS deleted ',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 3000);
+
+								deleteConnectionAPI({
+									startNode: id,
+									endNode: item.n.id,
+									type: ConnectionTypes.NEEDS,
+								});
+							} else {
+								// do 'related;
+								const { dismiss } = toast({
+									title: (
+										<div>
+											<NodeIcon
+												icon={nodeDataSWR.n.icon}
+											/>
+											<span>
+												{editor.children[0].children[0]
+													.text +
+													' is no longer related to '}
+											</span>
+											<NodeIcon icon={item.n.icon} />
+											<span>{item.n.title}</span>
+										</div>
+									),
+									description:
+										'Connection of type RELATED deleted',
+								});
+
+								setTimeout(() => {
+									dismiss();
+								}, 3000);
+
+								deleteConnectionAPI({
+									startNode: id,
+									endNode: item.n.id,
+									type: ConnectionTypes.RELATED,
+								});
+
+								deleteConnectionAPI({
+									endNode: id,
+									startNode: item.n.id,
+									type: ConnectionTypes.RELATED,
+								});
 							}
 						} else {
 							// add node link

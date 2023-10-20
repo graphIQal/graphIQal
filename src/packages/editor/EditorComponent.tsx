@@ -184,7 +184,7 @@ const EditorComponent: React.FC<{
 				<FloatingToolbar>
 					<FloatingToolbarButtons />
 				</FloatingToolbar>
-				<EditorSlashMenu />
+				<EditorSlashMenu nodeId={nodeId} />
 			</Plate>
 		</div>
 	);

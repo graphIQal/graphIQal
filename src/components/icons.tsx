@@ -103,6 +103,7 @@ export const Icons: { [key: string]: any } = {
 	data: Data,
 	delete: Trash,
 	draw: Pencil,
+	disconnect: Unlink,
 	edit: Pencil,
 	expand: ArrowsAngleExpand,
 	externalLink: ExternalLink,

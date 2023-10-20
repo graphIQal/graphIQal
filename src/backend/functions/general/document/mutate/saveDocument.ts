@@ -83,8 +83,8 @@ export const saveDocument = async ({
 
 	// loop through document, find nodes, and update them.
 
-	console.log('saveDocument', nodeId, title);
-	console.log(JSON.stringify(document, null, 2));
+	// console.log('saveDocument', nodeId, title);
+	// console.log(JSON.stringify(document, null, 2));
 
 	document = saveNestedNodes(document.slice(1));
 

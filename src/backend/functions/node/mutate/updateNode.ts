@@ -40,11 +40,11 @@ export const updateNode = async ({ nodeId, nodeData }: updateNodeInput) => {
 		body: body,
 	})
 		.then((res) => {
-			console.log('res ', res);
+			// console.log('res ', res);
 			return res.json();
 		})
 		.then((json) => {
-			console.log('json: ', json);
+			// console.log('json: ', json);
 			return json;
 		});
 

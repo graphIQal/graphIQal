@@ -66,21 +66,22 @@ export const NodeLink = (props: {
 
 	return (
 		<div
-			className='border-l-4 border-node cursor-pointer py-1 hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 overflow-x-auto overflow-ellipsis'
+			className='flex flex-row border-l-4 border-node cursor-pointer py-1 hover:bg-lining font-semibold underline underline-offset-2 decoration-lining decoration-1 overflow-x-auto overflow-ellipsis '
 			onClick={() => {
 				// Navigate to node
 				router.push(props.element.routeString, undefined);
 			}}
-			// contentEditable={false}
 			{...props.attributes}
 		>
-			<IconCircleButton
-				src={props.element.icon ? props.element.icon : 'node'}
-				onClick={() => {
-					console.log('node implemented yet');
-				}}
-				circle={false}
-			></IconCircleButton>
+			<span contentEditable={false}>
+				<IconCircleButton
+					src={props.element.icon ? props.element.icon : 'node'}
+					onClick={() => {
+						console.log('node implemented yet');
+					}}
+					circle={false}
+				></IconCircleButton>
+			</span>
 			{props.children}
 		</div>
 	);
@@ -152,7 +153,7 @@ export const Group = (props: any) => {
 			{...props.attributes}
 			className='border border-lining rounded-md p-2 mt-2'
 		>
-			<div className='text-lg font-bold ml-3'>{props.children}</div>
+			<div className='text-md font-bold ml-3'>{props.children}</div>
 			<div contentEditable={false}>
 				<div className='flex flex-row items-center gap-2 overflow-x-scroll scrollbar-hide'>
 					<FilterPopover

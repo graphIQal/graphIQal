@@ -304,6 +304,7 @@ export const Arrow = ({
 							circle={true}
 							src='draw'
 							onClick={(e: any) => {
+								console.log(e);
 								e.stopPropagation();
 								const div = e.currentTarget.nextSibling;
 								if (div) {

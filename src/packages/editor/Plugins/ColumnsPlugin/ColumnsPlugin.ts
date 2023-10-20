@@ -10,7 +10,7 @@ import { withColumns } from './withColumns';
 
 export const createColumnParentPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_COLUMN_PARENT,
-	component: withDraggable(ColumnParent),
+	component: ColumnParent,
 	isElement: true,
 	withOverrides: withColumns,
 	deserializeHtml: {

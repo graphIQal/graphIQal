@@ -34,7 +34,6 @@ export const useKeyboardShortcut = (
       if (config.ctrlKey && !(ctrlKey || metaKey)) return;
       if (config.altKey && !altKey) return;
       if (shiftKey && !config.shiftKey) return; // prevent undo when using redo shortcut
-      console.log('past  conditions', currWorkspace, config.workspace);
       if (currWorkspace === config.workspace) {
         e.stopPropagation();
         e.stopImmediatePropagation();

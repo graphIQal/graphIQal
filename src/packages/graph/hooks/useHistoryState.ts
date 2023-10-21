@@ -70,8 +70,6 @@ export const useHistoryState = ({
     history.current.undos = [...history.current.undos, action];
 
     history.current.redos = [];
-
-    console.log(history.current);
   };
 
   const applyAction = (action: Action) => {
@@ -165,8 +163,6 @@ export const useHistoryState = ({
 
         break;
       case 'NODE_ADD_EXISTING':
-        console.log('addExistingNode', value);
-
         newNodeData = { ...nodeData_Graph };
         newNodeData[value.newNode.id] = value.newNode;
 
@@ -462,14 +458,12 @@ export const useHistoryState = ({
   };
 
   const undo = () => {
-    console.log('in undo function', graphViewId);
     const nodeData_Graph = nodeDataRef.current;
     const nodeVisualData_Graph = visualDataRef.current;
     let newState: any;
     let newNodeData: any;
     let newVisualData: any;
 
-    console.log(history.current);
     if (history.current.undos.length < 1) return;
 
     const { id, value, type } =
@@ -477,8 +471,6 @@ export const useHistoryState = ({
 
     history.current.undos.pop();
     history.current.redos.push({ id, value, type });
-
-    console.log('undo values: ', id, value, type);
 
     switch (type) {
       case 'NODE_SIZE':
@@ -515,8 +507,6 @@ export const useHistoryState = ({
 
         break;
       case 'NODE_ADD':
-        console.log('id, value.newNode');
-        console.log(id, value.newNode);
         newNodeData = { ...nodeData_Graph };
         delete newNodeData[id];
         changeNodeData_Graph(newNodeData);
@@ -782,14 +772,10 @@ export const useHistoryState = ({
   };
 
   const redo = () => {
-    console.log(history.current);
-
     if (history.current.redos.length < 1) return;
 
     const { id, value, type } =
       history.current.redos[history.current.redos.length - 1];
-
-    console.log('redo', { id, value, type });
 
     history.current.redos.pop();
     history.current.undos.push({ id, value, type });

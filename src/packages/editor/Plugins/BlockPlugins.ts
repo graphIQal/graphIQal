@@ -162,9 +162,9 @@ const createGroupPlugin = createMyPluginFactory<HotkeyPlugin>({
 const cutTextHiddenPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_CUT_HIDDEN,
 	isElement: true,
-	isLeaf: false,
 	isInline: true,
 	isVoid: true,
+	isLeaf: false,
 	component: CutTextHidden,
 	// options: {
 	// 	hotkey: 'mod+g',

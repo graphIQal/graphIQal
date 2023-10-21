@@ -372,10 +372,9 @@ export const CutTextShown = (props: PlateRenderElementProps) => {
 export const CutTextHidden = (props: PlateRenderElementProps) => {
 	return (
 		<span {...props.attributes} className='text-node opacity-70'>
-			<span
-				contentEditable={false}
-				className='w-1 h-1 bg-node rounded-full inline-block mb-3'
-			></span>
+			<span contentEditable={false} style={{ userSelect: 'none' }}>
+				<div className='w-1 h-1 bg-node rounded-full inline-block mb-3'></div>
+			</span>
 			{props.children}
 		</span>
 	);

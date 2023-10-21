@@ -1,7 +1,5 @@
-import React from 'react';
 import {
 	MARK_BOLD,
-	MARK_CODE,
 	MARK_ITALIC,
 	MARK_STRIKETHROUGH,
 	MARK_UNDERLINE,
@@ -10,20 +8,24 @@ import {
 
 import { Icons } from '@/components/icons';
 
-import { MarkToolbarButton } from './mark-toolbar-button';
-import { MoreDropdownMenu } from './more-dropdown-menu';
-import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
 import { ELEMENT_CUT_HIDDEN, MARK_COLOUR } from '@/packages/editor/plateTypes';
-import { ToolbarButton } from './toolbar';
 import {
 	collapseSelection,
+	deselect,
 	focusEditor,
 	getPluginType,
-	toggleNodeType,
+	select,
 	useEditorRef,
+	withoutNormalizing,
 	wrapNodes,
 } from '@udecode/plate';
+import { BaseEditor, Path, Transforms } from 'slate';
 import { CommentToolbarButton } from './comment-toolbar-button';
+import { MarkToolbarButton } from './mark-toolbar-button';
+import { MoreDropdownMenu } from './more-dropdown-menu';
+import { ToolbarButton } from './toolbar';
+import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
+import { ReactEditor } from 'slate-react';
 
 export function FloatingToolbarButtons() {
 	// const readOnly = useEditorReadOnly();
@@ -74,6 +76,10 @@ export function FloatingToolbarButtons() {
 					</MarkToolbarButton>
 					<ToolbarButton
 						onClick={() => {
+							const { selection } = editor;
+							if (!selection) return;
+
+							console.log(selection);
 							wrapNodes(
 								editor,
 								{
@@ -85,8 +91,45 @@ export function FloatingToolbarButtons() {
 								},
 								{ split: true }
 							);
+							const earlierPoint = Path.isBefore(
+								selection.anchor.path,
+								selection.focus.path
+							)
+								? selection.anchor
+								: selection.focus;
+
+							let newPointPath = [...earlierPoint.path]; // create a copy of the path
+							newPointPath[newPointPath.length - 1] += 2; // increment the last element
+
+							const newPoint = {
+								path: newPointPath,
+								offset: 0,
+							};
+
+							// const focusEditor = (editor, target) => {
+							// 	if (target) {
+							// 		withoutNormalizing(editor, () => {
+							// 			deselect(editor);
+							// 			select(editor, target);
+							// 		});
+							// 	}
+							// 	console.log('okay');
+							// 	ReactEditor.focus(editor);
+							// };
+
+							// collapseSelection(editor);
+							// Transforms.select(
+							// 	editor as BaseEditor,
+							// 	newPointPath
+							// );
+							const neet = focusEditor(editor, [0, 0]);
 							collapseSelection(editor);
-							focusEditor(editor);
+							select(editor, newPoint);
+
+							// setSelection(editor, {
+							// 	anchor: newPoint,
+							// 	focus: newPoint,
+							// });
 						}}
 						tooltip='Cut Text (⌘+D)'
 					>

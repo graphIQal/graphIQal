@@ -2033,12 +2033,14 @@ export const EditorSlashMenu = ({ children }: { children?: ReactNode }) => {
 					return (
 						<div className='flex flex-row x-3 gap-x-2 items-center'>
 							{/* @ts-ignore */}
-							<NodeIcon icon={item.n.icon} />
-							{item.key === 'create'
-								? `new '${search.substring(
-										search.indexOf('@') + 1
-								  )}' node`
-								: item.n.title}
+							<NodeIcon
+								icon={
+									item.key === 'create'
+										? 'clear'
+										: item.n.icon
+								}
+							/>
+							{item.key === 'create' ? 'exit' : item.n.title}
 						</div>
 					);
 				}}

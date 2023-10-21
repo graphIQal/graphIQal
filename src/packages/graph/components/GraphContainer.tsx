@@ -132,7 +132,7 @@ export const GraphContainer: React.FC = () => {
     code: 'KeyZ',
     ctrlKey: true,
     workspace: graphViewId,
-    shortcutTarget: document.getElementById('parent' + graphViewId),
+    // shortcutTarget: document.getElementById('parent' + graphViewId),
   };
   useKeyboardShortcut(() => undo(), undoShortcutConfig);
 
@@ -141,14 +141,14 @@ export const GraphContainer: React.FC = () => {
     ctrlKey: true,
     shiftKey: true,
     workspace: graphViewId,
-    shortcutTarget: document.getElementById('parent' + graphViewId),
+    // shortcutTarget: document.getElementById('parent' + graphViewId),
   };
   useKeyboardShortcut(() => redo(), redoShortcutConfig);
 
   const escapeDrawingConfig = {
     code: 'Escape',
     workspace: graphViewId,
-    shortcutTarget: document.getElementById('parent' + graphViewId),
+    // shortcutTarget: document.getElementById('parent' + graphViewId),
   };
   useKeyboardShortcut(
     () => handleEscapeDrawing(drawingContext, setPoints),

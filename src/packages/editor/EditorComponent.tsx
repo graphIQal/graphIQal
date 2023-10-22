@@ -1,7 +1,11 @@
 import {
 	createComboboxPlugin,
 	createNodeIdPlugin,
+	getNodes,
+	isElement,
 	Plate,
+	setNodes,
+	withoutSavingHistory,
 } from '@udecode/plate';
 
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -10,6 +14,8 @@ import { EditorSlashMenu } from './Components/EditorSlashMenu';
 import { editableProps } from './editableProps';
 import {
 	createMyPlugins,
+	ELEMENT_CUT_HIDDEN,
+	ELEMENT_CUT_SHOWN,
 	MyEditor,
 	MyPlatePlugin,
 	MyValue,
@@ -25,6 +31,7 @@ import { FloatingToolbarButtons } from '@/components/plate-ui/floating-toolbar-b
 import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import { useViewData } from '../../components/context/ViewContext';
+import { nodes } from 'slate';
 
 const EditorComponent: React.FC<{
 	value: any[];
@@ -55,6 +62,46 @@ const EditorComponent: React.FC<{
 	useEffect(() => {
 		setValue(initialValue);
 	}, []);
+
+	useEffect(() => {
+		if (showCutText) {
+			const editor = editorRef.current;
+			if (editor) {
+				// Traverse the document
+				for (const [node, path] of getNodes(editor)) {
+					// If the node is a cutTextHidden
+					if (isElement(node) && node.type === ELEMENT_CUT_HIDDEN) {
+						// Change it to cutTextShown
+						withoutSavingHistory(editor, () =>
+							setNodes(
+								editor,
+								{ type: ELEMENT_CUT_SHOWN },
+								{ at: path }
+							)
+						);
+					}
+				}
+			}
+		} else {
+			const editor = editorRef.current;
+			if (editor) {
+				// Traverse the document
+				for (const [node, path] of getNodes(editor)) {
+					// If the node is a cutTextHidden
+					if (isElement(node) && node.type === ELEMENT_CUT_SHOWN) {
+						// Change it to cutTextShown
+						withoutSavingHistory(editor, () =>
+							setNodes(
+								editor,
+								{ type: ELEMENT_CUT_HIDDEN },
+								{ at: path }
+							)
+						);
+					}
+				}
+			}
+		}
+	}, [showCutText]);
 
 	useEffect(() => {
 		window.addEventListener('beforeunload', onUnload);

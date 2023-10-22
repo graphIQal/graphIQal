@@ -363,9 +363,9 @@ export const BlockquoteElement = (props: PlateRenderElementProps) => {
 
 export const CutTextShown = (props: PlateRenderElementProps) => {
 	return (
-		<div {...props.attributes} className='text-node opacity-70 '>
+		<span {...props.attributes} className='text-node opacity-70 '>
 			{props.children}
-		</div>
+		</span>
 	);
 };
 

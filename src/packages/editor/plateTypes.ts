@@ -216,6 +216,7 @@ export interface BlockElements
 		MyIndentListProps,
 		MyLineHeightProps {
 	id: PlateId;
+	type: string;
 	[key: string]: any;
 	// children: InlineElements[] | BlockElements[];
 }
@@ -264,7 +265,6 @@ export interface MyNodeLinkElement extends BlockElements {
 
 export interface MyParagraphElement extends BlockElements {
 	type: typeof ELEMENT_PARAGRAPH;
-	// text: InlineElements[];
 	children: InlineElements[];
 }
 

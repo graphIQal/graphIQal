@@ -252,9 +252,10 @@ const Document: React.FC<{
 							}}
 							selected={showCutText}
 							src='cut'
-							className='h-5 w-5'
+							className={`h-5 w-5 ${
+								showCutText ? 'text-node opacity-70' : ''
+							}`}
 							circle={false}
-							color={'#FFCB45'}
 						/>
 						{barComponents.settings}
 						{barComponents.favourite}

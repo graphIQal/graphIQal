@@ -155,12 +155,6 @@ export const GraphContainer: React.FC = () => {
     escapeDrawingConfig
   );
 
-  //   document.addEventListener('keydown', (event) => listenerFunc(event));
-  //   return document.removeEventListener('keydown', (event) =>
-  //     listenerFunc(event)
-  //   );
-  // }, []);
-
   // Wheel event: panning and zooming
   useEffect(() => {
     documentVar

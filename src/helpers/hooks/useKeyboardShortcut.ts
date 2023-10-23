@@ -5,7 +5,7 @@ type OptionalConfig = Pick<KeyboardEvent, 'altKey' | 'ctrlKey' | 'shiftKey'>;
 
 interface ShortcutConfig extends Partial<OptionalConfig> {
   code: KeyboardEvent['code'];
-  workspace: string; // represents graph or doc id (0 for doc)
+  workspace?: string; // represents graph or doc id (0 for doc)
   shortcutTarget?: HTMLElement | null;
 }
 
@@ -34,7 +34,17 @@ export const useKeyboardShortcut = (
       if (config.ctrlKey && !(ctrlKey || metaKey)) return;
       if (config.altKey && !altKey) return;
       if (shiftKey && !config.shiftKey) return; // prevent undo when using redo shortcut
-      if (currWorkspace === config.workspace) {
+      if (config.workspace) {
+        // if we're working with a specific workspace (or tab)
+        if (currWorkspace === config.workspace) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          shortcutAction(e as KeyboardEvent);
+        }
+      } else {
+        // general keyboard shortcut
+        e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
         shortcutAction(e as KeyboardEvent);

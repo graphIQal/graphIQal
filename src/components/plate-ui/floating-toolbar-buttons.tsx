@@ -8,26 +8,37 @@ import {
 
 import { Icons } from '@/components/icons';
 
-import { ELEMENT_CUT_HIDDEN, MARK_COLOUR } from '@/packages/editor/plateTypes';
 import {
+	ELEMENT_CUT_HIDDEN,
+	ELEMENT_CUT_SHOWN,
+	MARK_COLOUR,
+} from '@/packages/editor/plateTypes';
+import {
+	ELEMENT_PARAGRAPH,
 	collapseSelection,
-	deselect,
 	focusEditor,
 	getPluginType,
 	select,
+	setNodes,
+	someNode,
+	splitNodes,
+	unwrapNodes,
 	useEditorRef,
 	withoutNormalizing,
 	wrapNodes,
 } from '@udecode/plate';
-import { BaseEditor, Path, Transforms } from 'slate';
+import { Editor, Path, Text, Transforms } from 'slate';
 import { CommentToolbarButton } from './comment-toolbar-button';
 import { MarkToolbarButton } from './mark-toolbar-button';
 import { MoreDropdownMenu } from './more-dropdown-menu';
 import { ToolbarButton } from './toolbar';
 import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
-import { ReactEditor } from 'slate-react';
 
-export function FloatingToolbarButtons() {
+export function FloatingToolbarButtons({
+	showCutText = false,
+}: {
+	showCutText: boolean;
+}) {
 	// const readOnly = useEditorReadOnly();
 	const readOnly = false;
 	const editor = useEditorRef();
@@ -79,57 +90,146 @@ export function FloatingToolbarButtons() {
 							const { selection } = editor;
 							if (!selection) return;
 
-							console.log(selection);
-							wrapNodes(
-								editor,
-								{
-									type: getPluginType(
+							if (!showCutText) {
+								console.log('making hidden text');
+								wrapNodes(
+									editor,
+									{
+										type: getPluginType(
+											editor,
+											ELEMENT_CUT_HIDDEN
+										),
+										children: [],
+									},
+									{ split: true }
+								);
+								const earlierPoint = Path.isBefore(
+									selection.anchor.path,
+									selection.focus.path
+								)
+									? selection.anchor
+									: selection.focus;
+
+								let newPointPath = [...earlierPoint.path]; // create a copy of the path
+								newPointPath[newPointPath.length - 1] += 2; // increment the last element
+
+								const newPoint = {
+									path: newPointPath,
+									offset: 0,
+								};
+
+								const neet = focusEditor(editor, [0, 0]);
+								collapseSelection(editor);
+								select(editor, newPoint);
+							} else {
+								const [match] = Editor.nodes(editor as Editor, {
+									match: (n) =>
+										// @ts-ignore
+										n.type ===
+										getPluginType(
+											editor,
+											ELEMENT_CUT_SHOWN
+										),
+									universal: true,
+								});
+
+								if (match) {
+									// withoutNormalizing(editor, () =>
+									// Save the selected text
+									const selectedText = Editor.string(
 										editor,
-										ELEMENT_CUT_HIDDEN
-									),
-									children: [],
-								},
-								{ split: true }
-							);
-							const earlierPoint = Path.isBefore(
-								selection.anchor.path,
-								selection.focus.path
-							)
-								? selection.anchor
-								: selection.focus;
+										selection
+									);
 
-							let newPointPath = [...earlierPoint.path]; // create a copy of the path
-							newPointPath[newPointPath.length - 1] += 2; // increment the last element
+									const earlierPoint = Path.isBefore(
+										selection.anchor.path,
+										selection.focus.path
+									)
+										? selection.anchor
+										: selection.focus;
 
-							const newPoint = {
-								path: newPointPath,
-								offset: 0,
-							};
+									const laterPoint = Path.isBefore(
+										selection.anchor.path,
+										selection.focus.path
+									)
+										? selection.focus
+										: selection.anchor;
 
-							// const focusEditor = (editor, target) => {
-							// 	if (target) {
-							// 		withoutNormalizing(editor, () => {
-							// 			deselect(editor);
-							// 			select(editor, target);
-							// 		});
-							// 	}
-							// 	console.log('okay');
-							// 	ReactEditor.focus(editor);
-							// };
+									// Delete the selected text from the current node
+									// Transforms.delete(editor as Editor, {
+									// 	at: selection,
+									// });
 
-							// collapseSelection(editor);
-							// Transforms.select(
-							// 	editor as BaseEditor,
-							// 	newPointPath
-							// );
-							const neet = focusEditor(editor, [0, 0]);
-							collapseSelection(editor);
-							select(editor, newPoint);
+									// Unwrap the node
+									withoutNormalizing(editor, () => {
+										splitNodes(editor, {
+											match: (n) =>
+												n.type ===
+												getPluginType(
+													editor,
+													ELEMENT_CUT_SHOWN
+												),
+											at: laterPoint,
+										});
 
-							// setSelection(editor, {
-							// 	anchor: newPoint,
-							// 	focus: newPoint,
-							// });
+										splitNodes(editor, {
+											match: (n) =>
+												n.type ===
+												getPluginType(
+													editor,
+													ELEMENT_CUT_SHOWN
+												),
+											at: earlierPoint,
+										});
+
+										// setNodes(
+										// 	editor,
+										// 	{
+										// 		type: getPluginType(
+										// 			editor,
+										// 			ELEMENT_PARAGRAPH
+										// 		),
+										// 	},
+										// 	{ split: true }
+										// );
+
+										const cutPath = earlierPoint.path.slice(
+											0,
+											-1
+										);
+										cutPath[cutPath.length - 1] += 1;
+
+										// Unwrap nodes at new selection
+										unwrapNodes(editor, {
+											match: (n) =>
+												n.type ===
+												getPluginType(
+													editor,
+													ELEMENT_CUT_SHOWN
+												),
+											at: cutPath,
+											split: true,
+										});
+									});
+
+									// Insert the selected text at the current cursor position
+								} else {
+									// Your existing wrapNodes logic
+									wrapNodes(
+										editor,
+										{
+											type: getPluginType(
+												editor,
+												ELEMENT_CUT_SHOWN
+											),
+											children: [],
+										},
+										{ split: true }
+									);
+								}
+
+								const newEditor = editor;
+							}
 						}}
 						tooltip='Cut Text (⌘+D)'
 					>

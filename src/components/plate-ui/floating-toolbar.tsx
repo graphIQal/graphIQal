@@ -50,7 +50,7 @@ const FloatingToolbar = React.forwardRef<
 
 	const ref = useComposedRef<HTMLDivElement>(componentRef, floatingRef);
 
-	if (!floatingToolbarState.focused || hidden) return null;
+	if (hidden) return null;
 
 	return (
 		<PortalBody>

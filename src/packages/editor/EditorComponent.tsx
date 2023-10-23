@@ -229,7 +229,7 @@ const EditorComponent: React.FC<{
 				id={id}
 			>
 				<FloatingToolbar>
-					<FloatingToolbarButtons />
+					<FloatingToolbarButtons showCutText={showCutText} />
 				</FloatingToolbar>
 				<EditorSlashMenu />
 			</Plate>

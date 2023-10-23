@@ -66,6 +66,7 @@ import {
 	createColumnParentPlugin,
 	createColumnsPlugin,
 } from './ColumnsPlugin/ColumnsPlugin';
+import { withCutText } from './CutTextPlugin/withCutText';
 
 const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODE,
@@ -187,6 +188,7 @@ const cutTextShownPlugin = createMyPluginFactory<HotkeyPlugin>({
 	isLeaf: false,
 	isInline: true,
 	isVoid: false,
+	withOverrides: withCutText,
 	// options: {
 	// 	hotkey: 'mod+g',
 	// },

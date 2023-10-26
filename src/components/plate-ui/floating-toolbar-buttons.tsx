@@ -17,6 +17,7 @@ import {
 	ELEMENT_PARAGRAPH,
 	collapseSelection,
 	focusEditor,
+	getParentNode,
 	getPluginType,
 	select,
 	setNodes,
@@ -27,7 +28,7 @@ import {
 	withoutNormalizing,
 	wrapNodes,
 } from '@udecode/plate';
-import { Editor, Path, Text, Transforms } from 'slate';
+import { Editor, Path, Point, Text, Transforms } from 'slate';
 import { CommentToolbarButton } from './comment-toolbar-button';
 import { MarkToolbarButton } from './mark-toolbar-button';
 import { MoreDropdownMenu } from './more-dropdown-menu';
@@ -103,12 +104,6 @@ export function FloatingToolbarButtons({
 									},
 									{ split: true }
 								);
-								const earlierPoint = Path.isBefore(
-									selection.anchor.path,
-									selection.focus.path
-								)
-									? selection.anchor
-									: selection.focus;
 
 								let newPointPath = [...earlierPoint.path]; // create a copy of the path
 								newPointPath[newPointPath.length - 1] += 2; // increment the last element
@@ -133,73 +128,39 @@ export function FloatingToolbarButtons({
 									universal: true,
 								});
 
+								const earlierPoint = Point.isBefore(
+									selection.anchor,
+									selection.focus
+								)
+									? selection.anchor
+									: selection.focus;
+
+								const laterPoint = Point.isBefore(
+									selection.anchor,
+									selection.focus
+								)
+									? selection.focus
+									: selection.anchor;
+
 								if (match) {
-									// withoutNormalizing(editor, () =>
-									// Save the selected text
-									const selectedText = Editor.string(
-										editor,
-										selection
+									const [node, path] = match;
+									const nodeRange = Editor.range(
+										editor as Editor,
+										path
 									);
 
-									const earlierPoint = Path.isBefore(
-										selection.anchor.path,
-										selection.focus.path
-									)
-										? selection.anchor
-										: selection.focus;
-
-									const laterPoint = Path.isBefore(
-										selection.anchor.path,
-										selection.focus.path
-									)
-										? selection.focus
-										: selection.anchor;
-
-									// Delete the selected text from the current node
-									// Transforms.delete(editor as Editor, {
-									// 	at: selection,
-									// });
-
-									// Unwrap the node
-									withoutNormalizing(editor, () => {
-										splitNodes(editor, {
-											match: (n) =>
-												n.type ===
-												getPluginType(
-													editor,
-													ELEMENT_CUT_SHOWN
-												),
-											at: laterPoint,
-										});
-
-										splitNodes(editor, {
-											match: (n) =>
-												n.type ===
-												getPluginType(
-													editor,
-													ELEMENT_CUT_SHOWN
-												),
-											at: earlierPoint,
-										});
-
-										// setNodes(
-										// 	editor,
-										// 	{
-										// 		type: getPluginType(
-										// 			editor,
-										// 			ELEMENT_PARAGRAPH
-										// 		),
-										// 	},
-										// 	{ split: true }
-										// );
-
-										const cutPath = earlierPoint.path.slice(
-											0,
-											-1
+									const isEntireNodeSelected =
+										Point.equals(
+											earlierPoint,
+											nodeRange.anchor
+										) &&
+										Point.equals(
+											laterPoint,
+											nodeRange.focus
 										);
-										cutPath[cutPath.length - 1] += 1;
 
-										// Unwrap nodes at new selection
+									if (isEntireNodeSelected) {
+										// You're selecting the entire ELEMENT_CUT_SHOWN
 										unwrapNodes(editor, {
 											match: (n) =>
 												n.type ===
@@ -207,12 +168,92 @@ export function FloatingToolbarButtons({
 													editor,
 													ELEMENT_CUT_SHOWN
 												),
-											at: cutPath,
-											split: true,
 										});
-									});
+									} else {
+										// You're selecting a part of the ELEMENT_CUT_SHOWN
 
-									// Insert the selected text at the current cursor position
+										// Unwrap the node
+										withoutNormalizing(editor, () => {
+											// Unwrap nodes at new selection
+
+											// Check the node before the selection
+											const beforeSelection =
+												Editor.before(
+													editor as Editor,
+													selection
+												);
+											const beforeNode =
+												beforeSelection &&
+												Editor.node(
+													editor as Editor,
+													beforeSelection.path
+												);
+
+											const parentNode = getParentNode(
+												editor,
+												beforeNode[1]
+											);
+
+											const hasCutShownBefore =
+												parentNode[0].type ===
+												ELEMENT_CUT_SHOWN;
+
+											splitNodes(editor, {
+												match: (n) =>
+													n.type ===
+													getPluginType(
+														editor,
+														ELEMENT_CUT_SHOWN
+													),
+												at: laterPoint,
+											});
+
+											splitNodes(editor, {
+												match: (n) =>
+													n.type ===
+													getPluginType(
+														editor,
+														ELEMENT_CUT_SHOWN
+													),
+												at: earlierPoint,
+											});
+
+											if (hasCutShownBefore) {
+												// There's more ELEMENT_CUT_SHOWN text before the selection
+												const cutPath =
+													earlierPoint.path.slice(
+														0,
+														-1
+													);
+												cutPath[
+													cutPath.length - 1
+												] += 1;
+
+												// Unwrap nodes at new selection
+												unwrapNodes(editor, {
+													match: (n) =>
+														n.type ===
+														getPluginType(
+															editor,
+															ELEMENT_CUT_SHOWN
+														),
+													at: cutPath,
+													split: true,
+												});
+											} else {
+												unwrapNodes(editor, {
+													match: (n) =>
+														n.type ===
+														getPluginType(
+															editor,
+															ELEMENT_CUT_SHOWN
+														),
+													at: selection,
+													split: true,
+												});
+											}
+										});
+									}
 								} else {
 									// Your existing wrapNodes logic
 									wrapNodes(

@@ -91,6 +91,20 @@ export function FloatingToolbarButtons({
 							const { selection } = editor;
 							if (!selection) return;
 
+							const earlierPoint = Point.isBefore(
+								selection.anchor,
+								selection.focus
+							)
+								? selection.anchor
+								: selection.focus;
+
+							const laterPoint = Point.isBefore(
+								selection.anchor,
+								selection.focus
+							)
+								? selection.focus
+								: selection.anchor;
+
 							if (!showCutText) {
 								console.log('making hidden text');
 								wrapNodes(
@@ -113,7 +127,7 @@ export function FloatingToolbarButtons({
 									offset: 0,
 								};
 
-								const neet = focusEditor(editor, [0, 0]);
+								focusEditor(editor, [0, 0]);
 								collapseSelection(editor);
 								select(editor, newPoint);
 							} else {
@@ -127,20 +141,6 @@ export function FloatingToolbarButtons({
 										),
 									universal: true,
 								});
-
-								const earlierPoint = Point.isBefore(
-									selection.anchor,
-									selection.focus
-								)
-									? selection.anchor
-									: selection.focus;
-
-								const laterPoint = Point.isBefore(
-									selection.anchor,
-									selection.focus
-								)
-									? selection.focus
-									: selection.anchor;
 
 								if (match) {
 									const [node, path] = match;
@@ -268,8 +268,7 @@ export function FloatingToolbarButtons({
 										{ split: true }
 									);
 								}
-
-								const newEditor = editor;
+								collapseSelection(editor, { edge: 'end' });
 							}
 						}}
 						tooltip='Cut Text (⌘+D)'

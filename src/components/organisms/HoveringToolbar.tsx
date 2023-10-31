@@ -1,57 +1,35 @@
-import React, { MutableRefObject, useEffect, useRef } from 'react';
-import ToolbarButton from '../molecules/ToolbarButton';
+import React from 'react';
+import IconCircleButton from '../molecules/IconCircleButton';
 
-type ToolbarButtonProps = {
-  buttonText: String;
-  icon?: string;
-  onPress: (params: any) => void;
+type OnHoverMenuProps = {
+  buttonItems: {
+    icon: string;
+    buttonText: string;
+    onPress: () => void;
+    // label?: string;
+  }[];
 };
 
-type HoveringToolbarProps = {
-  items: ToolbarButtonProps[];
-  onRender?: (ref: React.MutableRefObject<any>) => void;
-};
-
-//shows up on top of current selection of text
-const HoveringToolbar = React.forwardRef<
-  MutableRefObject<any>,
-  HoveringToolbarProps
->((props, ref) => {
-  const ref2 = useRef<any>();
-  const { items, onRender } = props;
-  useEffect(() => {
-    if (onRender) onRender(ref2);
-  });
-  const renderButtons = () => {
-    return items.map((item, i) => {
-      const { buttonText, icon, onPress } = item;
-      const it = { buttonText, icon, onPress };
-      return (
-        <ToolbarButton
-          key={i}
-          className='menu_item first:rounded-l-text_box last:rounded-r-text_box'
-          item={it}
-        />
-      );
-    });
-  };
+export const HoveringToolbar: React.FC<OnHoverMenuProps> = ({
+  buttonItems,
+}) => {
   return (
-    <div
-      ref={ref2}
-      style={{
-        opacity: 0,
-        display: 'inline-block',
-        position: 'absolute',
-        zIndex: 1,
-        top: 0,
-        left: 0,
-        marginTop: '-10px',
-        marginLeft: '50px',
-      }}
-    >
-      <div className='menu bg-base_black'>{renderButtons()}</div>
+    <div className='flex flex-col w-max justify-center z-50 rounded-sm border bg-popover p-1 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'>
+      {buttonItems.map((button: any, i: number) => (
+        <div
+          onClick={button.onPress}
+          className='flex flex-row align-middle items-center gap-y-sm gap-x-sm p-1 justify-start hover:bg-selected_white rounded-sm'
+        >
+          <IconCircleButton
+            key={i}
+            onClick={button.onPress}
+            src={button.icon}
+            size={30}
+            circle={false}
+          />
+          <h3 className='text-sm'>{button.buttonText}</h3>
+        </div>
+      ))}
     </div>
   );
-});
-
-export default HoveringToolbar;
+};

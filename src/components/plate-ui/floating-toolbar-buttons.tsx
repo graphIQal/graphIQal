@@ -17,6 +17,7 @@ import {
 	ELEMENT_PARAGRAPH,
 	collapseSelection,
 	focusEditor,
+	getNodeEntries,
 	getParentNode,
 	getPluginType,
 	select,
@@ -142,6 +143,17 @@ export function FloatingToolbarButtons({
 									universal: true,
 								});
 
+								const [match2] = getNodeEntries(editor, {
+									match: (n) =>
+										// @ts-ignore
+										n.type ===
+										getPluginType(
+											editor,
+											ELEMENT_CUT_SHOWN
+										),
+									universal: true,
+								});
+
 								if (match) {
 									const [node, path] = match;
 									const nodeRange = Editor.range(
@@ -189,10 +201,16 @@ export function FloatingToolbarButtons({
 													beforeSelection.path
 												);
 
+											if (beforeNode === undefined)
+												return;
+
 											const parentNode = getParentNode(
 												editor,
 												beforeNode[1]
 											);
+
+											if (parentNode === undefined)
+												return;
 
 											const hasCutShownBefore =
 												parentNode[0].type ===

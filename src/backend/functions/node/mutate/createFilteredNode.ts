@@ -21,8 +21,8 @@ export const createFilteredNode = async (
 			const direction = getConnectionDirection(
 				key as DirectionalConnectionTypes
 			);
-			const leftArrow = direction === 'to' ? '<-' : '-';
-			const rightArrow = direction === 'from' ? '->' : '-';
+			const leftArrow = direction === 'from' ? '<-' : '-';
+			const rightArrow = direction === 'to' ? '->' : '-';
 
 			filters[key].forEach((nodeData, index) => {
 				relationships += `MERGE (m${key}${index}:Node {id: "${nodeData.id}"})

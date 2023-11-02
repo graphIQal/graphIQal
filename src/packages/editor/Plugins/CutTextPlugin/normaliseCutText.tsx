@@ -61,7 +61,7 @@ export const normaliseCutText = <V extends MyValue>(editor: MyEditor) => {
 			);
 
 			// Get the index of the current node in the parent's children
-			const index = parentPath[parentPath.length - 1];
+			const index = path[path.length - 1];
 
 			// If next node is text -> check the node after that.
 
@@ -79,6 +79,7 @@ export const normaliseCutText = <V extends MyValue>(editor: MyEditor) => {
 							node[0].type === ELEMENT_CUT_SHOWN)
 					) {
 						unwrapNodes(editor, { at: path });
+						return;
 					}
 				}
 			}

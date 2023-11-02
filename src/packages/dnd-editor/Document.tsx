@@ -297,6 +297,8 @@ const Document: React.FC<{
 											},
 										});
 
+										console.log('nodeId ', nodeId);
+
 										// If a parent node exists, navigate to it
 										if (parentNode) {
 											router.push(

@@ -208,38 +208,7 @@ const EditorComponent: React.FC<{
 						});
 					},
 				}}
-				initialValue={[
-					{
-						type: 'title',
-						id: 'Node Title',
-						children: [
-							{
-								text: 'Graphiqal Testing Page',
-							},
-						],
-					},
-					{
-						type: 'block',
-						id: 'f72945c8-e8de-479c-81d6-ecbfce092085',
-						children: [
-							{
-								text: 'asdfasdfaasdf',
-							},
-							{
-								type: 'cut_show',
-								children: [
-									{
-										text: 'sdsdffasdasdfa',
-									},
-								],
-								id: 'e5dfadd3-a5c1-4b03-af0c-d52da49fcd86',
-							},
-							{
-								text: 'l',
-							},
-						],
-					},
-				]}
+				initialValue={initialValue}
 				onChange={(docValue) => {
 					console.log(docValue);
 					setValue(docValue);

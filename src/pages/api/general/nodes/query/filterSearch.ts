@@ -24,7 +24,7 @@ export default async function handler(
 				);
 
 				return `(n:Node)${
-					direction == 'to' ? '<' : ''
+					direction == 'from' ? '<' : ''
 				}-[:${convertToConnectionType(
 					key as DirectionalConnectionTypes
 				)}${
@@ -35,7 +35,7 @@ export default async function handler(
 					)
 						? '*1..5'
 						: ''
-				}]-${direction == 'from' ? '>' : ''}(:Node {id: "${node.id}"})`;
+				}]-${direction == 'to' ? '>' : ''}(:Node {id: "${node.id}"})`;
 			});
 		})
 		.join(', ');

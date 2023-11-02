@@ -39,21 +39,6 @@ export const Filtering: React.FC<FilteringProps> = ({
 			<div className=' absolute top-10 flex flex-row py-2 px-3 justify-between w-full align-middle items-center z-99'>
 				<div className='flex flex-row gap-x-5'>
 					<div className='flex flex-row gap-x-3 align-middle items-center'>
-						{/* <IconCircleButton
-							src='save'
-							size={30}
-							onClick={() => {
-								saveGraphView({
-									username,
-									graphViewId,
-									nodeId,
-									graphViewData: nodeVisualData_Graph,
-									nodeData: nodeData_Graph,
-									history: history,
-									pointer: pointer,
-								});
-							}}
-						/> */}
 						<div className='flex flex-row gap-x-1 align-middle items-center'>
 							<IconCircleButton src='undo' onClick={undo} />
 							<IconCircleButton src='redo' onClick={redo} />

@@ -6,7 +6,9 @@ import {
 	ELEMENT_BLOCK,
 	ELEMENT_GROUP,
 	ELEMENT_NODE,
+	ELEMENT_NODELINK,
 } from '@/packages/editor/plateTypes';
+import { updateNode } from '@/backend/functions/node/mutate/updateNode';
 
 export type SaveDocumentInput = {
 	nodeId: string;
@@ -65,6 +67,11 @@ export const saveDocument = async ({
 							delete node.inbox;
 						});
 					});
+				} else if (value.type === ELEMENT_NODELINK && value.nodeId) {
+					updateNode({
+						nodeId: value.nodeId,
+						nodeData: { title: value.children[0].text as string },
+					});
 				}
 			});
 		}
@@ -77,6 +84,7 @@ export const saveDocument = async ({
 	// loop through document, find nodes, and update them.
 
 	// console.log('saveDocument', nodeId, title);
+	// console.log(JSON.stringify(document, null, 2));
 
 	document = saveNestedNodes(document.slice(1));
 
@@ -88,11 +96,11 @@ export const saveDocument = async ({
 		}
 	)
 		.then((res) => {
-			// console.log('saveDocument ', res);
+			console.log('saveDocument ', res);
 			return res.json();
 		})
 		.then((json) => {
-			// console.log('saveDocumentJson', json);
+			console.log('saveDocumentJson', json);
 			return json;
 		});
 

@@ -1,4 +1,3 @@
-import { KeyedMutator } from 'swr';
 import { API, State } from '../../context/GraphViewContext';
 
 export type NodeUpdate = 'resize' | 'drag' | 'title' | 'icon' | 'color';

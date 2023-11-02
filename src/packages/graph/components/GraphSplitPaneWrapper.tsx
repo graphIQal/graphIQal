@@ -70,8 +70,8 @@ const GraphSplitPaneWrapper: React.FC<{
 	useEffect(() => {
 		// let nodeData = {} as { [key: string]: NodeData };
 		// let visualData = {} as { [key: string]: GraphNodeData };
-		console.log('data graph');
-		console.log(data);
+		// console.log('data graph');
+		// console.log(data);
 
 		if (!data) return;
 

@@ -1,19 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import EditorComponent from '../../../packages/editor/EditorComponent';
-import ShelfEditor from '../../../packages/shelf-editor/ShelfEditor';
-import Tab from '../../atoms/Tab';
-import { Tabs } from './Tabs';
-import ConnectionListItem from '../ConnectionList/ConnectionListItem';
-import { connectedNode_type } from '../../../backend/functions/node/query/useGetNodeData';
-import { useViewData } from '../../context/ViewContext';
-import { SelectableList } from '../../templates/SelectableList';
 import { useRouter } from 'next/router';
-import { Divider } from '../split-pane/SplitPane';
-import ConnectionSection from '../ConnectionList/ConnectionSection';
-import { CircularGraph } from '@styled-icons/entypo/CircularGraph';
+import React, { useEffect, useState } from 'react';
+import Tab from '../../atoms/Tab';
+import { useViewData } from '../../context/ViewContext';
+import { Tabs } from './Tabs';
 
-import { ArrowLeftIcon, ArrowRightIcon, DiscIcon } from '@radix-ui/react-icons';
-import { connectionColours } from '@/theme/colors';
 import { renderConnections } from './RenderConnections';
 
 export type SideTabPropsDoc = {

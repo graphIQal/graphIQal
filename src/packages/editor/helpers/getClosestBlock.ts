@@ -1,5 +1,12 @@
 import { NodeEntry, Path } from 'slate';
-import { MyBlockElement, MyEditor, MyValue } from '../plateTypes';
+import {
+	BlockElements,
+	ELEMENT_NODE,
+	ELEMENT_NODELINK,
+	MyBlockElement,
+	MyEditor,
+	MyValue,
+} from '../plateTypes';
 
 export const getClosestBlockId = (path: Path, editor: MyEditor) => {
 	const ancestors = [path, ...Path.ancestors(path, { reverse: true })];
@@ -7,7 +14,7 @@ export const getClosestBlockId = (path: Path, editor: MyEditor) => {
 
 	for (let i = 0; i < ancestors.length; i++) {
 		if (editor.hasPath(ancestors[i])) {
-			const node = editor.node(ancestors[i]);
+			const node = editor.node(ancestors[i]) as [BlockElements, Path];
 			// console.log(ancestors[i])
 			// console.log(node)
 			if (node && node[0].type === 'block') {
@@ -25,11 +32,16 @@ export const getClosestNodeId = (path: Path, editor: MyEditor) => {
 
 	for (let i = 0; i < ancestors.length; i++) {
 		if (editor.hasPath(ancestors[i])) {
-			const node = editor.node(ancestors[i]);
-			// console.log(ancestors[i])
-			// console.log(node)
-			if (node && node[0].type === 'node') {
-				return node[0].id;
+			const node = editor.node(ancestors[i]) as [BlockElements, Path];
+
+			console.log(node);
+
+			if (
+				node &&
+				(node[0].type === ELEMENT_NODE ||
+					node[0].type === ELEMENT_NODELINK)
+			) {
+				return node[0].nodeId;
 			}
 		}
 	}
@@ -46,7 +58,7 @@ export const getClosestBlock = (
 
 	for (let i = 0; i < ancestors.length; i++) {
 		if (editor.hasPath(ancestors[i])) {
-			const node = editor.node(ancestors[i]);
+			const node = editor.node(ancestors[i]) as [BlockElements, Path];
 			// console.log(ancestors[i])
 			// console.log(node)
 			if (node && node[0].type === 'block') {
@@ -67,10 +79,16 @@ export const getClosestNode = (
 
 	for (let i = 0; i < ancestors.length; i++) {
 		if (editor.hasPath(ancestors[i])) {
-			const node = editor.node(ancestors[i]);
+			const node = editor.node(ancestors[i]) as [BlockElements, Path];
 			// console.log(ancestors[i])
 			// console.log(node)
-			if (node && node[0].type === 'node') {
+			console.log(node);
+
+			if (
+				node &&
+				(node[0].type === ELEMENT_NODE ||
+					node[0].type === ELEMENT_NODELINK)
+			) {
 				return node;
 			}
 		}

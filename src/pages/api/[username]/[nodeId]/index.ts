@@ -1,12 +1,10 @@
 import {
 	Block,
-	MyTitleElement,
-	ELEMENT_NODE,
 	BlockElements,
-	ELEMENT_BLOCK,
+	ELEMENT_NODE,
 	ELEMENT_NODETITLE,
+	MyTitleElement,
 } from '@/packages/editor/plateTypes';
-import { getNodeData_cypher } from '../../../../backend/cypher-generation/cypherGenerators';
 import { read, write } from '../../../../backend/driver/helpers';
 
 import type { NextApiRequest, NextApiResponse } from 'next';

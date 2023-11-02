@@ -1,7 +1,6 @@
 //Node with just its title
 
 import { useContext, useEffect, useRef, useState } from 'react';
-import { updateNode } from '../../helpers/backend/updateNode';
 import { addExistingNodeToGraph } from '../../helpers/frontend/addExistingNodeToGraph';
 import GraphNodeContext, {
 	GraphNodeContextInterface,
@@ -15,6 +14,7 @@ import {
 	useGraphViewAPI,
 	useGraphViewData,
 } from '../../packages/graph/context/GraphViewContext';
+import { updateNode } from '@/packages/graph/helpers/backend/updateNode';
 
 const CollapsedGraphNode: React.FC<{
 	toggleDropdown: () => void;
@@ -27,7 +27,7 @@ const CollapsedGraphNode: React.FC<{
 	setShowSearchDropdown,
 	setResults,
 }) => {
-	const { title, id, icon } = useContext(
+	const { id, icon } = useContext(
 		GraphNodeContext
 	) as GraphNodeContextInterface;
 
@@ -69,8 +69,7 @@ const CollapsedGraphNode: React.FC<{
 									addAction,
 								},
 								username,
-								id,
-								result.n
+								{ id, title: result.n.title }
 							);
 						},
 					};
@@ -100,7 +99,7 @@ const CollapsedGraphNode: React.FC<{
 						id='node_title'
 						placeholder='Type title or press /'
 						// defaultValue={title}
-						value={title}
+						value={'idk, please fx this in CollpasedGraphNode.tsx'}
 						ref={formRef}
 						autoComplete='off'
 						onChange={async (newVal: any) => {

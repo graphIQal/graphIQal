@@ -84,7 +84,6 @@ const SignIn: React.FC = () => {
 					</Link>
 				</p>
 			</div>
-			{/* <CustomIconCircleButton onClick={() => {}} icon={<Plus />} /> */}
 		</div>
 	);
 };

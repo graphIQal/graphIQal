@@ -16,8 +16,8 @@ export const renderConnections = (
 	const sectionDisplayNames: { [key: string]: string } = {
 		'To-HAS': 'Parents',
 		'From-HAS': 'Children',
-		'To-IS': 'Is',
-		'From-IS': 'Encompasses',
+		'To-IS': 'Encompasses',
+		'From-IS': 'IS',
 		'To-NEEDS': 'Needed',
 		'From-NEEDS': 'Needs',
 		'To-FOLLOWS': 'Followed',
@@ -115,8 +115,8 @@ export const connectionCategorisation = (
 	const sectionDisplayNames: { [key: string]: string } = {
 		'To-HAS': 'Parents',
 		'From-HAS': 'Children',
-		'To-IS': 'Is',
-		'From-IS': 'Encompasses',
+		'To-IS': 'Encompasses',
+		'From-IS': 'IS',
 		'To-NEEDS': 'Needed',
 		'From-NEEDS': 'Needs',
 		'To-FOLLOWS': 'Followed',

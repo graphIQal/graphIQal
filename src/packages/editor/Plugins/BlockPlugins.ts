@@ -66,6 +66,7 @@ import {
 	createColumnParentPlugin,
 	createColumnsPlugin,
 } from './ColumnsPlugin/ColumnsPlugin';
+import { withCutText } from './CutTextPlugin/withCutText';
 
 const createNodePlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_NODE,
@@ -107,6 +108,7 @@ const createNodeLinkPlugin = createMyPluginFactory<HotkeyPlugin>({
 	isElement: true,
 	isLeaf: false,
 	withOverrides: withNodeLink,
+	isVoid: false,
 	options: {},
 });
 
@@ -161,9 +163,9 @@ const createGroupPlugin = createMyPluginFactory<HotkeyPlugin>({
 const cutTextHiddenPlugin = createMyPluginFactory<HotkeyPlugin>({
 	key: ELEMENT_CUT_HIDDEN,
 	isElement: true,
-	isLeaf: false,
 	isInline: true,
 	isVoid: true,
+	isLeaf: false,
 	component: CutTextHidden,
 	// options: {
 	// 	hotkey: 'mod+g',
@@ -186,6 +188,7 @@ const cutTextShownPlugin = createMyPluginFactory<HotkeyPlugin>({
 	isLeaf: false,
 	isInline: true,
 	isVoid: false,
+	withOverrides: withCutText,
 	// options: {
 	// 	hotkey: 'mod+g',
 	// },
